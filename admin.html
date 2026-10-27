@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrativo Oficial — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  
+  <!-- Favicon Oficial -->
+  <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  
+  <!-- Fuentes Institucionales -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Estilos del Admin -->
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Backdrop para Sidebar en Móviles -->
+  <div id="admin-sidebar-backdrop" class="admin-sidebar-backdrop"></div>
+
+  <!-- ==========================================
+       SIDEBAR LATERAL INSTITUCIONAL
+       ========================================== -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="sidebar-header">
+      <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo HERCAR" class="sidebar-logo">
+      <div class="sidebar-title">
+        <h5>HercarBot IA</h5>
+        <span>Administración Oficial</span>
+      </div>
+      <button id="btn-close-admin-sidebar" class="btn btn-sm text-white d-lg-none ms-auto" title="Cerrar Menú">
+        <i class="bi bi-x-lg fs-5"></i>
+      </button>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li>
+        <a href="#metricas" class="active">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard & Métricas</span>
+        </a>
+      </li>
+      <li>
+        <a href="#comunicados">
+          <i class="bi bi-megaphone-fill"></i>
+          <span>Tablón de Comunicados</span>
+        </a>
+      </li>
+      <li>
+        <a href="#vocacional">
+          <i class="bi bi-compass-fill"></i>
+          <span>Historial de Vocaciones</span>
+        </a>
+      </li>
+      <li>
+        <a href="#faqs">
+          <i class="bi bi-journal-text"></i>
+          <span>Base de Conocimientos</span>
+        </a>
+      </li>
+      <li>
+        <a href="#no-resueltas">
+          <i class="bi bi-question-diamond"></i>
+          <span>Consultas No Resueltas</span>
+        </a>
+      </li>
+      <li>
+        <a href="#configuracion">
+          <i class="bi bi-gear-fill"></i>
+          <span>Configuración & Demo</span>
+        </a>
+      </li>
+      <li class="mt-auto">
+        <a href="index.html" class="text-warning">
+          <i class="bi bi-arrow-left-circle-fill"></i>
+          <span>Volver al Portal Web</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer text-muted">
+      <div class="small fw-semibold text-white-50">IESTP "Hermanos Cárcamo"</div>
+      <small style="font-size:0.72rem; color:#94a3b8;">Paita, Piura • Versión 2026</small>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       CONTENIDO PRINCIPAL
+       ========================================== -->
+  <main class="admin-main">
+    <!-- Header Superior -->
+    <div class="admin-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+      <div class="d-flex align-items-center gap-2">
+        <button id="btn-admin-mobile-toggle" class="btn btn-outline-secondary d-lg-none rounded-3 px-2 py-1" title="Menú de Navegación">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h2 class="mb-0 fw-bold admin-main-title" style="color: var(--admin-blue-dark);">Panel de Gestión Institucional</h2>
+            <span class="badge bg-primary px-3 py-1 rounded-pill"><i class="bi bi-shield-check me-1"></i>En Línea</span>
+          </div>
+          <p class="text-muted small mb-0 mt-1 d-none d-sm-block">Monitoreo en vivo de consultas, comunicados en tiempo real, evaluaciones vocacionales y retroalimentación de la IA.</p>
+        </div>
+      </div>
+      <div class="d-flex gap-2 flex-wrap align-items-center">
+        <button id="btn-admin-theme-toggle" class="btn btn-outline-secondary rounded-pill px-3 shadow-sm btn-sm d-flex align-items-center gap-1" title="Modo Oscuro / Claro">
+          <i class="bi bi-moon-stars-fill text-primary" id="admin-theme-icon"></i>
+          <span id="admin-theme-text" class="small fw-semibold">Modo Oscuro</span>
+        </button>
+        <button id="btn-export-csv" class="btn btn-outline-success rounded-pill px-3 shadow-sm btn-sm">
+          <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Exportar a Excel (CSV)
+        </button>
+        <button id="btn-export-report" class="btn btn-outline-primary rounded-pill px-3 shadow-sm btn-sm">
+          <i class="bi bi-download me-1"></i> Backup JSON
+        </button>
+        <a href="index.html" target="_blank" class="btn btn-primary rounded-pill px-3 shadow-sm btn-sm" style="background:#13357b; border-color:#13357b;">
+          <i class="bi bi-robot me-1"></i> Abrir Chatbot
+        </a>
+      </div>
+    </div>
+
+    <!-- TARJETAS DE MÉTRICAS EN TIEMPO REAL -->
+    <section id="metricas" class="row g-3 mb-4">
+      <div class="col-12 col-sm-6 col-md-4 col-xl-2-4">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(19, 53, 123, 0.12); color: #13357b;">
+            <i class="bi bi-chat-dots-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-total-consultas">345</h3>
+            <p>Consultas Atendidas</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-4 col-xl-2-4">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
+            <i class="bi bi-compass-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-total-tests">42</h3>
+            <p>Tests Vocacionales</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-4 col-xl-2-4">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+            <i class="bi bi-laptop-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-top-carrera">APSTI</h3>
+            <p>Carrera Más Solicitada</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-xl-2-4">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+            <i class="bi bi-hand-thumbs-up-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-satisfaccion">95%</h3>
+            <p>Satisfacción del Alumno</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-6 col-xl-2-4">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(239, 68, 68, 0.12); color: #ef4444;">
+            <i class="bi bi-question-circle-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-no-resueltas">0</h3>
+            <p>Dudas por Responder</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRÁFICOS INTERACTIVOS (CHART.JS) -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6">
+        <div class="admin-card h-100">
+          <div class="admin-card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-pie-chart-fill me-2 text-primary"></i> Interés y Vocaciones por Carrera</h5>
+            <span class="badge bg-light text-muted border">APSTI, ANI, CONTA, DPA</span>
+          </div>
+          <div class="admin-card-body d-flex justify-content-center align-items-center" style="min-height: 280px;">
+            <canvas id="chartCarreras" style="max-height: 250px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="admin-card h-100">
+          <div class="admin-card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-bar-chart-fill me-2 text-primary"></i> Consultas por Temática Institucional</h5>
+            <span class="badge bg-light text-muted border">Tiempo Real</span>
+          </div>
+          <div class="admin-card-body d-flex justify-content-center align-items-center" style="min-height: 280px;">
+            <canvas id="chartCategorias" style="max-height: 250px; width: 100%;"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SECCIÓN: TABLÓN DE ANUNCIOS Y COMUNICADOS
+         ========================================== -->
+    <section id="comunicados" class="admin-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h5 class="mb-0"><i class="bi bi-megaphone-fill me-2 text-warning"></i> Tablón de Anuncios y Comunicados Institucionales</h5>
+          <small class="text-muted">Los comunicados que agregues aquí se mostrarán de inmediato en el Chatbot para todos los estudiantes.</small>
+        </div>
+        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" onclick="openCreateAnnouncementModal()" style="background:#13357b; border-color:#13357b;">
+          <i class="bi bi-plus-lg me-1"></i> Publicar Nuevo Comunicado
+        </button>
+      </div>
+      <!-- Barra de Búsqueda de Comunicados -->
+      <div class="p-3 bg-light border-bottom d-flex gap-3 flex-wrap align-items-center justify-content-between">
+        <div class="input-group" style="max-width: 320px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="announcement-filter-search" class="form-control border-start-0" placeholder="Buscar comunicado por título...">
+        </div>
+      </div>
+      <div class="admin-card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-custom align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width: 110px;">Estado</th>
+                <th style="width: 260px;">Título del Comunicado</th>
+                <th>Resumen e Indicaciones</th>
+                <th style="width: 140px;">Fecha / Enlace</th>
+                <th style="width: 100px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="announcements-table-body">
+              <!-- Renderizado dinámicamente con admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECCIÓN: HISTORIAL DE ORIENTACIÓN VOCACIONAL
+         ========================================== -->
+    <section id="vocacional" class="admin-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h5 class="mb-0"><i class="bi bi-compass-fill me-2 text-primary"></i> Evaluaciones de Orientación Vocacional Rendidas</h5>
+          <small class="text-muted">Registro de postulantes que han completado el Test Vocacional Inteligente.</small>
+        </div>
+        <span class="badge bg-primary-subtle text-primary fw-bold" id="badge-tests-count">0 Evaluaciones</span>
+      </div>
+      <!-- Barra de Filtro y Exportación de Vocaciones -->
+      <div class="p-3 bg-light border-bottom d-flex gap-3 flex-wrap align-items-center justify-content-between">
+        <div class="input-group" style="max-width: 320px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="vocational-filter-search" class="form-control border-start-0" placeholder="Buscar por carrera o fecha...">
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button id="btn-export-vocational-csv" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+            <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Exportar Vocaciones (CSV)
+          </button>
+        </div>
+      </div>
+      <div class="admin-card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-custom align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width: 150px;">Fecha / Hora</th>
+                <th style="width: 180px;">Carrera Recomendada</th>
+                <th>Especialidad Profesional Detectada</th>
+                <th style="width: 120px;">Afinidad %</th>
+                <th style="width: 130px;">Sinergia 2da</th>
+                <th style="width: 140px;" class="text-center">Respuestas / Detalle</th>
+              </tr>
+            </thead>
+            <tbody id="vocational-table-body">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- GESTOR DE BASE DE CONOCIMIENTOS (FAQS) -->
+    <section id="faqs" class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-journal-check me-2 text-primary"></i> Base de Conocimiento Institucional</h5>
+        <button class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#modalAddFaq" onclick="openCreateFaqModal()">
+          <i class="bi bi-plus-lg me-1"></i> Nueva Pregunta / Respuesta
+        </button>
+      </div>
+      <!-- Barra de Filtro y Búsqueda -->
+      <div class="p-3 bg-light border-bottom d-flex gap-3 flex-wrap align-items-center justify-content-between">
+        <div class="input-group" style="max-width: 320px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="faq-filter-search" class="form-control border-start-0" placeholder="Buscar por título o keyword...">
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <label class="small text-muted fw-bold mb-0">Categoría:</label>
+          <select id="faq-filter-category" class="form-select form-select-sm" style="width: 170px;">
+            <option value="all">Todas las categorías</option>
+            <option value="carreras">Carreras Profesionales</option>
+            <option value="admision">Admisión & CEPRE</option>
+            <option value="pagos">Pagos & Vouchers</option>
+            <option value="tramites">Trámites & TUPA</option>
+            <option value="institucional">Institucional</option>
+            <option value="academico">Académico</option>
+            <option value="bienestar">Bienestar Estudiantil</option>
+          </select>
+        </div>
+      </div>
+      <div class="admin-card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-custom">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Tipo</th>
+                <th style="width: 250px;">Título / Tema</th>
+                <th>Palabras Clave (Keywords)</th>
+                <th style="width: 130px;">Categoría</th>
+                <th style="width: 110px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="faq-table-body">
+              <!-- Las filas se cargan dinámicamente con admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANDEJA DE CONSULTAS NO RESUELTAS -->
+    <section id="no-resueltas" class="admin-card">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <h5 class="mb-0"><i class="bi bi-question-diamond-fill me-2 text-danger"></i> Consultas No Resueltas (Retroalimentación de la IA)</h5>
+          <span class="badge bg-danger-subtle text-danger" id="unresolved-badge-count">Pendientes de Respuesta</span>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <input type="text" id="search-unresolved-input" class="form-control form-control-sm" placeholder="Buscar consulta de estudiante..." style="max-width: 260px;">
+          <button id="btn-clear-all-unresolved" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm" title="Marcar todas como atendidas">
+            <i class="bi bi-check2-all me-1"></i>Limpiar Bandeja
+          </button>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <p class="text-muted small mb-3">
+          Aquí aparecen las preguntas escritas por los estudiantes que el chatbot no pudo responder con exactitud o que requieren atención. Puedes convertirlas en nuevas FAQs oficiales con un solo clic.
+        </p>
+        <div id="unresolved-list-container">
+          <!-- Lista generada con JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIGURACIÓN DE IA GEMINI -->
+    <section id="configuracion" class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-cpu-fill me-2 text-primary"></i> Configuración del Motor de Inteligencia Artificial</h5>
+      </div>
+      <div class="admin-card-body">
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+              <h6 class="fw-bold mb-0">Google Gemini API Key (Opcional)</h6>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1" style="font-size:0.75rem;">
+                <i class="bi bi-box-arrow-up-right me-1"></i>Obtener clave gratis en Google AI Studio
+              </a>
+            </div>
+            <p class="text-muted small mb-3">
+              El chatbot cuenta con un <strong>motor semántico NLP institucional integrado que funciona 100% sin internet</strong>. Si deseas habilitar respuestas generativas avanzadas con Google Gemini, ingresa tu clave API aquí:
+            </p>
+            <div class="input-group mb-2">
+              <input type="password" id="gemini-api-key" class="form-control" placeholder="AIzaSy..." autocomplete="off">
+              <button class="btn btn-outline-secondary" type="button" id="btn-toggle-key-visibility" title="Mostrar u ocultar clave">
+                <i class="bi bi-eye" id="icon-toggle-key"></i>
+              </button>
+              <button class="btn btn-primary px-3" id="btn-save-gemini-key">Guardar Clave</button>
+            </div>
+            <div class="row g-2 align-items-center mb-3">
+              <div class="col-sm-6">
+                <label for="gemini-model-select" class="form-label small text-muted mb-1">Modelo Gemini:</label>
+                <select id="gemini-model-select" class="form-select form-select-sm">
+                  <option value="auto">⚡ Detección Automática (Recomendado)</option>
+                  <option value="gemini-2.0-flash">gemini-2.0-flash (Más rápido y moderno)</option>
+                  <option value="gemini-1.5-flash">gemini-1.5-flash (Alta compatibilidad)</option>
+                  <option value="gemini-1.5-flash-8b">gemini-1.5-flash-8b (Bajo consumo)</option>
+                  <option value="gemini-2.5-flash">gemini-2.5-flash (Experimental)</option>
+                  <option value="gemini-pro">gemini-pro (Estándar)</option>
+                </select>
+              </div>
+              <div class="col-sm-6 d-flex align-items-end">
+                <button class="btn btn-outline-success btn-sm rounded-pill px-3 w-100" id="btn-test-gemini-key" style="height:31px;">
+                  <i class="bi bi-lightning-charge-fill me-1"></i> Probar Conexión con Gemini en Vivo
+                </button>
+              </div>
+            </div>
+            <div id="gemini-test-result" class="mt-2" style="display: none;"></div>
+            <small class="text-muted d-block mt-2"><i class="bi bi-shield-lock me-1"></i>La clave se almacena de forma segura en tu navegador (localStorage) y se conecta directamente a la API oficial de Google.</small>
+          </div>
+          <div class="col-lg-5">
+            <div class="p-3 bg-light rounded-3 border mb-3">
+              <h6 class="fw-bold"><i class="bi bi-shield-check text-success me-1"></i> Estado de los Servicios Institucionales</h6>
+              <ul class="list-unstyled small mb-0 mt-2 d-flex flex-column gap-1">
+                <li><i class="bi bi-check2-circle text-success me-1"></i> Base Institucional Oficial: <strong>Activa</strong></li>
+                <li><i class="bi bi-check2-circle text-success me-1"></i> 4 Programas de Estudio: <strong>Cargados</strong></li>
+                <li><i class="bi bi-check2-circle text-success me-1"></i> Test Vocacional 24 Preguntas: <strong>Operativo</strong></li>
+                <li><i class="bi bi-check2-circle text-success me-1"></i> Tablón de Comunicados en Vivo: <strong>Conectado</strong></li>
+                <li><i class="bi bi-check2-circle text-success me-1"></i> Voz Conversacional y Humana: <strong>Habilitada</strong></li>
+              </ul>
+            </div>
+
+            <div class="p-3 bg-white rounded-3 border shadow-sm">
+              <h6 class="fw-bold text-danger mb-2"><i class="bi bi-arrow-counterclockwise me-1"></i> Restaurar Demostración para Evaluación</h6>
+              <p class="small text-muted mb-2">Restablece las métricas, tests simulados y preguntas de prueba para sustentar ante el docente evaluador:</p>
+              <button id="btn-reset-demo" class="btn btn-outline-danger btn-sm rounded-pill w-100">
+                <i class="bi bi-arrow-clockwise me-1"></i> Restaurar Estadísticas de Demostración
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       MODAL PARA AGREGAR O EDITAR FAQ
+       ========================================== -->
+  <div class="modal fade" id="modalAddFaq" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-primary text-white" style="background:#13357b !important;">
+          <h5 class="modal-title fw-bold" id="modalFaqTitle"><i class="bi bi-plus-circle me-2"></i>Nueva Pregunta y Respuesta</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="form-add-faq">
+          <input type="hidden" id="faq-id" value="">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Título / Pregunta Frecuente</label>
+              <input type="text" id="faq-titulo" class="form-control" placeholder="Ej: Costo del Certificado Modular" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Palabras Clave (Separadas por comas)</label>
+              <input type="text" id="faq-keywords" class="form-control" placeholder="Ej: certificado modular, costo certificado, pagar modulo" required>
+              <div class="form-text">Palabras o frases que activarán esta respuesta cuando el estudiante consulte.</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Categoría</label>
+              <select id="faq-categoria" class="form-select">
+                <option value="tramites">Trámites y Documentos TUPA</option>
+                <option value="admision">Admisión y CEPRE</option>
+                <option value="pagos">Pagos y Vouchers</option>
+                <option value="carreras">Carreras Profesionales</option>
+                <option value="institucional">Institucional & Autoridades</option>
+                <option value="academico">Académico & Reglamento</option>
+                <option value="bienestar">Bienestar Estudiantil</option>
+                <option value="general">Información General</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Respuesta Completa del Asistente</label>
+              <textarea id="faq-respuesta" class="form-control" rows="4" placeholder="Escribe la respuesta detallada..." required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4" id="btn-save-faq" style="background:#13357b; border-color:#13357b;">Guardar en Base de Conocimientos</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL PARA PUBLICAR / EDITAR COMUNICADO
+       ========================================== -->
+  <div class="modal fade" id="modalAddAnnouncement" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-primary text-white" style="background:#13357b !important;">
+          <h5 class="modal-title fw-bold" id="modalAnnouncementTitle"><i class="bi bi-megaphone me-2"></i>Publicar Comunicado Oficial</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="form-add-announcement">
+          <input type="hidden" id="announcement-id" value="">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Título del Comunicado</label>
+              <input type="text" id="announcement-title" class="form-control" placeholder="Ej: Convocatoria a Beca Continuidad 2026" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Resumen / Contenido Breve</label>
+              <textarea id="announcement-summary" class="form-control" rows="3" placeholder="Describe brevemente el anuncio para los alumnos..." required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Indicaciones para el Alumno</label>
+              <input type="text" id="announcement-directions" class="form-control" placeholder="Ej: Presentar expediente en Secretaría antes del 15 de marzo.">
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Enlace a Google Drive o PDF</label>
+                <input type="url" id="announcement-drive" class="form-control" placeholder="https://drive.google.com/...">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Enlace a Plataforma Web</label>
+                <input type="url" id="announcement-url" class="form-control" placeholder="https://ieshercar.edu.pe/...">
+              </div>
+            </div>
+            <div class="form-check form-switch mt-3">
+              <input class="form-check-input" type="checkbox" id="announcement-important">
+              <label class="form-check-label fw-bold text-dark" for="announcement-important">
+                Marcar como Comunicado Urgente / Importante (Destacado)
+              </label>
+            </div>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4" style="background:#13357b; border-color:#13357b;">Publicar Comunicado</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL DE DETALLE DE EVALUACIÓN VOCACIONAL
+       ========================================== -->
+  <div class="modal fade" id="modalVocationalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, #13357b 0%, #1e40af 100%);">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-compass-fill fs-4 text-warning"></i>
+            <div>
+              <h5 class="modal-title fw-bold mb-0">Detalle de Evaluación Vocacional</h5>
+              <small id="modal-voc-date" class="text-white-50"></small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4" id="modal-voc-body">
+          <!-- Renderizado dinámicamente desde admin.js -->
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL DE CONFIRMACIÓN ESTILIZADO (SIN POPUPS NATIVOS)
+       ========================================== -->
+  <div class="modal fade" id="modalAdminConfirm" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 360px;">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-body p-4 text-center">
+          <div id="admin-confirm-icon-box" class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 58px; height: 58px; background: rgba(239, 68, 68, 0.12); color: #ef4444; font-size: 1.7rem;">
+            <i class="bi bi-exclamation-triangle-fill" id="admin-confirm-icon"></i>
+          </div>
+          <h5 class="fw-bold mb-2 text-dark" id="admin-confirm-title">¿Estás seguro?</h5>
+          <p class="small text-muted mb-4" id="admin-confirm-message">Esta acción no se puede deshacer.</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-light rounded-pill px-3 py-2 flex-grow-1 border small fw-semibold" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger rounded-pill px-3 py-2 flex-grow-1 small fw-semibold" id="admin-confirm-btn-action">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor Global de Toasts Modernos del Admin -->
+  <div id="admin-toast-container" class="admin-toast-container" aria-live="polite"></div>
+
+  <!-- Bootstrap 5 & Chart.js JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Scripts de la Base de Conocimiento y Lógica de Administración -->
+  <script src="js/knowledge-base.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# robots.txt para HercarBot IA — IESTP Hermanos Cárcamo de Paita
+User-agent: *
+Allow: /
+
+# Bloquear archivos de sistema o de pruebas locales si hubiera
+Disallow: /admin.html
+
+# Ubicación del Sitemap oficial para Googlebot y buscadores
+Sitemap: https://hercarbot-paita.pages.dev/sitemap.xml

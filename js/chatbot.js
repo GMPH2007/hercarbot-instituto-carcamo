@@ -574,6 +574,7 @@ class HercarBotApp {
 
   startNewChat(showAnimation = true) {
     this.stopSpeaking();
+    this.closeMobileSidebar();
     this.activeTest = null;
     this.activeSimulator = null;
     this.currentChatId = 'chat_' + Date.now();
@@ -679,6 +680,7 @@ class HercarBotApp {
 
     this.scrollToBottom();
     this.renderHistoryList();
+    this.closeMobileSidebar();
   }
 
   deleteConversation(chatId) {

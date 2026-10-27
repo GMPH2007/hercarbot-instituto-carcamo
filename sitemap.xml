@@ -4,15 +4,15 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://hercarbot-paita.pages.dev/</loc>
+    <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/</loc>
     <lastmod>2026-10-27</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://hercarbot-paita.pages.dev/index.html</loc>
+    <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/index.html</loc>
     <lastmod>2026-10-27</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 </urlset>

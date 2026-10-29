@@ -17,6 +17,8 @@ body.admin-body {
   font-family: 'Jost', 'Segoe UI', system-ui, sans-serif;
   color: #1e293b;
   min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Sidebar */
@@ -374,29 +376,101 @@ body.admin-body {
 
 @media (max-width: 576px) {
   .admin-header h2.admin-main-title {
-    font-size: 1.25rem !important;
+    font-size: 1.12rem !important;
+    line-height: 1.25 !important;
+  }
+  .admin-header-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+  }
+  .admin-header-actions .btn {
+    padding: 5px 10px !important;
+    font-size: 0.74rem !important;
+    flex-shrink: 0 !important;
   }
   .metric-card {
-    padding: 15px 16px !important;
-    gap: 12px !important;
+    padding: 10px 10px !important;
+    gap: 8px !important;
+    border-radius: 12px !important;
+    min-height: 72px !important;
   }
   .metric-icon {
-    width: 44px !important;
-    height: 44px !important;
-    font-size: 1.3rem !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.15rem !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
   }
   .metric-data h3 {
-    font-size: 1.45rem !important;
+    font-size: 1.25rem !important;
+    margin-bottom: 2px !important;
+    line-height: 1.1 !important;
+  }
+  .metric-data p {
+    font-size: 0.7rem !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0 !important;
+    color: #64748b;
+  }
+  .admin-card {
+    border-radius: 14px !important;
+    margin-bottom: 16px !important;
   }
   .admin-card-header {
-    padding: 14px 16px !important;
+    padding: 12px 14px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  .admin-card-header h5 {
+    font-size: 0.95rem !important;
+  }
+  .admin-card-header .btn {
+    width: 100% !important;
+    justify-content: center !important;
   }
   .admin-card-body {
-    padding: 16px 12px !important;
+    padding: 12px 10px !important;
   }
-  .table-custom th, .table-custom td {
+  .table-responsive {
+    border-radius: 0 0 14px 14px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .table-custom th {
+    white-space: nowrap !important;
+    font-size: 0.72rem !important;
+    padding: 8px 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+  }
+  .table-custom td {
+    font-size: 0.75rem !important;
+    padding: 8px 10px !important;
+  }
+  .badge-carrera-apsti, .badge-carrera-ani, .badge-carrera-conta, .badge-carrera-dpa {
+    font-size: 0.7rem !important;
+    padding: 2px 8px !important;
+  }
+  .admin-card .p-3.bg-light {
     padding: 10px 12px !important;
-    font-size: 0.82rem !important;
+    gap: 8px !important;
+  }
+  .admin-card .input-group,
+  #search-unresolved-input {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  #faq-filter-category {
+    width: 100% !important;
+  }
+  .modal-dialog {
+    margin: 12px !important;
+    max-width: calc(100% - 24px) !important;
+  }
+  .modal-content {
+    border-radius: 16px !important;
   }
 }
 

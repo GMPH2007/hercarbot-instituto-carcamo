@@ -111,26 +111,26 @@
           <p class="text-muted small mb-0 mt-1 d-none d-sm-block">Monitoreo en vivo de consultas, comunicados en tiempo real, evaluaciones vocacionales y retroalimentación de la IA.</p>
         </div>
       </div>
-      <div class="d-flex gap-2 flex-wrap align-items-center">
-        <button id="btn-admin-theme-toggle" class="btn btn-outline-secondary rounded-pill px-3 shadow-sm btn-sm d-flex align-items-center gap-1" title="Modo Oscuro / Claro">
+      <div class="d-flex gap-2 flex-wrap align-items-center admin-header-actions">
+        <button id="btn-admin-theme-toggle" class="btn btn-outline-secondary rounded-pill px-2 px-sm-3 shadow-sm btn-sm d-flex align-items-center gap-1" title="Modo Oscuro / Claro">
           <i class="bi bi-moon-stars-fill text-primary" id="admin-theme-icon"></i>
-          <span id="admin-theme-text" class="small fw-semibold">Modo Oscuro</span>
+          <span id="admin-theme-text" class="small fw-semibold d-none d-sm-inline">Modo Oscuro</span>
         </button>
-        <button id="btn-export-csv" class="btn btn-outline-success rounded-pill px-3 shadow-sm btn-sm">
-          <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Exportar a Excel (CSV)
+        <button id="btn-export-csv" class="btn btn-outline-success rounded-pill px-2 px-sm-3 shadow-sm btn-sm" title="Exportar a Excel CSV">
+          <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> <span class="d-none d-sm-inline">Exportar a Excel (CSV)</span><span class="d-inline d-sm-none">Excel</span>
         </button>
-        <button id="btn-export-report" class="btn btn-outline-primary rounded-pill px-3 shadow-sm btn-sm">
-          <i class="bi bi-download me-1"></i> Backup JSON
+        <button id="btn-export-report" class="btn btn-outline-primary rounded-pill px-2 px-sm-3 shadow-sm btn-sm" title="Copia de Seguridad JSON">
+          <i class="bi bi-download me-1"></i> <span class="d-none d-sm-inline">Backup JSON</span><span class="d-inline d-sm-none">Backup</span>
         </button>
         <a href="index.html" target="_blank" class="btn btn-primary rounded-pill px-3 shadow-sm btn-sm" style="background:#13357b; border-color:#13357b;">
-          <i class="bi bi-robot me-1"></i> Abrir Chatbot
+          <i class="bi bi-robot me-1"></i> <span>Chatbot</span>
         </a>
       </div>
     </div>
 
     <!-- TARJETAS DE MÉTRICAS EN TIEMPO REAL -->
-    <section id="metricas" class="row g-3 mb-4">
-      <div class="col-12 col-sm-6 col-md-4 col-xl-2-4">
+    <section id="metricas" class="row g-2 g-sm-3 mb-4">
+      <div class="col-6 col-sm-6 col-md-4 col-xl-2-4">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(19, 53, 123, 0.12); color: #13357b;">
             <i class="bi bi-chat-dots-fill"></i>
@@ -142,7 +142,7 @@
         </div>
       </div>
 
-      <div class="col-12 col-sm-6 col-md-4 col-xl-2-4">
+      <div class="col-6 col-sm-6 col-md-4 col-xl-2-4">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
             <i class="bi bi-compass-fill"></i>
@@ -154,7 +154,7 @@
         </div>
       </div>
 
-      <div class="col-12 col-sm-6 col-md-4 col-xl-2-4">
+      <div class="col-6 col-sm-6 col-md-4 col-xl-2-4">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
             <i class="bi bi-laptop-fill"></i>
@@ -166,7 +166,7 @@
         </div>
       </div>
 
-      <div class="col-12 col-sm-6 col-md-6 col-xl-2-4">
+      <div class="col-6 col-sm-6 col-md-6 col-xl-2-4">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
             <i class="bi bi-hand-thumbs-up-fill"></i>

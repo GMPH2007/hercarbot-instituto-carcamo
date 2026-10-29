@@ -1881,113 +1881,196 @@ body.dark-theme .fallback-icon-box {
     display: flex !important;
     width: 32px !important;
     height: 32px !important;
+    border-radius: 8px !important;
     flex-shrink: 0 !important;
   }
 
   /* Safe areas en móviles (notch superior y barra home inferior en iPhone / Android) */
   .chat-top-header {
-    padding: env(safe-area-inset-top, 0px) 10px 0 !important;
-    height: calc(56px + env(safe-area-inset-top, 0px)) !important;
-    gap: 6px !important;
+    padding: env(safe-area-inset-top, 0px) 8px 0 !important;
+    height: calc(54px + env(safe-area-inset-top, 0px)) !important;
+    gap: 4px !important;
     max-width: 100vw !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
+    flex-wrap: nowrap !important;
   }
 
   .chat-input-container {
-    padding: 8px 10px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
     box-sizing: border-box !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+  }
+
+  .chat-form-box {
+    padding: 4px 6px 4px 10px !important;
+    border-radius: 22px !important;
+    gap: 4px !important;
   }
 
   /* Prevenir zoom automático no deseado en iOS Safari fijando 16px */
   .chat-textarea {
     font-size: 16px !important;
-    line-height: 1.35 !important;
+    height: 32px !important;
+    line-height: 32px !important;
+  }
+
+  .input-btn,
+  .send-action-btn,
+  .btn-send {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.95rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .input-disclaimer {
+    display: none !important; /* Libera valioso espacio vertical en celular */
   }
 
   .chat-messages-viewport {
-    padding: 12px 10px calc(24px + env(safe-area-inset-bottom, 0px));
-    gap: 12px;
+    padding: 10px 8px calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 10px !important;
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
   }
 
   .welcome-title {
-    font-size: 1.35rem;
-    line-height: 1.25;
+    font-size: 1.25rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 4px !important;
+    letter-spacing: -0.4px !important;
   }
   .welcome-subtitle {
-    font-size: 0.84rem;
-    margin-bottom: 16px;
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 12px !important;
+    padding: 0 4px !important;
   }
   .welcome-badge {
-    font-size: 0.72rem;
-    padding: 4px 12px;
+    font-size: 0.68rem !important;
+    padding: 3px 10px !important;
+    margin-bottom: 8px !important;
   }
 
-  /* En móviles: 1 columna vertical táctil y cómoda */
+  /* En móviles: Grid de 2 columnas compacto, estético e interactivo */
   .features-pill-grid {
-    grid-template-columns: 1fr !important;
-    gap: 9px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 7px !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    margin-bottom: 12px !important;
   }
   .feature-pill {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    padding: 12px 14px !important;
-    min-height: auto;
+    padding: 9px 8px !important;
+    min-height: 56px !important;
+    height: 100% !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+  }
+  .feature-pill-icon-box {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.05rem !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
   }
   .feature-pill strong {
-    font-size: 0.88rem;
+    font-size: 0.76rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0 !important;
+    font-weight: 700 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
   .feature-pill small {
-    font-size: 0.74rem;
+    display: none !important; /* Ocultar texto largo en celular para mantener tarjetas cuadradas limpias */
   }
 
   .interactive-button-grid {
-    grid-template-columns: 1fr;
-    gap: 6px;
+    grid-template-columns: 1fr !important;
+    gap: 5px !important;
+    margin-top: 8px !important;
+  }
+  .interactive-btn {
+    padding: 9px 12px !important;
+    font-size: 0.8rem !important;
+    min-height: 40px !important;
+  }
+
+  .bot-avatar-badge {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 7px !important;
+    font-size: 0.85rem !important;
   }
 
   .msg-bubble-bot {
-    max-width: 95%;
-    padding: 13px 14px;
-    font-size: 0.88rem;
+    max-width: 94% !important;
+    padding: 11px 12px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+    line-height: 1.5 !important;
   }
   .msg-bubble-user {
-    max-width: 90%;
-    padding: 10px 14px;
-    font-size: 0.88rem;
+    max-width: 88% !important;
+    padding: 9px 12px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+    line-height: 1.5 !important;
   }
 
-  /* Tablas responsivas dentro de los mensajes del bot */
+  /* Tablas responsivas dentro de los mensajes del bot con desplazamiento táctil suave */
   .msg-bubble-bot table {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    font-size: 0.78rem !important;
+    font-size: 0.74rem !important;
     white-space: nowrap !important;
     border-collapse: collapse !important;
-    margin: 8px 0 !important;
+    margin: 6px 0 !important;
   }
 
+  .suggested-prompts-section {
+    padding: 10px 10px !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  .suggested-label {
+    font-size: 0.68rem !important;
+    margin-bottom: 6px !important;
+  }
   .prompts-chips-wrapper {
-    gap: 5px;
-    width: 100%;
-    box-sizing: border-box;
+    gap: 5px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   .prompt-chip {
-    font-size: 0.74rem;
-    padding: 6px 11px;
+    font-size: 0.72rem !important;
+    padding: 5px 10px !important;
+    border-radius: 14px !important;
   }
 
   .header-inst-sub {
     display: none !important;
   }
   .header-title-text {
-    font-size: 0.86rem !important;
-    white-space: nowrap;
+    font-size: 0.88rem !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   .header-meta .badge {
     display: none !important;
@@ -2000,6 +2083,7 @@ body.dark-theme .fallback-icon-box {
   .header-inst-logo {
     width: 26px !important;
     height: 26px !important;
+    border-radius: 6px !important;
     flex-shrink: 0 !important;
   }
   .header-controls {
@@ -2009,11 +2093,16 @@ body.dark-theme .fallback-icon-box {
   .control-btn {
     width: 32px !important;
     height: 32px !important;
-    font-size: 0.85rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 8px !important;
     flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
-  #btn-export-chat {
-    display: none !important;
+  #btn-export-chat,
+  #btn-topics-modal {
+    display: none !important; /* Ocultos en celular para garantizar alineación limpia sin desbordes */
   }
   .voice-wave-container {
     padding: 2px 4px !important;
@@ -2029,7 +2118,7 @@ body.dark-theme .fallback-icon-box {
     flex-shrink: 0 !important;
   }
   .bot-welcome-hero {
-    padding: 6px 0 20px !important;
+    padding: 6px 0 16px !important;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
@@ -2039,43 +2128,48 @@ body.dark-theme .fallback-icon-box {
 /* --- 14.6 TELÉFONOS EXTRA PEQUEÑOS (<= 380px, ej. iPhone SE / pantallas angostas) --- */
 @media (max-width: 380px) {
   .chat-top-header {
-    padding: env(safe-area-inset-top, 0px) 6px 0 !important;
+    padding: env(safe-area-inset-top, 0px) 4px 0 !important;
     gap: 3px !important;
   }
   .header-title-text {
-    font-size: 0.78rem !important;
+    font-size: 0.8rem !important;
   }
   .control-btn {
     width: 28px !important;
     height: 28px !important;
-    font-size: 0.78rem !important;
-  }
-  #btn-topics-modal {
-    display: none !important; /* Accesible desde sugerencias y menú */
+    font-size: 0.75rem !important;
   }
   .chat-form-box {
-    padding: 5px 6px 5px 10px !important;
+    padding: 4px 5px 4px 8px !important;
   }
-  .btn-send {
-    width: 34px !important;
-    height: 34px !important;
+  .btn-send, .send-action-btn {
+    width: 32px !important;
+    height: 32px !important;
   }
   .input-btn {
-    width: 30px !important;
-    height: 30px !important;
+    width: 28px !important;
+    height: 28px !important;
   }
   .welcome-title {
-    font-size: 1.2rem !important;
+    font-size: 1.15rem !important;
   }
   .welcome-subtitle {
-    font-size: 0.78rem !important;
+    font-size: 0.75rem !important;
   }
   .feature-pill {
-    padding: 10px 12px !important;
+    padding: 8px 6px !important;
+  }
+  .feature-pill strong {
+    font-size: 0.72rem !important;
+  }
+  .feature-pill-icon-box {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.95rem !important;
   }
   .msg-bubble-bot {
     max-width: 98% !important;
-    padding: 10px 12px !important;
+    padding: 9px 10px !important;
   }
 }
 

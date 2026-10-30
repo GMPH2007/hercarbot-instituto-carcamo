@@ -136,12 +136,15 @@ const COMUNICADOS_OFICIALES = [
 
 const INSTITUTO_LINKS = {
   webPrincipal: 'https://ieshercar.edu.pe/',
-  mesaPartesVirtual: 'https://ieshercar.edu.pe/registro-tramite/',
+  mesaPartesVirtual: 'https://sistema.ieshercar.edu.pe/registro-tramite/',
   sistemaInstitucional: 'https://sistema.ieshercar.edu.pe/acceso',
   sistemaPagos: 'https://pagos.ieshercar.edu.pe/',
   aulaVirtual: 'https://aula.ieshercar.edu.pe/',
+  bolsaLaboral: 'https://bolsalaboral.ieshercar.edu.pe/',
+  bibliotecaVirtual: 'https://biblioteca.ieshercar.edu.pe/',
   bibliotecaLatina: 'https://iestphercar.bibliotecalatina.com/login',
-  bibliotecaYoleo: 'https://ieshercar.edu.pe/',
+  admisionCicloCero: 'https://ieshercar.edu.pe/Tramites/Admision-Ciclo_Cero/',
+  becasPronabec: 'https://ieshercar.edu.pe/Informacion_Academica/Becas/becas.php',
   videoPagosDrive: 'https://drive.google.com/file/d/1kYBJhVXOqO7BoQUpMZmYs-1E59gIUV9h/view?usp=sharing',
   resultadosCepreDrive: 'https://drive.google.com/file/d/1tbEWl2oBRglGp9QWx012TIE66yYBS1VN/view?usp=drive_link',
   facebookOficial: 'https://web.facebook.com/iestphercar.edu.pe',
@@ -249,7 +252,8 @@ const CARRERAS_COMPLETAS = [
       'Emprendimiento propio en consultoría digital, soporte técnico y desarrollo de software'
     ],
     color: '#0d6efd',
-    icono: 'bi-laptop-fill'
+    icono: 'bi-laptop-fill',
+    imagen: 'assets/img/apsti.webp'
   },
   {
     id: 'ani',
@@ -294,7 +298,8 @@ const CARRERAS_COMPLETAS = [
       'Creación de empresas exportadoras o importadoras independientes'
     ],
     color: '#198754',
-    icono: 'bi-globe-americas'
+    icono: 'bi-globe-americas',
+    imagen: 'assets/img/ani.webp'
   },
   {
     id: 'conta',
@@ -339,7 +344,8 @@ const CARRERAS_COMPLETAS = [
       'Auditoría interna, liquidación de impuestos SUNAT y consultoría'
     ],
     color: '#6f42c1',
-    icono: 'bi-calculator-fill'
+    icono: 'bi-calculator-fill',
+    imagen: 'assets/img/contabilidad.webp'
   },
   {
     id: 'dpa',
@@ -384,7 +390,8 @@ const CARRERAS_COMPLETAS = [
       'Organismos públicos de fiscalización e investigación: IMARPE, PRODUCE, SANIPES, DICAPI'
     ],
     color: '#0dcaf0',
-    icono: 'bi-water'
+    icono: 'bi-water',
+    imagen: 'assets/img/dpa.webp'
   }
 ];
 

@@ -1523,6 +1523,28 @@ class HercarBotApp {
           Soy el asistente virtual del <strong>IESTP "Hermanos Cárcamo"</strong> de Paita. Selecciona uno de los temas principales o escribe tu duda en el chat:
         </p>
 
+        <!-- Banner Visual Institucional del Campus Real -->
+        <div class="welcome-campus-card mb-3">
+          <div class="campus-banner-img-wrap">
+            <img src="assets/img/campus-hercar.jpg" alt="Campus Central IESTP Hermanos Cárcamo - Paita" class="campus-banner-img" />
+            <div class="campus-banner-overlay">
+              <div>
+                <div class="campus-banner-title">
+                  <i class="bi bi-geo-alt-fill text-danger me-1"></i> Campus Central Paita Alta
+                </div>
+                <div class="campus-banner-addr">
+                  Av. Miguel Grau Mz. A Lt. 01 – Urb. El Parque · Paita, Piura
+                </div>
+              </div>
+              <div class="campus-banner-tags">
+                <span class="campus-badge"><i class="bi bi-telephone-fill me-1"></i> (073) 251013</span>
+                <span class="campus-badge"><i class="bi bi-clock-fill me-1"></i> Lun-Vie 8am-3pm</span>
+                <span class="campus-badge bg-gold"><i class="bi bi-mortarboard-fill me-1"></i> 100% Gratuito</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 12 Tarjetas Principales, Espaciosas y Ordenadas (3 filas x 4 columnas) -->
         <div class="features-pill-grid">
 
@@ -3688,6 +3710,8 @@ class HercarBotApp {
         <h4 class="fw-bold mb-1 text-dark">Distribución de Ambientes y Croquis del Campus</h4>
         <p class="small text-muted mb-3">Conoce las instalaciones, pabellones y laboratorios del IESTP Hermanos Cárcamo:</p>
 
+        <img src="assets/img/campus-hercar.jpg" alt="Campus Central IESTP Hermanos Cárcamo - Paita" class="campus-contact-photo" />
+
         <div class="row g-2 mb-3">
           ${ambientesCards}
         </div>
@@ -4076,9 +4100,12 @@ class HercarBotApp {
 
     const html = `
       <div class="carrera-hero-card" style="border-top: 4px solid ${carrera.color};">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="badge" style="background: ${carrera.color}; color: #fff; font-size: 0.85rem;">${carrera.codigo}</span>
-          <span class="badge bg-light text-muted border"><i class="bi bi-clock me-1"></i>${carrera.duracion}</span>
+        <div class="carrera-cover-banner">
+          <img src="${carrera.imagen || 'assets/img/campus-hercar.jpg'}" alt="${carrera.nombre}" onerror="this.src='assets/img/campus-hercar.jpg'" />
+          <div class="cover-overlay">
+            <span class="badge" style="background: ${carrera.color}; color: #fff; font-size: 0.85rem; font-weight: 700;">${carrera.codigo}</span>
+            <span class="badge bg-dark bg-opacity-75 text-light border border-light border-opacity-25"><i class="bi bi-clock me-1"></i>${carrera.duracion}</span>
+          </div>
         </div>
         <h4 class="fw-bold mb-2">${carrera.nombre}</h4>
         <p class="carrera-titulo-sub small">${carrera.titulo}</p>
@@ -4169,9 +4196,7 @@ class HercarBotApp {
   renderCarrerasList() {
     const listCards = CARRERAS_COMPLETAS.map(c => `
       <div class="carrera-interactive-item" data-chat-action="ver_carrera_detalle" data-chat-val="${c.id}">
-        <div class="carrera-item-icon" style="background: ${c.color}15; color: ${c.color};">
-          <i class="bi ${c.icono}"></i>
-        </div>
+        <img src="${c.imagen || 'assets/img/campus-hercar.jpg'}" alt="${c.nombre}" class="carrera-item-thumb" onerror="this.src='assets/img/campus-hercar.jpg'" />
         <div class="carrera-item-content">
           <div class="d-flex align-items-center gap-2">
             <span class="badge" style="background: ${c.color}; color: #fff; font-size: 0.75rem;">${c.codigo}</span>
@@ -4441,6 +4466,8 @@ class HercarBotApp {
       <div class="contacto-guide-card">
         <h5 class="fw-bold text-primary mb-2"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Sede Institucional & Canales de Atención</h5>
         
+        <img src="assets/img/campus-hercar.jpg" alt="Fachada Campus IESTP Hermanos Cárcamo - Paita" class="campus-contact-photo" />
+
         <div class="p-3 bg-light rounded-3 border mb-3">
           <h6 class="fw-bold mb-1"><i class="bi bi-building me-2 text-primary"></i>Ubicación en Paita:</h6>
           <p class="mb-1 small">Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Parte Alta, Paita, Piura.</p>
@@ -4513,18 +4540,50 @@ class HercarBotApp {
             </div>
           </a>
 
-          <a href="https://iestphercar.bibliotecalatina.com/login" target="_blank" class="plat-link-box">
-            <i class="bi bi-book plat-icon text-purple"></i>
+          <a href="https://bolsalaboral.ieshercar.edu.pe/" target="_blank" class="plat-link-box">
+            <i class="bi bi-briefcase-fill plat-icon text-info"></i>
             <div>
-              <strong>Biblioteca Virtual Latina</strong>
-              <small>Libros electrónicos y revistas indexadas</small>
+              <strong>Bolsa Laboral HERCAR</strong>
+              <small>Ofertas de empleo y pasantías en empresas de Paita</small>
+            </div>
+          </a>
+
+          <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank" class="plat-link-box">
+            <i class="bi bi-file-earmark-text-fill plat-icon text-danger"></i>
+            <div>
+              <strong>Mesa de Partes Virtual</strong>
+              <small>Trámites documentarios, FUT y solicitudes en línea</small>
+            </div>
+          </a>
+
+          <a href="https://biblioteca.ieshercar.edu.pe/" target="_blank" class="plat-link-box">
+            <i class="bi bi-book-half plat-icon text-purple"></i>
+            <div>
+              <strong>Biblioteca Virtual</strong>
+              <small>Repositorio institucional y libros electrónicos</small>
+            </div>
+          </a>
+
+          <a href="https://ieshercar.edu.pe/Tramites/Admision-Ciclo_Cero/" target="_blank" class="plat-link-box">
+            <i class="bi bi-award-fill plat-icon text-warning"></i>
+            <div>
+              <strong>Admisión & Ciclo Cero</strong>
+              <small>Inscripción al examen de admisión y academia preparatoria</small>
+            </div>
+          </a>
+
+          <a href="https://ieshercar.edu.pe/Informacion_Academica/Becas/becas.php" target="_blank" class="plat-link-box">
+            <i class="bi bi-patch-check-fill plat-icon text-primary"></i>
+            <div>
+              <strong>Becas PRONABEC (Beca 18)</strong>
+              <small>Información y orientación para becas del Estado</small>
             </div>
           </a>
         </div>
       </div>
     `;
 
-    this.appendBotMessage(html, "Aquí tienes los accesos directos al Sistema Académico, Aula Virtual y el portal de comprobantes del instituto.");
+    this.appendBotMessage(html, "Aquí tienes el ecosistema completo de plataformas digitales y portales del IESTP Hermanos Cárcamo: Sistema Académico, Aula Virtual, Sistema de Pagos, Mesa de Partes, Bolsa Laboral y Biblioteca.");
   }
 
   /* ==========================================================================

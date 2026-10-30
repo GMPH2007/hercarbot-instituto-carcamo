@@ -3528,13 +3528,27 @@ body.dark-theme .carrera-item-thumb {
    SISTEMA DE MINI TOUR GUIADO INTERACTIVO (ONBOARDING WALKTHROUGH)
    ========================================================================== */
 .hercar-tour-overlay {
+  display: none !important;
+  pointer-events: none !important;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hercar-tour-overlay.active {
+  display: block !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   z-index: 10500;
-  pointer-events: auto;
+  background: rgba(8, 15, 32, 0.72);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   overflow: hidden;
+  transition: opacity 0.3s ease;
 }
 
 .hercar-tour-mask {
@@ -4008,45 +4022,118 @@ body.hercar-widget-mode .features-pill-grid {
   gap: 8px !important;
 }
 
-/* 6. Botón Flotante del Tour (FAB) */
-.hercar-tour-fab {
+/* 6. Botón Flotante del Tour (FAB) - Desactivado para no tapar la barra de chat */
+.hercar-tour-fab,
+.hercar-pwa-banner {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Tarjeta del Tour Onboarding */
+.hercar-tour-card {
   position: fixed;
-  right: 18px;
-  bottom: 88px;
-  z-index: 90;
-  background: linear-gradient(135deg, #1d4ed8, #0284c7);
-  color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.85);
-  border-radius: 99px;
-  padding: 8px 16px;
-  font-size: 0.82rem;
+  z-index: 10520;
+  width: 400px;
+  max-width: calc(100vw - 28px);
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 22px 50px rgba(10, 25, 60, 0.38), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  padding: 20px 22px;
+  display: none;
+  pointer-events: auto;
+  animation: tourPopoverIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hercar-tour-card.active {
+  display: block !important;
+}
+
+body.dark-theme .hercar-tour-card {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.7);
+}
+
+.hercar-tour-step-badge {
+  display: inline-block;
+  font-size: 0.72rem;
   font-weight: 700;
-  box-shadow: 0 8px 22px rgba(2, 132, 199, 0.45);
-  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #2563eb;
+  margin-bottom: 4px;
+}
+
+body.dark-theme .hercar-tour-step-badge {
+  color: #60a5fa;
+}
+
+.hercar-tour-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 4px 0 8px;
+}
+
+body.dark-theme .hercar-tour-title {
+  color: #f8fafc;
+}
+
+.hercar-tour-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #475569;
+  margin: 0 0 16px;
+}
+
+body.dark-theme .hercar-tour-desc {
+  color: #cbd5e1;
+}
+
+.hercar-tour-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  animation: pulseTour 2.5s infinite;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
 }
 
-.hercar-tour-fab:hover {
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 12px 28px rgba(2, 132, 199, 0.6);
+body.dark-theme .hercar-tour-actions {
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
 
-@keyframes pulseTour {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+.hercar-tour-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-@media (max-width: 600px) {
-  .hercar-tour-fab {
-    bottom: 78px;
-    right: 12px;
-    padding: 7px 12px;
-    font-size: 0.76rem;
-  }
+.hercar-tour-btn.skip {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+body.dark-theme .hercar-tour-btn.skip {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.hercar-tour-btn.next {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+}
+
+.hercar-tour-btn.next:hover {
+  background: #1d4ed8;
 }
 
 /* 7. Modal del Generador de FUT */

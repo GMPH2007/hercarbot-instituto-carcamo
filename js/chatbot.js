@@ -600,13 +600,6 @@ class HercarBotApp {
     if (btnPrintFut) {
       btnPrintFut.addEventListener('click', () => this.printFutDocument());
     }
-
-    // Auto-iniciar tour en la primera visita para que el usuario conozca todas las funciones
-    if (!localStorage.getItem('hercar_tour_seen_2026')) {
-      setTimeout(() => {
-        if (this.tourGuide) this.tourGuide.start();
-      }, 1200);
-    }
   }
 
   openFutModal() {
@@ -1427,16 +1420,84 @@ class HercarBotApp {
     }
   }
 
+  extractSpokenAnswer(htmlOrMarkdown, title = '') {
+    if (!htmlOrMarkdown && !title) {
+      return this.preparePhoneticText('¡Hola! Con mucho gusto te oriento en lo que necesites sobre el instituto.');
+    }
+
+    let raw = (htmlOrMarkdown || '').toString();
+
+    // 1. Eliminar scripts, estilos, botones y badges
+    raw = raw
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+      .replace(/<button[\s\S]*?<\/button>/gi, '')
+      .replace(/<span\s+class=["'][^"']*badge[^"']*["'][\s\S]*?<\/span>/gi, '')
+      .replace(/<i\s+class=["'][^"']*bi-[^"']*["'][^>]*><\/i>/gi, '');
+
+    // 2. Extraer texto de enlaces markdown [Texto](url) -> Texto
+    raw = raw.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1');
+
+    // 3. Eliminar etiquetas HTML
+    raw = raw.replace(/<[^>]+>/g, ' ');
+
+    // 4. Limpiar formato Markdown (negrita, cursiva, encabezados, viñetas)
+    raw = raw
+      .replace(/[*_#`~>]/g, ' ')
+      .replace(/^\s*[-•·▪]\s+/gm, ' ')
+      .replace(/^\s*\d+\.\s+/gm, ' ')
+      .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // 5. Dividir en oraciones sustantivas
+    const sentences = raw.split(/(?<=[.!?])\s+/).filter(s => {
+      const cleanS = s.trim();
+      if (cleanS.length < 8) return false;
+      // Descartar encabezados o preguntas que son solo títulos
+      if (cleanS.startsWith('¿') && cleanS.endsWith('?')) return false;
+      if (/^(preguntas sugeridas|principales comunicados|resultados de la academia|guia del sistema|requisitos)/i.test(cleanS)) return false;
+      return true;
+    });
+
+    let spoken = '';
+    if (sentences.length > 0) {
+      spoken = sentences.slice(0, 2)
+        .map(s => {
+          let t = s.trim().replace(/[.!?]+$/, '');
+          return t.charAt(0).toUpperCase() + t.slice(1);
+        })
+        .join('. ');
+      if (spoken.length > 280) {
+        const first = sentences[0].trim().replace(/[.!?]+$/, '');
+        spoken = first.charAt(0).toUpperCase() + first.slice(1);
+      }
+    }
+
+    if (!spoken || spoken.length < 25) {
+      if (title && title.length > 5 && !title.startsWith('¿')) {
+        spoken = `Te comparto las indicaciones oficiales sobre ${title}. Puedes revisar todos los detalles en tu pantalla.`;
+      } else {
+        spoken = 'He preparado la información oficial completa en tu pantalla para resolver tu consulta.';
+      }
+    }
+
+    return this.preparePhoneticText(spoken);
+  }
+
   generateSpokenHeadline(htmlOrText, customTitle = null) {
     if (!htmlOrText && !customTitle) {
-      return '¡Hola! Qué gusto saludarte. Con todo gusto te oriento en lo que necesites sobre el instituto.';
+      return this.preparePhoneticText('¡Hola! Qué gusto saludarte. Con todo gusto te oriento en lo que necesites sobre el instituto.');
     }
 
     const fullContent = ((customTitle || '') + ' ' + (htmlOrText || '')).toLowerCase();
 
-    // 1. Respuestas habladas directas, empáticas y conversacionales (habla una asesora académica humana)
+    // 1. Respuestas habladas directas, empáticas y conversacionales para temas frecuentes
+    if (fullContent.includes('mensualidad') || fullContent.includes('pension') || fullContent.includes('gratis') || fullContent.includes('cuanto cuesta la mensualidad')) {
+      return this.preparePhoneticText('El Instituto Hermanos Cárcamo es una institución pública del Estado, por lo que no se pagan pensiones ni mensualidades. El único abono corresponde a la matrícula semestral fijada en el TUPA de aproximadamente ciento veinte soles.');
+    }
     if (fullContent.includes('carrera') || fullContent.includes('apsti') || fullContent.includes('computacion') || fullContent.includes('software')) {
-      return this.preparePhoneticText('¡Hola! En el Instituto Cárcamo contamos con cuatro carreras técnicas de tres años. Al ser un instituto público del Estado, no pagas mensualidades de estudio, únicamente la matrícula administrativa semestral. Aquí puedes revisar sus planes y oportunidades laborales.');
+      return this.preparePhoneticText('¡Hola! En el Instituto Cárcamo contamos con cuatro carreras técnicas de tres años. Al ser educación pública del Estado, no pagas mensualidades de estudio, únicamente la matrícula administrativa de cada semestre. Aquí puedes revisar sus planes y oportunidades laborales.');
     }
     if (fullContent.includes('negocios internacionales') || fullContent.includes('ani') || fullContent.includes('aduan')) {
       return this.preparePhoneticText('¡Qué excelente carrera! En Administración de Negocios Internacionales te preparas para trabajar en comercio exterior, logística portuaria y agencias de aduanas en el Puerto de Paita.');
@@ -1475,137 +1536,149 @@ class HercarBotApp {
       return this.preparePhoneticText('Con más de treinta y ocho años formando profesionales técnicos en Paita, el Instituto Hermanos Cárcamo brinda educación superior tecnológica pública de calidad.');
     }
 
-    // 2. Formulación humana general sin muletillas mecánicas ni fórmulas de lectura rígida
-    const saludos = [
-      '¡Hola! Qué gusto saludarte. ',
-      '¡Claro que sí! Con mucho gusto te ayudo. ',
-      '¡Hola! Te comparto con agrado esta información. ',
-      '¡Con mucho gusto te oriento! '
-    ];
-    const saludoElegido = saludos[Math.floor(Math.random() * saludos.length)];
-
-    let tema = '';
-    if (customTitle && customTitle.trim().length > 3) {
-      tema = customTitle.trim();
-    } else if (htmlOrText) {
-      const matchHeading = htmlOrText.match(/<h[3-6][^>]*>(.*?)<\/h[3-6]>/i) || 
-                           htmlOrText.match(/class=["'][^"']*(?:faq-custom-title|card-title)[^"']*["'][^>]*>(.*?)<\/(?:h\d|div|span)>/i);
-      if (matchHeading) {
-        tema = matchHeading[1].replace(/<[^>]*>/g, '').trim();
-      }
-    }
-
-    tema = tema
-      .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
-      .replace(/[«»""'']/g, '')
-      .replace(/^[—\-\:\.\s]+/, '')
-      .replace(/[—\-\:\.\s]+$/, '')
-      .trim();
-
-    if (tema && tema.length > 4 && tema.length < 50) {
-      return this.preparePhoneticText(`${saludoElegido}Aquí tienes las indicaciones oficiales sobre ${tema}.`);
-    }
-
-    return this.preparePhoneticText(`${saludoElegido}He preparado la información oficial para ayudarte en lo que necesitas.`);
+    // 2. Extraer respuesta real inteligente del contenido provisto
+    return this.extractSpokenAnswer(htmlOrText, customTitle);
   }
 
   preparePhoneticText(text) {
     if (!text) return '';
-    return text
-      // Educación pública / aclaración honesta de gratuidad
+    let p = text.toString();
+
+    // 1. Limpieza de honestidad académica y gratuidad pública
+    p = p
+      .replace(/Banco\s+de\s+la\s+Naci[oó]n\s*\(?\s*BN\s*\)?/gi, 'Banco de la Nación')
+      .replace(/Ministerio\s+de\s+Educaci[oó]n\s*\(?\s*MINEDU\s*\)?/gi, 'Ministerio de Educación')
+      .replace(/Seguro\s+Integral\s+de\s+Salud\s*\(?\s*SIS\s*\)?/gi, 'Seguro Integral de Salud')
+      .replace(/TUPA\s+Institucional/gi, 'Tupa institucional')
+      .replace(/aprox\.\s*/gi, 'aproximadamente ')
       .replace(/\b100%\s*gratuita\b/gi, 'pública y sin mensualidades')
       .replace(/\b100%\s*gratuito\b/gi, 'público y sin mensualidades')
       .replace(/\bcien por ciento gratuita\b/gi, 'pública y sin mensualidades')
       .replace(/\bcien por ciento gratuito\b/gi, 'público y sin mensualidades')
       .replace(/\btodas son gratuitas\b/gi, 'todas son carreras públicas sin costo de mensualidad')
       .replace(/\bcarreras gratuitas\b/gi, 'carreras públicas sin mensualidad')
+      .replace(/¡?\s*NO SE PAGAN PENSIONES NI MENSUALIDADES!?/gi, 'no se pagan pensiones ni mensualidades');
 
-      // Monedas y costos
-      .replace(/S\/\.?\s*250(\.00)?/gi, 'doscientos cincuenta soles')
-      .replace(/S\/\.?\s*180(\.00)?/gi, 'ciento ochenta soles')
-      .replace(/S\/\.?\s*150(\.00)?/gi, 'ciento cincuenta soles')
-      .replace(/S\/\.?\s*120(\.00)?/gi, 'ciento veinte soles')
-      .replace(/S\/\.?\s*50(\.00)?/gi, 'cincuenta soles')
-      .replace(/S\/\.?\s*25(\.00)?/gi, 'veinticinco soles')
-      .replace(/S\/\.?\s*20(\.00)?/gi, 'veinte soles')
-      .replace(/S\/\.?\s*15(\.00)?/gi, 'quince soles')
-      .replace(/S\/\.?\s*(\d+)(\.00)?/gi, '$1 soles')
+    // 2. Monedas y montos monetarios en soles
+    p = p
+      .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
+      .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
+      .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
+      .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
+      .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
+      .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
+      .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
+      .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
+      .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
+      .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
+      .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, '$1 soles');
 
-      // Cuenta del Banco de la Nación
+    // 3. Cuenta bancaria institucional y Códigos
+    p = p
       .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero uno dos nueve cuatro ocho')
-      // Código Interbancario (CCI)
-      .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno cero uno dos nueve cuatro ocho, guión cincuenta y dos')
+      .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno cero uno dos nueve cuatro ocho, cincuenta y dos')
+      .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
+      .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, dos uno uno, cero cuatro ocho')
+      .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
 
-      // Siglas y términos institucionales naturales
+    // 4. Horas y rangos de horario
+    p = p
+      .replace(/8:00\s*(?:a\.?m\.?|am)\b/gi, 'ocho de la mañana')
+      .replace(/8:30\s*(?:a\.?m\.?|am)\b/gi, 'ocho y media de la mañana')
+      .replace(/1:15\s*(?:p\.?m\.?|pm)\b/gi, 'una y quince de la tarde')
+      .replace(/12:00\s*(?:p\.?m\.?|pm)\b/gi, 'doce del mediodía')
+      .replace(/3:00\s*(?:p\.?m\.?|pm)\b/gi, 'tres de la tarde')
+      .replace(/7:40\s*(?:p\.?m\.?|pm)\b/gi, 'siete y cuarenta de la noche')
+      .replace(/(\d{1,2}):(\d{2})\s*(?:a\.?m\.?|am)\b/gi, (match, h, min) => {
+        const hNum = parseInt(h, 10);
+        const hText = hNum === 1 ? 'una' : `${hNum}`;
+        const mText = min === '00' ? '' : min === '30' ? ' y media' : min === '15' ? ' y quince' : ` y ${min}`;
+        return `${hText}${mText} de la mañana`;
+      })
+      .replace(/(\d{1,2}):(\d{2})\s*(?:p\.?m\.?|pm)\b/gi, (match, h, min) => {
+        const hNum = parseInt(h, 10);
+        const periodo = (hNum >= 7 && hNum < 12) ? 'de la noche' : 'de la tarde';
+        const hText = hNum === 1 ? 'una' : `${hNum}`;
+        const mText = min === '00' ? '' : min === '30' ? ' y media' : min === '15' ? ' y quince' : ` y ${min}`;
+        return `${hText}${mText} ${periodo}`;
+      });
+
+    // 5. Siglas, abreviaturas y términos institucionales naturales
+    p = p
       .replace(/\bIESTP\s+Hermanos\s+Cárcamo\b/gi, 'Instituto Hermanos Cárcamo')
       .replace(/\bIESTP\s+HERCAR\b/gi, 'Instituto Hermanos Cárcamo')
       .replace(/\bIESTP\b/gi, 'Instituto')
       .replace(/\bHERCAR\b/gi, 'Hercar')
-      .replace(/\bAPSTI\b/gi, 'A P S T I, Desarrollo de Sistemas y Software')
+      .replace(/\bHercarBot\s*IA\b/gi, 'Hercar Bot')
+      .replace(/\bHercarBot\b/gi, 'Hercar Bot')
+      .replace(/\bMINEDU\b/gi, 'Minedu')
+      .replace(/\bAPSTI\b/gi, 'Desarrollo de Sistemas y Software')
       .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
       .replace(/\bCONTA\b/gi, 'Contabilidad')
       .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
-      .replace(/\bDPI\b/gi, 'desaprobación por inasistencias')
-      .replace(/\bMINEDU\b/gi, 'Minedu')
-      .replace(/\bSUNAT\b/gi, 'Sunat')
-      .replace(/\bBN\b/gi, 'Banco de la Nación')
-      .replace(/\bCCI\b/gi, 'código interbancario')
-      .replace(/\bDNI\b/gi, 'de ene i')
-      .replace(/\bEFSRT\b/gi, 'prácticas preprofesionales')
-      .replace(/\bTPE\b/gi, 'Terminal Portuario Euroandino')
-      .replace(/\bHACCP\b/gi, 'Hassap')
-      .replace(/\bPRODUCE\b/gi, 'Ministerio de la Producción')
-      .replace(/\bSANIPES\b/gi, 'Sanipes')
-      .replace(/\bIMARPE\b/gi, 'Imarpe')
-      .replace(/\bPRONABEC\b/gi, 'Pronabec')
-      .replace(/\bICPNA\b/gi, 'Icpna')
+      .replace(/\bDPI\b/gi, 'límite de inasistencias')
       .replace(/\bFUT\b/gi, 'formulario de trámite')
-      .replace(/\bCEPRE\b/gi, 'Sepre')
       .replace(/\bTUPA\b/gi, 'Tupa')
       .replace(/\bSIS\b/gi, 'Seguro Integral de Salud')
-      .replace(/\bWhatsApp\b/gi, 'guasap')
+      .replace(/\bBN\b/gi, 'Banco de la Nación')
+      .replace(/\bCCI\b/gi, 'código interbancario')
+      .replace(/\bCEPRE\b/gi, 'Sepre')
+      .replace(/\bEFSRT\b/gi, 'prácticas preprofesionales')
+      .replace(/\bSANIPES\b/gi, 'Sanipes')
+      .replace(/\bIMARPE\b/gi, 'Imarpe')
+      .replace(/\bPRODUCE\b/gi, 'Ministerio de la Producción')
+      .replace(/\bPRONABEC\b/gi, 'Pronabec')
+      .replace(/\bICPNA\b/gi, 'Icpna')
+      .replace(/\bSUNAT\b/gi, 'Sunat')
+      .replace(/\bDNI\b/gi, 'de ene i')
       .replace(/\bPDF\b/gi, 'pe de efe')
-      .replace(/\bIA\b/gi, 'inteligencia artificial')
+      .replace(/\bWhatsApp\b/gi, 'guasap')
       .replace(/\bchatbot\b/gi, 'asistente virtual')
+      .replace(/\bIA\b/gi, 'inteligencia artificial')
       .replace(/Págalo\.pe/gi, 'Págalo punto pe')
-      .replace(/pagos\.ieshercar\.edu\.pe/gi, 'pagos punto ies hercar punto edu punto pe')
-      .replace(/ieshercar\.edu\.pe/gi, 'ies hercar punto edu punto pe')
+      .replace(/pagos\.ieshercar\.edu\.pe/gi, 'portal de pagos del instituto')
+      .replace(/ieshercar\.edu\.pe/gi, 'portal web oficial del instituto')
       .replace(/\bEC\b/g, 'evaluación continua')
       .replace(/\bEF\b/g, 'evaluación final')
       .replace(/\b70%/g, 'setenta por ciento')
       .replace(/\b30%/g, 'treinta por ciento')
       .replace(/\b100%/g, 'cien por ciento')
+      .replace(/R\.?M\.?\s*N[°º\.]*\s*232-87-ED/gi, 'Resolución Ministerial doscientos treinta y dos del año ochenta y siete')
       .replace(/R\.?M\.?\b/gi, 'Resolución Ministerial')
       .replace(/R\.?D\.?\b/gi, 'Resolución Directoral')
-      .replace(/\bEcon\.\b/gi, 'Economista')
       .replace(/\bLic\.\b/gi, 'Licenciado')
+      .replace(/\bEcon\.\b/gi, 'Economista')
       .replace(/\bCPC\b/gi, 'Contador Colegiado')
-      // Niveles de idioma
+      .replace(/\bMg\.\b/gi, 'Magíster')
+      .replace(/\bIng\.\b/gi, 'Ingeniero')
       .replace(/\bA1\b/g, 'A uno')
       .replace(/\bA2\b/g, 'A dos')
       .replace(/\bB1\b/g, 'B uno')
       .replace(/\bB2\b/g, 'B dos')
-      // Horarios y tiempo
-      .replace(/8:00\s*a\.?m\.?/gi, 'ocho de la mañana')
-      .replace(/1:15\s*p\.?m\.?/gi, 'una y quince de la tarde')
-      .replace(/3:00\s*p\.?m\.?/gi, 'tres de la tarde')
-      .replace(/(\d+):00\s*a\.?m\.?/gi, '$1 de la mañana')
-      .replace(/(\d+):00\s*p\.?m\.?/gi, '$1 de la tarde')
-      // Años y ordinales
       .replace(/2026/g, 'dos mil veintiséis')
       .replace(/2025/g, 'dos mil veinticinco')
       .replace(/1°/g, 'primer').replace(/2°/g, 'segundo').replace(/3°/g, 'tercer')
       .replace(/4°/g, 'cuarto').replace(/5°/g, 'quinto').replace(/6°/g, 'sexto')
       .replace(/N°|Nro\./gi, 'número')
-      // URLs y enlaces
-      .replace(/https?:\/\/\S+/g, 'enlace oficial')
-      // Caracteres especiales y pausas naturales
-      .replace(/[*#_`\[\]()]/g, '')
+      .replace(/https?:\/\/\S+/g, 'enlace oficial');
+
+    // 6. Limpieza profunda de puntuación y caracteres especiales para locución humana perfecta
+    p = p
       .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .replace(/\s*\/\s*/g, ' o ')
+      .replace(/[¿?¡!«»""“”'']/g, '')
+      .replace(/[*#_`\[\]()^~|•·▪]/g, '')
+      .replace(/\.\s*(a|hasta|y|o)\s+/gi, ' $1 ')
       .replace(/:\s+/g, ', ')
       .replace(/;\s*/g, ', ')
+      .replace(/,\s*,+/g, ', ')
       .replace(/\s+/g, ' ')
       .trim();
+
+    // 7. Capitalizar inicio de oraciones tras puntos
+    p = p.replace(/(^\s*|[.!?]\s+)([a-záéíóúñ])/g, (m, sep, char) => sep + char.toUpperCase());
+
+    return p;
   }
 
   speak(text) {
@@ -2145,52 +2218,26 @@ ${text}
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       window.deferredPwaPrompt = e;
-      this.showPwaInstallPrompt();
+      const btnHeaderPwa = document.getElementById('btn-pwa-install');
+      if (btnHeaderPwa) {
+        btnHeaderPwa.style.display = 'inline-flex';
+        btnHeaderPwa.onclick = async () => {
+          if (window.deferredPwaPrompt) {
+            window.deferredPwaPrompt.prompt();
+            const { outcome } = await window.deferredPwaPrompt.userChoice;
+            if (outcome === 'accepted') {
+              this.showToast('¡HercarBot se instaló con éxito en tu dispositivo!', 'success', 'bi-check-circle-fill');
+              btnHeaderPwa.style.display = 'none';
+            }
+            window.deferredPwaPrompt = null;
+          }
+        };
+      }
     });
   }
 
   showPwaInstallPrompt() {
-    if (localStorage.getItem('hercar_pwa_dismissed')) return;
-    const banner = document.createElement('div');
-    banner.className = 'hercar-pwa-banner animate-fade-in';
-    banner.style.cssText = `
-      position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
-      width: min(420px, 92vw); background: linear-gradient(135deg, #0a1f4d, #1e3a8a);
-      color: #fff; padding: 12px 16px; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.4);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.45); z-index: 9990; display: flex;
-      align-items: center; justify-content: space-between; gap: 10px;
-    `;
-    banner.innerHTML = `
-      <div class="d-flex align-items-center gap-2">
-        <img src="assets/img/logo-hercar.png" alt="App" style="width: 34px; height: 34px; border-radius: 8px; background: #fff; padding: 2px;">
-        <div>
-          <div style="font-weight: 700; font-size: 0.86rem;">📲 Instalar App HercarBot</div>
-          <div style="font-size: 0.72rem; color: #93c5fd;">Acceso directo en tu celular o PC</div>
-        </div>
-      </div>
-      <div class="d-flex gap-1">
-        <button id="pwa-install-btn" style="background:#0284c7; color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:0.78rem; font-weight:700; cursor:pointer;">Instalar</button>
-        <button id="pwa-close-btn" style="background:transparent; color:#94a3b8; border:none; font-size:1rem; cursor:pointer; padding:0 4px;">&times;</button>
-      </div>
-    `;
-    document.body.appendChild(banner);
-
-    document.getElementById('pwa-install-btn').onclick = async () => {
-      if (window.deferredPwaPrompt) {
-        window.deferredPwaPrompt.prompt();
-        const { outcome } = await window.deferredPwaPrompt.userChoice;
-        if (outcome === 'accepted') {
-          this.showToast('¡App instalada correctamente en tu dispositivo!', 'success', 'bi-check-circle-fill');
-        }
-        window.deferredPwaPrompt = null;
-      }
-      banner.remove();
-    };
-
-    document.getElementById('pwa-close-btn').onclick = () => {
-      localStorage.setItem('hercar_pwa_dismissed', 'true');
-      banner.remove();
-    };
+    // Se gestiona elegantemente desde el botón de la cabecera sin obstruir el chat
   }
 
   speakCurrent(btn) {
@@ -2607,6 +2654,7 @@ ${text}
     // 21. Búsqueda con Motor de Puntuación Semántica en FAQs Personalizadas y Oficiales
     const matchedFaq = this.findBestFaqMatch(norm);
     if (matchedFaq) {
+      const spokenFaq = this.extractSpokenAnswer(matchedFaq.respuesta, matchedFaq.titulo);
       this.appendBotMessage(`
         <div class="faq-card-custom">
           <h5 class="faq-custom-title text-primary"><i class="bi bi-info-circle-fill me-2"></i>${matchedFaq.titulo}</h5>
@@ -2617,7 +2665,7 @@ ${text}
             <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Pagos BN</button>
           </div>
         </div>
-      `, `Sobre ${matchedFaq.titulo}. Con gusto te oriento con todos los detalles oficiales de nuestra institución.`, [
+      `, spokenFaq, [
         { label: "🎓 4 Carreras Técnicas", prompt: "Ver todas las carreras" },
         { label: "💳 Pagos Banco de la Nación", prompt: "¿Cómo pago en el Banco de la Nación?" },
         { label: "📍 Sede y Contacto", prompt: "¿Dónde queda el instituto?" }
@@ -2656,7 +2704,8 @@ ${text}
             </div>
           </div>
         `;
-        this.appendBotMessage(cardHtml, "¡Listo! He analizado tu consulta a profundidad con asistencia inteligente para brindarte una orientación clara y precisa.");
+        const geminiSpoken = this.extractSpokenAnswer(geminiResponse);
+        this.appendBotMessage(cardHtml, geminiSpoken);
         this.logQuery('gemini_ai');
         return;
       }
@@ -5851,25 +5900,30 @@ class HercarTourGuide {
   initUI() {
     this.overlay = document.createElement('div');
     this.overlay.className = 'hercar-tour-overlay';
+    this.overlay.style.display = 'none';
+    this.overlay.style.pointerEvents = 'none';
+    this.overlay.onclick = () => this.end();
+
     this.card = document.createElement('div');
     this.card.className = 'hercar-tour-card';
+    this.card.style.display = 'none';
+
     document.body.appendChild(this.overlay);
     document.body.appendChild(this.card);
 
-    // Botón flotante "¿Cómo funciona? (Tour)"
-    this.fab = document.createElement('button');
-    this.fab.className = 'hercar-tour-fab';
-    this.fab.innerHTML = '<i class="bi bi-stars"></i> ✨ Tour Guiado';
-    this.fab.title = 'Ver recorrido interactivo con voz femenina suave y cariñosa';
-    this.fab.onclick = () => this.start();
-    document.body.appendChild(this.fab);
+    // Permitir cerrar el tour con la tecla Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isPlaying) {
+        this.end();
+      }
+    });
   }
 
   speakFemale(text) {
     if (!('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
+      const utter = new SpeechSynthesisUtterance(this.app.preparePhoneticText(text));
       const voices = window.speechSynthesis.getVoices();
       const femaleVoice = voices.find(v =>
         v.lang.startsWith('es') && /sabina|paloma|dalia|salma|paulina|elena|helena|monica|mónica|camila|lucia|lucía|soledad|francisca|andrea|laura|victoria|rosa|carmen|penelope|penélope|esperanza|conchita|valeria|mia|mujer|female|google español/i.test(v.name)
@@ -5886,7 +5940,10 @@ class HercarTourGuide {
   start() {
     this.currentStep = 0;
     this.isPlaying = true;
+    this.overlay.style.display = 'block';
+    this.overlay.style.pointerEvents = 'auto';
     this.overlay.classList.add('active');
+    this.card.style.display = 'block';
     this.card.classList.add('active');
     this.showStep();
   }
@@ -5897,7 +5954,10 @@ class HercarTourGuide {
     const target = document.querySelector(step.selector);
 
     this.card.innerHTML = `
-      <span class="hercar-tour-step-badge">Paso ${this.currentStep + 1} de ${this.steps.length} • 🔊 Voz Activa</span>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+        <span class="hercar-tour-step-badge">Paso ${this.currentStep + 1} de ${this.steps.length} • 🔊 Voz Activa</span>
+        <button id="tourCloseIconBtn" style="background:none; border:none; font-size:1.4rem; line-height:1; color:#94a3b8; cursor:pointer; padding:0 4px;" title="Cerrar tour">&times;</button>
+      </div>
       <h4 class="hercar-tour-title">${step.title}</h4>
       <p class="hercar-tour-desc">${step.desc}</p>
       <div class="hercar-tour-actions">
@@ -5910,6 +5970,9 @@ class HercarTourGuide {
         </div>
       </div>
     `;
+
+    const closeIcon = document.getElementById('tourCloseIconBtn');
+    if (closeIcon) closeIcon.onclick = () => this.end();
 
     if (target) {
       target.classList.add('hercar-tour-highlight');
@@ -5950,6 +6013,9 @@ class HercarTourGuide {
     try { window.speechSynthesis?.cancel(); } catch (e) {}
     this.overlay.classList.remove('active');
     this.card.classList.remove('active');
+    this.overlay.style.display = 'none';
+    this.overlay.style.pointerEvents = 'none';
+    this.card.style.display = 'none';
     document.querySelectorAll('.hercar-tour-highlight').forEach(el => el.classList.remove('hercar-tour-highlight'));
     localStorage.setItem('hercar_tour_seen_2026', 'true');
   }

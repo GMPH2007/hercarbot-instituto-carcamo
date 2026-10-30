@@ -1,5 +1,5 @@
 // Service Worker oficial de HercarBot IA (IESTP Hermanos Cárcamo - Paita)
-const CACHE_NAME = 'hercarbot-pwa-v2026';
+const CACHE_NAME = 'hercarbot-pwa-v2026-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -16,12 +16,12 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (e) => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -30,16 +30,34 @@ self.addEventListener('activate', (e) => {
       return Promise.all(
         keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
+// Estrategia Network-First: Siempre consulta primero al servidor para obtener las últimas actualizaciones
+// Si no hay conexión (offline), recurre al caché local como respaldo.
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+
+  const url = new URL(e.request.url);
+  // No interceptar peticiones externas a CDNs de Bootstrap o fuentes
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      return cached || fetch(e.request).catch(() => cached);
-    })
+    fetch(e.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(e.request);
+      })
   );
 });

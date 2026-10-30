@@ -9,6 +9,15 @@
  * - Base de conocimiento completa con comunicados y enlaces Drive
  */
 
+// Desbloqueo y purga inmediata de cualquier residuo previo en memoria o DOM
+(function() {
+  try {
+    document.querySelectorAll('.hercar-tour-overlay, .hercar-tour-card, .hercar-tour-fab, .hercar-pwa-banner, #hercar-tour-popover').forEach(function(el) {
+      el.remove();
+    });
+  } catch(e) {}
+})();
+
 class HercarBotApp {
   constructor() {
     this.storageStats = 'hercarbot_stats';
@@ -5899,19 +5908,6 @@ class HercarTourGuide {
   }
 
   initUI() {
-    this.overlay = document.createElement('div');
-    this.overlay.className = 'hercar-tour-overlay';
-    this.overlay.style.display = 'none';
-    this.overlay.style.pointerEvents = 'none';
-    this.overlay.onclick = () => this.end();
-
-    this.card = document.createElement('div');
-    this.card.className = 'hercar-tour-card';
-    this.card.style.display = 'none';
-
-    document.body.appendChild(this.overlay);
-    document.body.appendChild(this.card);
-
     // Permitir cerrar el tour con la tecla Escape
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isPlaying) {
@@ -5939,13 +5935,19 @@ class HercarTourGuide {
   }
 
   start() {
+    this.end(); // Limpiar cualquier estado anterior
     this.currentStep = 0;
     this.isPlaying = true;
-    this.overlay.style.display = 'block';
-    this.overlay.style.pointerEvents = 'auto';
-    this.overlay.classList.add('active');
-    this.card.style.display = 'block';
-    this.card.classList.add('active');
+
+    this.overlay = document.createElement('div');
+    this.overlay.className = 'hercar-tour-overlay active';
+    this.overlay.onclick = () => this.end();
+
+    this.card = document.createElement('div');
+    this.card.className = 'hercar-tour-card active';
+
+    document.body.appendChild(this.overlay);
+    document.body.appendChild(this.card);
     this.showStep();
   }
 
@@ -6012,11 +6014,14 @@ class HercarTourGuide {
   end() {
     this.isPlaying = false;
     try { window.speechSynthesis?.cancel(); } catch (e) {}
-    this.overlay.classList.remove('active');
-    this.card.classList.remove('active');
-    this.overlay.style.display = 'none';
-    this.overlay.style.pointerEvents = 'none';
-    this.card.style.display = 'none';
+    if (this.overlay) {
+      try { this.overlay.remove(); } catch(e) {}
+      this.overlay = null;
+    }
+    if (this.card) {
+      try { this.card.remove(); } catch(e) {}
+      this.card = null;
+    }
     document.querySelectorAll('.hercar-tour-highlight').forEach(el => el.classList.remove('hercar-tour-highlight'));
     localStorage.setItem('hercar_tour_seen_2026', 'true');
   }

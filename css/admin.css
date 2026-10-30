@@ -13,7 +13,14 @@
 }
 
 body.admin-body {
-  background-color: var(--admin-bg);
+  background-color: #eef4fb;
+  background-image: 
+    radial-gradient(at 10% 12%, rgba(2, 132, 199, 0.12) 0px, transparent 48%),
+    radial-gradient(at 90% 18%, rgba(37, 99, 235, 0.10) 0px, transparent 50%),
+    radial-gradient(at 50% 92%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+    linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px, 28px 28px;
   font-family: 'Jost', 'Segoe UI', system-ui, sans-serif;
   color: #1e293b;
   min-height: 100vh;
@@ -126,42 +133,44 @@ body.admin-body {
 
 /* Metric Cards */
 .metric-card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 14px;
-  padding: 22px;
-  border: 1px solid var(--admin-border);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 2px 6px rgba(15, 23, 42, 0.02);
   display: flex;
   align-items: center;
-  gap: 18px;
-  transition: transform 0.2s;
+  gap: 16px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .metric-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 30px -6px rgba(2, 132, 199, 0.16);
 }
 
 .metric-icon {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   flex-shrink: 0;
 }
 
 .metric-data h3 {
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 700;
   margin: 0;
   color: #0f172a;
 }
 
 .metric-data p {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: #64748b;
   margin: 0;
   font-weight: 500;
@@ -169,8 +178,18 @@ body.admin-body {
 
 /* Cards & Charts */
 .admin-card {
-  background: #fff;
-  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.bg-purple {
+  background-color: #7c3aed !important;
+}
   border: 1px solid var(--admin-border);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   margin-bottom: 25px;

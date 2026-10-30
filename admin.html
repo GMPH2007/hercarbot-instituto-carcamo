@@ -7,8 +7,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Panel Administrativo Oficial — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
   
-  <!-- Favicon Oficial -->
+  <!-- Favicon y PWA Manifest Oficial -->
   <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#13357b">
+  <meta name="apple-mobile-web-app-title" content="HercarAdmin">
+  <link rel="apple-touch-icon" href="assets/img/logo-hercar.png">
   
   <!-- Fuentes Institucionales -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,6 +57,12 @@
         <a href="#comunicados">
           <i class="bi bi-megaphone-fill"></i>
           <span>Tablón de Comunicados</span>
+        </a>
+      </li>
+      <li>
+        <a href="#tramites-fut">
+          <i class="bi bi-file-earmark-check-fill"></i>
+          <span>Trámites FUT & Mesa Partes</span>
         </a>
       </li>
       <li>
@@ -130,7 +140,7 @@
 
     <!-- TARJETAS DE MÉTRICAS EN TIEMPO REAL -->
     <section id="metricas" class="row g-2 g-sm-3 mb-4">
-      <div class="col-6 col-sm-6 col-md-4 col-xl-2-4">
+      <div class="col-6 col-md-4 col-xl-2">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(19, 53, 123, 0.12); color: #13357b;">
             <i class="bi bi-chat-dots-fill"></i>
@@ -142,7 +152,31 @@
         </div>
       </div>
 
-      <div class="col-6 col-sm-6 col-md-4 col-xl-2-4">
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+            <i class="bi bi-file-earmark-check-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-total-fut">18</h3>
+            <p>FUTs Generados</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-xl-2">
+        <div class="metric-card">
+          <div class="metric-icon" style="background: rgba(2, 132, 199, 0.12); color: #0284c7;">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <div class="metric-data">
+            <h3 id="stat-ciclo-cero">84</h3>
+            <p>Admisión & Ciclo Cero</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-xl-2">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">
             <i class="bi bi-compass-fill"></i>
@@ -154,38 +188,26 @@
         </div>
       </div>
 
-      <div class="col-6 col-sm-6 col-md-4 col-xl-2-4">
+      <div class="col-6 col-md-4 col-xl-2">
         <div class="metric-card">
-          <div class="metric-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+          <div class="metric-icon" style="background: rgba(139, 92, 246, 0.12); color: #8b5cf6;">
             <i class="bi bi-laptop-fill"></i>
           </div>
           <div class="metric-data">
             <h3 id="stat-top-carrera">APSTI</h3>
-            <p>Carrera Más Solicitada</p>
+            <p>Carrera Top Interés</p>
           </div>
         </div>
       </div>
 
-      <div class="col-6 col-sm-6 col-md-6 col-xl-2-4">
+      <div class="col-6 col-md-4 col-xl-2">
         <div class="metric-card">
           <div class="metric-icon" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
             <i class="bi bi-hand-thumbs-up-fill"></i>
           </div>
           <div class="metric-data">
             <h3 id="stat-satisfaccion">95%</h3>
-            <p>Satisfacción del Alumno</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-sm-6 col-md-6 col-xl-2-4">
-        <div class="metric-card">
-          <div class="metric-icon" style="background: rgba(239, 68, 68, 0.12); color: #ef4444;">
-            <i class="bi bi-question-circle-fill"></i>
-          </div>
-          <div class="metric-data">
-            <h3 id="stat-no-resueltas">0</h3>
-            <p>Dudas por Responder</p>
+            <p>Satisfacción Alumnos</p>
           </div>
         </div>
       </div>
@@ -251,6 +273,75 @@
               </tr>
             </thead>
             <tbody id="announcements-table-body">
+              <!-- Renderizado dinámicamente con admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECCIÓN: TRÁMITES FUT Y MESA DE PARTES VIRTUAL
+         ========================================== -->
+    <section id="tramites-fut" class="admin-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <div class="d-flex align-items-center gap-2">
+            <h5 class="mb-0"><i class="bi bi-file-earmark-check-fill me-2 text-success"></i> Trámites FUT Generados para Mesa de Partes</h5>
+            <span class="badge bg-success-subtle text-success fw-bold" id="badge-fut-count">0 Solicitudes</span>
+          </div>
+          <small class="text-muted">Registro en tiempo real de formatos únicos de trámite (FUT) generados por los alumnos para presentar ante la Dirección General.</small>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <button id="btn-export-fut-csv" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm" title="Exportar FUT a CSV">
+            <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Exportar Trámites (CSV)
+          </button>
+          <button id="btn-simulate-fut" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="background:#13357b; border-color:#13357b;" title="Simular Registro de Trámite">
+            <i class="bi bi-plus-lg me-1"></i> Simular Solicitud FUT
+          </button>
+          <button id="btn-clear-fut" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm" title="Limpiar Solicitudes">
+            <i class="bi bi-trash3 me-1"></i> Limpiar
+          </button>
+        </div>
+      </div>
+      <!-- Barra de Filtro y Búsqueda de FUTs -->
+      <div class="p-3 bg-light border-bottom d-flex gap-3 flex-wrap align-items-center justify-content-between">
+        <div class="input-group" style="max-width: 320px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="fut-filter-search" class="form-control border-start-0" placeholder="Buscar por alumno o DNI...">
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <label class="small text-muted fw-bold mb-0">Programa:</label>
+          <select id="fut-filter-carrera" class="form-select form-select-sm" style="width: 170px;">
+            <option value="all">Todas las carreras</option>
+            <option value="apsti">APSTI (TI)</option>
+            <option value="ani">Negocios Internac.</option>
+            <option value="conta">Contabilidad</option>
+            <option value="dpa">Pesquería (DPA)</option>
+          </select>
+          <label class="small text-muted fw-bold mb-0">Estado:</label>
+          <select id="fut-filter-estado" class="form-select form-select-sm" style="width: 170px;">
+            <option value="all">Todos los estados</option>
+            <option value="generado">Generado y Descargado</option>
+            <option value="radicado">Enviado a Mesa de Partes</option>
+          </select>
+        </div>
+      </div>
+      <div class="admin-card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-custom align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Fecha y Hora</th>
+                <th style="width: 220px;">Estudiante Solicitante</th>
+                <th style="width: 120px;">DNI / Celular</th>
+                <th style="width: 170px;">Programa de Estudios</th>
+                <th>Tipo de Trámite / Solicitud</th>
+                <th style="width: 160px;">Estado</th>
+                <th style="width: 130px;" class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="fut-table-body">
               <!-- Renderizado dinámicamente con admin.js -->
             </tbody>
           </table>
@@ -540,6 +631,35 @@
             <button type="submit" class="btn btn-primary rounded-pill px-4" style="background:#13357b; border-color:#13357b;">Publicar Comunicado</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL DE VISTA PREVIA DEL FUT (ADMIN)
+       ========================================== -->
+  <div class="modal fade" id="modalAdminFutView" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, #065f46 0%, #059669 100%);">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-pdf-fill fs-4 text-warning"></i>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="admin-fut-modal-title">Formato Único de Trámite (FUT) Oficial</h5>
+              <small class="text-white-50">IESTP "Hermanos Cárcamo" de Paita — Mesa de Partes</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4" id="admin-fut-modal-body">
+          <!-- Contenido del FUT para impresión o revisión -->
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary rounded-pill px-4" id="btn-admin-fut-print" style="background:#13357b; border-color:#13357b;">
+            <i class="bi bi-printer me-1"></i> Imprimir / Guardar PDF
+          </button>
+        </div>
       </div>
     </div>
   </div>

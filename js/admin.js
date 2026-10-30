@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAdminMobileSidebar();
   initDashboard();
   initAnnouncements();
+  initFutRequestsManager();
   initVocationalHistory();
   initFaqManager();
   initUnresolvedList();
@@ -157,10 +158,14 @@ function initAdminMobileSidebar() {
   if (btnClose) btnClose.addEventListener('click', closeSidebar);
   if (backdrop) backdrop.addEventListener('click', closeSidebar);
 
-  // Cerrar al hacer clic en un enlace del sidebar en mobile
+  // Manejo de clase activa y cierre al hacer clic en un enlace del sidebar en mobile
   const links = sidebar ? sidebar.querySelectorAll('.sidebar-menu a') : [];
   links.forEach(link => {
     link.addEventListener('click', () => {
+      if (link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
       if (window.innerWidth <= 992) {
         closeSidebar();
       }
@@ -282,6 +287,15 @@ function initDashboard() {
   // Actualizar tarjetas de métricas
   const elTotal = document.getElementById('stat-total-consultas');
   if (elTotal) elTotal.innerText = stats.totalConsultas || 0;
+
+  // Total trámites FUT generados
+  const futs = getFutRequests();
+  const elFut = document.getElementById('stat-total-fut');
+  if (elFut) elFut.innerText = futs.length;
+
+  // Consultas Ciclo Cero & Admisión
+  const elCiclo = document.getElementById('stat-ciclo-cero');
+  if (elCiclo) elCiclo.innerText = stats.cicloCeroConsultas || 84;
 
   // Total tests vocacionales
   const elTests = document.getElementById('stat-total-tests');
@@ -575,6 +589,404 @@ function renderAnnouncementsTable(filterText = '') {
       </td>
     </tr>
   `).join('');
+}
+
+/* ==========================================================================
+   GESTIÓN DE TRÁMITES FUT & MESA DE PARTES VIRTUAL
+   ========================================================================== */
+
+function getFutRequests() {
+  try {
+    const raw = localStorage.getItem('hercarbot_fut_requests');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {}
+
+  const defaultFuts = [
+    {
+      id: 'fut_101',
+      nombre: 'CASTILLO RUIZ, JEAN PIERRE',
+      dni: '73928104',
+      carrera: 'Arquitectura de Plataformas y Servicios de TI (APSTI)',
+      tramite: 'SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS (EFSRT)',
+      detalle: 'Para iniciar prácticas preprofesionales modulares en el área de sistemas del Terminal Portuario Euroandinos (TPE) de Paita.',
+      fecha: '28/02/2026, 11:20',
+      estado: 'Generado y Descargado'
+    },
+    {
+      id: 'fut_102',
+      nombre: 'MEDINA FLORES, ROSA ELENA',
+      dni: '74819205',
+      carrera: 'Administración de Negocios Internacionales',
+      tramite: 'SOLICITO CONSTANCIA DE ESTUDIOS / MATRÍCULA',
+      detalle: 'Constancia oficial de matrícula para trámite de Beca Continuidad PRONABEC 2026.',
+      fecha: '28/02/2026, 09:45',
+      estado: 'Enviado a Mesa de Partes'
+    },
+    {
+      id: 'fut_103',
+      nombre: 'CHUNGA PURIZACA, CARLOS ALBERTO',
+      dni: '72910384',
+      carrera: 'Contabilidad',
+      tramite: 'SOLICITO CERTIFICADO MODULAR / DE ESTUDIOS',
+      detalle: 'Certificación del Módulo I: Procesos Contables Básicos culminado con promedio aprobatorio.',
+      fecha: '27/02/2026, 16:10',
+      estado: 'Generado y Descargado'
+    },
+    {
+      id: 'fut_104',
+      nombre: 'PANTA VILLEGAS, LUIS MIGUEL',
+      dni: '75019283',
+      carrera: 'Desarrollo Pesquero y Acuícola',
+      tramite: 'SOLICITO CONVALIDACIÓN DE UNIDADES DIDÁCTICAS',
+      detalle: 'Convalidación de cursos modulares por traslado interno entre carreras.',
+      fecha: '26/02/2026, 12:35',
+      estado: 'Enviado a Mesa de Partes'
+    }
+  ];
+  localStorage.setItem('hercarbot_fut_requests', JSON.stringify(defaultFuts));
+  return defaultFuts;
+}
+
+function saveFutRequests(records) {
+  localStorage.setItem('hercarbot_fut_requests', JSON.stringify(records));
+}
+
+function initFutRequestsManager() {
+  renderFutTable();
+
+  const searchInput = document.getElementById('fut-filter-search');
+  const carreraSelect = document.getElementById('fut-filter-carrera');
+  const estadoSelect = document.getElementById('fut-filter-estado');
+
+  const handleFilter = () => {
+    const search = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    const carrera = carreraSelect ? carreraSelect.value : 'all';
+    const estado = estadoSelect ? estadoSelect.value : 'all';
+    renderFutTable(search, carrera, estado);
+  };
+
+  if (searchInput) searchInput.addEventListener('input', handleFilter);
+  if (carreraSelect) carreraSelect.addEventListener('change', handleFilter);
+  if (estadoSelect) estadoSelect.addEventListener('change', handleFilter);
+
+  const btnExport = document.getElementById('btn-export-fut-csv');
+  if (btnExport) btnExport.addEventListener('click', exportFutToCSV);
+
+  const btnSimulate = document.getElementById('btn-simulate-fut');
+  if (btnSimulate) btnSimulate.addEventListener('click', simulateFutRequest);
+
+  const btnClear = document.getElementById('btn-clear-fut');
+  if (btnClear) btnClear.addEventListener('click', clearFutRequests);
+}
+
+function renderFutTable(filterText = '', filterCarrera = 'all', filterEstado = 'all') {
+  const tbody = document.getElementById('fut-table-body');
+  const badge = document.getElementById('badge-fut-count');
+  const statFut = document.getElementById('stat-total-fut');
+  if (!tbody) return;
+
+  const records = getFutRequests();
+  if (badge) badge.innerText = `${records.length} Solicitudes`;
+  if (statFut) statFut.innerText = records.length;
+
+  const filtered = records.filter(r => {
+    const textMatch = !filterText ||
+      (r.nombre && r.nombre.toLowerCase().includes(filterText)) ||
+      (r.dni && r.dni.toLowerCase().includes(filterText)) ||
+      (r.tramite && r.tramite.toLowerCase().includes(filterText));
+
+    let carreraMatch = true;
+    if (filterCarrera !== 'all') {
+      const c = (r.carrera || '').toLowerCase();
+      if (filterCarrera === 'apsti') carreraMatch = c.includes('apsti') || c.includes('plataformas') || c.includes('ti');
+      else if (filterCarrera === 'ani') carreraMatch = c.includes('ani') || c.includes('negocios');
+      else if (filterCarrera === 'conta') carreraMatch = c.includes('conta');
+      else if (filterCarrera === 'dpa') carreraMatch = c.includes('pesquero') || c.includes('acuícola') || c.includes('dpa');
+    }
+
+    let estadoMatch = true;
+    if (filterEstado !== 'all') {
+      const est = (r.estado || '').toLowerCase();
+      if (filterEstado === 'generado') estadoMatch = est.includes('descargado') || est.includes('generado');
+      else if (filterEstado === 'radicado') estadoMatch = est.includes('mesa') || est.includes('partes') || est.includes('enviado');
+    }
+
+    return textMatch && carreraMatch && estadoMatch;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="text-center py-4 text-muted">
+          <i class="bi bi-file-earmark-x fs-3 d-block mb-1 text-secondary"></i>
+          ${filterText || filterCarrera !== 'all' || filterEstado !== 'all' ? 'No se encontraron solicitudes con los filtros aplicados.' : 'No hay solicitudes de trámite FUT registradas actualmente.'}
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(r => {
+    const isEnviado = (r.estado || '').toLowerCase().includes('mesa') || (r.estado || '').toLowerCase().includes('enviado');
+    let badgeCarreraClass = 'badge bg-secondary';
+    const cLower = (r.carrera || '').toLowerCase();
+    if (cLower.includes('apsti') || cLower.includes('ti')) badgeCarreraClass = 'badge bg-primary';
+    else if (cLower.includes('negocios') || cLower.includes('ani')) badgeCarreraClass = 'badge bg-success';
+    else if (cLower.includes('conta')) badgeCarreraClass = 'badge bg-purple text-white';
+    else if (cLower.includes('pesquer') || cLower.includes('dpa')) badgeCarreraClass = 'badge bg-info text-dark';
+
+    return `
+      <tr>
+        <td class="text-nowrap small text-muted"><i class="bi bi-calendar3 me-1"></i>${escapeHtml(r.fecha || '')}</td>
+        <td>
+          <div class="fw-bold text-dark">${escapeHtml(r.nombre || 'Estudiante')}</div>
+          <small class="text-muted" style="font-size:0.75rem;"><i class="bi bi-person-badge me-1"></i>Postulante / Alumno</small>
+        </td>
+        <td><span class="badge bg-light text-dark border font-monospace">${escapeHtml(r.dni || '--------')}</span></td>
+        <td><span class="${badgeCarreraClass}" style="font-size:0.75rem;">${escapeHtml(r.carrera || 'General')}</span></td>
+        <td>
+          <div class="small fw-semibold text-primary mb-1">${escapeHtml(r.tramite || 'Trámite TUPA')}</div>
+          <div class="small text-muted" style="font-size:0.76rem; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(r.detalle || '')}</div>
+        </td>
+        <td>
+          <span class="badge ${isEnviado ? 'bg-primary-subtle text-primary border border-primary-subtle' : 'bg-success-subtle text-success border border-success-subtle'} rounded-pill px-2 py-1">
+            <i class="bi ${isEnviado ? 'bi-send-check-fill' : 'bi-check-circle-fill'} me-1"></i>${escapeHtml(r.estado || 'Generado')}
+          </span>
+        </td>
+        <td class="text-center">
+          <div class="d-flex justify-content-center gap-1">
+            <button class="btn btn-sm btn-outline-primary" title="Ver Documento FUT" onclick="viewAdminFut('${r.id}')">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-sm ${isEnviado ? 'btn-outline-warning' : 'btn-outline-success'}" title="${isEnviado ? 'Marcar como Generado' : 'Marcar como Enviado a Mesa de Partes'}" onclick="toggleFutStatus('${r.id}')">
+              <i class="bi ${isEnviado ? 'bi-arrow-counterclockwise' : 'bi-send-check'}"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" title="Eliminar registro" onclick="deleteFutRequest('${r.id}')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function viewAdminFut(id) {
+  const records = getFutRequests();
+  const fut = records.find(r => r.id === id);
+  if (!fut) return;
+
+  const modalEl = document.getElementById('modalAdminFutView');
+  const bodyEl = document.getElementById('admin-fut-modal-body');
+  const printBtn = document.getElementById('btn-admin-fut-print');
+  if (!modalEl || !bodyEl) return;
+
+  bodyEl.innerHTML = `
+    <div class="border rounded-3 p-4 bg-white shadow-sm" style="font-family: Arial, sans-serif; color: #111;">
+      <div class="text-center border-bottom pb-3 mb-3">
+        <h4 class="fw-bold mb-1" style="color: #0a1f4d;">FORMATO ÚNICO DE TRÁMITE (FUT)</h4>
+        <h6 class="text-muted mb-0">IESTP "HERMANOS CÁRCAMO" DE PAITA — MESA DE PARTES VIRTUAL</h6>
+      </div>
+
+      <div class="p-3 mb-3 rounded-2 bg-light border">
+        <span class="text-muted fw-bold small text-uppercase d-block mb-1">I. Resumen del Pedido (Sumilla):</span>
+        <div class="fs-6 fw-bold text-primary">${escapeHtml(fut.tramite || '')}</div>
+      </div>
+
+      <div class="p-3 mb-3 rounded-2 bg-light border">
+        <span class="text-muted fw-bold small text-uppercase d-block mb-1">II. Dependencia o Autoridad a quien se dirige:</span>
+        <div class="small fw-semibold">DIRECCIÓN GENERAL DEL IESTP "HERMANOS CÁRCAMO" DE PAITA</div>
+      </div>
+
+      <div class="p-3 mb-3 rounded-2 bg-light border">
+        <span class="text-muted fw-bold small text-uppercase d-block mb-1">III. Datos del Solicitante:</span>
+        <div class="row g-2 small">
+          <div class="col-sm-6"><strong>Nombres y Apellidos:</strong> ${escapeHtml(fut.nombre || '')}</div>
+          <div class="col-sm-6"><strong>DNI / Celular:</strong> ${escapeHtml(fut.dni || '')}</div>
+          <div class="col-12 mt-2"><strong>Programa de Estudios:</strong> ${escapeHtml(fut.carrera || '')}</div>
+          <div class="col-12"><strong>Fecha de Solicitud:</strong> ${escapeHtml(fut.fecha || '')}</div>
+        </div>
+      </div>
+
+      <div class="p-3 mb-4 rounded-2 bg-light border">
+        <span class="text-muted fw-bold small text-uppercase d-block mb-1">IV. Fundamentación del Pedido:</span>
+        <div class="small text-secondary">${escapeHtml(fut.detalle || 'Por corresponder de acuerdo al Reglamento Institucional y TUPA vigente del IESTP Hermanos Cárcamo de Paita.')}</div>
+      </div>
+
+      <div class="text-center mt-4 pt-4 border-top">
+        <div class="d-inline-block border-top border-dark px-5 pt-2">
+          <strong>${escapeHtml(fut.nombre || '')}</strong><br>
+          <span class="small text-muted">Firma del Solicitante • DNI: ${escapeHtml(fut.dni || '')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (printBtn) {
+    printBtn.onclick = () => {
+      const win = window.open('', '_blank');
+      win.document.write(`
+        <html><head><title>FUT_${fut.dni || 'DOC'}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; color: #111; line-height: 1.5; }
+          .header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 24px; }
+          .box { border: 1px solid #333; padding: 12px; margin-bottom: 14px; border-radius: 6px; }
+          .label { font-weight: bold; font-size: 11px; color: #555; text-transform: uppercase; margin-bottom: 4px; }
+        </style></head><body>
+          <div class="header">
+            <h2>FORMATO ÚNICO DE TRÁMITE (FUT)</h2>
+            <h4>IESTP "HERMANOS CÁRCAMO" DE PAITA - MESA DE PARTES VIRTUAL</h4>
+          </div>
+          <div class="box"><div class="label">I. Resumen del Pedido (Sumilla):</div><p><b>${fut.tramite}</b></p></div>
+          <div class="box"><div class="label">II. Dependencia o Autoridad a quien se dirige:</div><p>DIRECCIÓN GENERAL DEL IESTP "HERMANOS CÁRCAMO" DE PAITA</p></div>
+          <div class="box">
+            <div class="label">III. Datos del Solicitante:</div>
+            <p><b>Apellidos y Nombres:</b> ${fut.nombre}<br>
+            <b>DNI / Contacto:</b> ${fut.dni}<br>
+            <b>Programa de Estudios:</b> ${fut.carrera}</p>
+          </div>
+          <div class="box"><div class="label">IV. Fundamentación del Pedido:</div><p>${fut.detalle || 'Por corresponder de acuerdo al Reglamento Institucional.'}</p></div>
+          <p style="margin-top:24px;">Paita, ${fut.fecha}</p>
+          <p style="margin-top:50px; text-align:center;">_________________________________________<br><b>${fut.nombre}</b><br>Firma del Solicitante</p>
+          <hr><p style="font-size:11px; text-align:center;">Documento oficial gestionado a través de HercarBot IA — Súbelo a: https://sistema.ieshercar.edu.pe/registro-tramite/</p>
+        </body></html>
+      `);
+      win.document.close();
+      win.print();
+    };
+  }
+
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+  modal.show();
+}
+
+function toggleFutStatus(id) {
+  const records = getFutRequests();
+  const fut = records.find(r => r.id === id);
+  if (!fut) return;
+
+  const current = (fut.estado || '').toLowerCase();
+  if (current.includes('mesa') || current.includes('enviado')) {
+    fut.estado = 'Generado y Descargado';
+    showAdminToast('Estado cambiado a: Generado y Descargado', 'info', 'bi-arrow-counterclockwise');
+  } else {
+    fut.estado = 'Enviado a Mesa de Partes';
+    showAdminToast('Solicitud marcada como: Enviada a Mesa de Partes', 'success', 'bi-send-check-fill');
+  }
+
+  saveFutRequests(records);
+  renderFutTable();
+}
+
+function deleteFutRequest(id) {
+  showAdminConfirm({
+    title: '¿Eliminar Solicitud FUT?',
+    message: 'Esta solicitud será removida del registro histórico administrativo.',
+    icon: 'bi-trash-fill',
+    isDanger: true,
+    btnText: 'Eliminar Registro',
+    onConfirm: () => {
+      let records = getFutRequests();
+      records = records.filter(r => r.id !== id);
+      saveFutRequests(records);
+      renderFutTable();
+      showAdminToast('Solicitud eliminada con éxito.', 'success', 'bi-trash');
+    }
+  });
+}
+
+function simulateFutRequest() {
+  const carreras = [
+    'Arquitectura de Plataformas y Servicios de TI (APSTI)',
+    'Administración de Negocios Internacionales',
+    'Contabilidad',
+    'Desarrollo Pesquero y Acuícola'
+  ];
+  const tramites = [
+    'SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS (EFSRT)',
+    'SOLICITO CONSTANCIA DE ESTUDIOS / MATRÍCULA',
+    'SOLICITO CERTIFICADO MODULAR / DE ESTUDIOS',
+    'SOLICITO RESERVA DE MATRÍCULA / REINGRESO'
+  ];
+  const nombres = [
+    'PACHERREZ SILVA, LUIS FERNANDO',
+    'VILLEGAS CARREÑO, MARIA ALEJANDRA',
+    'PURIZACA YOVERA, CRISTIAN JOEL',
+    'TUME CHUNGA, KATERINE DEL PILAR'
+  ];
+
+  const randomIdx = Math.floor(Math.random() * nombres.length);
+  const newFut = {
+    id: 'fut_' + Date.now(),
+    nombre: nombres[randomIdx],
+    dni: '7' + Math.floor(1000000 + Math.random() * 9000000),
+    carrera: carreras[randomIdx % carreras.length],
+    tramite: tramites[randomIdx % tramites.length],
+    detalle: 'Solicitud institucional procesada vía HercarBot IA para trámite regular.',
+    fecha: new Date().toLocaleString(),
+    estado: 'Generado y Descargado'
+  };
+
+  const records = getFutRequests();
+  records.unshift(newFut);
+  saveFutRequests(records);
+  renderFutTable();
+  showAdminToast(`Nueva solicitud simulada: ${newFut.nombre}`, 'success', 'bi-file-earmark-plus-fill');
+}
+
+function clearFutRequests() {
+  showAdminConfirm({
+    title: '¿Limpiar Todo el Historial de FUTs?',
+    message: 'Se borrarán las solicitudes actuales del historial.',
+    icon: 'bi-trash3-fill',
+    isDanger: true,
+    btnText: 'Limpiar Historial',
+    onConfirm: () => {
+      saveFutRequests([]);
+      renderFutTable();
+      showAdminToast('Historial de trámites FUT vaciado.', 'info', 'bi-check-circle');
+    }
+  });
+}
+
+function exportFutToCSV() {
+  const records = getFutRequests();
+  if (records.length === 0) {
+    showAdminToast('No hay solicitudes FUT para exportar.', 'info', 'bi-info-circle-fill');
+    return;
+  }
+
+  let csv = "\uFEFF"; // UTF-8 BOM
+  csv += "TRÁMITES FUT GENERADOS - IESTP HERMANOS CÁRCAMO (PAITA)\r\n";
+  csv += `Fecha de Exportación:;${new Date().toLocaleString()}\r\n`;
+  csv += "Mesa de Partes Virtual:;https://sistema.ieshercar.edu.pe/registro-tramite/\r\n\r\n";
+  csv += "ID;Fecha / Hora;Estudiante;DNI / Celular;Programa de Estudios;Trámite Solicitado;Fundamentación;Estado\r\n";
+
+  records.forEach(r => {
+    const id = r.id || '';
+    const fecha = r.fecha || '';
+    const nom = (r.nombre || '').replace(/"/g, '""');
+    const dni = (r.dni || '').replace(/"/g, '""');
+    const car = (r.carrera || '').replace(/"/g, '""');
+    const tra = (r.tramite || '').replace(/"/g, '""');
+    const det = (r.detalle || '').replace(/"/g, '""');
+    const est = (r.estado || '').replace(/"/g, '""');
+    csv += `"${id}";"${fecha}";"${nom}";"${dni}";"${car}";"${tra}";"${det}";"${est}"\r\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', `tramites_fut_hercar_${Date.now()}.csv`);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showAdminToast('Reporte de trámites FUT exportado exitosamente a CSV.', 'success', 'bi-file-earmark-spreadsheet-fill');
 }
 
 /* ==========================================================================
@@ -1434,6 +1846,24 @@ function exportToCSV() {
     });
   }
 
+  // Trámites FUT Generados para Mesa de Partes
+  const futs = getFutRequests();
+  if (futs && futs.length > 0) {
+    csvContent += "\r\n5. TRÁMITES FUT GENERADOS (MESA DE PARTES VIRTUAL)\r\n";
+    csvContent += "ID;Fecha / Hora;Estudiante;DNI / Celular;Carrera;Trámite Solicitado;Fundamentación;Estado\r\n";
+    futs.forEach(f => {
+      const id = f.id || '';
+      const fec = f.fecha || '';
+      const nom = (f.nombre || '').replace(/"/g, '""');
+      const dni = (f.dni || '').replace(/"/g, '""');
+      const car = (f.carrera || '').replace(/"/g, '""');
+      const tra = (f.tramite || '').replace(/"/g, '""');
+      const det = (f.detalle || '').replace(/"/g, '""');
+      const est = (f.estado || '').replace(/"/g, '""');
+      csvContent += `"${id}";"${fec}";"${nom}";"${dni}";"${car}";"${tra}";"${det}";"${est}"\r\n`;
+    });
+  }
+
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const downloadAnchor = document.createElement('a');
@@ -1473,10 +1903,12 @@ function resetDemoData() {
         ]
       };
       saveStats(defaultStats);
+      localStorage.removeItem('hercarbot_fut_requests');
       initDashboard();
+      renderFutTable();
       renderVocationalTable();
       renderUnresolvedList();
-      showAdminToast('Datos de demostración restablecidos correctamente para la evaluación.', 'success', 'bi-check-circle-fill');
+      showAdminToast('Datos de demostración y solicitudes FUT restablecidos correctamente.', 'success', 'bi-check-circle-fill');
     }
   });
 }
@@ -1500,4 +1932,10 @@ window.exportToCSV = exportToCSV;
 window.exportVocationalCSV = exportVocationalCSV;
 window.clearAllUnresolved = clearAllUnresolved;
 window.resetDemoData = resetDemoData;
+window.viewAdminFut = viewAdminFut;
+window.toggleFutStatus = toggleFutStatus;
+window.deleteFutRequest = deleteFutRequest;
+window.simulateFutRequest = simulateFutRequest;
+window.clearFutRequests = clearFutRequests;
+window.exportFutToCSV = exportFutToCSV;
 

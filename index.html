@@ -102,8 +102,11 @@
   }
   </script>
   
-  <!-- Favicon Oficial -->
+  <!-- Favicon y PWA Manifest Oficial -->
   <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-title" content="HercarBot">
+  <link rel="apple-touch-icon" href="assets/img/logo-hercar.png">
   
   <!-- Fuentes Premium -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -208,17 +211,19 @@
           <button id="btn-toggle-sidebar" class="sidebar-toggle-btn" title="Ocultar / Mostrar Barra Lateral">
             <i class="bi bi-layout-sidebar-inset"></i>
           </button>
-          <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo HERCAR" class="header-inst-logo">
-          <div>
-            <h4 class="d-flex align-items-center gap-2 mb-0">
-              <span class="header-title-text">HercarBot IA</span>
-              <span class="badge text-white fs-7" style="background: linear-gradient(135deg,#0f3380,#2563eb); font-weight:700; letter-spacing:0.2px;">
-                <i class="bi bi-shield-check me-1"></i>Oficial
+          <div class="header-brand-title d-flex align-items-center gap-2">
+            <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo HERCAR" class="header-inst-logo">
+            <div>
+              <h4 class="d-flex align-items-center gap-2 mb-0">
+                <span class="header-title-text">HercarBot IA</span>
+                <span class="badge text-white fs-7" style="background: linear-gradient(135deg,#0f3380,#2563eb); font-weight:700; letter-spacing:0.2px;">
+                  <i class="bi bi-shield-check me-1"></i>Oficial
+                </span>
+              </h4>
+              <span class="d-none d-sm-block small header-inst-sub" style="color:#94a3b8; font-size:0.73rem;">
+                IESTP "Hermanos Cárcamo" de Paita &bull; Información Oficial 2026
               </span>
-            </h4>
-            <span class="d-none d-sm-block small header-inst-sub" style="color:#94a3b8; font-size:0.73rem;">
-              IESTP "Hermanos Cárcamo" de Paita &bull; Información Oficial 2026
-            </span>
+            </div>
           </div>
         </div>
 
@@ -236,8 +241,8 @@
           <i class="bi bi-stop-circle-fill"></i><span class="d-none d-sm-inline ms-1">Detener Voz</span><span class="d-inline d-sm-none ms-1">Detener</span>
         </button>
 
-        <!-- Botones de Enlace Rápido en Header -->
-        <div class="header-quick-portals d-none d-xl-flex align-items-center gap-2">
+        <!-- Botones de Enlace Rápido en Header (Cinta Deslizable en Móvil) -->
+        <div class="header-quick-portals header-portals d-flex align-items-center gap-2">
           <a href="https://sistema.ieshercar.edu.pe/acceso" target="_blank" class="quick-portal-chip">
             <i class="bi bi-laptop text-primary"></i> Sistema Académico
           </a>
@@ -253,9 +258,18 @@
           <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank" class="quick-portal-chip">
             <i class="bi bi-file-earmark-text text-danger"></i> Mesa de Partes
           </a>
+          <a href="https://biblioteca.ieshercar.edu.pe/" target="_blank" class="quick-portal-chip">
+            <i class="bi bi-book-half text-purple"></i> Biblioteca Virtual
+          </a>
+          <button id="btn-open-fut-modal" class="quick-portal-chip btn-fut-chip" style="cursor:pointer; border:1px solid #0284c7; background:#e0f2fe; color:#0369a1; font-weight:700;">
+            <i class="bi bi-file-earmark-pdf-fill text-primary"></i> Generar FUT
+          </button>
         </div>
 
         <div class="header-controls d-flex align-items-center gap-1 gap-sm-2">
+          <button id="btn-toggle-widget-mode" class="control-btn" title="Alternar Vista Flotante sobre Web ieshercar.edu.pe">
+            <i class="bi bi-window-stack" style="color:#0284c7;"></i>
+          </button>
           <button id="btn-start-tour" class="control-btn" title="Mini Tour Guiado / Instrucciones">
             <i class="bi bi-compass-fill" style="color:#f59e0b;"></i>
           </button>
@@ -287,6 +301,15 @@
 
       <!-- Barra Inferior de Entrada (Input Form) -->
       <footer class="chat-input-container">
+        <!-- Barra de Consultas Rápidas de la Web Oficial -->
+        <div class="chat-quick-chips-bar mb-2" style="display:flex; gap:6px; overflow-x:auto; padding:2px 4px 6px; max-width:880px; margin:0 auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+          <button type="button" class="quick-chip-btn" id="chip-generar-fut" style="white-space:nowrap; border:1px solid #bae6fd; background:#f0f9ff; color:#0369a1; border-radius:99px; padding:5px 12px; font-size:0.76rem; font-weight:700; cursor:pointer;"><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i> 📝 Generar FUT para Mesa de Partes</button>
+          <button type="button" class="quick-chip-btn prompt-chip" data-prompt="¿Cuáles son los 3 módulos formativos y certificaciones de las 4 carreras?" style="white-space:nowrap; border:1px solid #bae6fd; background:#f0f9ff; color:#0369a1; border-radius:99px; padding:5px 12px; font-size:0.76rem; font-weight:600; cursor:pointer;"><i class="bi bi-award-fill me-1 text-warning"></i> 📦 Módulos de las 4 Carreras</button>
+          <button type="button" class="quick-chip-btn prompt-chip" data-prompt="¿Cómo es el Ciclo Cero PRE-HERCAR y modalidades de exoneración?" style="white-space:nowrap; border:1px solid #bae6fd; background:#f0f9ff; color:#0369a1; border-radius:99px; padding:5px 12px; font-size:0.76rem; font-weight:600; cursor:pointer;"><i class="bi bi-mortarboard-fill me-1 text-success"></i> 🎯 Ciclo Cero y Exonerados</button>
+          <button type="button" class="quick-chip-btn prompt-chip" data-prompt="¿Qué requisitos piden para Beca 18 y Beca Permanencia en el instituto?" style="white-space:nowrap; border:1px solid #bae6fd; background:#f0f9ff; color:#0369a1; border-radius:99px; padding:5px 12px; font-size:0.76rem; font-weight:600; cursor:pointer;"><i class="bi bi-star-fill me-1 text-primary"></i> 🏆 Becas PRONABEC</button>
+          <button type="button" class="quick-chip-btn prompt-chip" data-prompt="¿Cómo ingreso a la Biblioteca Virtual del instituto biblioteca.ieshercar.edu.pe?" style="white-space:nowrap; border:1px solid #bae6fd; background:#f0f9ff; color:#0369a1; border-radius:99px; padding:5px 12px; font-size:0.76rem; font-weight:600; cursor:pointer;"><i class="bi bi-book-half me-1 text-purple"></i> 📚 Biblioteca Virtual</button>
+        </div>
+
         <div class="input-box-wrapper position-relative">
           <!-- Bandeja Flotante de Autocompletado y Sugerencias en Vivo -->
           <div id="chat-suggestions-box" class="chat-suggestions-box" style="display: none;"></div>
@@ -549,6 +572,59 @@
           <button type="button" id="btn-reset-voice-defaults" class="btn btn-link btn-sm text-muted text-decoration-none p-0">Restablecer valores</button>
           <button type="button" class="btn btn-primary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Listo, Guardar</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Generador Oficial de FUT -->
+  <div class="hercar-fut-modal" id="modalGeneradorFUT" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="hercar-fut-box">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h3 class="mb-0"><i class="bi bi-file-earmark-text-fill text-primary me-2"></i>Generador Oficial de FUT</h3>
+        <button type="button" class="btn-close" id="btn-close-fut-modal" aria-label="Cerrar"></button>
+      </div>
+      <p>Completa tus datos para generar e imprimir tu <strong>Formato Único de Trámite (FUT)</strong> listo para presentar ante <strong>Mesa de Partes Virtual</strong> (sistema.ieshercar.edu.pe/registro-tramite/).</p>
+      
+      <div class="mb-2">
+        <label class="form-label small fw-bold text-muted mb-1">Apellidos y Nombres Completos:</label>
+        <input class="fut-field" id="futNombre" placeholder="Ej: CARLOS MENDOZA FLORES" required />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label small fw-bold text-muted mb-1">Número de DNI / Celular de Contacto:</label>
+        <input class="fut-field" id="futDni" placeholder="Ej: 72938491 / 969123456" required />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label small fw-bold text-muted mb-1">Programa de Estudios (Carrera):</label>
+        <select class="fut-field" id="futCarrera">
+          <option value="Arquitectura de Plataformas y Servicios de TI (APSTI)">💻 Arquitectura de Plataformas y TI (APSTI)</option>
+          <option value="Administración de Negocios Internacionales (ANI)">🚢 Administración de Negocios Internacionales (ANI)</option>
+          <option value="Contabilidad">📊 Contabilidad</option>
+          <option value="Desarrollo Pesquero y Acuícola (DPA)">🐟 Desarrollo Pesquero y Acuícola (DPA)</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label small fw-bold text-muted mb-1">Trámite Institucional que Solicitas:</label>
+        <select class="fut-field" id="futTramite">
+          <option value="SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS PREPROFESIONALES (EFSRT)">Carta de Presentación para Prácticas Preprofesionales (EFSRT)</option>
+          <option value="SOLICITO CONSTANCIA DE ESTUDIOS / MATRÍCULA OFICIAL">Constancia de Estudios / Matrícula Oficial</option>
+          <option value="SOLICITO CERTIFICADO MODULAR / EXPEDICIÓN DE DIPLOMA MODULAR">Certificado Modular (Módulo I, II o III)</option>
+          <option value="SOLICITO RESERVA DE MATRÍCULA / REINGRESO SEMESTRAL">Reserva de Matrícula / Reingreso</option>
+          <option value="SOLICITO CONVALIDACIÓN DE UNIDADES DIDÁCTICAS">Convalidación de Unidades Didácticas</option>
+          <option value="SOLICITO DUPLICADO DE CARNÉ DE MEDIO PASAJE">Duplicado de Carné de Medio Pasaje</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-bold text-muted mb-1">Fundamentación Breve de la Solicitud (Opcional):</label>
+        <textarea class="fut-field" id="futDetalle" rows="2" placeholder="Por cumplir con los requisitos académicos del periodo lectivo en curso según el TUPA institucional..."></textarea>
+      </div>
+
+      <div class="fut-actions">
+        <button type="button" class="fut-btn secondary" id="futCloseBtn">Cancelar</button>
+        <button type="button" class="fut-btn primary" id="futPrintBtn"><i class="bi bi-printer-fill me-1"></i> Generar e Imprimir FUT (PDF)</button>
       </div>
     </div>
   </div>

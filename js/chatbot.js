@@ -40,6 +40,7 @@ class HercarBotApp {
     this.initConversations();
     this.initAutocomplete();
     this.initTour();
+    this.initPwaServiceWorker();
   }
 
   normalizeText(str) {
@@ -546,7 +547,7 @@ class HercarBotApp {
   }
 
   /* ==========================================================================
-     INICIALIZACIÓN DEL MINI TOUR GUIADO INTERACTIVO
+     INICIALIZACIÓN DEL MINI TOUR GUIADO INTERACTIVO Y HERRAMIENTAS WEB
      ========================================================================== */
 
   initTour() {
@@ -564,12 +565,180 @@ class HercarBotApp {
       });
     }
 
+    // Alternador de Modo Widget Flotante sobre ieshercar.edu.pe
+    const btnWidget = document.getElementById('btn-toggle-widget-mode');
+    if (btnWidget) {
+      btnWidget.addEventListener('click', () => {
+        document.body.classList.toggle('hercar-widget-mode');
+        const isWidget = document.body.classList.contains('hercar-widget-mode');
+        this.showToast(isWidget ? '🗗 Modo Burbuja activado (Vista sobre portal ieshercar.edu.pe)' : 'Modo Pantalla Completa restaurado', 'info', 'bi-window-stack');
+      });
+    }
+
+    // Modal de Generación de FUT Oficial
+    const btnOpenFut = document.getElementById('btn-open-fut-modal');
+    if (btnOpenFut) {
+      btnOpenFut.addEventListener('click', () => this.openFutModal());
+    }
+
+    const chipFut = document.getElementById('chip-generar-fut');
+    if (chipFut) {
+      chipFut.addEventListener('click', () => this.openFutModal());
+    }
+
+    const btnCloseFut1 = document.getElementById('btn-close-fut-modal');
+    if (btnCloseFut1) {
+      btnCloseFut1.addEventListener('click', () => this.closeFutModal());
+    }
+
+    const btnCloseFut2 = document.getElementById('futCloseBtn');
+    if (btnCloseFut2) {
+      btnCloseFut2.addEventListener('click', () => this.closeFutModal());
+    }
+
+    const btnPrintFut = document.getElementById('futPrintBtn');
+    if (btnPrintFut) {
+      btnPrintFut.addEventListener('click', () => this.printFutDocument());
+    }
+
     // Auto-iniciar tour en la primera visita para que el usuario conozca todas las funciones
-    if (!localStorage.getItem('hercarbot_tour_completed')) {
+    if (!localStorage.getItem('hercar_tour_seen_2026')) {
       setTimeout(() => {
         if (this.tourGuide) this.tourGuide.start();
       }, 1200);
     }
+  }
+
+  openFutModal() {
+    const modal = document.getElementById('modalGeneradorFUT');
+    if (modal) modal.classList.add('open');
+  }
+
+  closeFutModal() {
+    const modal = document.getElementById('modalGeneradorFUT');
+    if (modal) modal.classList.remove('open');
+  }
+
+  printFutDocument() {
+    const nombre = (document.getElementById('futNombre')?.value || 'ESTUDIANTE HERCAR').trim();
+    const dni = (document.getElementById('futDni')?.value || '--------').trim();
+    const carrera = document.getElementById('futCarrera')?.value || 'APSTI';
+    const tramite = document.getElementById('futTramite')?.value || 'SOLICITUD INSTITUCIONAL';
+    const detalle = (document.getElementById('futDetalle')?.value || 'Por corresponder de acuerdo al Reglamento Institucional y TUPA vigente del IESTP Hermanos Cárcamo de Paita.').trim();
+    const fecha = new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    // Guardar registro de solicitud para el Panel Administrativo (admin.html)
+    try {
+      const records = JSON.parse(localStorage.getItem('hercarbot_fut_requests') || '[]');
+      records.unshift({
+        id: 'fut_' + Date.now(),
+        nombre,
+        dni,
+        carrera,
+        tramite,
+        fecha: new Date().toLocaleString(),
+        estado: 'Generado y Descargado'
+      });
+      localStorage.setItem('hercarbot_fut_requests', JSON.stringify(records.slice(0, 50)));
+    } catch (e) {}
+
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>FUT Oficial - ${nombre}</title>
+          <style>
+            body { font-family: Arial, Helvetica, sans-serif; padding: 40px; color: #111; line-height: 1.5; max-width: 800px; margin: 0 auto; }
+            .header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 24px; }
+            .inst-name { font-size: 14px; font-weight: bold; color: #1e3a8a; margin: 0; text-transform: uppercase; }
+            .fut-title { font-size: 18px; font-weight: bold; margin: 6px 0; color: #0f172a; }
+            .box { border: 1px solid #334155; padding: 12px 14px; margin-bottom: 14px; border-radius: 6px; }
+            .label { font-weight: bold; font-size: 11px; color: #475569; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+            .val { font-size: 13.5px; margin: 0; }
+            .firma-box { margin-top: 60px; text-align: center; }
+            .firma-line { display: inline-block; width: 280px; border-top: 1px solid #000; padding-top: 6px; font-weight: bold; }
+            .footer-note { margin-top: 40px; padding-top: 12px; border-top: 1px dashed #94a3b8; font-size: 10.5px; color: #64748b; text-align: center; }
+            @media print { body { padding: 20px; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <p class="inst-name">Ministerio de Educación &bull; DRE Piura</p>
+            <p class="inst-name" style="font-size: 15px; color: #0f2d6c;">IESTP "HERMANOS CÁRCAMO" DE PAITA</p>
+            <div class="fut-title">FORMATO ÚNICO DE TRÁMITE (FUT)</div>
+            <small style="color: #64748b;">Mesa de Partes Virtual &bull; Resolución Ministerial N° 232-87-ED</small>
+          </div>
+
+          <div class="box">
+            <div class="label">I. Resumen del Pedido (Sumilla):</div>
+            <p class="val"><strong>${tramite}</strong></p>
+          </div>
+
+          <div class="box">
+            <div class="label">II. Dependencia o Autoridad a quien se dirige:</div>
+            <p class="val"><strong>DIRECCIÓN GENERAL DEL IESTP "HERMANOS CÁRCAMO" DE PAITA</strong></p>
+          </div>
+
+          <div class="box">
+            <div class="label">III. Datos del Solicitante:</div>
+            <p class="val">
+              <strong>Apellidos y Nombres:</strong> ${nombre}<br>
+              <strong>DNI / Celular de Contacto:</strong> ${dni}<br>
+              <strong>Programa de Estudios (Carrera):</strong> ${carrera}
+            </p>
+          </div>
+
+          <div class="box">
+            <div class="label">IV. Fundamentación del Pedido:</div>
+            <p class="val">${detalle}</p>
+          </div>
+
+          <p style="margin-top: 25px; font-size: 13px;">Paita, ${fecha}</p>
+
+          <div class="firma-box">
+            <div class="firma-line">
+              ${nombre}<br>
+              <span style="font-size: 11px; font-weight: normal; color: #475569;">DNI N° ${dni} &bull; Solicitante</span>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            Documento generado digitalmente por el Asistente Virtual <strong>HercarBot IA</strong>.<br>
+            Adjunta este documento firmado junto a tu comprobante de tasa del Banco de la Nación en: 
+            <strong>https://sistema.ieshercar.edu.pe/registro-tramite/</strong>
+          </div>
+        </body>
+        </html>
+      `);
+      win.document.close();
+      win.focus();
+      setTimeout(() => { win.print(); }, 350);
+    }
+
+    this.closeFutModal();
+    this.showToast('¡FUT generado con éxito! Puedes imprimirlo o guardarlo como PDF.', 'success', 'bi-file-earmark-check-fill');
+
+    const chatMsgHtml = `
+      <div class="p-3 bg-white rounded-3 border shadow-sm">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>FUT Generado</span>
+          <strong>${tramite}</strong>
+        </div>
+        <p class="small text-muted mb-2">Tu Formato Único de Trámite para <strong>${nombre}</strong> (${carrera}) ha sido emitido con éxito.</p>
+        <div class="interactive-button-grid">
+          <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank" class="interactive-btn text-decoration-none">
+            <i class="bi bi-send-check text-primary"></i> Subir a Mesa de Partes Virtual
+          </a>
+          <button class="interactive-btn" data-chat-action="abrir_generador_fut">
+            <i class="bi bi-pencil-square text-warning"></i> Generar otro FUT
+          </button>
+        </div>
+      </div>
+    `;
+    this.appendBotMessage(chatMsgHtml, `He generado tu Formato Único de Trámite para ${tramite}. Recuerda subirlo firmado a través de la Mesa de Partes Virtual.`);
   }
 
   /* ==========================================================================
@@ -699,6 +868,7 @@ class HercarBotApp {
               <div class="toolbar-actions">
                 <button class="tool-btn" title="Copiar texto" onclick="hercarBotApp.copyText(this)"><i class="bi bi-clipboard"></i></button>
                 <button class="tool-btn" title="Escuchar en voz alta" onclick="hercarBotApp.speakCurrent(this)"><i class="bi bi-volume-up"></i></button>
+                <button class="tool-btn text-success" title="Enviar datos a mi WhatsApp" onclick="hercarBotApp.shareToWhatsApp(this)"><i class="bi bi-whatsapp"></i></button>
               </div>
             </div>
           </div>
@@ -1001,9 +1171,9 @@ class HercarBotApp {
   initVoiceSynthesis() {
     if (!('speechSynthesis' in window)) return;
 
-    // Cargar configuraciones guardadas de voz humanizada (priorizando tono cálido y femenino por defecto)
-    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.98;
-    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.08;
+    // Cargar configuraciones guardadas de voz humanizada (tono dulce, suave, femenino y cariñoso por defecto)
+    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.94;
+    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.10;
     this.voiceStyle = localStorage.getItem('hercar_voice_style') || 'calida';
     this.voiceURI = localStorage.getItem('hercar_voice_uri') || null;
 
@@ -1013,52 +1183,55 @@ class HercarBotApp {
       const name = (v.name || '').toLowerCase();
       const lang = (v.lang || '').toLowerCase();
 
-      // Detección exhaustiva de voces FEMENINAS para máxima calidez y belleza vocal
+      // Detección exhaustiva de voces FEMENINAS para máxima calidez, dulzura y belleza vocal
       const isFemale = name.includes('female') || name.includes('mujer') || 
                        name.includes('paloma') || name.includes('dalia') || name.includes('salma') || 
                        name.includes('sabina') || name.includes('paulina') || name.includes('elena') || 
-                       name.includes('helena') || name.includes('monica') || name.includes('camila') || 
-                       name.includes('sofia') || name.includes('andrea') || name.includes('laura') || 
-                       name.includes('victoria') || name.includes('lucia') || name.includes('elvira') || 
+                       name.includes('helena') || name.includes('monica') || name.includes('mónica') || 
+                       name.includes('camila') || name.includes('sofia') || name.includes('sofía') || 
+                       name.includes('andrea') || name.includes('laura') || name.includes('lucia') || 
+                       name.includes('lucía') || name.includes('victoria') || name.includes('elvira') || 
                        name.includes('rosa') || name.includes('marta') || name.includes('marina') || 
                        name.includes('carmen') || name.includes('francisca') || name.includes('penelope') || 
-                       name.includes('zira') || name.includes('conchita') || name.includes('esperanza') ||
+                       name.includes('penélope') || name.includes('zira') || name.includes('conchita') || 
+                       name.includes('esperanza') || name.includes('valeria') || name.includes('mia') ||
                        (name.includes('google') && !name.includes('male') && !name.includes('hombre'));
 
       // Detección de voces masculinas para penalizarlas (priorizando la asesora femenina solicitada)
       const isMale = name.includes('male') || name.includes('hombre') || 
-                     name.includes('jorge') || name.includes('alvaro') || name.includes('raul') || 
-                     name.includes('pablo') || name.includes('david') || name.includes('carlos') || 
-                     name.includes('miguel') || name.includes('antonio') || name.includes('manuel') || 
-                     name.includes('enrique') || name.includes('jose') || name.includes('pedro') || 
+                     name.includes('jorge') || name.includes('alvaro') || name.includes('álvaro') || 
+                     name.includes('raul') || name.includes('raúl') || name.includes('pablo') || 
+                     name.includes('david') || name.includes('carlos') || name.includes('miguel') || 
+                     name.includes('antonio') || name.includes('manuel') || name.includes('enrique') || 
+                     name.includes('jose') || name.includes('josé') || name.includes('pedro') || 
                      name.includes('luis') || name.includes('fernando') || name.includes('mario') || 
                      name.includes('diego') || name.includes('sergio') || name.includes('javier');
 
-      if (isFemale) score += 220;
-      if (isMale) score -= 250;
+      if (isFemale) score += 240;
+      if (isMale) score -= 280;
 
       // Máxima prioridad: Voces Neuronales / Naturales de Microsoft Edge / Azure / Windows 11
-      if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) score += 180;
-      else if (name.includes('online')) score += 90;
+      if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) score += 190;
+      else if (name.includes('online')) score += 95;
 
       // Alta prioridad: Voces fluidas y suaves de Google Chrome / Android
-      if (name.includes('google')) score += 140;
+      if (name.includes('google')) score += 150;
 
       // Voces femeninas de altísima fidelidad natural
-      if (name.includes('paloma') || name.includes('dalia') || name.includes('salma')) score += 100;
-      if (name.includes('sabina') || name.includes('paulina') || name.includes('elena') || name.includes('helena')) score += 80;
-      if (name.includes('monica') || name.includes('laura') || name.includes('camila') || name.includes('sofia')) score += 60;
+      if (name.includes('sabina') || name.includes('paloma') || name.includes('dalia') || name.includes('salma')) score += 110;
+      if (name.includes('paulina') || name.includes('elena') || name.includes('helena') || name.includes('mónica') || name.includes('monica')) score += 90;
+      if (name.includes('laura') || name.includes('camila') || name.includes('lucia') || name.includes('lucía') || name.includes('sofia')) score += 70;
 
       // Preferencia regional: Perú / Latinoamérica / Neutro
-      if (lang === 'es-pe') score += 50;
-      else if (lang === 'es-419' || lang.includes('419')) score += 45;
-      else if (lang === 'es-mx') score += 35;
-      else if (lang === 'es-us') score += 30;
+      if (lang === 'es-pe') score += 55;
+      else if (lang === 'es-419' || lang.includes('419')) score += 50;
+      else if (lang === 'es-mx') score += 40;
+      else if (lang === 'es-us') score += 35;
       else if (lang === 'es-co' || lang === 'es-cl' || lang === 'es-ar') score += 25;
       else if (lang.startsWith('es')) score += 15;
 
       // Penalizar voces robóticas de escritorio clásicas (SAPI5 antiguas)
-      if (name.includes('desktop')) score -= 40;
+      if (name.includes('desktop')) score -= 50;
 
       return score;
     };
@@ -1190,20 +1363,20 @@ class HercarBotApp {
 
       btnWarm.addEventListener('click', () => {
         this.voiceStyle = 'calida';
-        this.voicePitch = 1.08;
-        this.voiceRate = 0.98;
+        this.voicePitch = 1.10;
+        this.voiceRate = 0.94;
         localStorage.setItem('hercar_voice_style', 'calida');
-        localStorage.setItem('hercar_voice_pitch', 1.08);
-        localStorage.setItem('hercar_voice_rate', 0.98);
+        localStorage.setItem('hercar_voice_pitch', 1.10);
+        localStorage.setItem('hercar_voice_rate', 0.94);
         if (speedRange && speedLabel) {
-          speedRange.value = 0.98;
-          speedLabel.textContent = '0.98x (Natural Cálida)';
+          speedRange.value = 0.94;
+          speedLabel.textContent = '0.94x (Suave y Cariñosa 🌸)';
         }
         btnWarm.classList.add('active', 'btn-primary');
         btnWarm.classList.remove('btn-outline-primary');
         btnPro.classList.remove('active', 'btn-primary');
         btnPro.classList.add('btn-outline-secondary');
-        this.showToast('Estilo activado: Asesora Académica Cálida 🌸', 'success', 'bi-heart-fill');
+        this.showToast('Voz activada: Asesora Femenina Suave y Cariñosa 🌸', 'success', 'bi-heart-fill');
       });
 
       btnPro.addEventListener('click', () => {
@@ -1229,7 +1402,7 @@ class HercarBotApp {
       btnTest.addEventListener('click', () => {
         const saludoPrueba = this.voiceStyle === 'pro'
           ? 'Estimado estudiante o postulante. Soy tu asesor institucional del Instituto Hermanos Cárcamo de Paita. Es un placer orientarte en tu formación técnica profesional.'
-          : '¡Hola! Qué alegría saludarte. Soy tu asesora del Instituto Hermanos Cárcamo de Paita. Dime, ¿en qué carrera o trámite te puedo orientar hoy? Con todo gusto te ayudo.';
+          : '¡Hola, qué alegría saludarte! Soy tu asesora virtual del Instituto Hermanos Cárcamo de Paita. Con mucho cariño te oriento en tus carreras, trámites y pagos. ¿En qué te puedo ayudar hoy, corazón?';
         this.speak(saludoPrueba);
       });
     }
@@ -1240,16 +1413,16 @@ class HercarBotApp {
         localStorage.removeItem('hercar_voice_rate');
         localStorage.removeItem('hercar_voice_pitch');
         localStorage.removeItem('hercar_voice_style');
-        this.voiceRate = 0.98;
-        this.voicePitch = 1.08;
+        this.voiceRate = 0.94;
+        this.voicePitch = 1.10;
         this.voiceStyle = 'calida';
         this.voiceURI = null;
         if (speedRange && speedLabel) {
-          speedRange.value = 0.98;
-          speedLabel.textContent = '0.98x (Natural)';
+          speedRange.value = 0.94;
+          speedLabel.textContent = '0.94x (Suave y Cariñosa)';
         }
         this.initVoiceSynthesis();
-        this.showToast('Valores de voz restablecidos a la Asesora Femenina Cálida recomendada.', 'info', 'bi-arrow-counterclockwise');
+        this.showToast('Valores de voz restablecidos a la Asesora Femenina Suave y Cariñosa 🌸', 'info', 'bi-arrow-counterclockwise');
       });
     }
   }
@@ -1847,6 +2020,9 @@ class HercarBotApp {
             <button class="tool-btn" title="Escuchar en voz alta" onclick="hercarBotApp.speakCurrent(this)">
               <i class="bi bi-volume-up"></i>
             </button>
+            <button class="tool-btn text-success" title="Enviar datos a mi WhatsApp" onclick="hercarBotApp.shareToWhatsApp(this)">
+              <i class="bi bi-whatsapp"></i>
+            </button>
             <button class="tool-btn" title="Respuesta útil" onclick="hercarBotApp.rate(this, 1)">
               <i class="bi bi-hand-thumbs-up"></i>
             </button>
@@ -1928,6 +2104,93 @@ class HercarBotApp {
       this.showToast(`Selecciona y copia: ${text}`, 'info', 'bi-info-circle');
     }
     document.body.removeChild(tempInput);
+  }
+
+  shareToWhatsApp(btn) {
+    try {
+      const bubble = btn.closest('.msg-bubble-bot');
+      if (!bubble) return;
+      const body = bubble.querySelector('.bot-content-body');
+      let text = body ? body.innerText : '';
+      text = text.replace(/\n{3,}/g, '\n\n').trim();
+
+      const waMsg = 
+`🏛️ *IESTP Hermanos Cárcamo - Paita*
+🤖 *HercarBot IA — Asistente Oficial*
+━━━━━━━━━━━━━━━━━━
+${text}
+━━━━━━━━━━━━━━━━━━
+📌 *Cuenta Banco de la Nación:* 00-631-012948
+💳 *Código CCI:* 018-631-000631012948-52
+📍 *Campus Central:* Av. Miguel Grau Mz. A Lt. 01, Paita Alta
+🌐 *Portal Web Oficial:* https://ieshercar.edu.pe/`;
+
+      const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
+      window.open(waUrl, '_blank');
+      this.showToast('Abriendo WhatsApp con los datos del trámite y cuenta bancaria...', 'success', 'bi-whatsapp');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  initPwaServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('HercarBot PWA Service Worker registrado:', reg.scope);
+        }).catch(() => {});
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window.deferredPwaPrompt = e;
+      this.showPwaInstallPrompt();
+    });
+  }
+
+  showPwaInstallPrompt() {
+    if (localStorage.getItem('hercar_pwa_dismissed')) return;
+    const banner = document.createElement('div');
+    banner.className = 'hercar-pwa-banner animate-fade-in';
+    banner.style.cssText = `
+      position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
+      width: min(420px, 92vw); background: linear-gradient(135deg, #0a1f4d, #1e3a8a);
+      color: #fff; padding: 12px 16px; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.45); z-index: 9990; display: flex;
+      align-items: center; justify-content: space-between; gap: 10px;
+    `;
+    banner.innerHTML = `
+      <div class="d-flex align-items-center gap-2">
+        <img src="assets/img/logo-hercar.png" alt="App" style="width: 34px; height: 34px; border-radius: 8px; background: #fff; padding: 2px;">
+        <div>
+          <div style="font-weight: 700; font-size: 0.86rem;">📲 Instalar App HercarBot</div>
+          <div style="font-size: 0.72rem; color: #93c5fd;">Acceso directo en tu celular o PC</div>
+        </div>
+      </div>
+      <div class="d-flex gap-1">
+        <button id="pwa-install-btn" style="background:#0284c7; color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:0.78rem; font-weight:700; cursor:pointer;">Instalar</button>
+        <button id="pwa-close-btn" style="background:transparent; color:#94a3b8; border:none; font-size:1rem; cursor:pointer; padding:0 4px;">&times;</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+
+    document.getElementById('pwa-install-btn').onclick = async () => {
+      if (window.deferredPwaPrompt) {
+        window.deferredPwaPrompt.prompt();
+        const { outcome } = await window.deferredPwaPrompt.userChoice;
+        if (outcome === 'accepted') {
+          this.showToast('¡App instalada correctamente en tu dispositivo!', 'success', 'bi-check-circle-fill');
+        }
+        window.deferredPwaPrompt = null;
+      }
+      banner.remove();
+    };
+
+    document.getElementById('pwa-close-btn').onclick = () => {
+      localStorage.setItem('hercar_pwa_dismissed', 'true');
+      banner.remove();
+    };
   }
 
   speakCurrent(btn) {
@@ -5261,6 +5524,9 @@ class HercarBotApp {
           this.tourGuide.start();
         }
         break;
+      case 'abrir_generador_fut':
+        this.openFutModal();
+        break;
       case 'ver_todas_carreras':
         this.renderCarrerasList();
         this.logQuery('carreras');
@@ -5536,329 +5802,156 @@ class HercarBotApp {
 }
 
 /* ==========================================================================
-   CLASE HERCARTTOURGUIDE — MOTOR DEL MINI TOUR GUIADO INTERACTIVO
+   MINI-TOUR GUIADO INTERACTIVO CON VOZ FEMENINA (HERCARBOT IA)
    ========================================================================== */
 
 class HercarTourGuide {
   constructor(app) {
     this.app = app;
     this.currentStep = 0;
+    this.isPlaying = false;
     this.overlay = null;
-    this._keyHandler = null;
-    this._resizeHandler = null;
+    this.card = null;
+    this.fab = null;
     this.steps = [
       {
-        target: () => document.querySelector('.welcome-campus-card') || document.querySelector('.bot-welcome-hero'),
+        selector: '.welcome-campus-card, .bot-welcome-hero, main h1',
         title: '🏛️ ¡Bienvenido a HercarBot IA!',
-        badge: 'Paso 1 de 6 · Bienvenida',
-        icon: 'bi-bank2',
-        iconColor: '#2563eb',
-        text: 'Soy el asistente virtual oficial con Inteligencia Artificial del <strong>IESTP "Hermanos Cárcamo"</strong> de Paita. Aquí podrás consultar carreras, admisión 2026, trámites TUPA, costos y servicios oficiales de nuestra institución pública.',
-        position: 'bottom'
+        desc: 'Soy la asistente virtual oficial del IESTP "Hermanos Cárcamo" de Paita. Te guiaré en 30 segundos por todas mis funciones.',
+        voice: '¡Hola con mucho cariño! Bienvenida o bienvenido a HercarBot I A, tu asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te mostraré con todo gusto cómo funciona nuestra plataforma.'
       },
       {
-        target: () => {
-          const toggleBtn = document.getElementById('btn-toggle-sidebar');
-          if (toggleBtn && this.isVisible(toggleBtn)) return toggleBtn;
-          const sidebar = document.getElementById('app-sidebar');
-          if (sidebar && this.isVisible(sidebar)) return sidebar;
-          return toggleBtn || sidebar;
-        },
-        title: '📋 Menú de la Esquina e Historial',
-        badge: 'Paso 2 de 6 · Barra Lateral',
-        icon: 'bi-layout-sidebar-inset',
-        iconColor: '#0ea5e9',
-        text: 'Con este botón en la esquina superior izquierda puedes <strong>abrir y cerrar la barra lateral</strong> para iniciar una nueva conversación, revisar tus chats guardados o buscar consultas que hiciste anteriormente.',
-        position: 'bottom-right'
+        selector: '.features-pill-grid, .cards-grid',
+        title: '🚀 12 Herramientas Inteligentes',
+        desc: 'Consulta las 4 carreras profesionales, usa el Simulador de Admisión 2026, el Test Vocacional IA, el Cotizador TUPA o las Calculadoras de Notas y Faltas (DPI 30%) con un solo toque.',
+        voice: 'En este panel central preparé con mucho cariño doce herramientas interactivas: puedes consultar nuestras cuatro carreras profesionales, simular tu examen de admisión, rendir tu test vocacional o calcular tus notas y asistencias.'
       },
       {
-        target: () => {
-          const portals = document.querySelector('.header-quick-portals');
-          if (portals && this.isVisible(portals)) return portals;
-          return document.getElementById('btn-topics-modal') || document.querySelector('.header-controls');
-        },
-        title: '🌐 Portales Oficiales en 1 Clic',
-        badge: 'Paso 3 de 6 · Enlaces Web',
-        icon: 'bi-globe2',
-        iconColor: '#10b981',
-        text: 'Accede de inmediato con 1 solo clic a los portales oficiales de <strong>ieshercar.edu.pe</strong>: Sistema Académico, Portal de Pagos del Banco de la Nación, Aula Virtual, Bolsa Laboral y Mesa de Partes Virtual.',
-        position: 'bottom'
+        selector: '.header-portals, .header-quick-portals, .chat-top-header',
+        title: '🌐 Portales Oficiales Directos',
+        desc: 'En la barra superior tienes acceso directo al Sistema Académico, Portal de Pagos, Aula Virtual, Bolsa Laboral, Mesa de Partes y Generador de FUT.',
+        voice: 'En la parte superior puedes abrir con un solo toque nuestros portales oficiales: el Sistema Académico, Registro de Pagos, Aula Virtual, Bolsa Laboral, y generar tu Formato Único de Trámite para Mesa de Partes.'
       },
       {
-        target: () => document.querySelector('.features-pill-grid') || document.querySelector('.bot-welcome-hero'),
-        title: '⚡ 12 Herramientas Interactivas',
-        badge: 'Paso 4 de 6 · Módulos Clave',
-        icon: 'bi-grid-fill',
-        iconColor: '#f59e0b',
-        text: 'Toca cualquiera de estas 12 tarjetas interactivas para ver detalles de las 4 carreras técnicas, practicar en el <strong>Simulador de Admisión</strong>, usar el <strong>Cotizador TUPA</strong>, o calcular tus notas (70/30) e inasistencias (DPI).',
-        position: 'top'
+        selector: '.header-controls, .control-btn',
+        title: '🌸 Voz Femenina y Personalización',
+        desc: 'Aquí arriba puedes activar o silenciar mi voz, cambiar al Modo Oscuro, alternar al Modo Burbuja Web flotante o descargar tu conversación.',
+        voice: 'En los botones de la esquina superior derecha puedes personalizar mi voz, cambiar a modo oscuro, probar la vista flotante sobre la web oficial o descargar el historial de tus consultas.'
       },
       {
-        target: () => document.querySelector('.chat-input-container') || document.getElementById('chat-form'),
-        title: '💬 Escribe, Pregunta o Habla por Voz',
-        badge: 'Paso 5 de 6 · Consultas',
-        icon: 'bi-chat-dots-fill',
-        iconColor: '#8b5cf6',
-        text: 'Escribe cualquier consulta en tus propias palabras con autocompletado en vivo, sube imágenes o fotos de vouchers, o presiona el botón del <strong>micrófono 🎙️</strong> para hacer tu consulta hablando con tu voz.',
-        position: 'top'
-      },
-      {
-        target: () => document.querySelector('.header-controls') || document.getElementById('btn-start-tour'),
-        title: '🎧 Voz Humana, Modo Oscuro y Ayuda',
-        badge: 'Paso 6 de 6 · Accesibilidad',
-        icon: 'bi-volume-up-fill',
-        iconColor: '#ec4899',
-        text: 'En esta esquina superior puedes activar o pausar la <strong>voz humana realista</strong> en español, cambiar entre Modo Oscuro 🌙 y Claro ☀️, abrir el Directorio Completo o reiniciar este tour cuando desees. ¡Listo para comenzar!',
-        position: 'bottom-left'
+        selector: '.chat-input-container, .input-box-wrapper, form',
+        title: '🎙️ Pregunta por Texto, Voz o Imagen',
+        desc: 'Escribe cualquier duda, usa el micrófono para hablarme directamente o adjunta una captura de tu voucher o trámite.',
+        voice: 'Finalmente, en la barra inferior puedes escribirme lo que desees o presionar el micrófono para hablar conmigo en tiempo real. ¡Estoy aquí para apoyarte en todo lo que necesites, corazón!'
       }
     ];
+    this.initUI();
   }
 
-  isVisible(el) {
-    if (!el) return false;
-    const style = window.getComputedStyle(el);
-    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+  initUI() {
+    this.overlay = document.createElement('div');
+    this.overlay.className = 'hercar-tour-overlay';
+    this.card = document.createElement('div');
+    this.card.className = 'hercar-tour-card';
+    document.body.appendChild(this.overlay);
+    document.body.appendChild(this.card);
+
+    // Botón flotante "¿Cómo funciona? (Tour)"
+    this.fab = document.createElement('button');
+    this.fab.className = 'hercar-tour-fab';
+    this.fab.innerHTML = '<i class="bi bi-stars"></i> ✨ Tour Guiado';
+    this.fab.title = 'Ver recorrido interactivo con voz femenina suave y cariñosa';
+    this.fab.onclick = () => this.start();
+    document.body.appendChild(this.fab);
   }
 
-  getTargetElement(step) {
-    if (!step) return null;
-    if (typeof step.target === 'function') {
-      return step.target();
-    }
-    return document.querySelector(step.target);
+  speakFemale(text) {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const femaleVoice = voices.find(v =>
+        v.lang.startsWith('es') && /sabina|paloma|dalia|salma|paulina|elena|helena|monica|mónica|camila|lucia|lucía|soledad|francisca|andrea|laura|victoria|rosa|carmen|penelope|penélope|esperanza|conchita|valeria|mia|mujer|female|google español/i.test(v.name)
+      ) || voices.find(v => v.lang.startsWith('es') && !/male|hombre|jorge|alvaro|álvaro|raul|raúl|david|carlos|pablo|luis|miguel|pedro|jose|josé/i.test(v.name))
+        || voices.find(v => v.lang.startsWith('es'));
+      if (femaleVoice) utter.voice = femaleVoice;
+      utter.lang = 'es-PE';
+      utter.pitch = 1.10;
+      utter.rate = 0.94;
+      window.speechSynthesis.speak(utter);
+    } catch (e) {}
   }
 
   start() {
     this.currentStep = 0;
-    this.createDom();
-    this.showStep(0);
+    this.isPlaying = true;
+    this.overlay.classList.add('active');
+    this.card.classList.add('active');
+    this.showStep();
   }
 
-  createDom() {
-    const existing = document.getElementById('hercar-tour-overlay');
-    if (existing) existing.remove();
+  showStep() {
+    document.querySelectorAll('.hercar-tour-highlight').forEach(el => el.classList.remove('hercar-tour-highlight'));
+    const step = this.steps[this.currentStep];
+    const target = document.querySelector(step.selector);
 
-    const overlay = document.createElement('div');
-    overlay.id = 'hercar-tour-overlay';
-    overlay.className = 'hercar-tour-overlay animate-fade-in';
-    overlay.innerHTML = `
-      <svg class="hercar-tour-mask" width="100%" height="100%">
-        <defs>
-          <mask id="tour-hole-mask">
-            <rect width="100%" height="100%" fill="white" />
-            <rect id="tour-mask-hole" x="0" y="0" width="0" height="0" rx="14" ry="14" fill="black" />
-          </mask>
-        </defs>
-        <rect width="100%" height="100%" fill="rgba(8, 16, 36, 0.78)" mask="url(#tour-hole-mask)" />
-      </svg>
-      <div id="tour-spotlight-border" class="tour-spotlight-border"></div>
-      <div id="hercar-tour-popover" class="hercar-tour-popover" role="dialog" aria-modal="true">
-        <div class="hercar-tour-popover-header">
-          <div class="d-flex align-items-center gap-2">
-            <div id="tour-icon-box" class="tour-icon-box">
-              <i class="bi bi-compass"></i>
-            </div>
-            <div>
-              <span id="tour-step-badge" class="tour-step-badge">Paso 1 de 6</span>
-              <h6 id="tour-title" class="tour-title mb-0">Título del Paso</h6>
-            </div>
-          </div>
-          <button type="button" class="tour-close-btn" id="tour-btn-close" title="Cerrar tour">&times;</button>
-        </div>
-        <div class="hercar-tour-popover-body">
-          <p id="tour-text" class="tour-text mb-0">Descripción del paso...</p>
-        </div>
-        <div class="hercar-tour-popover-footer">
-          <div class="hercar-tour-dots" id="tour-dots"></div>
-          <div class="hercar-tour-actions">
-            <button type="button" class="tour-btn-skip" id="tour-btn-skip">Omitir</button>
-            <button type="button" class="tour-btn-prev" id="tour-btn-prev">Anterior</button>
-            <button type="button" class="tour-btn-next" id="tour-btn-next">Siguiente</button>
-          </div>
+    this.card.innerHTML = `
+      <span class="hercar-tour-step-badge">Paso ${this.currentStep + 1} de ${this.steps.length} • 🔊 Voz Activa</span>
+      <h4 class="hercar-tour-title">${step.title}</h4>
+      <p class="hercar-tour-desc">${step.desc}</p>
+      <div class="hercar-tour-actions">
+        <button class="hercar-tour-btn skip" id="tourSkipBtn">Saltar tour</button>
+        <div style="display:flex; gap:6px;">
+          ${this.currentStep > 0 ? '<button class="hercar-tour-btn skip" id="tourPrevBtn">⬅ Atrás</button>' : ''}
+          <button class="hercar-tour-btn next" id="tourNextBtn">
+            ${this.currentStep === this.steps.length - 1 ? '¡Empezar ahora! 🚀' : 'Siguiente ➡'}
+          </button>
         </div>
       </div>
     `;
 
-    document.body.appendChild(overlay);
-    this.overlay = overlay;
-
-    document.getElementById('tour-btn-close').addEventListener('click', () => this.finish());
-    document.getElementById('tour-btn-skip').addEventListener('click', () => this.finish());
-    document.getElementById('tour-btn-prev').addEventListener('click', () => this.prev());
-    document.getElementById('tour-btn-next').addEventListener('click', () => this.next());
-
-    this._keyHandler = (e) => {
-      if (e.key === 'Escape') this.finish();
-      else if (e.key === 'ArrowRight' || e.key === 'Enter') this.next();
-      else if (e.key === 'ArrowLeft') this.prev();
-    };
-    window.addEventListener('keydown', this._keyHandler);
-
-    this._resizeHandler = () => this.updatePosition();
-    window.addEventListener('resize', this._resizeHandler);
-  }
-
-  showStep(index) {
-    if (index < 0 || index >= this.steps.length) {
-      this.finish();
-      return;
-    }
-    this.currentStep = index;
-    const step = this.steps[index];
-    const targetEl = this.getTargetElement(step);
-
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    const titleEl = document.getElementById('tour-title');
-    const badgeEl = document.getElementById('tour-step-badge');
-    const textEl = document.getElementById('tour-text');
-    const iconBox = document.getElementById('tour-icon-box');
-    const btnPrev = document.getElementById('tour-btn-prev');
-    const btnNext = document.getElementById('tour-btn-next');
-    const dotsContainer = document.getElementById('tour-dots');
-
-    if (titleEl) titleEl.textContent = step.title;
-    if (badgeEl) badgeEl.textContent = step.badge;
-    if (textEl) textEl.innerHTML = step.text;
-    if (iconBox) {
-      iconBox.innerHTML = `<i class="bi ${step.icon}"></i>`;
-      iconBox.style.background = `${step.iconColor}22`;
-      iconBox.style.color = step.iconColor;
-    }
-
-    if (btnPrev) {
-      btnPrev.style.display = index === 0 ? 'none' : 'inline-flex';
-    }
-    if (btnNext) {
-      if (index === this.steps.length - 1) {
-        btnNext.innerHTML = '¡Comenzar! <i class="bi bi-check-lg ms-1"></i>';
-        btnNext.classList.add('btn-finish');
-      } else {
-        btnNext.innerHTML = 'Siguiente <i class="bi bi-arrow-right ms-1"></i>';
-        btnNext.classList.remove('btn-finish');
-      }
-    }
-
-    if (dotsContainer) {
-      dotsContainer.innerHTML = this.steps.map((_, i) => `
-        <span class="tour-dot ${i === index ? 'active' : ''}" data-tour-index="${i}"></span>
-      `).join('');
-      dotsContainer.querySelectorAll('.tour-dot').forEach(dot => {
-        dot.addEventListener('click', (e) => {
-          const idx = parseInt(e.target.getAttribute('data-tour-index'), 10);
-          this.showStep(idx);
-        });
-      });
-    }
-
-    setTimeout(() => {
-      this.updatePosition();
-    }, 180);
-  }
-
-  updatePosition() {
-    if (!this.overlay) return;
-    const step = this.steps[this.currentStep];
-    const targetEl = this.getTargetElement(step);
-
-    const hole = document.getElementById('tour-mask-hole');
-    const border = document.getElementById('tour-spotlight-border');
-    const popover = document.getElementById('hercar-tour-popover');
-    if (!hole || !border || !popover) return;
-
-    if (!targetEl) {
-      hole.setAttribute('width', '0');
-      hole.setAttribute('height', '0');
-      border.style.display = 'none';
-      popover.style.top = '50%';
-      popover.style.left = '50%';
-      popover.style.transform = 'translate(-50%, -50%)';
-      return;
-    }
-
-    const rect = targetEl.getBoundingClientRect();
-    const padding = 8;
-    const x = Math.max(0, rect.left - padding);
-    const y = Math.max(0, rect.top - padding);
-    const w = rect.width + padding * 2;
-    const h = rect.height + padding * 2;
-
-    hole.setAttribute('x', x);
-    hole.setAttribute('y', y);
-    hole.setAttribute('width', w);
-    hole.setAttribute('height', h);
-
-    border.style.display = 'block';
-    border.style.left = `${x}px`;
-    border.style.top = `${y}px`;
-    border.style.width = `${w}px`;
-    border.style.height = `${h}px`;
-
-    const popoverRect = popover.getBoundingClientRect();
-    const margin = 16;
-    let top = 0;
-    let left = 0;
-
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
-
-    if (step.position === 'top' && y > popoverRect.height + margin + 10) {
-      top = y - popoverRect.height - margin;
-      left = x + w / 2 - popoverRect.width / 2;
-    } else if (step.position === 'bottom-left') {
-      top = y + h + margin;
-      left = x + w - popoverRect.width;
-    } else if (step.position === 'bottom-right') {
-      top = y + h + margin;
-      left = x;
-    } else if (y + h + popoverRect.height + margin < viewportH) {
-      top = y + h + margin;
-      left = x + w / 2 - popoverRect.width / 2;
-    } else if (y > popoverRect.height + margin) {
-      top = y - popoverRect.height - margin;
-      left = x + w / 2 - popoverRect.width / 2;
+    if (target) {
+      target.classList.add('hercar-tour-highlight');
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const rect = target.getBoundingClientRect();
+      const cardHeight = 220;
+      const topPos = (rect.bottom + 14 + cardHeight < window.innerHeight) 
+        ? rect.bottom + 14 
+        : Math.max(16, rect.top - cardHeight);
+      const cardWidth = Math.min(380, window.innerWidth * 0.92);
+      const leftPos = Math.min(Math.max(12, rect.left), window.innerWidth - cardWidth - 12);
+      this.card.style.top = `${topPos}px`;
+      this.card.style.left = `${leftPos}px`;
+      this.card.style.transform = 'none';
     } else {
-      top = Math.max(margin, (viewportH - popoverRect.height) / 2);
-      left = Math.max(margin, (viewportW - popoverRect.width) / 2);
+      this.card.style.top = '50%';
+      this.card.style.left = '50%';
+      this.card.style.transform = 'translate(-50%, -50%)';
     }
 
-    if (left < margin) left = margin;
-    if (left + popoverRect.width > viewportW - margin) {
-      left = viewportW - popoverRect.width - margin;
-    }
+    this.speakFemale(step.voice);
 
-    if (top < margin) top = margin;
-    if (top + popoverRect.height > viewportH - margin) {
-      top = viewportH - popoverRect.height - margin;
-    }
-
-    popover.style.transform = 'none';
-    popover.style.top = `${top}px`;
-    popover.style.left = `${left}px`;
+    document.getElementById('tourSkipBtn').onclick = () => this.end();
+    const prevBtn = document.getElementById('tourPrevBtn');
+    if (prevBtn) prevBtn.onclick = () => { this.currentStep--; this.showStep(); };
+    document.getElementById('tourNextBtn').onclick = () => {
+      if (this.currentStep < this.steps.length - 1) {
+        this.currentStep++;
+        this.showStep();
+      } else {
+        this.end();
+      }
+    };
   }
 
-  next() {
-    this.showStep(this.currentStep + 1);
-  }
-
-  prev() {
-    this.showStep(this.currentStep - 1);
-  }
-
-  finish() {
-    localStorage.setItem('hercarbot_tour_completed', 'true');
-    if (this._keyHandler) window.removeEventListener('keydown', this._keyHandler);
-    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
-    if (this.overlay) {
-      this.overlay.style.opacity = '0';
-      this.overlay.style.transition = 'opacity 0.25s ease';
-      setTimeout(() => {
-        if (this.overlay) this.overlay.remove();
-        this.overlay = null;
-      }, 250);
-    }
+  end() {
+    this.isPlaying = false;
+    try { window.speechSynthesis?.cancel(); } catch (e) {}
+    this.overlay.classList.remove('active');
+    this.card.classList.remove('active');
+    document.querySelectorAll('.hercar-tour-highlight').forEach(el => el.classList.remove('hercar-tour-highlight'));
+    localStorage.setItem('hercar_tour_seen_2026', 'true');
   }
 }
 

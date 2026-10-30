@@ -3830,4 +3830,351 @@ body.dark-theme .tour-btn-prev:hover {
   }
 }
 
+/* ==========================================================================
+   MEJORA PREMIUM: FONDO ATMOSFÉRICO + VENTANA FLOTANTE + MÓVIL NATIVO
+   ========================================================================== */
+
+/* 1. Fondo Mesh Gradient Institucional Tecnológico */
+.chat-main-area, main, body {
+  background-color: #eef4fb !important;
+  background-image: 
+    radial-gradient(at 12% 15%, rgba(2, 132, 199, 0.12) 0px, transparent 48%),
+    radial-gradient(at 88% 20%, rgba(37, 99, 235, 0.10) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+    linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px, 28px 28px !important;
+}
+
+body.dark-theme .chat-main-area,
+body.dark-theme main,
+body.dark-theme {
+  background-color: #070b14 !important;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(14, 165, 233, 0.16) 0px, transparent 45%),
+    radial-gradient(at 85% 80%, rgba(37, 99, 235, 0.14) 0px, transparent 50%),
+    linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px) !important;
+}
+
+/* 2. Glassmorphism Flotante para las 12 tarjetas de bienvenida */
+.features-pill-grid > div,
+.feature-pill {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 10px 26px -6px rgba(15, 23, 42, 0.07), 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+  transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+}
+
+.features-pill-grid > div:hover,
+.feature-pill:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 32px -6px rgba(2, 132, 199, 0.18) !important;
+}
+
+body.dark-theme .features-pill-grid > div,
+body.dark-theme .feature-pill {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 26px -6px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* 3. Ocultar logo/título duplicado en cabecera cuando el Sidebar está abierto en escritorio */
+@media (min-width: 993px) {
+  .app-sidebar:not(.collapsed) ~ .chat-main-area .header-brand-title {
+    display: none !important;
+  }
+}
+
+/* 4. Adaptación móvil tipo App Nativa (Pantallas hasta 768px) */
+@media (max-width: 768px) {
+  .chat-top-header {
+    height: auto !important;
+    min-height: 56px !important;
+    padding: 8px 10px !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  /* Los 5 portales se deslizan con el dedo en 1 fila */
+  .header-quick-portals,
+  .header-portals {
+    order: 3 !important;
+    width: 100% !important;
+    display: flex !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 6px !important;
+    padding: 4px 2px 4px !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .header-quick-portals::-webkit-scrollbar,
+  .header-portals::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .quick-portal-chip {
+    padding: 5px 11px !important;
+    font-size: 0.74rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Las 12 tarjetas en 2 columnas simétricas */
+  .features-pill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    padding: 0 8px 90px !important;
+  }
+
+  .features-pill-grid > div,
+  .feature-pill {
+    padding: 12px 10px !important;
+    border-radius: 14px !important;
+  }
+
+  .features-pill-grid small,
+  .feature-pill small {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    font-size: 0.74rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .chat-input-container {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom)) !important;
+    background: linear-gradient(180deg, transparent, rgba(238, 244, 251, 0.96) 30%) !important;
+    z-index: 45 !important;
+  }
+}
+
+/* 5. Modo Widget Flotante (Conmutador 🗗 en Cabecera) */
+body.hercar-widget-mode {
+  background: url('../assets/img/campus-hercar.jpg') center/cover no-repeat fixed !important;
+}
+
+body.hercar-widget-mode::before {
+  content: "🌐 Vista Previa en Vivo: Portal Oficial ieshercar.edu.pe con HercarBot IA Integrado";
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.94);
+  color: #38bdf8;
+  padding: 10px 24px;
+  border-radius: 99px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  z-index: 9990;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+body.hercar-widget-mode .app-sidebar {
+  display: none !important;
+}
+
+body.hercar-widget-mode .chat-main-area,
+body.hercar-widget-mode main {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  width: 420px !important;
+  height: 640px !important;
+  max-height: 85vh !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 2px #0284c7 !important;
+  z-index: 9995 !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+body.hercar-widget-mode .header-quick-portals,
+body.hercar-widget-mode .header-portals {
+  display: none !important;
+}
+
+body.hercar-widget-mode .features-pill-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 8px !important;
+}
+
+/* 6. Botón Flotante del Tour (FAB) */
+.hercar-tour-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 88px;
+  z-index: 90;
+  background: linear-gradient(135deg, #1d4ed8, #0284c7);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 99px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 8px 22px rgba(2, 132, 199, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: pulseTour 2.5s infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hercar-tour-fab:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 12px 28px rgba(2, 132, 199, 0.6);
+}
+
+@keyframes pulseTour {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@media (max-width: 600px) {
+  .hercar-tour-fab {
+    bottom: 78px;
+    right: 12px;
+    padding: 7px 12px;
+    font-size: 0.76rem;
+  }
+}
+
+/* 7. Modal del Generador de FUT */
+.hercar-fut-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 14, 28, 0.75);
+  backdrop-filter: blur(5px);
+  z-index: 10005;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.hercar-fut-modal.open {
+  display: flex;
+}
+
+.hercar-fut-box {
+  background: #ffffff;
+  color: #0f172a;
+  width: min(520px, 95vw);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.hercar-fut-box h3 {
+  margin: 0 0 6px;
+  color: #0f172a;
+  font-size: 1.18rem;
+  font-weight: 800;
+}
+
+.hercar-fut-box p {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.fut-field {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: inherit;
+}
+
+.fut-field:focus {
+  outline: none;
+  border-color: #0284c7;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.fut-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fut-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.86rem;
+  transition: all 0.2s ease;
+}
+
+.fut-btn.primary {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.fut-btn.primary:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.fut-btn.secondary {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.fut-btn.secondary:hover {
+  background: #cbd5e1;
+}
+
+body.dark-theme .hercar-fut-box {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+body.dark-theme .hercar-fut-box h3 {
+  color: #f8fafc;
+}
+
+body.dark-theme .hercar-fut-box p {
+  color: #94a3b8;
+}
+
+body.dark-theme .fut-field {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+body.dark-theme .fut-field:focus {
+  background: #1e293b;
+  border-color: #38bdf8;
+}
+
+body.dark-theme .fut-btn.secondary {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+
 

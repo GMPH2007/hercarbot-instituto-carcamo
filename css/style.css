@@ -3524,3 +3524,310 @@ body.dark-theme .carrera-item-thumb {
   border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
+/* ==========================================================================
+   SISTEMA DE MINI TOUR GUIADO INTERACTIVO (ONBOARDING WALKTHROUGH)
+   ========================================================================== */
+.hercar-tour-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10500;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.hercar-tour-mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.tour-spotlight-border {
+  position: absolute;
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow: 0 0 0 3px #2563eb, 0 0 25px rgba(37, 99, 235, 0.75);
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: tourBorderPulse 2s infinite ease-in-out;
+  z-index: 10505;
+}
+
+@keyframes tourBorderPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 3px #2563eb, 0 0 25px rgba(37, 99, 235, 0.75);
+  }
+  50% {
+    box-shadow: 0 0 0 4px #60a5fa, 0 0 35px rgba(96, 165, 250, 0.9);
+  }
+}
+
+.hercar-tour-popover {
+  position: absolute;
+  z-index: 10510;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 20px 45px rgba(10, 25, 60, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  padding: 20px 22px;
+  transition: top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: tourPopoverIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tourPopoverIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hercar-tour-popover-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tour-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+.tour-step-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #2563eb;
+  margin-bottom: 2px;
+}
+
+.tour-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.tour-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.tour-close-btn:hover {
+  color: #ef4444;
+}
+
+.hercar-tour-popover-body {
+  margin-bottom: 16px;
+}
+
+.tour-text {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #475569;
+}
+
+.tour-text strong {
+  color: #0f172a;
+}
+
+.hercar-tour-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.hercar-tour-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tour-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tour-dot.active {
+  width: 22px;
+  border-radius: 10px;
+  background: #2563eb;
+}
+
+.hercar-tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tour-btn-skip {
+  background: transparent;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.tour-btn-skip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.tour-btn-prev {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.tour-btn-prev:hover {
+  background: #e2e8f0;
+}
+
+.tour-btn-next {
+  background: #2563eb;
+  border: 1px solid #2563eb;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 7px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.tour-btn-next:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.tour-btn-next.btn-finish {
+  background: #10b981;
+  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.tour-btn-next.btn-finish:hover {
+  background: #059669;
+}
+
+/* Modo oscuro para el Tour */
+body.dark-theme .hercar-tour-popover {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .tour-title {
+  color: #f8fafc;
+}
+
+body.dark-theme .tour-step-badge {
+  color: #60a5fa;
+}
+
+body.dark-theme .tour-text {
+  color: #cbd5e1;
+}
+
+body.dark-theme .tour-text strong {
+  color: #ffffff;
+}
+
+body.dark-theme .hercar-tour-popover-footer {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .tour-dot {
+  background: #334155;
+}
+
+body.dark-theme .tour-dot.active {
+  background: #60a5fa;
+}
+
+body.dark-theme .tour-btn-skip {
+  color: #94a3b8;
+}
+
+body.dark-theme .tour-btn-skip:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+body.dark-theme .tour-btn-prev {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+body.dark-theme .tour-btn-prev:hover {
+  background: #334155;
+}
+
+/* Chip destacado en bienvenida */
+.prompt-chip.highlight-tour-chip {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
+}
+
+@media (max-width: 576px) {
+  .hercar-tour-popover {
+    width: calc(100vw - 24px);
+    padding: 16px 18px;
+  }
+  .tour-title {
+    font-size: 0.98rem;
+  }
+  .tour-text {
+    font-size: 0.82rem;
+  }
+}
+
+

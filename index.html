@@ -149,6 +149,10 @@
           <i class="bi bi-plus-circle-fill"></i>
           <span>Nueva Conversación</span>
         </button>
+        <button id="btn-sidebar-tour" class="btn btn-sm btn-outline-light w-100 mt-2 rounded-pill d-flex align-items-center justify-content-center gap-2" style="font-size: 0.78rem; opacity: 0.85; border-color: rgba(255,255,255,0.2);" title="Ver Mini Tour de Instrucciones">
+          <i class="bi bi-compass-fill text-warning"></i>
+          <span>Mini Tour de Ayuda</span>
+        </button>
       </div>
 
       <!-- Scroll de Historial Dedicado (Estilo ChatGPT / Claude) -->
@@ -252,6 +256,9 @@
         </div>
 
         <div class="header-controls d-flex align-items-center gap-1 gap-sm-2">
+          <button id="btn-start-tour" class="control-btn" title="Mini Tour Guiado / Instrucciones">
+            <i class="bi bi-compass-fill" style="color:#f59e0b;"></i>
+          </button>
           <button id="btn-theme-toggle" class="control-btn" title="Modo Oscuro / Claro">
             <i class="bi bi-moon-stars-fill" style="color:#60a5fa;"></i>
           </button>
@@ -354,6 +361,19 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body p-4" style="background: #f8fafc; max-height: 70vh; overflow-y: auto;">
+          <!-- Tarjeta de Acceso al Mini Tour Guiado -->
+          <div class="p-3 mb-3 rounded-3 shadow-sm d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(16,185,129,0.08) 100%); border: 1px solid rgba(37,99,235,0.2);">
+            <div>
+              <div class="fw-bold text-dark d-flex align-items-center gap-1">
+                <i class="bi bi-compass-fill text-warning"></i> ¿Eres nuevo en el Asistente?
+              </div>
+              <small class="text-muted">Aprende a usar todas las herramientas con nuestro mini tour guiado paso a paso.</small>
+            </div>
+            <button class="btn btn-sm btn-primary rounded-pill px-3 fw-bold" data-bs-dismiss="modal" data-chat-action="iniciar_mini_tour">
+              <i class="bi bi-play-circle-fill me-1"></i> Iniciar Mini Tour
+            </button>
+          </div>
+
           <p class="text-muted small mb-3">Haz clic en cualquier categoría para que el asistente institucional te brinde la información de inmediato:</p>
 
           <div class="row g-3">

@@ -29,6 +29,7 @@ class HercarBotApp {
     this.recognition = null;
     this.selectedVoice = null;
     this.currentChatId = null;
+    this.tourGuide = new HercarTourGuide(this);
 
     this.initStats();
     this.initDom();
@@ -38,6 +39,7 @@ class HercarBotApp {
     this.initVoiceSynthesis();
     this.initConversations();
     this.initAutocomplete();
+    this.initTour();
   }
 
   normalizeText(str) {
@@ -541,6 +543,33 @@ class HercarBotApp {
         this.suggestionsBox.style.display = 'none';
       }
     });
+  }
+
+  /* ==========================================================================
+     INICIALIZACIÓN DEL MINI TOUR GUIADO INTERACTIVO
+     ========================================================================== */
+
+  initTour() {
+    const btnStartTour = document.getElementById('btn-start-tour');
+    if (btnStartTour) {
+      btnStartTour.addEventListener('click', () => {
+        if (this.tourGuide) this.tourGuide.start();
+      });
+    }
+
+    const btnSidebarTour = document.getElementById('btn-sidebar-tour');
+    if (btnSidebarTour) {
+      btnSidebarTour.addEventListener('click', () => {
+        if (this.tourGuide) this.tourGuide.start();
+      });
+    }
+
+    // Auto-iniciar tour en la primera visita para que el usuario conozca todas las funciones
+    if (!localStorage.getItem('hercarbot_tour_completed')) {
+      setTimeout(() => {
+        if (this.tourGuide) this.tourGuide.start();
+      }, 1200);
+    }
   }
 
   /* ==========================================================================
@@ -1674,6 +1703,7 @@ class HercarBotApp {
         <div class="suggested-prompts-section">
           <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Preguntas Frecuentes y Herramientas Rápidas:</span>
           <div class="prompts-chips-wrapper">
+            <button class="prompt-chip highlight-tour-chip" data-chat-action="iniciar_mini_tour"><i class="bi bi-compass-fill me-1"></i> 💡 ¿Cómo funciona HercarBot? (Mini Tour Guiado)</button>
             <button class="prompt-chip" data-prompt="¿Cuál es el número de cuenta bancaria para pagar?">🏦 Número de Cuenta BN</button>
             <button class="prompt-chip" data-prompt="¿Cuánto cuesta la matrícula y qué hago después de pagar?">💰 ¿Qué pago y dónde voy?</button>
             <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final">📊 Calculadora de Notas (70/30)</button>
@@ -1712,6 +1742,14 @@ class HercarBotApp {
     if (this.suggestionsBox) this.suggestionsBox.style.display = 'none';
     this.clearAttachedImage();
     this.stopSpeaking();
+
+    // Interceptar solicitud de tour o instrucciones interactivas
+    if (/^(tour|guia|guía|instrucciones|tutorial|como funciona|cómo funciona|como sirve|cómo sirve|ayuda tour)/i.test(queryText)) {
+      if (this.tourGuide) {
+        this.tourGuide.start();
+        return;
+      }
+    }
 
     this.appendUserMessage(queryText, attachedImage ? attachedImage.base64 : null, isVoice);
     this.playSound('send');
@@ -5218,6 +5256,11 @@ class HercarBotApp {
 
   triggerAction(action, val = null) {
     switch (action) {
+      case 'iniciar_mini_tour':
+        if (this.tourGuide) {
+          this.tourGuide.start();
+        }
+        break;
       case 'ver_todas_carreras':
         this.renderCarrerasList();
         this.logQuery('carreras');
@@ -5489,6 +5532,333 @@ class HercarBotApp {
       .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
       .replace(/\n\n/g, '<br><br>')
       .replace(/\n/g, '<br>');
+  }
+}
+
+/* ==========================================================================
+   CLASE HERCARTTOURGUIDE — MOTOR DEL MINI TOUR GUIADO INTERACTIVO
+   ========================================================================== */
+
+class HercarTourGuide {
+  constructor(app) {
+    this.app = app;
+    this.currentStep = 0;
+    this.overlay = null;
+    this._keyHandler = null;
+    this._resizeHandler = null;
+    this.steps = [
+      {
+        target: () => document.querySelector('.welcome-campus-card') || document.querySelector('.bot-welcome-hero'),
+        title: '🏛️ ¡Bienvenido a HercarBot IA!',
+        badge: 'Paso 1 de 6 · Bienvenida',
+        icon: 'bi-bank2',
+        iconColor: '#2563eb',
+        text: 'Soy el asistente virtual oficial con Inteligencia Artificial del <strong>IESTP "Hermanos Cárcamo"</strong> de Paita. Aquí podrás consultar carreras, admisión 2026, trámites TUPA, costos y servicios oficiales de nuestra institución pública.',
+        position: 'bottom'
+      },
+      {
+        target: () => {
+          const toggleBtn = document.getElementById('btn-toggle-sidebar');
+          if (toggleBtn && this.isVisible(toggleBtn)) return toggleBtn;
+          const sidebar = document.getElementById('app-sidebar');
+          if (sidebar && this.isVisible(sidebar)) return sidebar;
+          return toggleBtn || sidebar;
+        },
+        title: '📋 Menú de la Esquina e Historial',
+        badge: 'Paso 2 de 6 · Barra Lateral',
+        icon: 'bi-layout-sidebar-inset',
+        iconColor: '#0ea5e9',
+        text: 'Con este botón en la esquina superior izquierda puedes <strong>abrir y cerrar la barra lateral</strong> para iniciar una nueva conversación, revisar tus chats guardados o buscar consultas que hiciste anteriormente.',
+        position: 'bottom-right'
+      },
+      {
+        target: () => {
+          const portals = document.querySelector('.header-quick-portals');
+          if (portals && this.isVisible(portals)) return portals;
+          return document.getElementById('btn-topics-modal') || document.querySelector('.header-controls');
+        },
+        title: '🌐 Portales Oficiales en 1 Clic',
+        badge: 'Paso 3 de 6 · Enlaces Web',
+        icon: 'bi-globe2',
+        iconColor: '#10b981',
+        text: 'Accede de inmediato con 1 solo clic a los portales oficiales de <strong>ieshercar.edu.pe</strong>: Sistema Académico, Portal de Pagos del Banco de la Nación, Aula Virtual, Bolsa Laboral y Mesa de Partes Virtual.',
+        position: 'bottom'
+      },
+      {
+        target: () => document.querySelector('.features-pill-grid') || document.querySelector('.bot-welcome-hero'),
+        title: '⚡ 12 Herramientas Interactivas',
+        badge: 'Paso 4 de 6 · Módulos Clave',
+        icon: 'bi-grid-fill',
+        iconColor: '#f59e0b',
+        text: 'Toca cualquiera de estas 12 tarjetas interactivas para ver detalles de las 4 carreras técnicas, practicar en el <strong>Simulador de Admisión</strong>, usar el <strong>Cotizador TUPA</strong>, o calcular tus notas (70/30) e inasistencias (DPI).',
+        position: 'top'
+      },
+      {
+        target: () => document.querySelector('.chat-input-container') || document.getElementById('chat-form'),
+        title: '💬 Escribe, Pregunta o Habla por Voz',
+        badge: 'Paso 5 de 6 · Consultas',
+        icon: 'bi-chat-dots-fill',
+        iconColor: '#8b5cf6',
+        text: 'Escribe cualquier consulta en tus propias palabras con autocompletado en vivo, sube imágenes o fotos de vouchers, o presiona el botón del <strong>micrófono 🎙️</strong> para hacer tu consulta hablando con tu voz.',
+        position: 'top'
+      },
+      {
+        target: () => document.querySelector('.header-controls') || document.getElementById('btn-start-tour'),
+        title: '🎧 Voz Humana, Modo Oscuro y Ayuda',
+        badge: 'Paso 6 de 6 · Accesibilidad',
+        icon: 'bi-volume-up-fill',
+        iconColor: '#ec4899',
+        text: 'En esta esquina superior puedes activar o pausar la <strong>voz humana realista</strong> en español, cambiar entre Modo Oscuro 🌙 y Claro ☀️, abrir el Directorio Completo o reiniciar este tour cuando desees. ¡Listo para comenzar!',
+        position: 'bottom-left'
+      }
+    ];
+  }
+
+  isVisible(el) {
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+  }
+
+  getTargetElement(step) {
+    if (!step) return null;
+    if (typeof step.target === 'function') {
+      return step.target();
+    }
+    return document.querySelector(step.target);
+  }
+
+  start() {
+    this.currentStep = 0;
+    this.createDom();
+    this.showStep(0);
+  }
+
+  createDom() {
+    const existing = document.getElementById('hercar-tour-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'hercar-tour-overlay';
+    overlay.className = 'hercar-tour-overlay animate-fade-in';
+    overlay.innerHTML = `
+      <svg class="hercar-tour-mask" width="100%" height="100%">
+        <defs>
+          <mask id="tour-hole-mask">
+            <rect width="100%" height="100%" fill="white" />
+            <rect id="tour-mask-hole" x="0" y="0" width="0" height="0" rx="14" ry="14" fill="black" />
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="rgba(8, 16, 36, 0.78)" mask="url(#tour-hole-mask)" />
+      </svg>
+      <div id="tour-spotlight-border" class="tour-spotlight-border"></div>
+      <div id="hercar-tour-popover" class="hercar-tour-popover" role="dialog" aria-modal="true">
+        <div class="hercar-tour-popover-header">
+          <div class="d-flex align-items-center gap-2">
+            <div id="tour-icon-box" class="tour-icon-box">
+              <i class="bi bi-compass"></i>
+            </div>
+            <div>
+              <span id="tour-step-badge" class="tour-step-badge">Paso 1 de 6</span>
+              <h6 id="tour-title" class="tour-title mb-0">Título del Paso</h6>
+            </div>
+          </div>
+          <button type="button" class="tour-close-btn" id="tour-btn-close" title="Cerrar tour">&times;</button>
+        </div>
+        <div class="hercar-tour-popover-body">
+          <p id="tour-text" class="tour-text mb-0">Descripción del paso...</p>
+        </div>
+        <div class="hercar-tour-popover-footer">
+          <div class="hercar-tour-dots" id="tour-dots"></div>
+          <div class="hercar-tour-actions">
+            <button type="button" class="tour-btn-skip" id="tour-btn-skip">Omitir</button>
+            <button type="button" class="tour-btn-prev" id="tour-btn-prev">Anterior</button>
+            <button type="button" class="tour-btn-next" id="tour-btn-next">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+    this.overlay = overlay;
+
+    document.getElementById('tour-btn-close').addEventListener('click', () => this.finish());
+    document.getElementById('tour-btn-skip').addEventListener('click', () => this.finish());
+    document.getElementById('tour-btn-prev').addEventListener('click', () => this.prev());
+    document.getElementById('tour-btn-next').addEventListener('click', () => this.next());
+
+    this._keyHandler = (e) => {
+      if (e.key === 'Escape') this.finish();
+      else if (e.key === 'ArrowRight' || e.key === 'Enter') this.next();
+      else if (e.key === 'ArrowLeft') this.prev();
+    };
+    window.addEventListener('keydown', this._keyHandler);
+
+    this._resizeHandler = () => this.updatePosition();
+    window.addEventListener('resize', this._resizeHandler);
+  }
+
+  showStep(index) {
+    if (index < 0 || index >= this.steps.length) {
+      this.finish();
+      return;
+    }
+    this.currentStep = index;
+    const step = this.steps[index];
+    const targetEl = this.getTargetElement(step);
+
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    const titleEl = document.getElementById('tour-title');
+    const badgeEl = document.getElementById('tour-step-badge');
+    const textEl = document.getElementById('tour-text');
+    const iconBox = document.getElementById('tour-icon-box');
+    const btnPrev = document.getElementById('tour-btn-prev');
+    const btnNext = document.getElementById('tour-btn-next');
+    const dotsContainer = document.getElementById('tour-dots');
+
+    if (titleEl) titleEl.textContent = step.title;
+    if (badgeEl) badgeEl.textContent = step.badge;
+    if (textEl) textEl.innerHTML = step.text;
+    if (iconBox) {
+      iconBox.innerHTML = `<i class="bi ${step.icon}"></i>`;
+      iconBox.style.background = `${step.iconColor}22`;
+      iconBox.style.color = step.iconColor;
+    }
+
+    if (btnPrev) {
+      btnPrev.style.display = index === 0 ? 'none' : 'inline-flex';
+    }
+    if (btnNext) {
+      if (index === this.steps.length - 1) {
+        btnNext.innerHTML = '¡Comenzar! <i class="bi bi-check-lg ms-1"></i>';
+        btnNext.classList.add('btn-finish');
+      } else {
+        btnNext.innerHTML = 'Siguiente <i class="bi bi-arrow-right ms-1"></i>';
+        btnNext.classList.remove('btn-finish');
+      }
+    }
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = this.steps.map((_, i) => `
+        <span class="tour-dot ${i === index ? 'active' : ''}" data-tour-index="${i}"></span>
+      `).join('');
+      dotsContainer.querySelectorAll('.tour-dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.getAttribute('data-tour-index'), 10);
+          this.showStep(idx);
+        });
+      });
+    }
+
+    setTimeout(() => {
+      this.updatePosition();
+    }, 180);
+  }
+
+  updatePosition() {
+    if (!this.overlay) return;
+    const step = this.steps[this.currentStep];
+    const targetEl = this.getTargetElement(step);
+
+    const hole = document.getElementById('tour-mask-hole');
+    const border = document.getElementById('tour-spotlight-border');
+    const popover = document.getElementById('hercar-tour-popover');
+    if (!hole || !border || !popover) return;
+
+    if (!targetEl) {
+      hole.setAttribute('width', '0');
+      hole.setAttribute('height', '0');
+      border.style.display = 'none';
+      popover.style.top = '50%';
+      popover.style.left = '50%';
+      popover.style.transform = 'translate(-50%, -50%)';
+      return;
+    }
+
+    const rect = targetEl.getBoundingClientRect();
+    const padding = 8;
+    const x = Math.max(0, rect.left - padding);
+    const y = Math.max(0, rect.top - padding);
+    const w = rect.width + padding * 2;
+    const h = rect.height + padding * 2;
+
+    hole.setAttribute('x', x);
+    hole.setAttribute('y', y);
+    hole.setAttribute('width', w);
+    hole.setAttribute('height', h);
+
+    border.style.display = 'block';
+    border.style.left = `${x}px`;
+    border.style.top = `${y}px`;
+    border.style.width = `${w}px`;
+    border.style.height = `${h}px`;
+
+    const popoverRect = popover.getBoundingClientRect();
+    const margin = 16;
+    let top = 0;
+    let left = 0;
+
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+
+    if (step.position === 'top' && y > popoverRect.height + margin + 10) {
+      top = y - popoverRect.height - margin;
+      left = x + w / 2 - popoverRect.width / 2;
+    } else if (step.position === 'bottom-left') {
+      top = y + h + margin;
+      left = x + w - popoverRect.width;
+    } else if (step.position === 'bottom-right') {
+      top = y + h + margin;
+      left = x;
+    } else if (y + h + popoverRect.height + margin < viewportH) {
+      top = y + h + margin;
+      left = x + w / 2 - popoverRect.width / 2;
+    } else if (y > popoverRect.height + margin) {
+      top = y - popoverRect.height - margin;
+      left = x + w / 2 - popoverRect.width / 2;
+    } else {
+      top = Math.max(margin, (viewportH - popoverRect.height) / 2);
+      left = Math.max(margin, (viewportW - popoverRect.width) / 2);
+    }
+
+    if (left < margin) left = margin;
+    if (left + popoverRect.width > viewportW - margin) {
+      left = viewportW - popoverRect.width - margin;
+    }
+
+    if (top < margin) top = margin;
+    if (top + popoverRect.height > viewportH - margin) {
+      top = viewportH - popoverRect.height - margin;
+    }
+
+    popover.style.transform = 'none';
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+  }
+
+  next() {
+    this.showStep(this.currentStep + 1);
+  }
+
+  prev() {
+    this.showStep(this.currentStep - 1);
+  }
+
+  finish() {
+    localStorage.setItem('hercarbot_tour_completed', 'true');
+    if (this._keyHandler) window.removeEventListener('keydown', this._keyHandler);
+    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
+    if (this.overlay) {
+      this.overlay.style.opacity = '0';
+      this.overlay.style.transition = 'opacity 0.25s ease';
+      setTimeout(() => {
+        if (this.overlay) this.overlay.remove();
+        this.overlay = null;
+      }, 250);
+    }
   }
 }
 

@@ -3968,6 +3968,10 @@ body.dark-theme .feature-pill {
     background: linear-gradient(180deg, transparent, rgba(238, 244, 251, 0.96) 30%) !important;
     z-index: 45 !important;
   }
+
+  body.dark-theme .chat-input-container {
+    background: linear-gradient(180deg, transparent, rgba(7, 11, 20, 0.98) 30%) !important;
+  }
 }
 
 /* 5. Modo Widget Flotante (Conmutador 🗗 en Cabecera) */

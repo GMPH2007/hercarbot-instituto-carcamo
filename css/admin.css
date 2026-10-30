@@ -2,6 +2,14 @@
    ESTILOS DEL PANEL DE ADMINISTRACIÓN - IESTP HERMANOS CÁRCAMO
    ========================================================================== */
 
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 30px;
+}
+
 :root {
   --admin-blue: #13357b;
   --admin-blue-dark: #0a1f4d;

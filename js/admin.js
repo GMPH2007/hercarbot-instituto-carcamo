@@ -119,20 +119,34 @@ function updateChartsTheme(isDark) {
   const textColor = isDark ? '#cbd5e1' : '#64748b';
   const gridColor = isDark ? '#1e2d4d' : '#e2e8f0';
 
-  if (careersChart && careersChart.options && careersChart.options.scales) {
-    if (careersChart.options.scales.x) {
-      careersChart.options.scales.x.ticks.color = textColor;
-      careersChart.options.scales.x.grid.color = gridColor;
+  if (careersChart) {
+    if (careersChart.options && careersChart.options.plugins && careersChart.options.plugins.legend) {
+      if (!careersChart.options.plugins.legend.labels) careersChart.options.plugins.legend.labels = {};
+      careersChart.options.plugins.legend.labels.color = textColor;
     }
-    if (careersChart.options.scales.y) {
-      careersChart.options.scales.y.ticks.color = textColor;
-      careersChart.options.scales.y.grid.color = gridColor;
+    if (careersChart.data.datasets && careersChart.data.datasets[0]) {
+      careersChart.data.datasets[0].borderColor = isDark ? '#111c38' : '#ffffff';
     }
     careersChart.update();
   }
-  if (categoriesChart && categoriesChart.options && categoriesChart.options.plugins) {
-    if (categoriesChart.options.plugins.legend && categoriesChart.options.plugins.legend.labels) {
-      categoriesChart.options.plugins.legend.labels.color = textColor;
+
+  if (categoriesChart) {
+    if (categoriesChart.options && categoriesChart.options.scales) {
+      if (categoriesChart.options.scales.x) {
+        if (!categoriesChart.options.scales.x.ticks) categoriesChart.options.scales.x.ticks = {};
+        if (!categoriesChart.options.scales.x.grid) categoriesChart.options.scales.x.grid = {};
+        categoriesChart.options.scales.x.ticks.color = textColor;
+        categoriesChart.options.scales.x.grid.color = gridColor;
+      }
+      if (categoriesChart.options.scales.y) {
+        if (!categoriesChart.options.scales.y.ticks) categoriesChart.options.scales.y.ticks = {};
+        if (!categoriesChart.options.scales.y.grid) categoriesChart.options.scales.y.grid = {};
+        categoriesChart.options.scales.y.ticks.color = textColor;
+        categoriesChart.options.scales.y.grid.color = gridColor;
+      }
+    }
+    if (categoriesChart.data.datasets && categoriesChart.data.datasets[0]) {
+      categoriesChart.data.datasets[0].backgroundColor = isDark ? '#38bdf8' : '#13357b';
     }
     categoriesChart.update();
   }
@@ -171,6 +185,28 @@ function initAdminMobileSidebar() {
       }
     });
   });
+
+  // ScrollSpy automático para resaltar la sección activa en el sidebar al hacer scroll
+  const sectionIds = ['metricas', 'comunicados', 'tramites-fut', 'vocacional', 'faqs', 'no-resueltas', 'configuracion'];
+  window.addEventListener('scroll', () => {
+    let current = '';
+    const scrollPos = window.scrollY + 140;
+    sectionIds.forEach(id => {
+      const section = document.getElementById(id);
+      if (section && section.offsetTop <= scrollPos) {
+        current = id;
+      }
+    });
+    if (current && links.length > 0) {
+      links.forEach(l => {
+        if (l.getAttribute('href') === `#${current}`) {
+          l.classList.add('active');
+        } else if (l.getAttribute('href') && l.getAttribute('href').startsWith('#')) {
+          l.classList.remove('active');
+        }
+      });
+    }
+  }, { passive: true });
 }
 
 function getStats() {
@@ -335,6 +371,10 @@ function initDashboard() {
 }
 
 function renderCharts(stats) {
+  const isDark = document.body.classList.contains('dark-theme');
+  const textColor = isDark ? '#cbd5e1' : '#64748b';
+  const gridColor = isDark ? '#1e2d4d' : '#e2e8f0';
+
   // Gráfico de Carreras (Doughnut)
   const ctxCarreras = document.getElementById('chartCarreras');
   if (ctxCarreras && window.Chart) {
@@ -348,13 +388,16 @@ function renderCharts(stats) {
           data: [cData.apsti, cData.ani, cData.conta, cData.dpa],
           backgroundColor: ['#0d6efd', '#198754', '#6f42c1', '#0dcaf0'],
           borderWidth: 2,
-          borderColor: '#ffffff'
+          borderColor: isDark ? '#111c38' : '#ffffff'
         }]
       },
       options: {
         responsive: true,
         plugins: {
-          legend: { position: 'bottom' }
+          legend: {
+            position: 'bottom',
+            labels: { color: textColor, boxWidth: 12, padding: 14 }
+          }
         },
         cutout: '65%'
       }
@@ -373,7 +416,7 @@ function renderCharts(stats) {
         datasets: [{
           label: 'N° de Consultas',
           data: [catData.admision, catData.tramites, catData.pagos, catData.plataformas],
-          backgroundColor: '#13357b',
+          backgroundColor: isDark ? '#38bdf8' : '#13357b',
           borderRadius: 6
         }]
       },
@@ -383,7 +426,15 @@ function renderCharts(stats) {
           legend: { display: false }
         },
         scales: {
-          y: { beginAtZero: true }
+          x: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          }
         }
       }
     });

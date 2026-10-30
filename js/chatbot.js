@@ -629,6 +629,7 @@ class HercarBotApp {
         dni,
         carrera,
         tramite,
+        detalle,
         fecha: new Date().toLocaleString(),
         estado: 'Generado y Descargado'
       });

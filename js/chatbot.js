@@ -1174,9 +1174,19 @@ class HercarBotApp {
   initVoiceSynthesis() {
     if (!('speechSynthesis' in window)) return;
 
-    // Cargar configuraciones guardadas de voz humanizada (tono dulce, suave, femenino y cariñoso por defecto)
-    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.94;
-    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.10;
+    // Sanear configuraciones previas corruptas o valores descalibrados
+    const oldPitch = parseFloat(localStorage.getItem('hercar_voice_pitch'));
+    const oldRate = parseFloat(localStorage.getItem('hercar_voice_rate'));
+    if (oldPitch && (oldPitch > 1.05 || oldPitch < 0.95)) {
+      localStorage.removeItem('hercar_voice_pitch');
+    }
+    if (oldRate && (oldRate < 0.95 || oldRate > 1.10)) {
+      localStorage.removeItem('hercar_voice_rate');
+    }
+
+    // Configuración estándar humana y natural (Pitch 1.0 y Rate 1.0)
+    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 1.0;
+    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.0;
     this.voiceStyle = localStorage.getItem('hercar_voice_style') || 'calida';
     this.voiceURI = localStorage.getItem('hercar_voice_uri') || null;
 
@@ -1186,7 +1196,7 @@ class HercarBotApp {
       const name = (v.name || '').toLowerCase();
       const lang = (v.lang || '').toLowerCase();
 
-      // Detección exhaustiva de voces FEMENINAS para máxima calidez, dulzura y belleza vocal
+      // Detección exhaustiva de voces naturales y femeninas de alta fidelidad
       const isFemale = name.includes('female') || name.includes('mujer') || 
                        name.includes('paloma') || name.includes('dalia') || name.includes('salma') || 
                        name.includes('sabina') || name.includes('paulina') || name.includes('elena') || 
@@ -1200,7 +1210,7 @@ class HercarBotApp {
                        name.includes('esperanza') || name.includes('valeria') || name.includes('mia') ||
                        (name.includes('google') && !name.includes('male') && !name.includes('hombre'));
 
-      // Detección de voces masculinas para penalizarlas (priorizando la asesora femenina solicitada)
+      // Detección de voces masculinas para despriorizarlas si se busca asistente femenina
       const isMale = name.includes('male') || name.includes('hombre') || 
                      name.includes('jorge') || name.includes('alvaro') || name.includes('álvaro') || 
                      name.includes('raul') || name.includes('raúl') || name.includes('pablo') || 
@@ -1210,31 +1220,31 @@ class HercarBotApp {
                      name.includes('luis') || name.includes('fernando') || name.includes('mario') || 
                      name.includes('diego') || name.includes('sergio') || name.includes('javier');
 
-      if (isFemale) score += 240;
-      if (isMale) score -= 280;
+      if (isFemale) score += 200;
+      if (isMale) score -= 150;
 
       // Máxima prioridad: Voces Neuronales / Naturales de Microsoft Edge / Azure / Windows 11
       if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) score += 190;
-      else if (name.includes('online')) score += 95;
+      else if (name.includes('online')) score += 90;
 
       // Alta prioridad: Voces fluidas y suaves de Google Chrome / Android
-      if (name.includes('google')) score += 150;
+      if (name.includes('google')) score += 140;
 
-      // Voces femeninas de altísima fidelidad natural
-      if (name.includes('sabina') || name.includes('paloma') || name.includes('dalia') || name.includes('salma')) score += 110;
-      if (name.includes('paulina') || name.includes('elena') || name.includes('helena') || name.includes('mónica') || name.includes('monica')) score += 90;
-      if (name.includes('laura') || name.includes('camila') || name.includes('lucia') || name.includes('lucía') || name.includes('sofia')) score += 70;
+      // Voces femeninas reconocidas por su dicción limpia
+      if (name.includes('sabina') || name.includes('paloma') || name.includes('dalia') || name.includes('salma')) score += 100;
+      if (name.includes('paulina') || name.includes('elena') || name.includes('helena') || name.includes('mónica') || name.includes('monica')) score += 80;
+      if (name.includes('laura') || name.includes('camila') || name.includes('lucia') || name.includes('lucía') || name.includes('sofia')) score += 60;
 
       // Preferencia regional: Perú / Latinoamérica / Neutro
-      if (lang === 'es-pe') score += 55;
-      else if (lang === 'es-419' || lang.includes('419')) score += 50;
-      else if (lang === 'es-mx') score += 40;
-      else if (lang === 'es-us') score += 35;
-      else if (lang === 'es-co' || lang === 'es-cl' || lang === 'es-ar') score += 25;
+      if (lang === 'es-pe') score += 50;
+      else if (lang === 'es-419' || lang.includes('419')) score += 45;
+      else if (lang === 'es-mx') score += 35;
+      else if (lang === 'es-us') score += 30;
+      else if (lang === 'es-co' || lang === 'es-cl' || lang === 'es-ar') score += 20;
       else if (lang.startsWith('es')) score += 15;
 
-      // Penalizar voces robóticas de escritorio clásicas (SAPI5 antiguas)
-      if (name.includes('desktop')) score -= 50;
+      // Penalizar voces robóticas de escritorio antiguas
+      if (name.includes('desktop')) score -= 40;
 
       return score;
     };
@@ -1279,20 +1289,11 @@ class HercarBotApp {
 
       spanishVoices.sort((a, b) => scoreVoice(b) - scoreVoice(a));
 
-      // Si el usuario tenía una voz guardada en localStorage, verificar que no sea una voz masculina previa
       if (this.voiceURI) {
         const saved = spanishVoices.find(v => v.voiceURI === this.voiceURI);
-        const isSavedMale = saved && (
-          saved.name.toLowerCase().includes('jorge') || 
-          saved.name.toLowerCase().includes('alvaro') || 
-          saved.name.toLowerCase().includes('raul') || 
-          saved.name.toLowerCase().includes('david') || 
-          saved.name.toLowerCase().includes('pablo')
-        );
-        if (saved && !isSavedMale) {
+        if (saved) {
           this.selectedVoice = saved;
         } else {
-          // Seleccionar la mejor voz femenina natural
           this.selectedVoice = spanishVoices[0];
           this.voiceURI = this.selectedVoice.voiceURI;
           localStorage.setItem('hercar_voice_uri', this.voiceURI);
@@ -1328,7 +1329,7 @@ class HercarBotApp {
 
     if (speedRange && speedLabel) {
       speedRange.value = this.voiceRate || 1.0;
-      speedLabel.textContent = `${Number(this.voiceRate).toFixed(2)}x (${this.voiceRate < 0.95 ? 'Pausada' : this.voiceRate > 1.05 ? 'Ágil' : 'Natural'})`;
+      speedLabel.textContent = `${Number(this.voiceRate).toFixed(2)}x (Natural y Fluida)`;
 
       speedRange.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
@@ -1366,46 +1367,46 @@ class HercarBotApp {
 
       btnWarm.addEventListener('click', () => {
         this.voiceStyle = 'calida';
-        this.voicePitch = 1.10;
-        this.voiceRate = 0.94;
+        this.voicePitch = 1.0;
+        this.voiceRate = 1.0;
         localStorage.setItem('hercar_voice_style', 'calida');
-        localStorage.setItem('hercar_voice_pitch', 1.10);
-        localStorage.setItem('hercar_voice_rate', 0.94);
+        localStorage.setItem('hercar_voice_pitch', 1.0);
+        localStorage.setItem('hercar_voice_rate', 1.0);
         if (speedRange && speedLabel) {
-          speedRange.value = 0.94;
-          speedLabel.textContent = '0.94x (Suave y Cariñosa 🌸)';
+          speedRange.value = 1.0;
+          speedLabel.textContent = '1.00x (Natural y Fluida 🌸)';
         }
         btnWarm.classList.add('active', 'btn-primary');
         btnWarm.classList.remove('btn-outline-primary');
         btnPro.classList.remove('active', 'btn-primary');
         btnPro.classList.add('btn-outline-secondary');
-        this.showToast('Voz activada: Asesora Femenina Suave y Cariñosa 🌸', 'success', 'bi-heart-fill');
+        this.showToast('Voz configurada: Asesora Femenina Natural 🌸', 'success', 'bi-mic-fill');
       });
 
       btnPro.addEventListener('click', () => {
         this.voiceStyle = 'pro';
-        this.voicePitch = 0.98;
-        this.voiceRate = 0.96;
+        this.voicePitch = 1.0;
+        this.voiceRate = 1.0;
         localStorage.setItem('hercar_voice_style', 'pro');
-        localStorage.setItem('hercar_voice_pitch', 0.98);
-        localStorage.setItem('hercar_voice_rate', 0.96);
+        localStorage.setItem('hercar_voice_pitch', 1.0);
+        localStorage.setItem('hercar_voice_rate', 1.0);
         if (speedRange && speedLabel) {
-          speedRange.value = 0.96;
-          speedLabel.textContent = '0.96x (Pausada y Serena)';
+          speedRange.value = 1.0;
+          speedLabel.textContent = '1.00x (Formal y Serena 👔)';
         }
         btnPro.classList.add('active', 'btn-primary');
         btnPro.classList.remove('btn-outline-secondary');
         btnWarm.classList.remove('active', 'btn-primary');
         btnWarm.classList.add('btn-outline-primary');
-        this.showToast('Estilo activado: Asesor Formal 👔', 'info', 'bi-briefcase-fill');
+        this.showToast('Voz configurada: Asesor Formal 👔', 'info', 'bi-briefcase-fill');
       });
     }
 
     if (btnTest) {
       btnTest.addEventListener('click', () => {
         const saludoPrueba = this.voiceStyle === 'pro'
-          ? 'Estimado estudiante o postulante. Soy tu asesor institucional del Instituto Hermanos Cárcamo de Paita. Es un placer orientarte en tu formación técnica profesional.'
-          : '¡Hola, qué alegría saludarte! Soy tu asesora virtual del Instituto Hermanos Cárcamo de Paita. Con mucho cariño te oriento en tus carreras, trámites y pagos. ¿En qué te puedo ayudar hoy, corazón?';
+          ? 'Estimado postulante o estudiante. Soy el asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te oriento con información actualizada sobre carreras técnicas, requisitos de matrícula y trámites académicos.'
+          : '¡Hola! Te doy la bienvenida al Instituto Hermanos Cárcamo de Paita. Con mucho gusto te oriento sobre nuestras cuatro carreras técnicas, admisión y trámites académicos. ¿Qué información deseas consultar?';
         this.speak(saludoPrueba);
       });
     }
@@ -1416,16 +1417,16 @@ class HercarBotApp {
         localStorage.removeItem('hercar_voice_rate');
         localStorage.removeItem('hercar_voice_pitch');
         localStorage.removeItem('hercar_voice_style');
-        this.voiceRate = 0.94;
-        this.voicePitch = 1.10;
+        this.voiceRate = 1.0;
+        this.voicePitch = 1.0;
         this.voiceStyle = 'calida';
         this.voiceURI = null;
         if (speedRange && speedLabel) {
-          speedRange.value = 0.94;
-          speedLabel.textContent = '0.94x (Suave y Cariñosa)';
+          speedRange.value = 1.0;
+          speedLabel.textContent = '1.00x (Natural)';
         }
         this.initVoiceSynthesis();
-        this.showToast('Valores de voz restablecidos a la Asesora Femenina Suave y Cariñosa 🌸', 'info', 'bi-arrow-counterclockwise');
+        this.showToast('Voz restablecida a entonación natural y clara', 'info', 'bi-arrow-counterclockwise');
       });
     }
   }
@@ -1445,48 +1446,61 @@ class HercarBotApp {
       .replace(/<span\s+class=["'][^"']*badge[^"']*["'][\s\S]*?<\/span>/gi, '')
       .replace(/<i\s+class=["'][^"']*bi-[^"']*["'][^>]*><\/i>/gi, '');
 
-    // 2. Extraer texto de enlaces markdown [Texto](url) -> Texto
+    // 2. Convertir saltos de bloque y elementos de lista en pausas naturales
+    raw = raw
+      .replace(/<\/(p|div|h[1-6]|tr|li|blockquote)>/gi, '. ')
+      .replace(/<br\s*[\/]?>/gi, '. ');
+
+    // 3. Extraer texto visible de enlaces markdown [Texto](url) -> Texto
     raw = raw.replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1');
 
-    // 3. Eliminar etiquetas HTML
+    // 4. Eliminar etiquetas HTML restantes
     raw = raw.replace(/<[^>]+>/g, ' ');
 
-    // 4. Limpiar formato Markdown (negrita, cursiva, encabezados, viñetas)
+    // 5. Limpiar formato Markdown (negrita, cursiva, encabezados) sin destruir puntuación
     raw = raw
       .replace(/[*_#`~>]/g, ' ')
-      .replace(/^\s*[-•·▪]\s+/gm, ' ')
-      .replace(/^\s*\d+\.\s+/gm, ' ')
-      .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, ' ')
+      .replace(/^\s*[-•·▪]\s+/gm, '. ')
+      .replace(/^\s*\d+\.\s+/gm, '. ');
+
+    // 6. Eliminar emojis para evitar que el sintetizador describa caras o símbolos
+    raw = raw.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, ' ');
+
+    // 7. Normalizar espacios y puntos repetidos
+    raw = raw
       .replace(/\s+/g, ' ')
+      .replace(/\.{2,}/g, '.')
+      .replace(/\s*\.\s*/g, '. ')
       .trim();
 
-    // 5. Dividir en oraciones sustantivas
+    // 8. Construir locución fluida de hasta 3 oraciones completas
     const sentences = raw.split(/(?<=[.!?])\s+/).filter(s => {
       const cleanS = s.trim();
-      if (cleanS.length < 8) return false;
-      // Descartar encabezados o preguntas que son solo títulos
-      if (cleanS.startsWith('¿') && cleanS.endsWith('?')) return false;
-      if (/^(preguntas sugeridas|principales comunicados|resultados de la academia|guia del sistema|requisitos)/i.test(cleanS)) return false;
+      if (cleanS.length < 10) return false;
+      if (/^(preguntas sugeridas|principales comunicados|guia del sistema)/i.test(cleanS)) return false;
       return true;
     });
 
     let spoken = '';
     if (sentences.length > 0) {
-      spoken = sentences.slice(0, 2)
-        .map(s => {
-          let t = s.trim().replace(/[.!?]+$/, '');
-          return t.charAt(0).toUpperCase() + t.slice(1);
-        })
-        .join('. ');
-      if (spoken.length > 280) {
-        const first = sentences[0].trim().replace(/[.!?]+$/, '');
-        spoken = first.charAt(0).toUpperCase() + first.slice(1);
+      let acc = [];
+      let totalLen = 0;
+      for (const sent of sentences) {
+        if (totalLen + sent.length <= 380 || acc.length === 0) {
+          acc.push(sent.trim());
+          totalLen += sent.length;
+        } else {
+          break;
+        }
       }
+      spoken = acc.join(' ');
+    } else {
+      spoken = raw.slice(0, 300);
     }
 
-    if (!spoken || spoken.length < 25) {
-      if (title && title.length > 5 && !title.startsWith('¿')) {
-        spoken = `Te comparto las indicaciones oficiales sobre ${title}. Puedes revisar todos los detalles en tu pantalla.`;
+    if (!spoken || spoken.length < 15) {
+      if (title && title.length > 5) {
+        spoken = `Te comparto la información oficial sobre ${title}. Puedes revisar todos los detalles en tu pantalla.`;
       } else {
         spoken = 'He preparado la información oficial completa en tu pantalla para resolver tu consulta.';
       }
@@ -1499,54 +1513,7 @@ class HercarBotApp {
     if (!htmlOrText && !customTitle) {
       return this.preparePhoneticText('¡Hola! Qué gusto saludarte. Con todo gusto te oriento en lo que necesites sobre el instituto.');
     }
-
-    const fullContent = ((customTitle || '') + ' ' + (htmlOrText || '')).toLowerCase();
-
-    // 1. Respuestas habladas directas, empáticas y conversacionales para temas frecuentes
-    if (fullContent.includes('mensualidad') || fullContent.includes('pension') || fullContent.includes('gratis') || fullContent.includes('cuanto cuesta la mensualidad')) {
-      return this.preparePhoneticText('El Instituto Hermanos Cárcamo es una institución pública del Estado, por lo que no se pagan pensiones ni mensualidades. El único abono corresponde a la matrícula semestral fijada en el TUPA de aproximadamente ciento veinte soles.');
-    }
-    if (fullContent.includes('carrera') || fullContent.includes('apsti') || fullContent.includes('computacion') || fullContent.includes('software')) {
-      return this.preparePhoneticText('¡Hola! En el Instituto Cárcamo contamos con cuatro carreras técnicas de tres años. Al ser educación pública del Estado, no pagas mensualidades de estudio, únicamente la matrícula administrativa de cada semestre. Aquí puedes revisar sus planes y oportunidades laborales.');
-    }
-    if (fullContent.includes('negocios internacionales') || fullContent.includes('ani') || fullContent.includes('aduan')) {
-      return this.preparePhoneticText('¡Qué excelente carrera! En Administración de Negocios Internacionales te preparas para trabajar en comercio exterior, logística portuaria y agencias de aduanas en el Puerto de Paita.');
-    }
-    if (fullContent.includes('contabilidad') || fullContent.includes('conta')) {
-      return this.preparePhoneticText('¡Hola! La carrera de Contabilidad tiene una gran demanda en empresas y negocios de toda la región Piura. Te permite trabajar desde los primeros ciclos con certificaciones modulares.');
-    }
-    if (fullContent.includes('pesquer') || fullContent.includes('dpa') || fullContent.includes('acuicol')) {
-      return this.preparePhoneticText('¡Hola! Desarrollo Pesquero y Acuícola es la carrera insignia de Paita, conectada directamente con las principales empresas pesqueras, acuícolas y de exportación marina.');
-    }
-    if (fullContent.includes('matricul') || fullContent.includes('paso a paso') || fullContent.includes('que pago')) {
-      return this.preparePhoneticText('¡Hola! Con gusto te explico los pasos de matrícula. Recuerda que al ser educación pública no pagas mensualidades, solo la tasa semestral en el Banco de la Nación y registras tu voucher en el portal oficial.');
-    }
-    if (fullContent.includes('cuenta') || fullContent.includes('banco de la nacion') || fullContent.includes('donde pago') || fullContent.includes('como pagar')) {
-      return this.preparePhoneticText('¡Claro que sí! Nuestra cuenta corriente oficial en el Banco de la Nación es cero cero, seis tres uno, cero uno dos nueve cuatro ocho. También tienes el código interbancario listo para copiar si pagas por tu banca móvil.');
-    }
-    if (fullContent.includes('admision') || fullContent.includes('postular') || fullContent.includes('inscripcion')) {
-      return this.preparePhoneticText('¡Qué alegría que quieras estudiar con nosotros! En el proceso de admisión dos mil veintiséis no pagas pensiones mensuales de enseñanza. Aquí puedes revisar las modalidades de ingreso y requisitos.');
-    }
-    if (fullContent.includes('tramite') || fullContent.includes('certificado') || fullContent.includes('tupa') || fullContent.includes('constancia')) {
-      return this.preparePhoneticText('¡Hola! Con mucho gusto. Aquí puedes consultar los requisitos oficiales, el costo administrativo de tasa TUPA y los tiempos de entrega para tus trámites académicos.');
-    }
-    if (fullContent.includes('ingles') || fullContent.includes('titulacion') || fullContent.includes('idioma')) {
-      return this.preparePhoneticText('¡Hola! El curso institucional de inglés técnico es un requisito obligatorio del Minedu para obtener tu título profesional. Te comparto sus niveles y modalidad.');
-    }
-    if (fullContent.includes('donde queda') || fullContent.includes('ubicacion') || fullContent.includes('direccion') || fullContent.includes('horario')) {
-      return this.preparePhoneticText('Estamos ubicados en la Avenida Miguel Grau, en Paita Alta. Te atendemos en secretaría de lunes a viernes desde las ocho de la mañana.');
-    }
-    if (fullContent.includes('sistema academico') || fullContent.includes('aula virtual') || fullContent.includes('plataforma') || fullContent.includes('notas')) {
-      return this.preparePhoneticText('¡Hola! Aquí tienes los enlaces directos para entrar al Sistema Académico a revisar tus notas y al Aula Virtual para tus tareas y clases.');
-    }
-    if (fullContent.includes('autoridad') || fullContent.includes('director') || fullContent.includes('plana')) {
-      return this.preparePhoneticText('¡Hola! Nuestra institución está liderada por la Dirección General junto a la Unidad Académica y Secretaría General.');
-    }
-    if (fullContent.includes('historia') || fullContent.includes('mision') || fullContent.includes('aniversario')) {
-      return this.preparePhoneticText('Con más de treinta y ocho años formando profesionales técnicos en Paita, el Instituto Hermanos Cárcamo brinda educación superior tecnológica pública de calidad.');
-    }
-
-    // 2. Extraer respuesta real inteligente del contenido provisto
+    // Extraer y hablar la respuesta real completa que el bot acaba de entregar
     return this.extractSpokenAnswer(htmlOrText, customTitle);
   }
 
@@ -1565,7 +1532,7 @@ class HercarBotApp {
       .replace(/\b100%\s*gratuito\b/gi, 'público y sin mensualidades')
       .replace(/\bcien por ciento gratuita\b/gi, 'pública y sin mensualidades')
       .replace(/\bcien por ciento gratuito\b/gi, 'público y sin mensualidades')
-      .replace(/\btodas son gratuitas\b/gi, 'todas son carreras públicas sin costo de mensualidad')
+      .replace(/\btodas son gratuitas\b/gi, 'todas son carreras públicas sin mensualidad')
       .replace(/\bcarreras gratuitas\b/gi, 'carreras públicas sin mensualidad')
       .replace(/¡?\s*NO SE PAGAN PENSIONES NI MENSUALIDADES!?/gi, 'no se pagan pensiones ni mensualidades');
 
@@ -1598,73 +1565,43 @@ class HercarBotApp {
       .replace(/1:15\s*(?:p\.?m\.?|pm)\b/gi, 'una y quince de la tarde')
       .replace(/12:00\s*(?:p\.?m\.?|pm)\b/gi, 'doce del mediodía')
       .replace(/3:00\s*(?:p\.?m\.?|pm)\b/gi, 'tres de la tarde')
-      .replace(/7:40\s*(?:p\.?m\.?|pm)\b/gi, 'siete y cuarenta de la noche')
-      .replace(/(\d{1,2}):(\d{2})\s*(?:a\.?m\.?|am)\b/gi, (match, h, min) => {
-        const hNum = parseInt(h, 10);
-        const hText = hNum === 1 ? 'una' : `${hNum}`;
-        const mText = min === '00' ? '' : min === '30' ? ' y media' : min === '15' ? ' y quince' : ` y ${min}`;
-        return `${hText}${mText} de la mañana`;
-      })
-      .replace(/(\d{1,2}):(\d{2})\s*(?:p\.?m\.?|pm)\b/gi, (match, h, min) => {
-        const hNum = parseInt(h, 10);
-        const periodo = (hNum >= 7 && hNum < 12) ? 'de la noche' : 'de la tarde';
-        const hText = hNum === 1 ? 'una' : `${hNum}`;
-        const mText = min === '00' ? '' : min === '30' ? ' y media' : min === '15' ? ' y quince' : ` y ${min}`;
-        return `${hText}${mText} ${periodo}`;
-      });
+      .replace(/7:40\s*(?:p\.?m\.?|pm)\b/gi, 'siete y cuarenta de la noche');
 
-    // 5. Siglas, abreviaturas y términos institucionales naturales
+    // 5. Siglas institucionales con pronunciación natural
     p = p
       .replace(/\bIESTP\s+Hermanos\s+Cárcamo\b/gi, 'Instituto Hermanos Cárcamo')
       .replace(/\bIESTP\s+HERCAR\b/gi, 'Instituto Hermanos Cárcamo')
       .replace(/\bIESTP\b/gi, 'Instituto')
       .replace(/\bHERCAR\b/gi, 'Hercar')
-      .replace(/\bHercarBot\s*IA\b/gi, 'Hercar Bot')
-      .replace(/\bHercarBot\b/gi, 'Hercar Bot')
+      .replace(/\bHercarBot\s*IA\b/gi, 'HercarBot')
+      .replace(/\bHercarBot\b/gi, 'HercarBot')
       .replace(/\bMINEDU\b/gi, 'Minedu')
-      .replace(/\bAPSTI\b/gi, 'Desarrollo de Sistemas y Software')
-      .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
+      .replace(/\bAPSTI\b/gi, 'A, P, S, T, I')
+      .replace(/\bANI\b/gi, 'A, N, I')
       .replace(/\bCONTA\b/gi, 'Contabilidad')
-      .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
-      .replace(/\bDPI\b/gi, 'límite de inasistencias')
-      .replace(/\bFUT\b/gi, 'formulario de trámite')
+      .replace(/\bDPA\b/gi, 'D, P, A')
+      .replace(/\bDPI\b/gi, 'límite de faltas')
+      .replace(/\bFUT\b/gi, 'F, U, T')
       .replace(/\bTUPA\b/gi, 'Tupa')
       .replace(/\bSIS\b/gi, 'Seguro Integral de Salud')
       .replace(/\bBN\b/gi, 'Banco de la Nación')
       .replace(/\bCCI\b/gi, 'código interbancario')
-      .replace(/\bCEPRE\b/gi, 'Sepre')
+      .replace(/\bCEPRE\b/gi, 'Cepre')
       .replace(/\bEFSRT\b/gi, 'prácticas preprofesionales')
       .replace(/\bSANIPES\b/gi, 'Sanipes')
       .replace(/\bIMARPE\b/gi, 'Imarpe')
       .replace(/\bPRODUCE\b/gi, 'Ministerio de la Producción')
       .replace(/\bPRONABEC\b/gi, 'Pronabec')
-      .replace(/\bICPNA\b/gi, 'Icpna')
       .replace(/\bSUNAT\b/gi, 'Sunat')
-      .replace(/\bDNI\b/gi, 'de ene i')
-      .replace(/\bPDF\b/gi, 'pe de efe')
-      .replace(/\bWhatsApp\b/gi, 'guasap')
+      .replace(/\bDNI\b/gi, 'D, N, I')
+      .replace(/\bPDF\b/gi, 'P, D, F')
+      .replace(/\bWhatsApp\b/gi, 'WhatsApp')
       .replace(/\bchatbot\b/gi, 'asistente virtual')
       .replace(/\bIA\b/gi, 'inteligencia artificial')
-      .replace(/Págalo\.pe/gi, 'Págalo punto pe')
-      .replace(/pagos\.ieshercar\.edu\.pe/gi, 'portal de pagos del instituto')
-      .replace(/ieshercar\.edu\.pe/gi, 'portal web oficial del instituto')
-      .replace(/\bEC\b/g, 'evaluación continua')
-      .replace(/\bEF\b/g, 'evaluación final')
+      .replace(/ieshercar\.edu\.pe/gi, 'portal del instituto')
       .replace(/\b70%/g, 'setenta por ciento')
       .replace(/\b30%/g, 'treinta por ciento')
       .replace(/\b100%/g, 'cien por ciento')
-      .replace(/R\.?M\.?\s*N[°º\.]*\s*232-87-ED/gi, 'Resolución Ministerial doscientos treinta y dos del año ochenta y siete')
-      .replace(/R\.?M\.?\b/gi, 'Resolución Ministerial')
-      .replace(/R\.?D\.?\b/gi, 'Resolución Directoral')
-      .replace(/\bLic\.\b/gi, 'Licenciado')
-      .replace(/\bEcon\.\b/gi, 'Economista')
-      .replace(/\bCPC\b/gi, 'Contador Colegiado')
-      .replace(/\bMg\.\b/gi, 'Magíster')
-      .replace(/\bIng\.\b/gi, 'Ingeniero')
-      .replace(/\bA1\b/g, 'A uno')
-      .replace(/\bA2\b/g, 'A dos')
-      .replace(/\bB1\b/g, 'B uno')
-      .replace(/\bB2\b/g, 'B dos')
       .replace(/2026/g, 'dos mil veintiséis')
       .replace(/2025/g, 'dos mil veinticinco')
       .replace(/1°/g, 'primer').replace(/2°/g, 'segundo').replace(/3°/g, 'tercer')
@@ -1672,21 +1609,13 @@ class HercarBotApp {
       .replace(/N°|Nro\./gi, 'número')
       .replace(/https?:\/\/\S+/g, 'enlace oficial');
 
-    // 6. Limpieza profunda de puntuación y caracteres especiales para locución humana perfecta
+    // 6. Limpieza de caracteres no pronunciables preservando signos de entonación
     p = p
-      .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '')
       .replace(/\s*\/\s*/g, ' o ')
-      .replace(/[¿?¡!«»""“”'']/g, '')
       .replace(/[*#_`\[\]()^~|•·▪]/g, '')
-      .replace(/\.\s*(a|hasta|y|o)\s+/gi, ' $1 ')
-      .replace(/:\s+/g, ', ')
-      .replace(/;\s*/g, ', ')
-      .replace(/,\s*,+/g, ', ')
       .replace(/\s+/g, ' ')
       .trim();
-
-    // 7. Capitalizar inicio de oraciones tras puntos
-    p = p.replace(/(^\s*|[.!?]\s+)([a-záéíóúñ])/g, (m, sep, char) => sep + char.toUpperCase());
 
     return p;
   }
@@ -1696,10 +1625,10 @@ class HercarBotApp {
     this.stopSpeaking();
 
     const clean = this.preparePhoneticText(text);
-    if (!clean) return;
+    if (!clean || clean.trim().length === 0) return;
 
     const utterance = new SpeechSynthesisUtterance(clean);
-    this.currentUtterance = utterance; // Prevenir recolección de basura del navegador
+    this.currentUtterance = utterance;
 
     if (this.selectedVoice) {
       utterance.voice = this.selectedVoice;
@@ -1708,32 +1637,20 @@ class HercarBotApp {
       utterance.lang = 'es-PE';
     }
 
-    // Cadencia humana, cálida y natural (respetando los ajustes personalizados)
+    // Entonación humana natural
     utterance.rate = this.voiceRate || 1.0;
-    utterance.pitch = this.voicePitch || 1.04;
+    utterance.pitch = this.voicePitch || 1.0;
     utterance.volume = this.voiceVolume || 1.0;
 
     utterance.onstart = () => {
       this.isSpeaking = true;
       if (this.voiceIndicator) this.voiceIndicator.classList.add('active');
       if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'inline-flex';
-
-      // Solución al bug de corte a los 15s en Google Chrome / Edge
-      if (this.speechHeartbeatInterval) clearInterval(this.speechHeartbeatInterval);
-      this.speechHeartbeatInterval = setInterval(() => {
-        if (this.isSpeaking && window.speechSynthesis.speaking) {
-          window.speechSynthesis.pause();
-          window.speechSynthesis.resume();
-        } else {
-          if (this.speechHeartbeatInterval) clearInterval(this.speechHeartbeatInterval);
-        }
-      }, 9500);
     };
 
     utterance.onend = () => {
       this.isSpeaking = false;
       this.currentUtterance = null;
-      if (this.speechHeartbeatInterval) clearInterval(this.speechHeartbeatInterval);
       if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
       if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
     };
@@ -1741,7 +1658,6 @@ class HercarBotApp {
     utterance.onerror = () => {
       this.isSpeaking = false;
       this.currentUtterance = null;
-      if (this.speechHeartbeatInterval) clearInterval(this.speechHeartbeatInterval);
       if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
       if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
     };
@@ -5877,13 +5793,13 @@ class HercarTourGuide {
         selector: '.welcome-campus-card, .bot-welcome-hero, main h1',
         title: '🏛️ ¡Bienvenido a HercarBot IA!',
         desc: 'Soy la asistente virtual oficial del IESTP "Hermanos Cárcamo" de Paita. Te guiaré en 30 segundos por todas mis funciones.',
-        voice: '¡Hola con mucho cariño! Bienvenida o bienvenido a HercarBot I A, tu asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te mostraré con todo gusto cómo funciona nuestra plataforma.'
+        voice: '¡Hola! Te doy una cordial bienvenida a HercarBot, el asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te mostraré rápidamente las funciones principales de nuestra plataforma.'
       },
       {
         selector: '.features-pill-grid, .cards-grid',
         title: '🚀 12 Herramientas Inteligentes',
         desc: 'Consulta las 4 carreras profesionales, usa el Simulador de Admisión 2026, el Test Vocacional IA, el Cotizador TUPA o las Calculadoras de Notas y Faltas (DPI 30%) con un solo toque.',
-        voice: 'En este panel central preparé con mucho cariño doce herramientas interactivas: puedes consultar nuestras cuatro carreras profesionales, simular tu examen de admisión, rendir tu test vocacional o calcular tus notas y asistencias.'
+        voice: 'En este panel central tienes doce herramientas interactivas: puedes consultar nuestras cuatro carreras profesionales, simular tu examen de admisión, rendir tu test vocacional o calcular tus notas y faltas permitidas.'
       },
       {
         selector: '.header-portals, .header-quick-portals, .chat-top-header',
@@ -5893,7 +5809,7 @@ class HercarTourGuide {
       },
       {
         selector: '.header-controls, .control-btn',
-        title: '🌸 Voz Femenina y Personalización',
+        title: '🌸 Voz y Personalización',
         desc: 'Aquí arriba puedes activar o silenciar mi voz, cambiar al Modo Oscuro, alternar al Modo Burbuja Web flotante o descargar tu conversación.',
         voice: 'En los botones de la esquina superior derecha puedes personalizar mi voz, cambiar a modo oscuro, probar la vista flotante sobre la web oficial o descargar el historial de tus consultas.'
       },
@@ -5901,7 +5817,7 @@ class HercarTourGuide {
         selector: '.chat-input-container, .input-box-wrapper, form',
         title: '🎙️ Pregunta por Texto, Voz o Imagen',
         desc: 'Escribe cualquier duda, usa el micrófono para hablarme directamente o adjunta una captura de tu voucher o trámite.',
-        voice: 'Finalmente, en la barra inferior puedes escribirme lo que desees o presionar el micrófono para hablar conmigo en tiempo real. ¡Estoy aquí para apoyarte en todo lo que necesites, corazón!'
+        voice: 'Finalmente, en la barra inferior puedes escribirme lo que desees o presionar el micrófono para hablar conmigo en tiempo real. ¡Estoy lista para apoyarte en lo que necesites!'
       }
     ];
     this.initUI();
@@ -5928,8 +5844,8 @@ class HercarTourGuide {
         || voices.find(v => v.lang.startsWith('es'));
       if (femaleVoice) utter.voice = femaleVoice;
       utter.lang = 'es-PE';
-      utter.pitch = 1.10;
-      utter.rate = 0.94;
+      utter.pitch = 1.0;
+      utter.rate = 1.0;
       window.speechSynthesis.speak(utter);
     } catch (e) {}
   }

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Acceso Docente y Administrativo — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  
+  <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0f3380;
+      --primary-dark: #0a1f4d;
+      --accent: #2563eb;
+      --gold: #f59e0b;
+      --bg-dark: #081326;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.25), transparent 40%),
+                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.15), transparent 40%),
+                  linear-gradient(135deg, #070e1e 0%, #0c1b36 50%, #071124 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+      color: #f1f5f9;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 36px 30px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .auth-logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .auth-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+    .auth-title {
+      font-family: 'Jost', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: #ffffff;
+      text-align: center;
+      letter-spacing: -0.3px;
+    }
+    .auth-subtitle {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 4px;
+      margin-bottom: 24px;
+    }
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .form-control {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+    .input-group-text {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-left: none;
+      color: #94a3b8;
+      border-radius: 0 12px 12px 0;
+      cursor: pointer;
+    }
+    .btn-auth-primary {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border-radius: 12px;
+      width: 100%;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .btn-auth-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.5);
+      color: #ffffff;
+    }
+    .btn-demo-quick {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px dashed rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 9px;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-demo-quick:hover {
+      background: rgba(245, 158, 11, 0.2);
+      color: #ffffff;
+    }
+    .auth-alert {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      display: none;
+      margin-bottom: 16px;
+    }
+    .auth-alert.danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+    .auth-alert.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+    }
+    .auth-links {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+    }
+    .auth-links a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .auth-links a:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <!-- Logotipo Institucional -->
+    <div class="auth-logo-box">
+      <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo IESTP Hermanos Cárcamo" class="auth-logo">
+      <div class="text-start">
+        <h5 class="mb-0 fw-bold text-white" style="font-size: 1.15rem;">HercarBot IA</h5>
+        <small class="text-warning fw-semibold" style="font-size: 0.72rem;"><i class="bi bi-shield-lock-fill me-1"></i>Acceso Docente y Administrativo</small>
+      </div>
+    </div>
+
+    <h2 class="auth-title">Iniciar Sesión</h2>
+    <p class="auth-subtitle">Ingresa con tus credenciales de docente para gestionar consultas, métricas y comunicados oficiales.</p>
+
+    <!-- Alertas -->
+    <div id="authAlert" class="auth-alert"></div>
+
+    <!-- Formulario de Acceso -->
+    <form id="loginForm" autocomplete="off">
+      <div class="mb-3">
+        <label for="inputEmail" class="form-label"><i class="bi bi-person-fill text-primary me-1"></i> Correo Institucional / Usuario:</label>
+        <input type="text" id="inputEmail" class="form-control" placeholder="ejemplo: profesor@ieshercar.edu.pe" required autofocus>
+      </div>
+
+      <div class="mb-3">
+        <label for="inputPassword" class="form-label"><i class="bi bi-key-fill text-primary me-1"></i> Contraseña de Acceso:</label>
+        <div class="input-group">
+          <input type="password" id="inputPassword" class="form-control" placeholder="••••••••" required>
+          <span class="input-group-text" id="togglePasswordBtn" title="Mostrar/Ocultar contraseña">
+            <i class="bi bi-eye-fill" id="eyeIcon"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+          <label class="form-check-label text-muted" for="rememberMe" style="font-size: 0.78rem;">
+            Recordar sesión
+          </label>
+        </div>
+        <a href="register.html" class="small text-decoration-none" style="color: #60a5fa; font-size: 0.78rem;">¿Olvidaste clave?</a>
+      </div>
+
+      <button type="submit" class="btn-auth-primary mb-3" id="btnLoginSubmit">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Panel de Control
+      </button>
+
+      <!-- Botón Rápido Demo para el Profesor -->
+      <button type="button" class="btn-demo-quick mb-2" id="btnFillDemo">
+        <i class="bi bi-mortarboard-fill me-1"></i> <strong>Autocompletar Acceso Profesor (Demo)</strong>
+      </button>
+    </form>
+
+    <div class="auth-links">
+      <div class="mb-2">
+        <span class="text-muted">¿Nuevo docente o administrativo?</span>
+        <a href="register.html">Crear Cuenta aquí</a>
+      </div>
+      <div>
+        <a href="index.html" class="text-white-50"><i class="bi bi-arrow-left me-1"></i>Volver al Asistente HercarBot</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mostrar / ocultar contraseña
+    const toggleBtn = document.getElementById('togglePasswordBtn');
+    const pwdInput = document.getElementById('inputPassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (toggleBtn && pwdInput && eyeIcon) {
+      toggleBtn.addEventListener('click', () => {
+        const isPassword = pwdInput.type === 'password';
+        pwdInput.type = isPassword ? 'text' : 'password';
+        eyeIcon.className = isPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
+      });
+    }
+
+    // Botón de autocompletado rápido para el profesor / evaluador
+    const btnFillDemo = document.getElementById('btnFillDemo');
+    if (btnFillDemo) {
+      btnFillDemo.addEventListener('click', () => {
+        document.getElementById('inputEmail').value = 'profesor@ieshercar.edu.pe';
+        document.getElementById('inputPassword').value = 'hercar2026';
+        showAlert('Datos de prueba cargados: profesor@ieshercar.edu.pe / hercar2026', 'success');
+      });
+    }
+
+    function showAlert(msg, type = 'danger') {
+      const alertBox = document.getElementById('authAlert');
+      alertBox.textContent = msg;
+      alertBox.className = `auth-alert ${type}`;
+      alertBox.style.display = 'block';
+    }
+
+    // Procesar Inicio de Sesión
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('inputEmail').value.trim().toLowerCase();
+      const pwd = document.getElementById('inputPassword').value.trim();
+
+      // Cargar lista de usuarios registrados
+      let users = [];
+      try {
+        users = JSON.parse(localStorage.getItem('hercar_admin_users')) || [];
+      } catch (err) {
+        users = [];
+      }
+
+      // Credenciales oficiales maestras por defecto
+      const defaultUsers = [
+        { email: 'profesor@ieshercar.edu.pe', pass: 'hercar2026', name: 'Profesor Titular IESTP Cárcamo', role: 'Docente Evaluador' },
+        { email: 'admin@ieshercar.edu.pe', pass: 'admin2026', name: 'Administrador General HercarBot', role: 'Administrador Institucional' },
+        { email: 'profesor', pass: 'hercar2026', name: 'Profesor Titular IESTP Cárcamo', role: 'Docente Evaluador' },
+        { email: 'admin', pass: 'admin2026', name: 'Administrador General HercarBot', role: 'Administrador Institucional' }
+      ];
+
+      const allUsers = [...defaultUsers, ...users];
+
+      const found = allUsers.find(u => 
+        (u.email.toLowerCase() === email || (u.username && u.username.toLowerCase() === email)) && 
+        (u.pass === pwd || u.password === pwd)
+      );
+
+      if (found) {
+        showAlert(`¡Bienvenido, ${found.name}! Redirigiendo al panel...`, 'success');
+        const sessionData = {
+          email: found.email,
+          name: found.name || 'Docente Autorizado',
+          role: found.role || 'Docente / Administrador',
+          loginTime: new Date().toISOString()
+        };
+
+        sessionStorage.setItem('hercar_admin_session', JSON.stringify(sessionData));
+        if (document.getElementById('rememberMe').checked) {
+          localStorage.setItem('hercar_admin_session', JSON.stringify(sessionData));
+        }
+
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 800);
+      } else {
+        showAlert('Usuario o contraseña incorrectos. Verifica tus datos o usa el botón de acceso de prueba.', 'danger');
+      }
+    });
+  </script>
+</body>
+</html>

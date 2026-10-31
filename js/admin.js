@@ -13,6 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initFaqManager();
   initUnresolvedList();
   initSettings();
+
+  const btnLogout = document.getElementById('btn-admin-logout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+      showAdminConfirm({
+        title: 'Cerrar Sesión',
+        message: '¿Deseas salir del panel de administración docente?',
+        icon: 'bi-box-arrow-right',
+        isDanger: false,
+        btnText: 'Sí, Salir',
+        onConfirm: () => {
+          sessionStorage.removeItem('hercar_admin_session');
+          localStorage.removeItem('hercar_admin_session');
+          showAdminToast('Sesión cerrada correctamente. Redirigiendo...', 'info', 'bi-shield-lock');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 600);
+        }
+      });
+    });
+  }
 });
 
 let careersChart = null;

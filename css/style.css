@@ -3490,13 +3490,28 @@ body.dark-theme #modalVoiceSettings .modal-footer {
 
 @media (max-width: 576px) {
   .campus-banner-img-wrap {
-    height: 135px;
+    height: 180px !important;
+  }
+  .campus-banner-overlay {
+    padding: 10px 12px !important;
+    gap: 6px !important;
+    background: linear-gradient(to top, rgba(7, 18, 38, 0.95) 0%, rgba(7, 18, 38, 0.7) 60%, transparent 100%) !important;
   }
   .campus-banner-title {
-    font-size: 0.88rem;
+    font-size: 0.88rem !important;
+    line-height: 1.2 !important;
   }
   .campus-banner-addr {
-    font-size: 0.72rem;
+    font-size: 0.70rem !important;
+    line-height: 1.2 !important;
+    margin-top: 1px !important;
+  }
+  .campus-banner-tags {
+    gap: 4px !important;
+  }
+  .campus-badge {
+    padding: 2px 7px !important;
+    font-size: 0.65rem !important;
   }
   .carrera-cover-banner {
     height: 140px;
@@ -3936,17 +3951,32 @@ body.dark-theme .feature-pill {
     flex-shrink: 0 !important;
   }
 
-  /* Las 12 tarjetas en 2 columnas simétricas */
+  /* Las 12 tarjetas en 2 columnas simétricas perfectamente adaptadas */
   .features-pill-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
-    padding: 0 8px 90px !important;
+    padding: 0 4px 90px !important;
   }
 
   .features-pill-grid > div,
   .feature-pill {
-    padding: 12px 10px !important;
-    border-radius: 14px !important;
+    padding: 10px 8px !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+
+  .features-pill-grid strong,
+  .feature-pill strong {
+    font-size: 0.80rem !important;
+    line-height: 1.2 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    word-break: break-word !important;
   }
 
   .features-pill-grid small,
@@ -3955,8 +3985,9 @@ body.dark-theme .feature-pill {
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
-    font-size: 0.74rem !important;
-    line-height: 1.25 !important;
+    font-size: 0.70rem !important;
+    line-height: 1.2 !important;
+    opacity: 0.85 !important;
   }
 
   .chat-input-container {

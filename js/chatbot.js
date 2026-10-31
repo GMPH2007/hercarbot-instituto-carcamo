@@ -1875,7 +1875,6 @@ class HercarBotApp {
         <div class="suggested-prompts-section">
           <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Preguntas Frecuentes y Herramientas Rápidas:</span>
           <div class="prompts-chips-wrapper">
-            <button class="prompt-chip highlight-tour-chip" data-chat-action="iniciar_mini_tour"><i class="bi bi-compass-fill me-1"></i> 💡 ¿Cómo funciona HercarBot? (Mini Tour Guiado)</button>
             <button class="prompt-chip" data-prompt="¿Cuál es el número de cuenta bancaria para pagar?">🏦 Número de Cuenta BN</button>
             <button class="prompt-chip" data-prompt="¿Cuánto cuesta la matrícula y qué hago después de pagar?">💰 ¿Qué pago y dónde voy?</button>
             <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final">📊 Calculadora de Notas (70/30)</button>

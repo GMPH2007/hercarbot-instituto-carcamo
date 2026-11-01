@@ -425,6 +425,26 @@ body {
   letter-spacing: 0.3px;
 }
 
+.sidebar-admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #94a3b8 !important;
+  font-size: 0.74rem !important;
+  font-weight: 600;
+  text-decoration: none !important;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.3);
+  transition: all 0.2s ease;
+}
+.sidebar-admin-link:hover {
+  color: #38bdf8 !important;
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.12);
+}
+
 /* ============================================================
    5. ÁREA PRINCIPAL DEL CHAT
    ============================================================ */
@@ -3927,12 +3947,13 @@ body.dark-theme .feature-pill {
     gap: 6px !important;
   }
 
-  /* Los 5 portales se deslizan con el dedo en 1 fila */
+  /* Los portales se deslizan fluidamente con el dedo en 1 sola fila sin desbordes */
   .header-quick-portals,
   .header-portals {
     order: 3 !important;
     width: 100% !important;
     display: flex !important;
+    flex-wrap: nowrap !important;
     overflow-x: auto !important;
     white-space: nowrap !important;
     gap: 6px !important;
@@ -3949,13 +3970,20 @@ body.dark-theme .feature-pill {
     padding: 5px 11px !important;
     font-size: 0.74rem !important;
     flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Viewport con amplio padding inferior dinámico para que NADA quede tapado por la barra de entrada */
+  .chat-messages-viewport {
+    padding: 12px 12px calc(150px + env(safe-area-inset-bottom, 0px)) !important;
+    scroll-padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   /* Las 12 tarjetas en 2 columnas simétricas perfectamente adaptadas */
   .features-pill-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
-    padding: 0 4px 90px !important;
+    padding: 0 4px 15px !important;
   }
 
   .features-pill-grid > div,
@@ -3966,6 +3994,8 @@ body.dark-theme .feature-pill {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 6px !important;
+    min-height: 74px !important;
+    justify-content: center !important;
   }
 
   .features-pill-grid strong,
@@ -3990,18 +4020,43 @@ body.dark-theme .feature-pill {
     opacity: 0.85 !important;
   }
 
+  /* Cinta de consultas rápidas deslizable en móvil */
+  .chat-quick-chips-bar {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    padding: 2px 2px 6px !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .chat-quick-chips-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+  .quick-chip-btn {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Barra de entrada anclada con blur elegante y sombra */
   .chat-input-container {
     position: fixed !important;
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom)) !important;
-    background: linear-gradient(180deg, transparent, rgba(238, 244, 251, 0.96) 30%) !important;
+    padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-top: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.07) !important;
     z-index: 45 !important;
   }
 
   body.dark-theme .chat-input-container {
-    background: linear-gradient(180deg, transparent, rgba(7, 11, 20, 0.98) 30%) !important;
+    background: rgba(7, 11, 20, 0.98) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5) !important;
   }
 }
 

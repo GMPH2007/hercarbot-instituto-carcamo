@@ -1181,40 +1181,40 @@ class HercarBotApp {
     }
     const oldPitch = parseFloat(localStorage.getItem('hercar_voice_pitch'));
     const oldRate = parseFloat(localStorage.getItem('hercar_voice_rate'));
-    if (oldPitch && (oldPitch > 1.15 || oldPitch < 0.95)) {
+    if (oldPitch && (oldPitch > 1.08 || oldPitch < 0.95)) {
       localStorage.removeItem('hercar_voice_pitch');
     }
-    if (oldRate && (oldRate < 0.90 || oldRate > 1.10)) {
+    if (oldRate && (oldRate < 0.88 || oldRate > 1.10)) {
       localStorage.removeItem('hercar_voice_rate');
     }
 
-    // Calibración óptima para voz femenina dulce, humana, suave y cercana ("chica asesora")
-    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.98;
-    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.05;
-    this.voiceStyle = localStorage.getItem('hercar_voice_style') || 'calida';
+    // Calibración acústica ultra-natural para voz femenina dulce, cálida y cercana ("chica asesora")
+    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.96;
+    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.01;
+    this.voiceStyle = localStorage.getItem('hercar_voice_style') || 'dulce';
     this.voiceURI = localStorage.getItem('hercar_voice_uri') || null;
 
     const scoreVoice = (v) => {
-      if (!v.lang || (!v.lang.toLowerCase().startsWith('es') && !v.name.toLowerCase().includes('spanish'))) return -100;
+      if (!v.lang || (!v.lang.toLowerCase().startsWith('es') && !v.name.toLowerCase().includes('spanish'))) return -9999;
       let score = 10;
       const name = (v.name || '').toLowerCase();
       const lang = (v.lang || '').toLowerCase();
 
       // Detección exhaustiva de voces naturales y femeninas de alta fidelidad
       const isFemale = name.includes('female') || name.includes('mujer') || 
-                       name.includes('paloma') || name.includes('dalia') || name.includes('salma') || 
-                       name.includes('sabina') || name.includes('paulina') || name.includes('elena') || 
-                       name.includes('helena') || name.includes('monica') || name.includes('mónica') || 
-                       name.includes('camila') || name.includes('sofia') || name.includes('sofía') || 
-                       name.includes('andrea') || name.includes('laura') || name.includes('lucia') || 
-                       name.includes('lucía') || name.includes('victoria') || name.includes('elvira') || 
-                       name.includes('rosa') || name.includes('marta') || name.includes('marina') || 
+                       name.includes('dalia') || name.includes('sabina') || name.includes('paloma') || 
+                       name.includes('jimena') || name.includes('ximena') || name.includes('salma') || 
+                       name.includes('paulina') || name.includes('elena') || name.includes('helena') || 
+                       name.includes('monica') || name.includes('mónica') || name.includes('camila') || 
+                       name.includes('sofia') || name.includes('sofía') || name.includes('andrea') || 
+                       name.includes('laura') || name.includes('lucia') || name.includes('lucía') || 
+                       name.includes('victoria') || name.includes('elvira') || name.includes('rosa') || 
                        name.includes('carmen') || name.includes('francisca') || name.includes('penelope') || 
                        name.includes('penélope') || name.includes('zira') || name.includes('conchita') || 
-                       name.includes('esperanza') || name.includes('valeria') || name.includes('mia') ||
+                       name.includes('valeria') || name.includes('mia') ||
                        (name.includes('google') && !name.includes('male') && !name.includes('hombre'));
 
-      // Detección de voces masculinas para despriorizarlas si se busca asistente femenina
+      // Detección de voces masculinas para despriorizarlas
       const isMale = name.includes('male') || name.includes('hombre') || 
                      name.includes('jorge') || name.includes('alvaro') || name.includes('álvaro') || 
                      name.includes('raul') || name.includes('raúl') || name.includes('pablo') || 
@@ -1224,32 +1224,39 @@ class HercarBotApp {
                      name.includes('luis') || name.includes('fernando') || name.includes('mario') || 
                      name.includes('diego') || name.includes('sergio') || name.includes('javier');
 
-      if (isFemale) score += 250;
-      if (isMale) score -= 300;
-
-      // Máxima prioridad: Voces Neuronales / Naturales de Microsoft Edge / Azure / Windows 11
-      if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) score += 350;
-      else if (name.includes('online')) score += 180;
-
-      // Alta prioridad: Voces fluidas y suaves de Google Chrome / Android
-      if (name.includes('google')) score += 220;
-
-      // Voces femeninas reconocidas por su dicción dulce, humana y clara
-      if (name.includes('sabina') || name.includes('paloma') || name.includes('dalia') || name.includes('salma')) score += 150;
-      if (name.includes('paulina') || name.includes('elena') || name.includes('helena') || name.includes('mónica') || name.includes('monica')) score += 120;
-      if (name.includes('laura') || name.includes('camila') || name.includes('lucia') || name.includes('lucía') || name.includes('sofia')) score += 100;
-
-      // Preferencia regional: Perú / Latinoamérica / Neutro
-      if (lang === 'es-pe') score += 60;
-      else if (lang === 'es-419' || lang.includes('419')) score += 50;
-      else if (lang === 'es-mx') score += 40;
-      else if (lang === 'es-us') score += 30;
-      else if (lang === 'es-co' || lang === 'es-cl' || lang === 'es-ar') score += 20;
-      else if (lang.startsWith('es')) score += 15;
+      if (isFemale) score += 300;
+      if (isMale) score -= 3000;
 
       // Penalizar fuertemente voces robóticas de escritorio antiguas (SAPI5 desktop / espeak)
-      if (name.includes('desktop')) score -= 600;
-      if (name.includes('espeak')) score -= 800;
+      if (name.includes('desktop')) score -= 3500;
+      if (name.includes('espeak')) score -= 5000;
+
+      // Prioridad suprema: Microsoft Dalia Online (Natural) — Reconocida por su timbre dulce, joven y humano
+      if (name.includes('dalia')) score += 700;
+      // Google español (Chrome / Android) — Dicción cálida, suave y cristalina
+      if (name.includes('google') && !name.includes('male')) score += 620;
+      // Microsoft Sabina Online (Natural) — Entonación cordial y afable
+      if (name.includes('sabina') && !name.includes('desktop')) score += 580;
+      // Microsoft Jimena Online (Natural) — Acento melódico latinoamericano
+      if (name.includes('jimena') || name.includes('ximena')) score += 560;
+      // Microsoft Paloma Online (Natural)
+      if (name.includes('paloma')) score += 540;
+      // Microsoft Paulina Online (Natural)
+      if (name.includes('paulina')) score += 530;
+      // Microsoft Elena Online (Natural)
+      if (name.includes('elena') && !name.includes('desktop')) score += 500;
+
+      // Bonificación por tecnología neuronal / natural moderna
+      if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) score += 400;
+      else if (name.includes('online')) score += 200;
+
+      // Preferencia regional latinoamericana
+      if (lang === 'es-pe') score += 80;
+      else if (lang === 'es-419' || lang.includes('419')) score += 60;
+      else if (lang === 'es-mx') score += 50;
+      else if (lang === 'es-us') score += 40;
+      else if (lang === 'es-co' || lang === 'es-cl') score += 30;
+      else if (lang.startsWith('es')) score += 20;
 
       return score;
     };
@@ -1264,18 +1271,17 @@ class HercarBotApp {
         option.value = v.voiceURI;
         const nameLower = v.name.toLowerCase();
         const isNatural = nameLower.includes('natural') || nameLower.includes('neural') || nameLower.includes('google');
-        const isFemale = nameLower.includes('female') || nameLower.includes('mujer') || 
-                         nameLower.includes('paloma') || nameLower.includes('dalia') || nameLower.includes('salma') || 
-                         nameLower.includes('sabina') || nameLower.includes('paulina') || nameLower.includes('elena') || 
-                         nameLower.includes('helena') || nameLower.includes('monica') || nameLower.includes('camila') || 
-                         nameLower.includes('sofia') || nameLower.includes('andrea') || nameLower.includes('laura') || 
-                         nameLower.includes('victoria') || nameLower.includes('lucia') || nameLower.includes('elvira') || 
-                         (nameLower.includes('google') && !nameLower.includes('male'));
+        const isDalia = nameLower.includes('dalia');
+        const isGoogle = nameLower.includes('google') && !nameLower.includes('male');
+        const isSabina = nameLower.includes('sabina') && !nameLower.includes('desktop');
 
         let badge = '';
-        if (isNatural && isFemale) badge = ' 🌸 Voz Femenina Natural (Recomendada)';
-        else if (isFemale) badge = ' 🌸 Voz Femenina';
+        if (isDalia) badge = ' 🌸 Voz Dulce y Joven (Máxima Recomendación)';
+        else if (isGoogle) badge = ' 🌸 Voz Natural Google (Recomendada)';
+        else if (isSabina) badge = ' 🌸 Voz Femenina Cálida (Recomendada)';
         else if (isNatural) badge = ' ✨ Voz Natural';
+        else if (!nameLower.includes('desktop')) badge = ' 🌸 Voz Estándar';
+        else badge = ' (Voz de Escritorio)';
 
         option.textContent = `${v.name} (${v.lang})${badge}`;
         if (this.selectedVoice && this.selectedVoice.voiceURI === v.voiceURI) {
@@ -1297,7 +1303,11 @@ class HercarBotApp {
       if (this.voiceURI) {
         const saved = spanishVoices.find(v => v.voiceURI === this.voiceURI);
         const isRobotic = saved && (saved.name.toLowerCase().includes('desktop') || saved.name.toLowerCase().includes('male'));
-        if (saved && !isRobotic) {
+        // Si la voz guardada es de escritorio y ahora hay una voz natural online disponible, mejorar automáticamente
+        const bestNatural = spanishVoices[0];
+        const isBestNatural = bestNatural && (bestNatural.name.toLowerCase().includes('natural') || bestNatural.name.toLowerCase().includes('google'));
+        
+        if (saved && !isRobotic && (!isBestNatural || saved.name.toLowerCase().includes('natural') || saved.name.toLowerCase().includes('google'))) {
           this.selectedVoice = saved;
         } else {
           this.selectedVoice = spanishVoices[0];
@@ -1322,6 +1332,131 @@ class HercarBotApp {
 
     // Inicializar controles del Modal de Configuración de Voz
     this.initVoiceModalControls();
+  }
+
+  initVoiceModalControls() {
+    const dropdown = document.getElementById('voice-select-dropdown');
+    const speedRange = document.getElementById('voice-speed-range');
+    const speedLabel = document.getElementById('voice-speed-label');
+    const btnWarm = document.getElementById('btn-voice-style-warm');
+    const btnPro = document.getElementById('btn-voice-style-pro');
+    const btnTest = document.getElementById('btn-test-voice-sample');
+    const btnReset = document.getElementById('btn-reset-voice-defaults');
+
+    if (speedRange && speedLabel) {
+      speedRange.value = this.voiceRate || 0.96;
+      speedLabel.textContent = `${Number(this.voiceRate).toFixed(2)}x (Dulce y Natural 🌸)`;
+
+      speedRange.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        this.voiceRate = val;
+        localStorage.setItem('hercar_voice_rate', val);
+        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.94 ? 'Pausada' : val > 1.02 ? 'Ágil' : 'Natural y Dulce'})`;
+      });
+    }
+
+    if (dropdown) {
+      dropdown.addEventListener('change', (e) => {
+        const voices = window.speechSynthesis.getVoices();
+        const found = voices.find(v => v.voiceURI === e.target.value);
+        if (found) {
+          this.selectedVoice = found;
+          this.voiceURI = found.voiceURI;
+          localStorage.setItem('hercar_voice_uri', found.voiceURI);
+          this.showToast(`Voz seleccionada: ${found.name}`, 'info', 'bi-mic-fill');
+          // Escuchar muestra instantánea para que el usuario verifique la dulzura de la voz
+          this.speak('¡Hola! Así suena mi voz para orientarte con cariño en el Instituto Hermanos Cárcamo.');
+        }
+      });
+    }
+
+    const btnQuickPreview = document.getElementById('btn-quick-preview-voice');
+    if (btnQuickPreview) {
+      btnQuickPreview.addEventListener('click', () => {
+        this.speak('¡Hola! Soy tu asesora virtual del Instituto Hermanos Cárcamo de Paita. ¿Te gusta cómo suena mi voz?');
+      });
+    }
+
+    if (btnWarm && btnPro) {
+      if (this.voiceStyle === 'pro') {
+        btnPro.classList.add('active', 'btn-primary');
+        btnPro.classList.remove('btn-outline-secondary');
+        btnWarm.classList.remove('active', 'btn-primary');
+        btnWarm.classList.add('btn-outline-primary');
+      } else {
+        btnWarm.classList.add('active', 'btn-primary');
+        btnWarm.classList.remove('btn-outline-primary');
+        btnPro.classList.remove('active', 'btn-primary');
+        btnPro.classList.add('btn-outline-secondary');
+      }
+
+      btnWarm.addEventListener('click', () => {
+        this.voiceStyle = 'dulce';
+        this.voicePitch = 1.01;
+        this.voiceRate = 0.96;
+        localStorage.setItem('hercar_voice_style', 'dulce');
+        localStorage.setItem('hercar_voice_pitch', '1.01');
+        localStorage.setItem('hercar_voice_rate', '0.96');
+        if (speedRange && speedLabel) {
+          speedRange.value = 0.96;
+          speedLabel.textContent = '0.96x (Dulce, Suave y Natural 🌸)';
+        }
+        btnWarm.classList.add('active', 'btn-primary');
+        btnWarm.classList.remove('btn-outline-primary');
+        btnPro.classList.remove('active', 'btn-primary');
+        btnPro.classList.add('btn-outline-secondary');
+        this.showToast('Voz configurada: Asesora Femenina Dulce y Natural 🌸', 'success', 'bi-mic-fill');
+        this.speak('¡Hola! He ajustado mi voz a un tono dulce, suave y natural para orientarte mejor.');
+      });
+
+      btnPro.addEventListener('click', () => {
+        this.voiceStyle = 'pro';
+        this.voicePitch = 1.0;
+        this.voiceRate = 1.0;
+        localStorage.setItem('hercar_voice_style', 'pro');
+        localStorage.setItem('hercar_voice_pitch', '1.0');
+        localStorage.setItem('hercar_voice_rate', '1.0');
+        if (speedRange && speedLabel) {
+          speedRange.value = 1.0;
+          speedLabel.textContent = '1.00x (Formal y Serena 👔)';
+        }
+        btnPro.classList.add('active', 'btn-primary');
+        btnPro.classList.remove('btn-outline-secondary');
+        btnWarm.classList.remove('active', 'btn-primary');
+        btnWarm.classList.add('btn-outline-primary');
+        this.showToast('Voz configurada: Asesor Formal Institucional 👔', 'info', 'bi-briefcase-fill');
+        this.speak('Estimado estudiante. He configurado la locución en modo formal e institucional.');
+      });
+    }
+
+    if (btnTest) {
+      btnTest.addEventListener('click', () => {
+        const saludoPrueba = this.voiceStyle === 'pro'
+          ? 'Estimado estudiante o postulante. Soy el asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te oriento con información actualizada sobre carreras técnicas, matrícula y trámites.'
+          : '¡Hola! Te doy una cálida bienvenida al Instituto Hermanos Cárcamo de Paita. Soy tu asesora virtual y con mucho gusto te oriento sobre nuestras carreras técnicas, pagos y trámites. ¿En qué te puedo ayudar hoy?';
+        this.speak(saludoPrueba);
+      });
+    }
+
+    if (btnReset) {
+      btnReset.addEventListener('click', () => {
+        localStorage.removeItem('hercar_voice_uri');
+        localStorage.removeItem('hercar_voice_rate');
+        localStorage.removeItem('hercar_voice_pitch');
+        localStorage.removeItem('hercar_voice_style');
+        this.voiceRate = 0.96;
+        this.voicePitch = 1.01;
+        this.voiceStyle = 'dulce';
+        this.voiceURI = null;
+        if (speedRange && speedLabel) {
+          speedRange.value = 0.96;
+          speedLabel.textContent = '0.96x (Dulce y Natural 🌸)';
+        }
+        this.initVoiceSynthesis();
+        this.showToast('Voz restablecida a Asesora Femenina Dulce y Natural 🌸', 'info', 'bi-arrow-counterclockwise');
+        this.speak('¡Listo! He restablecido mi voz a la opción más dulce y natural disponible.');
+      });
+    }
   }
 
   initVoiceModalControls() {
@@ -1513,7 +1648,12 @@ class HercarBotApp {
     }
 
     // Estilo conversacional humano femenino: Saludo cordial + respuesta directa + invitación a pantalla
-    const spokenFinal = `¡Hola! Con mucho gusto te cuento: ${spokenBody} En tu pantalla puedes ver todos los detalles.`;
+    let spokenFinal = '';
+    if (/^(¡?hola|bienvenido|con mucho gusto|con gusto|estimado)/i.test(spokenBody)) {
+      spokenFinal = `${spokenBody} En tu pantalla puedes ver todos los detalles.`;
+    } else {
+      spokenFinal = `¡Hola! Con mucho gusto te cuento. ${spokenBody} En tu pantalla puedes ver todos los detalles.`;
+    }
     return this.preparePhoneticText(spokenFinal);
   }
 
@@ -1558,13 +1698,14 @@ class HercarBotApp {
       .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
       .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, '$1 soles');
 
-    // 3. Cuenta bancaria institucional y Códigos
+    // 3. Cuenta bancaria institucional y Códigos pronunciados humanamente
     p = p
-      .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero dos cinco siete tres seis')
-      .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero uno dos nueve cuatro ocho')
-      .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno cero uno dos nueve cuatro ocho, cincuenta y dos')
+      .replace(/00-638-025736/g, 'cero cero, seiscientos treinta y ocho, cero veinticinco, setecientos treinta y seis')
+      .replace(/00-631-012948/g, 'cero cero, seiscientos treinta y uno, cero doce, novecientos cuarenta y ocho')
+      .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero uno dos nueve cuatro ocho, cincuenta y dos')
       .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
-      .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, dos uno uno, cero cuatro ocho')
+      .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
+      .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
       .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
 
     // 4. Horas y rangos de horario
@@ -1647,7 +1788,31 @@ class HercarBotApp {
     const clean = this.preparePhoneticText(text);
     if (!clean || clean.trim().length === 0) return;
 
-    const utterance = new SpeechSynthesisUtterance(clean);
+    // Dividir en oraciones naturales para que la síntesis tome micro-pausas humanas de respiración
+    // Esto evita que suene monótono o robótico al hablar de corrido
+    const rawSentences = clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [clean];
+    const sentences = rawSentences.map(s => s.trim()).filter(s => s.length > 0);
+
+    if (sentences.length === 0) return;
+
+    this.isSpeaking = true;
+    if (this.voiceIndicator) this.voiceIndicator.classList.add('active');
+    if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'inline-flex';
+
+    this.speakSentenceQueue(sentences);
+  }
+
+  speakSentenceQueue(queue) {
+    if (!this.isSpeaking || !queue || queue.length === 0) {
+      this.isSpeaking = false;
+      this.currentUtterance = null;
+      if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
+      if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+      return;
+    }
+
+    const currentSentence = queue.shift();
+    const utterance = new SpeechSynthesisUtterance(currentSentence);
     this.currentUtterance = utterance;
 
     if (this.selectedVoice) {
@@ -1658,21 +1823,23 @@ class HercarBotApp {
     }
 
     // Entonación humana suave, dulce y cálida ("chica asesora")
-    utterance.rate = this.voiceRate || 0.98;
-    utterance.pitch = this.voicePitch || 1.05;
+    utterance.rate = this.voiceRate || 0.96;
+    utterance.pitch = this.voicePitch || 1.01;
     utterance.volume = this.voiceVolume || 1.0;
 
-    utterance.onstart = () => {
-      this.isSpeaking = true;
-      if (this.voiceIndicator) this.voiceIndicator.classList.add('active');
-      if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'inline-flex';
-    };
-
     utterance.onend = () => {
-      this.isSpeaking = false;
-      this.currentUtterance = null;
-      if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
-      if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+      if (!this.isSpeaking) return;
+      if (queue.length > 0) {
+        // Micro-pausa natural de respiración de 75ms entre oraciones
+        this.speechQueueTimer = setTimeout(() => {
+          this.speakSentenceQueue(queue);
+        }, 75);
+      } else {
+        this.isSpeaking = false;
+        this.currentUtterance = null;
+        if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
+        if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+      }
     };
 
     utterance.onerror = () => {
@@ -1686,12 +1853,16 @@ class HercarBotApp {
   }
 
   stopSpeaking() {
+    if (this.speechQueueTimer) {
+      clearTimeout(this.speechQueueTimer);
+      this.speechQueueTimer = null;
+    }
     if (this.speechHeartbeatInterval) {
       clearInterval(this.speechHeartbeatInterval);
       this.speechHeartbeatInterval = null;
     }
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
+      try { window.speechSynthesis.cancel(); } catch (e) {}
     }
     this.isSpeaking = false;
     this.currentUtterance = null;

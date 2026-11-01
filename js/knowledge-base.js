@@ -498,6 +498,7 @@ const BASE_PREGUNTAS_RESPUESTAS = [
     titulo: 'Comunicados y Avisos Oficiales Recientes',
     keywords: ['comunicado', 'comunicados', 'aviso', 'avisos', 'novedades', 'noticias', 'anuncio', 'anuncios'],
     categorias: ['general'],
+    locucion: "¡Hola! Te comparto los últimos comunicados oficiales del instituto: están disponibles los resultados de Cepre, las instrucciones para registrar comprobantes del Banco de la Nación, y la convocatoria para el carné de medio pasaje. En tu pantalla puedes ver todos los enlaces directos.",
     respuesta: `📢 **Principales Comunicados Oficiales del IESTP Hermanos Cárcamo:**
 
 1. 🎯 **Academia CEPRE-HERCAR 2026:** Publicados los resultados finales del cuadro de mérito con ingreso directo. [Ver Resultados en PDF](https://drive.google.com/file/d/1tbEWl2oBRglGp9QWx012TIE66yYBS1VN/view?usp=drive_link)
@@ -510,6 +511,7 @@ const BASE_PREGUNTAS_RESPUESTAS = [
     titulo: 'Resultados Finales de la Academia CEPRE-HERCAR',
     keywords: ['resultado', 'resultados', 'cepre', 'cuadro de merito', 'ingresantes', 'lista de ingresantes', 'ingreso directo'],
     categorias: ['admision'],
+    locucion: "¡Hola! Los resultados oficiales de la academia Cepre con ingreso directo ya están publicados. En tu pantalla tienes el enlace directo a Google Drive para consultar si obtuviste tu vacante.",
     respuesta: `🎉 **Resultados de la Academia CEPRE-HERCAR 2026:**
 Los resultados oficiales con los ingresantes directos por carrera (APSTI, ANI, Contabilidad y Desarrollo Pesquero y Acuícola) están publicados en el enlace oficial de Google Drive:
 📄 [Abrir Documento Oficial de Resultados en Google Drive](https://drive.google.com/file/d/1tbEWl2oBRglGp9QWx012TIE66yYBS1VN/view?usp=drive_link)
@@ -521,6 +523,7 @@ Si obtuviste vacante, acércate a Secretaría General en la sede Paita con tu DN
     titulo: 'Requisitos y Modalidades de Admisión 2026',
     keywords: ['admision', 'ingreso', 'postular', 'requisitos', 'examen', 'inscribirme', 'inscripcion', 'vacantes', 'costo admision', 'carpeta'],
     categorias: ['admision'],
+    locucion: "¡Hola! Para postular al instituto tenemos tres modalidades: el examen ordinario, la academia Cepre con ingreso directo, y exonerados para los primeros puestos de secundaria. En tu pantalla puedes ver todos los requisitos y documentos que necesitas.",
     respuesta: `🎯 **Proceso de Admisión en el IESTP Hermanos Cárcamo:**
 Cuenta con 3 modalidades de ingreso oficial:
 1. **Examen Ordinario:** Para egresados de secundaria (100 preguntas de Raz. Matemático, Raz. Verbal, Cultura General y Ciencias).
@@ -539,6 +542,7 @@ Cuenta con 3 modalidades de ingreso oficial:
     titulo: '¿Cómo registrar y validar vouchers en pagos.ieshercar.edu.pe?',
     keywords: ['pago', 'pagos', 'pagar', 'voucher', 'banco', 'cuenta', 'subir voucher', 'tesoreria', 'banco de la nacion', 'bn', 'plataforma de pagos'],
     categorias: ['pagos'],
+    locucion: "¡Hola! Para registrar tu pago, primero abonas en el Banco de la Nación a la cuenta corriente del instituto. Luego entras con tu D N I a pagos punto i e s hercar punto edu punto pe y subes la foto de tu comprobante. En tu pantalla te dejé los pasos completos.",
     respuesta: `💳 **Guía del Sistema de Registro de Pagos:**
 1. **Depósito BN:** Deposita en el Banco de la Nación a la Cuenta Corriente N° **\`00-631-012948\`** (Titular: IESTP Hermanos Cárcamo).
 2. **Ingreso:** Entra con tu DNI a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
@@ -552,6 +556,7 @@ Cuenta con 3 modalidades de ingreso oficial:
     titulo: 'Las 4 Carreras Profesionales Técnicas y Mallas',
     keywords: ['carreras', 'programas', 'duracion', 'ani', 'apsti', 'conta', 'dpa', 'titulo', 'que carreras hay', 'cuales son las carreras', 'estudios'],
     categorias: ['carreras'],
+    locucion: "¡Hola! El instituto ofrece cuatro carreras técnicas profesionales de tres años: Computación y Desarrollo de Sistemas, Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola. Todas son públicas sin mensualidades. ¡En tu pantalla puedes revisar sus perfiles!",
     respuesta: `🎓 **4 Carreras Técnicas (3 Años / 6 Semestres / 120 Créditos):**
 1. 💻 **APSTI:** Arquitectura de Plataformas y Servicios TI (Software, Redes, Cloud y Ciberseguridad).
 2. 🚢 **ANI:** Administración de Negocios Internacionales (Comercio Exterior, Aduanas y Logística Portuaria).
@@ -565,6 +570,7 @@ Cuenta con 3 modalidades de ingreso oficial:
     titulo: 'Enlaces Directos a Plataformas y Servicios Virtuales',
     keywords: ['plataforma', 'plataformas', 'aula virtual', 'sistema', 'biblioteca', 'yoleo', 'biblioteca latina', 'enlace', 'links', 'entrar a notas', 'notas'],
     categorias: ['plataformas'],
+    locucion: "¡Hola! En la parte superior y en tu pantalla tienes acceso directo a todos nuestros sistemas: Sistema Académico para ver notas y matrícula, Portal de Pagos, Aula Virtual y Biblioteca. Puedes abrir cualquiera con un solo toque.",
     respuesta: `🌐 **Portales y Sistemas Oficiales en Vivo:**
 * 💻 **Sistema Académico:** [sistema.ieshercar.edu.pe/acceso](https://sistema.ieshercar.edu.pe/acceso) *(Notas y Matrícula)*
 * 💳 **Portal de Pagos:** [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) *(Subir comprobantes BN)*
@@ -577,6 +583,7 @@ Cuenta con 3 modalidades de ingreso oficial:
     titulo: 'Ubicación de la Sede en Paita, Horarios y Teléfonos',
     keywords: ['ubicacion', 'direccion', 'donde queda', 'horario', 'telefono', 'celular', 'paita', 'secretaria', 'atencion', 'como llegar', 'donde estan'],
     categorias: ['general'],
+    locucion: "¡Hola! Nuestro campus principal queda en la avenida Miguel Grau, en la parte alta de Paita. Atendemos de lunes a viernes desde las ocho de la mañana hasta las tres de la tarde. En tu pantalla tienes nuestros teléfonos y mapa.",
     respuesta: `📍 **Sede Institucional Paita:**
 Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Parte Alta, Paita, Piura.
 ⏰ **Horario de Atención:** Lunes a Viernes de 8:00 a.m. a 3:00 p.m. (Horario continuo).
@@ -590,6 +597,7 @@ Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Parte Alta, Paita, Piura.
     titulo: '¿Cuánto cuesta la mensualidad o pensión?',
     keywords: ['mensualidad', 'pension', 'cuanto cuesta', 'costo', 'gratis', 'publico', 'cuanto se paga', 'pagar mes'],
     categorias: ['admision'],
+    locucion: "¡Hola! Te cuento con mucho gusto que en el Instituto Hermanos Cárcamo estudiar es público y no se pagan pensiones ni mensualidades. Únicamente abonas la tasa administrativa de matrícula por semestre en el Banco de la Nación, que son unos ciento veinte soles e incluye tu carné y seguro de salud. ¡En tu pantalla te dejé todos los detalles!",
     respuesta: `🎓 **Educación Pública sin Mensualidades:**
 El **IESTP Hermanos Cárcamo es una institución tecnológica pública** del Estado, dependiente del Ministerio de Educación (MINEDU). 
 **¡NO SE PAGAN PENSIONES NI MENSUALIDADES!** 
@@ -600,6 +608,7 @@ La formación profesional técnica es pública y no tiene mensualidades. El úni
     titulo: 'Becas Pronabec y Beneficios Estudiantiles',
     keywords: ['beca', 'becas', 'pronabec', 'beca 18', 'continuidad', 'permanencia', 'apoyo'],
     categorias: ['bienestar'],
+    locucion: "¡Hola! Nuestros estudiantes pueden postular a los programas de becas de Pronabec como Beca Dieciocho y Beca Permanencia, que te brindan apoyo económico para tu carrera. En tu pantalla tienes los requisitos.",
     respuesta: `🌟 **Becas y Apoyo Estudiantil:**
 Al ser una institución pública de educación superior licenciada, los estudiantes del IESTP Hermanos Cárcamo pueden postular a los programas de becas del Estado a través de PRONABEC:
 - **Beca 18:** Para egresados de secundaria con alto rendimiento académico y condición de pobreza o vulnerabilidad.
@@ -611,6 +620,7 @@ Al ser una institución pública de educación superior licenciada, los estudian
     titulo: 'Curso de Idioma Extranjero (Inglés para Titulación)',
     keywords: ['ingles', 'curso de ingles', 'idioma', 'idiomas', 'ingles tecnico', 'certificado de ingles', 'examen de ingles', 'suficiencia', 'titulacion ingles', 'aprender ingles', 'centro de idiomas'],
     categorias: ['academico', 'titulacion'],
+    locucion: "¡Hola! Recuerda que el curso de inglés es un requisito obligatorio del Minedu para obtener tu título profesional a nombre de la nación. El instituto ofrece módulos técnicos o puedes convalidarlo si ya estudiaste en otro centro. ¡En tu pantalla te muestro las opciones!",
     respuesta: `🇬🇧 **Curso de Inglés & Requisito de Idioma Extranjero para Titulación:**
 
 Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un idioma extranjero (mínimo Nivel Básico A2) es un **requisito obligatorio para obtener el Título Profesional Técnico** en las 4 carreras (APSTI, ANI, CONTA y DPA).
@@ -627,6 +637,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Autoridades y Plana Directiva Institucional',
     keywords: ['director', 'directora', 'autoridades', 'plana docente', 'profesores', 'docentes', 'jefatura', 'secretaria general', 'quien dirige', 'coordinador', 'adolfo zeta'],
     categorias: ['institucional'],
+    locucion: "¡Hola! Nuestra institución está dirigida por el economista Adolfo Zeta Pazo como Director General, junto a la Unidad Académica, Secretaría General y las coordinaciones de cada carrera. En tu pantalla puedes conocer a nuestro equipo directivo.",
     respuesta: `🏛️ **Plana Directiva y Autoridades del IESTP "Hermanos Cárcamo":**
 * **Director General:** **Econ. Adolfo Zeta Pazo** — Lidera la gestión institucional, licenciamiento y vinculación estratégica con el sector productivo de Paita.
 * **Jefe de Unidad Académica:** **Lic. Juan García Reto** — Responsable de la planificación curricular, mallas, supervisión pedagógica y titulación.
@@ -643,6 +654,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Historia, Misión, Visión y Valores del Instituto',
     keywords: ['historia', 'mision', 'vision', 'valores', 'lema', 'fundacion', 'que es hercar', 'quienes son los hermanos carcamo', 'resolucion ministerial'],
     categorias: ['institucional'],
+    locucion: "¡Hola! El Instituto Hermanos Cárcamo tiene más de treinta y ocho años formando profesionales técnicos en Paita. Nuestro lema es: Formando Profesionales y Construyendo Oportunidades. En tu pantalla te comparto nuestra historia y valores.",
     respuesta: `🎓 **IESTP "Hermanos Cárcamo" - Paita, Piura:**
 * **Creación Legal:** Creado mediante la **Resolución Ministerial N.° 232-87-ED** (09 de mayo de 1987) y revalidado con la **Resolución Directoral N.° 0528-2006-ED**. Cuenta con más de 38 años de trayectoria formando profesionales técnicos.
 * **Lema Oficial:** *"Formando Profesionales y Construyendo Oportunidades"*.
@@ -656,6 +668,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Reglamento Académico: ¿Qué pasa si desapruebo un curso?',
     keywords: ['jalar', 'jale', 'desaprobar', 'reprobar', 'desaprobe', 'curso a cargo', 'subsanacion', 'recuperacion', 'inasistencias', 'reglamento', 'nota minima', 'escala vigesimal'],
     categorias: ['academico'],
+    locucion: "¡Hola! La escala de notas es vigesimal y apruebas con trece. Si desapruebas hasta dos cursos, puedes llevarlos a cargo en el siguiente ciclo; pero si desapruebas tres o más, tendrás que repetir esos cursos. ¡En tu pantalla tienes el reglamento completo!",
     respuesta: `📖 **Reglamento Académico y Evaluación de Aprendizajes (MINEDU):**
 * 💯 **Escala de Calificación:** La escala es vigesimal (0 a 20). La **nota mínima aprobatoria es 13 (trece)**. Las fracciones de 0.5 o más se redondean al entero superior inmediato.
 * ⚠️ **Cursos a Cargo (Desaprobados):**
@@ -669,6 +682,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Turnos y Horarios de Clases',
     keywords: ['turno', 'turnos', 'horario de clases', 'a que hora estudio', 'manana', 'tarde', 'noche', 'asistencia', 'clases'],
     categorias: ['academico'],
+    locucion: "¡Hola! Nuestras clases se imparten en el turno mañana, de lunes a viernes, desde las ocho de la mañana hasta la una y quince de la tarde. En tu pantalla puedes revisar los horarios y turnos de talleres.",
     respuesta: `⏰ **Horarios y Turnos de Formación Académica:**
 * ☀️ **Turno Diurno (Mañana):**
   - Horario regular de clases: **8:00 a.m. a 1:15 p.m.** (Lunes a Viernes).
@@ -682,6 +696,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Convalidación de Cursos y Traslados de Matrícula',
     keywords: ['convalida', 'convalidacion', 'traslado', 'traslado externo', 'traslado interno', 'otra universidad', 'otro instituto', 'cambio de carrera'],
     categorias: ['tramites'],
+    locucion: "¡Hola! Si vienes de otra universidad o instituto técnico, puedes convalidar tus asignaturas aprobadas presentando tu certificado oficial de estudios y sílabos en Secretaría. En tu pantalla tienes los requisitos.",
     respuesta: `🔄 **Proceso de Convalidación y Traslados:**
 * **Traslado Externo:** Si provienes de otra universidad o instituto público/privado con carreras afines, debes presentar:
   1. Certificado oficial de estudios visado por la institución de origen.
@@ -695,6 +710,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Bienestar Estudiantil, Seguro SIS y Servicios al Alumno',
     keywords: ['bienestar', 'seguro', 'sis', 'topico', 'salud', 'deportes', 'cultural', 'psicologia', 'atencion medica'],
     categorias: ['bienestar'],
+    locucion: "¡Hola! En bienestar estudiantil cuentas con afiliación gratuita al Seguro Integral de Salud, tópico de primeros auxilios, tutoría psicopedagógica y talleres deportivos. ¡En tu pantalla puedes ver todos los beneficios!",
     respuesta: `🏥 **Servicios de Bienestar Estudiantil HERCAR:**
 * 🩺 **Seguro Integral de Salud (SIS):** Como estudiante de educación superior pública, tienes derecho a afiliación y atención gratuita a través del Seguro Integral de Salud (SIS Gratuito).
 * 🩹 **Tópico de Primeros Auxilios:** Atención inmediata ante emergencias de salud dentro de la sede institucional.
@@ -706,6 +722,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Paso a Paso de Matrícula y Pagos: ¿Qué pago, dónde voy y qué hago?',
     keywords: ['matricula', 'paso a paso', 'que pago', 'donde voy', 'que hago', 'como matricularme', 'proceso matricula', 'pago matricula', 'donde pagar', 'voucher matricula', 'donde registrar', 'cuanto pago'],
     categorias: ['pagos', 'tramites'],
+    locucion: "¡Hola! Con mucho gusto te explico los pasos de matrícula: pagas tu tasa semestral en el Banco de la Nación, le tomas foto clara a tu comprobante y lo subes a pagos punto i e s hercar punto edu punto pe. ¡En tu pantalla te preparé la guía completa!",
     respuesta: `📋 **Guía Completa y Paso a Paso para Tu Matrícula en el IESTP Hermanos Cárcamo:**
 
 1️⃣ **¿QUÉ PAGO Y CUÁNTO ES?**
@@ -734,6 +751,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: '¿Qué hago después de pagar en el Banco de la Nación? (Dónde ir y qué presentar)',
     keywords: ['despues de pagar', 'ya pague', 'donde llevo el voucher', 'que hago con el voucher', 'subir voucher', 'validar voucher', 'donde ir', 'oficina pagos', 'caja'],
     categorias: ['pagos'],
+    locucion: "¡Hola! Después de pagar en el Banco de la Nación, debes tomarle una foto nítida al voucher y registrarlo en pagos punto i e s hercar punto edu punto pe para que Tesorería valide tu matrícula en veinticuatro a cuarenta y ocho horas.",
     respuesta: `🧾 **¿Ya pagaste en el Banco de la Nación? Sigue estos 3 pasos obligatorios:**
 
 1. **Fotografía el Voucher:** Toma una foto nítida donde se lea el N° de Operación del Banco de la Nación (Cta. Cte. \`00-631-012948\`).
@@ -745,6 +763,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: 'Curso de Inglés Institucional: Requisito Obligatorio de Titulación MINEDU',
     keywords: ['ingles', 'idioma', 'curso de ingles', 'titulacion ingles', 'minedu ingles', 'nivel a2', 'convalidar ingles', 'donde estudiar ingles', 'ingles obligatorio'],
     categorias: ['academico', 'tramites'],
+    locucion: "¡Hola! Para titularte profesionalmente es indispensable acreditar el nivel básico A dos de inglés. Puedes estudiar los módulos técnicos que dicta el instituto o convalidar con un examen de suficiencia. En tu pantalla te dejé los detalles.",
     respuesta: `🌐 **Reglamento del Curso de Idioma Extranjero (Inglés):**
 
 * **¿Es Obligatorio?** **SÍ.** De acuerdo a la **Ley de Institutos N° 30512** y los lineamientos académicos del MINEDU, todo estudiante de educación superior tecnológica debe acreditar el **Nivel Básico A2 concluido** para tramitar su **Título Profesional Técnico a Nombre de la Nación**.
@@ -761,6 +780,7 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
     titulo: '¿Hay límite de edad para postular o estudiar en el instituto?',
     keywords: ['edad', 'limite de edad', 'edad maxima', 'edad minima', 'tengo 30', 'tengo 40', 'tengo 50', 'puedo estudiar si soy mayor', 'hasta que edad', 'edad para postular'],
     categorias: ['admision', 'general'],
+    locucion: "¡Hola! En el Instituto Hermanos Cárcamo no hay ningún límite de edad. Solo necesitas haber terminado la secundaria y muchas personas que trabajan estudian con nosotros para superarse profesionalmente. ¡Todos son bienvenidos!",
     respuesta: `🎉 **¡NO HAY LÍMITE DE EDAD PARA ESTUDIAR!**
 
 En el **IESTP "Hermanos Cárcamo" de Paita**, la educación pública es inclusiva y para todos:
@@ -773,6 +793,7 @@ En el **IESTP "Hermanos Cárcamo" de Paita**, la educación pública es inclusiv
     titulo: '¿Se usa uniforme institucional o cómo es la vestimenta?',
     keywords: ['uniforme', 'vestimenta', 'ropa', 'como ir vestido', 'mandil', 'chaleco', 'camisa', 'codigo de vestimenta'],
     categorias: ['academico', 'general'],
+    locucion: "¡Hola! Para las clases teóricas la vestimenta es casual formal, mientras que el uniforme institucional se usa en ceremonias cívicas y visitas a empresas. En talleres y laboratorios se exige calzado cerrado y equipos de protección.",
     respuesta: `👕 **Uso de Uniforme y Vestimenta en el Campus:**
 
 * **Para Clases Teóricas:** Ropa casual formal y decorosa (pantalón, polo o camisa, calzado cerrado). No se permite el ingreso con sandalias playeras ni shorts por normas de seguridad en talleres.
@@ -787,6 +808,7 @@ En el **IESTP "Hermanos Cárcamo" de Paita**, la educación pública es inclusiv
     titulo: '¿Puedo trabajar y estudiar al mismo tiempo en el instituto?',
     keywords: ['trabajar y estudiar', 'puedo trabajar', 'estudio y trabajo', 'chamba y estudio', 'trabajo y quiero estudiar', 'horarios para trabajar'],
     categorias: ['academico', 'bienestar'],
+    locucion: "¡Hola! Sí puedes trabajar y estudiar al mismo tiempo. Las clases son por la mañana hasta la una y quince de la tarde, y si tu empleo está relacionado a tu carrera, puedes convalidar tus horas de trabajo como prácticas preprofesionales.",
     respuesta: `💼 **¡SÍ, ES TOTALMENTE COMPATIBLE!**
 
 El IESTP Hermanos Cárcamo brinda facilidades para que los estudiantes puedan generar ingresos y formarse profesionalmente:
@@ -799,6 +821,7 @@ El IESTP Hermanos Cárcamo brinda facilidades para que los estudiantes puedan ge
     titulo: '¿Cuánto gana un egresado técnico y cuál es la demanda laboral en Paita?',
     keywords: ['cuanto gana', 'sueldo', 'salario', 'cuanto pagan', 'remuneracion', 'empleabilidad', 'cuanto voy a ganar', 'chamba', 'bolsa de trabajo sueldos'],
     categorias: ['carreras', 'bolsa_trabajo'],
+    locucion: "¡Hola! Por la cercanía al Puerto de Paita y las plantas exportadoras, nuestros egresados técnicos tienen alta demanda laboral y sueldos que van desde dos mil doscientos hasta más de cuatro mil soles según la especialidad. En tu pantalla tienes el reporte.",
     respuesta: `💰 **Estimación Salarial y Demanda Laboral en Paita y Piura:**
 
 Por la cercanía al **Puerto de Paita (TPE)**, plantas congeladoras, agencias marítimas y sector agroindustrial, los profesionales técnicos del IESTP Hermanos Cárcamo tienen alta demanda:
@@ -821,6 +844,7 @@ Por la cercanía al **Puerto de Paita (TPE)**, plantas congeladoras, agencias ma
     titulo: '¿Cómo recupero mi clave del Sistema Académico o Aula Virtual?',
     keywords: ['olvide mi clave', 'perdi mi contrasena', 'recuperar clave', 'no puedo entrar al aula', 'no puedo entrar al sistema', 'acceso bloqueado', 'cambiar clave', 'reseteo de clave'],
     categorias: ['plataformas', 'academico'],
+    locucion: "¡Hola! Si olvidaste tu clave del Sistema Académico, recuerda que tu usuario es tu D N I. Puedes solicitar el restablecimiento escribiendo por WhatsApp a Secretaría o mediante el enlace de recuperación en el Aula Virtual.",
     respuesta: `🔑 **Recuperación de Claves y Accesos Institucionales:**
 
 Si olvidaste o bloqueaste tu contraseña de las plataformas del instituto:
@@ -838,6 +862,7 @@ Si olvidaste o bloqueaste tu contraseña de las plataformas del instituto:
     titulo: '¿Cómo y en qué plazo se justifican las inasistencias a clases?',
     keywords: ['justificar falta', 'justificar inasistencia', 'falte a clases', 'estoy enfermo', 'justificante', 'certificado medico', 'plazo justificar', 'no desaprobar por falta'],
     categorias: ['academico', 'reglamento'],
+    locucion: "¡Hola! Tienes un plazo de cinco días hábiles para justificar tus faltas por motivos de salud o trabajo en Secretaría. Esto es muy importante para evitar el límite del treinta por ciento de faltas y no quedar inhabilitado.",
     respuesta: `📝 **Procedimiento de Justificación de Inasistencias:**
 
 Para evitar superar el límite del 30% de inasistencias y quedar en condición de **DPI (Desaprobado por Inasistencias)**:
@@ -853,6 +878,7 @@ Para evitar superar el límite del 30% de inasistencias y quedar en condición d
     titulo: 'Prácticas Preprofesionales (EFSRT): Horas, requisitos y convalidación',
     keywords: ['practicas', 'efsrt', 'horas de practicas', 'cuantas horas', 'carta de presentacion', 'informe de practicas', 'donde hacer practicas', 'experiencias formativas'],
     categorias: ['academico', 'tramites'],
+    locucion: "¡Hola! Para titularte debes cumplir ochocientas veinte horas de prácticas preprofesionales distribuidas en los tres módulos de tu carrera. En tu pantalla te muestro los pasos para solicitar tu carta de presentación.",
     respuesta: `🏢 **Guía de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT):**
 
 Las EFSRT son obligatorias para obtener los Certificados Modulares y el Título Profesional Técnico:
@@ -871,6 +897,7 @@ Las EFSRT son obligatorias para obtener los Certificados Modulares y el Título 
     titulo: '¿Cómo obtener el Título Profesional Técnico a Nombre de la Nación?',
     keywords: ['como me titulo', 'titulacion', 'requisitos para titularme', 'tesis', 'plan de negocios', 'examen de suficiencia', 'tramite de titulo', 'titulo a nombre de la nacion'],
     categorias: ['titulacion', 'academico'],
+    locucion: "¡Hola! Para obtener tu título a nombre de la nación debes aprobar los ciento veinte créditos de tu carrera, completar tus prácticas preprofesionales y acreditar el curso de inglés. En tu pantalla puedes ver las modalidades de titulación.",
     respuesta: `🎓 **Requisitos y Modalidades para la Titulación Profesional Técnica:**
 
 El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU**:
@@ -890,6 +917,7 @@ El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU
     titulo: '¿Cómo llegar al IESTP Hermanos Cárcamo en Paita Alta?',
     keywords: ['como llegar', 'donde queda el instituto', 'direccion exacta', 'colectivo', 'combi', 'desde piura', 'desde sullana', 'transporte paita', 'paradero'],
     categorias: ['contacto', 'general'],
+    locucion: "¡Hola! El instituto está ubicado en la avenida Miguel Grau, urbanización El Parque, en Paita Alta. Si vienes en transporte público, cualquier colectivo que sube de Paita Baja te deja en la puerta principal.",
     respuesta: `📍 **Ubicación y Guía de Transporte para Llegar al Campus:**
 
 * 📌 **Dirección:** Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita Alta, Piura.
@@ -904,6 +932,7 @@ El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU
     titulo: 'Diferencias entre la Academia CEPRE-HERCAR y el Examen Ordinario',
     keywords: ['diferencia cepre ordinario', 'cepre o examen', 'que es cepre', 'ingreso directo', 'examen ordinario', 'cual conviene mas'],
     categorias: ['admision'],
+    locucion: "¡Hola! La academia Cepre te ofrece preparación intensiva con ingreso directo por evaluaciones continuas, mientras que el examen ordinario es una prueba única de admisión. Ambas modalidades te dan una vacante pública sin mensualidades.",
     respuesta: `⚖️ **Comparativa: Academia CEPRE vs. Examen Ordinario:**
 
 * 🏆 **Academia CEPRE-HERCAR:**
@@ -920,6 +949,7 @@ El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU
     titulo: 'Carné de Educación Superior MINEDU: Derechos del Medio Pasaje',
     keywords: ['carnet', 'carne', 'medio pasaje', 'pasaje escolar', 'ley 26271', 'cuanto pago en combi', 'cuanto dura el carne'],
     categorias: ['bienestar', 'tramites'],
+    locucion: "¡Hola! Con tu carné de educación superior del Minedu tienes derecho al medio pasaje urbano e interurbano todos los días de la semana. En tu pantalla tienes los requisitos para tramitarlo con Secretaría.",
     respuesta: `🚌 **Derecho de Medio Pasaje con el Carné Oficial MINEDU:**
 
 * 📜 **Amparo Legal:** Regulado por la **Ley N° 26271**, que establece que los estudiantes de educación superior universitaria y técnica pagan un **máximo del 50% de la tarifa del pasaje adulto**.
@@ -931,6 +961,7 @@ El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU
     titulo: 'Infraestructura, Talleres de Cómputo, Laboratorios y Wifi',
     keywords: ['laboratorios', 'computadoras', 'taller de computo', 'wifi', 'internet', 'aulas', 'equipamiento', 'plantas piloto', 'equipos'],
     categorias: ['institucional', 'academico'],
+    locucion: "¡Hola! Contamos con centros de cómputo modernos con fibra óptica, laboratorios de redes y telecomunicaciones, plantas piloto de calidad pesquera y talleres contables con software profesional. En tu pantalla puedes ver nuestras instalaciones.",
     respuesta: `🖥️ **Infraestructura y Equipamiento Tecnológico del IESTP Hermanos Cárcamo:**
 
 El campus de Paita Alta cuenta con ambientes diseñados para el aprendizaje práctico:
@@ -944,6 +975,7 @@ El campus de Paita Alta cuenta con ambientes diseñados para el aprendizaje prá
     titulo: 'Convenios de Articulación y Convalidación con Universidades',
     keywords: ['convalidacion universitaria', 'convalidar con universidad', 'seguir estudios', 'ingenieria', 'licenciatura', 'bachiller', 'continuar estudios', 'universidades con convenio'],
     categorias: ['carreras', 'institucional'],
+    locucion: "¡Hola! Al graduarte como profesional técnico, puedes convalidar tus tres años de estudio para continuar tu carrera universitaria en ingeniería de sistemas, administración o contabilidad. En tu pantalla te muestro las equivalencias.",
     respuesta: `🎓 **¡Continúa tus Estudios Universitarios tras Egresar!**
 
 Gracias a la Ley de Institutos N° 30512, los egresados titulados del IESTP Hermanos Cárcamo pueden convalidar sus 3 años de carrera técnica para obtener su grado universitario:
@@ -959,6 +991,7 @@ Gracias a la Ley de Institutos N° 30512, los egresados titulados del IESTP Herm
     titulo: '¿Cómo pagar con Págalo.pe, Yape, Transferencia Bancaria (CCI) o Agentes?',
     keywords: ['yape', 'plin', 'pagalo.pe', 'pagalo', 'transferencia', 'cci', 'interbancario', 'agente multired', 'bcp a banco de la nacion', 'como pagar sin ir al banco'],
     categorias: ['pagos'],
+    locucion: "¡Hola! Puedes realizar tus pagos sin salir de casa mediante Págalo punto pe con tarjeta, o por transferencia bancaria y Yape utilizando nuestro código interbancario oficial. ¡En tu pantalla tienes el número para copiarlo con un toque!",
     respuesta: `💳 **Métodos de Pago Digitales y Sin Hacer Colas:**
 
 Para mayor comodidad de los estudiantes y postulantes de Paita y Piura, existen múltiples formas de abonar a la cuenta oficial del instituto:
@@ -985,6 +1018,7 @@ Para mayor comodidad de los estudiantes y postulantes de Paita y Piura, existen 
     titulo: 'Distribución y Croquis de Ambientes del Campus en Paita Alta',
     keywords: ['mapa del campus', 'croquis', 'ambientes', 'donde queda direccion', 'donde queda secretaria', 'donde queda el laboratorio', 'pabellones', 'aulas'],
     categorias: ['institucional', 'contacto'],
+    locucion: "¡Hola! Nuestro campus cuenta con pabellón administrativo, centros de cómputo para sistemas, aulas climatizadas para negocios y contabilidad, planta piloto pesquera y biblioteca. En tu pantalla puedes ver la distribución de ambientes.",
     respuesta: `🗺️ **Distribución de Pabellones y Espacios del IESTP Hermanos Cárcamo:**
 
 El campus institucional en Paita Alta está organizado en las siguientes zonas:
@@ -1000,6 +1034,7 @@ El campus institucional en Paita Alta está organizado en las siguientes zonas:
     titulo: 'Calendario Académico y Fechas Clave del Año 2026',
     keywords: ['calendario 2026', 'cronograma 2026', 'inicio de clases', 'cuando empiezan las clases', 'cuando terminan las clases', 'feriados', 'semana tecnica', 'aniversario'],
     categorias: ['academico', 'institucional'],
+    locucion: "¡Hola! El inicio de clases del primer semestre está programado para el lunes treinta y uno de marzo de dos mil veintiséis. En tu pantalla tienes el cronograma completo de matrículas, aniversarios y evaluaciones.",
     respuesta: `📅 **Calendario Académico y Fechas Oficiales 2026:**
 
 * 🚀 **Semestre Académico 2026-I:**
@@ -1021,6 +1056,7 @@ El campus institucional en Paita Alta está organizado en las siguientes zonas:
     titulo: '¿Cómo obtener tu Certificado Oficial de Secundaria por Internet?',
     keywords: ['certificado de secundaria', 'certificado minedu', 'como sacar certificado de colegio', 'certificado de estudios digital', 'certificado gratis'],
     categorias: ['admision', 'tramites'],
+    locucion: "¡Hola! Puedes tramitar y descargar tu certificado oficial de estudios secundarios con firma digital de forma gratuita a través de la web del Ministerio de Educación: certificado punto minedu punto gob punto pe. En tu pantalla te dejé el enlace directo.",
     respuesta: `📄 **Cómo Descargar tu Certificado Oficial de Secundaria Gratis:**
 
 Para postular a la admisión del IESTP Hermanos Cárcamo ya no necesitas ir a tu colegio antiguo:

@@ -618,19 +618,21 @@ Al ser una institución pública de educación superior licenciada, los estudian
   {
     id: 'faq-curso-ingles',
     titulo: 'Curso de Idioma Extranjero (Inglés para Titulación)',
-    keywords: ['ingles', 'curso de ingles', 'idioma', 'idiomas', 'ingles tecnico', 'certificado de ingles', 'examen de ingles', 'suficiencia', 'titulacion ingles', 'aprender ingles', 'centro de idiomas'],
-    categorias: ['academico', 'titulacion'],
-    locucion: "¡Hola! Recuerda que el curso de inglés es un requisito obligatorio del Minedu para obtener tu título profesional a nombre de la nación. El instituto ofrece módulos técnicos o puedes convalidarlo si ya estudiaste en otro centro. ¡En tu pantalla te muestro las opciones!",
+    keywords: ['ingles', 'curso de ingles', 'idioma', 'idiomas', 'ingles tecnico', 'certificado de ingles', 'examen de ingles', 'suficiencia', 'titulacion ingles', 'aprender ingles', 'centro de idiomas', 'pago ingles', 'pago de ingles', 'cuenta ingles', 'cuenta de ingles', 'voucher ingles', '00-638-025736', 'omar garcia', 'tania herrera'],
+    categorias: ['academico', 'titulacion', 'pagos'],
+    locucion: "¡Hola! Te cuento que para el curso de inglés de titulación, el pago se realiza en el Banco de la Nación en la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda sacar dos copias a tu voucher y entregarlo en Tesorería del instituto para que no haya retrasos en la entrega de tu certificado. ¡En tu pantalla tienes el número de cuenta y los detalles oficiales!",
     respuesta: `🇬🇧 **Curso de Inglés & Requisito de Idioma Extranjero para Titulación:**
 
 Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un idioma extranjero (mínimo Nivel Básico A2) es un **requisito obligatorio para obtener el Título Profesional Técnico** en las 4 carreras (APSTI, ANI, CONTA y DPA).
 
+💳 **Datos Oficiales de Pago para el Curso de Inglés:**
+* 🏦 **Banco de la Nación - Cuenta Corriente Específica:** **\`00-638-025736\`**
+* 📄 **Voucher:** Debes **sacar 2 copias a tu voucher** y entregarlos en la oficina de **Tesorería**, en el campus del instituto en Paita Alta.
+* ⚠️ **Comunicado de Tesorería y Coordinación (Lic. Omar García Reto):** La entrega de certificados se realizará cuando no haya adeudos pendientes en el grupo. Todos los estudiantes deben regularizar sus cuotas para no perjudicar la emisión grupal del certificado y el proceso de titulación oficial. Para consultas de cobranza, coordinar con Tesorería (Srta. Tania Herrera Cruz).
+
 ⭐ **Opciones que ofrece el IESTP Hermanos Cárcamo:**
 1. 📚 **Curso Modular de Inglés Institucional:** Impartido por el instituto con certificación directa y valor oficial para tu expediente de graduación.
-2. 📝 **Examen de Suficiencia o Convalidación:** Si ya estudiaste en un centro de idiomas externo (ICPNA, Británico, etc.), puedes convalidar presentando tu certificado en Mesa de Partes.
-
-💳 **Registro de Pago:**
-Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y se registra el voucher en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).`
+2. 📝 **Examen de Suficiencia o Convalidación:** Si ya estudiaste en un centro de idiomas externo (ICPNA, Británico, etc.), puedes convalidar presentando tu certificado en Mesa de Partes.`
   },
   {
     id: 'faq-autoridades',
@@ -761,19 +763,22 @@ Se deposita en el Banco de la Nación a la Cta. Cte. N° **\`00-631-012948\`** y
   {
     id: 'faq-ingles-titulacion-minedu',
     titulo: 'Curso de Inglés Institucional: Requisito Obligatorio de Titulación MINEDU',
-    keywords: ['ingles', 'idioma', 'curso de ingles', 'titulacion ingles', 'minedu ingles', 'nivel a2', 'convalidar ingles', 'donde estudiar ingles', 'ingles obligatorio'],
-    categorias: ['academico', 'tramites'],
-    locucion: "¡Hola! Para titularte profesionalmente es indispensable acreditar el nivel básico A dos de inglés. Puedes estudiar los módulos técnicos que dicta el instituto o convalidar con un examen de suficiencia. En tu pantalla te dejé los detalles.",
+    keywords: ['ingles', 'idioma', 'curso de ingles', 'titulacion ingles', 'minedu ingles', 'nivel a2', 'convalidar ingles', 'donde estudiar ingles', 'ingles obligatorio', 'pago ingles', 'cuenta ingles', '00-638-025736'],
+    categorias: ['academico', 'tramites', 'pagos'],
+    locucion: "¡Hola! Para titularte profesionalmente es indispensable acreditar el nivel básico A dos de inglés. Recuerda que el pago del curso se realiza en la cuenta específica del Banco de la Nación cero cero, seis tres ocho, cero dos cinco siete tres seis, y debes entregar dos copias de tu voucher en Tesorería. En tu pantalla te dejé los detalles.",
     respuesta: `🌐 **Reglamento del Curso de Idioma Extranjero (Inglés):**
 
 * **¿Es Obligatorio?** **SÍ.** De acuerdo a la **Ley de Institutos N° 30512** y los lineamientos académicos del MINEDU, todo estudiante de educación superior tecnológica debe acreditar el **Nivel Básico A2 concluido** para tramitar su **Título Profesional Técnico a Nombre de la Nación**.
+* 💳 **Pago Oficial del Curso de Inglés:** Se abona en el Banco de la Nación a la Cuenta Corriente N° **\`00-638-025736\`**.
+* 📄 **Voucher:** Debes **sacar 2 copias legibles al voucher** y entregarlos en la oficina de **Tesorería** del instituto en Paita Alta.
+* ⚠️ **Aviso de Tesorería (Lic. Omar García Reto):** Todos los participantes deben regularizar adeudos para no perjudicar la entrega de certificados del grupo ni el trámite de titulación. Coordinar con Tesorería (Srta. Tania Herrera Cruz).
 * **¿Dónde se estudia?**
   1. **En el IESTP Hermanos Cárcamo:** El instituto dicta los módulos de inglés técnico y talleres de idiomas orientados a las carreras (APSTI, Negocios, Contabilidad y Pesquería).
   2. **Semi-presencial y Virtual:** Clases flexibles diseñadas para que los estudiantes cumplan las 120 horas lectivas requeridas.
 * **¿Se puede convalidar si ya estudié inglés?**
   - **SÍ.** Si cuentas con certificado o constancia de nivel básico concluido emitido por un Centro de Idiomas universitario o instituto reconocido (ej. ICPNA, Británico, UNP), preséntalo por **Mesa de Partes** con un FUT solicitando la convalidación oficial.
 * **¿A dónde acudir por consultas?**
-  - A la **Jefatura de Unidad Académica** o **Secretaría General** en el campus central de Paita Alta.`
+  - A la **Jefatura de Unidad Académica**, **Tesorería** o **Secretaría General** en el campus central de Paita Alta.`
   },
   {
     id: 'faq-limite-edad',
@@ -1072,6 +1077,7 @@ const CURSO_INGLES_INSTITUTO = {
   nombre: 'Curso de Idioma Extranjero - Inglés (Básico e Intermedio / Inglés Técnico)',
   institucion: 'IESTP Hermanos Cárcamo - Paita',
   finalidad: 'Requisito obligatorio para la Titulación Profesional Técnica según la Ley N° 30512 del MINEDU y desarrollo de competencias bilingües para el puerto de Paita y el mercado global.',
+  cuentaBN: '00-638-025736',
   modalidades: [
     {
       nivel: 'Inglés Básico I, II y III (Nivel A1 - A2)',
@@ -1086,12 +1092,13 @@ const CURSO_INGLES_INSTITUTO = {
     }
   ],
   pasosInscripcion: [
-    'Consultar la apertura de ciclo de inglés en Secretaría General o comunicados oficiales.',
-    'Realizar el depósito en el Banco de la Nación (Cta. Cte. 00-631-012948).',
-    'Registrar el voucher en la plataforma https://pagos.ieshercar.edu.pe/.',
-    'Registrar tus datos en la ficha de inscripción del curso de inglés.',
-    'Acceder a las sesiones de clase y talleres de conversación.'
+    'Realizar el depósito en el Banco de la Nación a la Cuenta específica del Curso de Inglés N° 00-638-025736.',
+    'Sacar 2 copias legibles al voucher de pago original.',
+    'Entregar el voucher original y las 2 copias en la Oficina de Tesorería del instituto (Campus Paita Alta).',
+    'Regularizar cualquier adeudo pendiente con Tesorería (Coordinación: Srta. Tania Herrera Cruz / Lic. Omar García Reto).',
+    'La entrega de certificados se realiza cuando todo el grupo esté al día sin deudas para no retrasar el proceso de titulación.'
   ],
+  avisoTesoreria: 'La entrega de certificados de inglés para la titulación se realiza cuando no haya adeudos en el grupo. Todos los estudiantes deben regularizar sus cuotas en Tesorería para no perjudicar la emisión grupal ni el trámite de titulación.',
   beneficios: [
     'Cumplimiento directo del requisito de titulación profesional técnica.',
     'Horarios adaptados a estudiantes de turno regular y personas con empleo.',

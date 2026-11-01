@@ -1560,6 +1560,7 @@ class HercarBotApp {
 
     // 3. Cuenta bancaria institucional y Códigos
     p = p
+      .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero dos cinco siete tres seis')
       .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero uno dos nueve cuatro ocho')
       .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno cero uno dos nueve cuatro ocho, cincuenta y dos')
       .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
@@ -2550,8 +2551,8 @@ ${text}
       return;
     }
 
-    // 16. Curso de Inglés y Requisito de Idioma Extranjero
-    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles tecnico') || norm.includes('suficiencia')) {
+    // 16. Curso de Inglés, Requisito de Titulación y Pagos Específicos (00-638-025736)
+    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles tecnico') || norm.includes('suficiencia') || norm.includes('00-638-025736') || norm.includes('025736') || norm.includes('pago ingles') || norm.includes('voucher ingles') || norm.includes('tania herrera') || norm.includes('omar garcia') || norm.includes('deuda ingles')) {
       this.renderCursoIngles();
       this.logQuery('ingles');
       return;
@@ -4343,13 +4344,45 @@ ${text}
     const benHtml = ing.beneficios.map(b => `<li><i class="bi bi-check-circle-fill text-success me-2"></i>${b}</li>`).join('');
 
     const html = `
-      <div class="ingles-detail-card p-4 bg-white rounded-3 border shadow-sm">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="ingles-detail-card p-3 p-sm-4 bg-white rounded-3 border shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
           <span class="badge bg-primary px-3 py-1 fs-7"><i class="bi bi-translate me-1"></i>Idioma Extranjero Oficial</span>
-          <span class="badge bg-warning text-dark"><i class="bi bi-award-fill me-1"></i>Requisito MINEDU</span>
+          <span class="badge bg-warning text-dark"><i class="bi bi-award-fill me-1"></i>Requisito MINEDU Titulación</span>
         </div>
-        <h4 class="fw-bold mb-2 text-dark">${ing.nombre}</h4>
+        <h4 class="fw-bold mb-1 text-dark">${ing.nombre}</h4>
         <p class="small text-muted mb-3">${ing.finalidad}</p>
+
+        <!-- Bloque Destacado de Pago Oficial del Curso de Inglés -->
+        <div class="p-3 rounded-3 mb-3" style="background: linear-gradient(135deg, #0a1f4d 0%, #0f3380 100%); color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">
+          <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+            <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="bi bi-bank me-1"></i> Banco de la Nación</span>
+            <small class="text-white-50">Cuenta Específica del Curso de Inglés</small>
+          </div>
+          <p class="small text-white-50 mb-1">Número de Cuenta para Pago de Inglés:</p>
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-2 rounded mb-2" style="background: rgba(255,255,255,0.1);">
+            <code class="fs-5 fw-bold text-warning font-monospace" style="letter-spacing: 1px;">00-638-025736</code>
+            <button type="button" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3" 
+                    onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
+              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta
+            </button>
+          </div>
+          <div class="p-2 rounded small" style="background: rgba(239, 68, 68, 0.2); border-left: 3px solid #f87171;">
+            <strong class="text-warning d-block mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Indicaciones Obligatorias de Tesorería:</strong>
+            <ul class="mb-0 ps-3 text-white" style="font-size: 0.82rem; line-height: 1.45;">
+              <li>El pago se realiza en el Banco de la Nación en la cuenta Nº <strong>00-638-025736</strong>.</li>
+              <li>Debes <strong>sacar 2 copias legibles a tu voucher</strong> original.</li>
+              <li>Entregar el voucher original y las <strong>2 copias en Tesorería</strong>, en la oficina del instituto.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Alerta de Regularización de Adeudos y Proceso de Titulación -->
+        <div class="alert alert-warning py-2 px-3 small mb-3 border-warning" style="background:#fffbeb; color:#92400e;">
+          <strong class="d-block mb-1"><i class="bi bi-megaphone-fill me-1"></i> Comunicado de Coordinación (Lic. Omar García Reto):</strong>
+          <p class="mb-0" style="font-size:0.83rem; line-height:1.45;">
+            La entrega de certificados de inglés se realizará cuando ya no haya deudas pendientes en el grupo. Los estudiantes deben regularizar su situación en Tesorería para no perjudicar la entrega grupal ni el proceso de titulación oficial. Para consultas y trámites de cobranza, coordinar con Tesorería (Srta. Tania Herrera Cruz).
+          </p>
+        </div>
 
         <h6 class="fw-bold text-dark mb-2"><i class="bi bi-journal-check text-primary me-1"></i> Modalidades y Niveles:</h6>
         <div class="mb-3">${modHtml}</div>
@@ -4357,31 +4390,33 @@ ${text}
         <h6 class="fw-bold text-dark mb-2"><i class="bi bi-stars text-warning me-1"></i> Beneficios del Curso Institucional:</h6>
         <ul class="campo-laboral-ul mb-3">${benHtml}</ul>
 
-        <h6 class="fw-bold text-dark mb-2"><i class="bi bi-credit-card-2-front text-success me-1"></i> ¿Cómo Inscribirte y Pagar la Tasa?</h6>
+        <h6 class="fw-bold text-dark mb-2"><i class="bi bi-credit-card-2-front text-success me-1"></i> Pasos para Inscribirte y Tramitar Certificado:</h6>
         <ol class="tramite-pasos-ol mb-3">${pasosHtml}</ol>
 
         <div class="d-flex flex-wrap gap-2 mb-3">
-          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="btn btn-sm btn-primary rounded-pill px-3 py-2 text-white">
-            <i class="bi bi-credit-card me-1"></i> Registrar Pago de Inglés en pagos.ieshercar.edu.pe
-          </a>
-          <a href="https://wa.me/51969100257?text=Hola,%20quisiera%20informes%20sobre%20el%20Curso%20de%20Ingles%20del%20IESTP%20Hermanos%20Carcamo" target="_blank" class="btn btn-sm btn-success rounded-pill px-3 py-2 text-white">
-            <i class="bi bi-whatsapp me-1"></i> Consultar por WhatsApp
+          <button type="button" class="btn btn-sm btn-primary rounded-pill px-3 py-2 text-white"
+                  onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
+            <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta BN (00-638-025736)
+          </button>
+          <a href="https://wa.me/51969100257?text=Hola,%20quisiera%20consultar%20sobre%20mi%20voucher%20del%20Curso%20de%20Ingles%20en%20Tesoreria%20IESTP%20Hermanos%20Carcamo" target="_blank" class="btn btn-sm btn-success rounded-pill px-3 py-2 text-white">
+            <i class="bi bi-whatsapp me-1"></i> Contactar a Tesorería / Secretaría
           </a>
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion"><i class="bi bi-mortarboard text-primary"></i> Ver Requisitos de Titulación</button>
-          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Guía de Pagos BN</button>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion"><i class="bi bi-mortarboard text-primary"></i> Requisitos de Titulación</button>
+          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Guía General de Pagos BN</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-danger"></i> Horario de Tesorería</button>
         </div>
       </div>
     `;
 
     const inglesChips = [
       { label: 'Requisitos de Titulación', prompt: '¿Cuáles son los requisitos para titularse profesionalmente?' },
-      { label: 'Certificado Modular', prompt: '¿Cómo tramito mi Certificado Modular y cuánto demora?' },
-      { label: 'Reglamento Académico', prompt: '¿Cuál es la nota mínima para aprobar y qué pasa si jalo un curso?' }
+      { label: 'Horarios de Tesorería', prompt: '¿Dónde queda y cuál es el horario de atención de Tesorería?' },
+      { label: 'Cuenta General Matrícula', prompt: '¿Cuál es el número de cuenta bancaria para matrícula regular?' }
     ];
-    this.appendBotMessage(html, "El curso de inglés técnico institucional es requisito obligatorio del Minedu para titularte profesionalmente. Te oriento en sus niveles y matrícula.", inglesChips);
+    this.appendBotMessage(html, "¡Hola! Te cuento que para el curso de inglés de titulación, el pago se realiza en el Banco de la Nación a la cuenta específica cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda sacar dos copias a tu voucher y entregarlos físicamente en Tesorería del instituto para que no haya retrasos en la entrega de tu certificado. ¡En tu pantalla tienes el número de cuenta y las indicaciones oficiales!", inglesChips);
   }
 
   renderCarreraCompleta(carrera) {
@@ -5693,6 +5728,9 @@ ${text}
         break;
       case 'copiar_cuenta_bn':
         this.copyData('00-631-012948', 'Cuenta Corriente BN');
+        break;
+      case 'copiar_cuenta_ingles_bn':
+        this.copyData('00-638-025736', 'Cuenta Curso de Inglés BN');
         break;
       case 'copiar_cci_bn':
         this.copyData('018-631-000631012948-52', 'Código Interbancario (CCI)');

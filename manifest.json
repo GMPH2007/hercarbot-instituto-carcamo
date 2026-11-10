@@ -54,10 +54,17 @@
       "icons": [{ "src": "favicon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Portal Pagos Banco de la Nación",
-      "short_name": "Pagos",
-      "description": "Cuenta corriente oficial y subida de vouchers",
+      "name": "Las 2 Cuentas BN (Solo Ventanilla)",
+      "short_name": "Cuentas BN",
+      "description": "Cuentas oficiales 00-638-002361 y 00-638-025736 (NO Págalo.pe)",
       "url": "./index.html?action=pagos",
+      "icons": [{ "src": "favicon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Buscador TUPA 2026",
+      "short_name": "TUPA 2026",
+      "description": "Consultar las 66 tasas oficiales del TUPA 2026",
+      "url": "./index.html?action=tupa",
       "icons": [{ "src": "favicon-96x96.png", "sizes": "96x96" }]
     }
   ]

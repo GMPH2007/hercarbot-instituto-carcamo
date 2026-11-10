@@ -290,6 +290,7 @@ class HercarBotApp {
     this.storageConversations = 'hercarbot_conversations';
     this.storageActiveChatId = 'hercarbot_active_chat_id';
     this.storageTheme = 'hercarbot_theme';
+    this.storageUserPrefs = 'hercarbot_user_prefs';
 
     this.isMuted = false;
     this.isRecording = false;
@@ -318,6 +319,7 @@ class HercarBotApp {
     this.initStats();
     this.initDom();
     this.initTheme();
+    this.initCustomizationStudio();
     this.initEvents();
     this.initSpeech();
     this.initVoiceSynthesis();
@@ -327,6 +329,7 @@ class HercarBotApp {
     this.initCommandPalette();
     this.initTour();
     this.initPwaServiceWorker();
+    this.handleInitialUrlParams();
   }
 
   normalizeText(str) {
@@ -350,11 +353,18 @@ class HercarBotApp {
     this.updateThemeButtonIcon();
   }
 
-  toggleTheme() {
-    const isDark = document.body.classList.toggle('dark-theme');
+  toggleTheme(forceMode = null) {
+    const isDark = forceMode === 'dark'
+      ? (document.body.classList.add('dark-theme'), true)
+      : forceMode === 'light'
+        ? (document.body.classList.remove('dark-theme'), false)
+        : document.body.classList.toggle('dark-theme');
     localStorage.setItem(this.storageTheme, isDark ? 'dark' : 'light');
     this.updateThemeButtonIcon();
-    this.showToast(isDark ? 'Modo Oscuro activado' : 'Modo Claro activado', 'info', isDark ? 'bi-moon-stars-fill' : 'bi-sun-fill');
+    this.syncCustomStudioButtons();
+    if (!forceMode) {
+      this.showToast(isDark ? 'Modo Oscuro activado' : 'Modo Claro activado', 'info', isDark ? 'bi-moon-stars-fill' : 'bi-sun-fill');
+    }
   }
 
   updateThemeButtonIcon() {
@@ -364,6 +374,182 @@ class HercarBotApp {
       ? '<i class="bi bi-sun-fill text-warning"></i>' 
       : '<i class="bi bi-moon-stars-fill" style="color:#60a5fa;"></i>';
     this.btnThemeToggle.title = isDark ? 'Cambiar a Tema Claro' : 'Cambiar a Modo Oscuro';
+  }
+
+  /* ==========================================================================
+     ESTUDIO DE PERSONALIZACIÓN PRO & DEEP LINKS PWA
+     ========================================================================== */
+
+  getUserPrefs() {
+    const defaults = {
+      palette: 'hercar',
+      avatar: 'avatar-ia',
+      fontScale: 'normal',
+      density: 'comfortable',
+      userProfile: 'general'
+    };
+    try {
+      const raw = localStorage.getItem(this.storageUserPrefs);
+      return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
+    } catch {
+      return defaults;
+    }
+  }
+
+  saveUserPrefs(prefs) {
+    try {
+      localStorage.setItem(this.storageUserPrefs, JSON.stringify(prefs));
+    } catch {}
+  }
+
+  getBotAvatarUrl() {
+    const prefs = this.getUserPrefs();
+    return prefs.avatar === 'escudo' ? 'assets/img/logo-hercar.png' : 'assets/img/hercarbot-avatar.jpg';
+  }
+
+  applyUserPrefs() {
+    const prefs = this.getUserPrefs();
+    document.body.dataset.hercarPalette = prefs.palette || 'hercar';
+    document.body.dataset.hercarFont = prefs.fontScale || 'normal';
+    document.body.dataset.hercarDensity = prefs.density || 'comfortable';
+    document.body.dataset.hercarProfile = prefs.userProfile || 'general';
+
+    const avatarSrc = this.getBotAvatarUrl();
+    const launcherImg = document.getElementById('launcher-avatar-img');
+    if (launcherImg) launcherImg.src = avatarSrc;
+    document.querySelectorAll('.bot-avatar-badge img').forEach(img => {
+      img.src = avatarSrc;
+      img.style.objectFit = prefs.avatar === 'escudo' ? 'contain' : 'cover';
+    });
+    this.syncCustomStudioButtons();
+  }
+
+  syncCustomStudioButtons() {
+    const prefs = this.getUserPrefs();
+    const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+    document.querySelectorAll('[data-pref-palette]').forEach(el => el.classList.toggle('active', el.dataset.prefPalette === prefs.palette));
+    document.querySelectorAll('[data-pref-profile]').forEach(el => el.classList.toggle('active', el.dataset.prefProfile === prefs.userProfile));
+    document.querySelectorAll('[data-pref-avatar]').forEach(el => el.classList.toggle('active', el.dataset.prefAvatar === prefs.avatar));
+    document.querySelectorAll('[data-pref-font]').forEach(el => el.classList.toggle('active', el.dataset.prefFont === prefs.fontScale));
+    document.querySelectorAll('[data-pref-density]').forEach(el => el.classList.toggle('active', el.dataset.prefDensity === prefs.density));
+    document.querySelectorAll('[data-pref-theme]').forEach(el => el.classList.toggle('active', el.dataset.prefTheme === currentTheme));
+  }
+
+  initCustomizationStudio() {
+    this.applyUserPrefs();
+    const modal = document.getElementById('modalCustomStudio');
+    if (modal) {
+      modal.addEventListener('show.bs.modal', () => this.syncCustomStudioButtons());
+    }
+
+    document.querySelectorAll('[data-pref-palette]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prefs = this.getUserPrefs();
+        prefs.palette = btn.dataset.prefPalette;
+        this.saveUserPrefs(prefs);
+        this.applyUserPrefs();
+        this.showToast('Paleta visual actualizada', 'success', 'bi-palette-fill');
+      });
+    });
+
+    document.querySelectorAll('[data-pref-profile]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prefs = this.getUserPrefs();
+        prefs.userProfile = btn.dataset.prefProfile;
+        this.saveUserPrefs(prefs);
+        this.applyUserPrefs();
+        if (this.messagesContainer && this.messagesContainer.querySelector('.bot-welcome-hero')) {
+          this.renderWelcome();
+        }
+        this.showToast('Perfil de bienvenida personalizado', 'info', 'bi-person-check-fill');
+      });
+    });
+
+    document.querySelectorAll('[data-pref-avatar]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prefs = this.getUserPrefs();
+        prefs.avatar = btn.dataset.prefAvatar;
+        this.saveUserPrefs(prefs);
+        this.applyUserPrefs();
+        this.showToast('Avatar de HercarBot actualizado', 'success', 'bi-robot');
+      });
+    });
+
+    document.querySelectorAll('[data-pref-theme]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.toggleTheme(btn.dataset.prefTheme);
+      });
+    });
+
+    document.querySelectorAll('[data-pref-font]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prefs = this.getUserPrefs();
+        prefs.fontScale = btn.dataset.prefFont;
+        this.saveUserPrefs(prefs);
+        this.applyUserPrefs();
+        this.showToast('Tamaño de texto actualizado', 'info', 'bi-type');
+      });
+    });
+
+    document.querySelectorAll('[data-pref-density]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const prefs = this.getUserPrefs();
+        prefs.density = btn.dataset.prefDensity;
+        this.saveUserPrefs(prefs);
+        this.applyUserPrefs();
+        this.showToast('Espaciado de tarjetas actualizado', 'info', 'bi-layout-text-window');
+      });
+    });
+
+    const resetBtn = document.getElementById('btn-reset-custom-studio');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        localStorage.removeItem(this.storageUserPrefs);
+        this.toggleTheme('light');
+        this.applyUserPrefs();
+        if (this.messagesContainer && this.messagesContainer.querySelector('.bot-welcome-hero')) {
+          this.renderWelcome();
+        }
+        this.showToast('Personalización restablecida a valores oficiales', 'success', 'bi-arrow-counterclockwise');
+      });
+    }
+  }
+
+  handleInitialUrlParams() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const action = (params.get('action') || '').toLowerCase();
+      const carreraParam = (params.get('carrera') || '').toLowerCase();
+      const queryParam = (params.get('q') || '').trim();
+
+      if (!action && !carreraParam && !queryParam) return;
+
+      setTimeout(() => {
+        if (queryParam) {
+          this.handleUserSubmit(queryParam);
+          return;
+        }
+        if (carreraParam) {
+          this.triggerAction('ver_carrera_detalle', carreraParam);
+          return;
+        }
+        const actionMap = {
+          admision: () => this.triggerAction('ver_admision_completa'),
+          fut: () => this.triggerAction('abrir_generador_fut'),
+          pagos: () => this.triggerAction('ver_numero_cuenta_bn'),
+          ingles: () => this.triggerAction('ver_curso_ingles'),
+          suficiencia: () => this.triggerAction('ver_examen_suficiencia'),
+          titulo: () => this.triggerAction('ver_tramite_titulo'),
+          tupa: () => this.triggerAction('ver_buscador_tupa'),
+          carreras: () => this.triggerAction('ver_todas_carreras'),
+          personalizar: () => {
+            const btn = document.getElementById('btn-customize-studio');
+            if (btn) btn.click();
+          }
+        };
+        if (actionMap[action]) actionMap[action]();
+      }, 220);
+    } catch {}
   }
 
   initStats() {
@@ -651,6 +837,43 @@ class HercarBotApp {
         const chatId = btnDeleteChat.getAttribute('data-delete-chat');
         this.deleteConversation(chatId);
       }
+
+      const chkItem = e.target.closest('.hercar-checklist-item[data-check-store]');
+      if (chkItem) {
+        const storeKey = chkItem.getAttribute('data-check-store');
+        const idx = parseInt(chkItem.getAttribute('data-check-idx'), 10);
+        this.toggleRequirementChecklist(storeKey, idx, chkItem);
+      }
+
+      const resetChk = e.target.closest('[data-reset-checklist]');
+      if (resetChk) {
+        const storeKey = resetChk.getAttribute('data-reset-checklist');
+        localStorage.removeItem(storeKey);
+        if (storeKey === 'hercarbot_checklist_suficiencia') this.renderExamenSuficiencia();
+        else if (storeKey === 'hercarbot_checklist_titulo') this.renderTramiteTitulo();
+        this.showToast('Lista de requisitos reiniciada', 'info', 'bi-arrow-counterclockwise');
+      }
+
+      const tupaFilterBtn = e.target.closest('[data-tupa-filter]');
+      if (tupaFilterBtn) {
+        const wrap = tupaFilterBtn.closest('.tupa-browser-card');
+        if (wrap) {
+          wrap.querySelectorAll('[data-tupa-filter]').forEach(b => b.classList.remove('active', 'btn-primary'));
+          tupaFilterBtn.classList.add('active', 'btn-primary');
+          wrap.dataset.activeFilter = tupaFilterBtn.getAttribute('data-tupa-filter');
+          const searchEl = wrap.querySelector('.tupa-live-search');
+          this.updateTupaSearchResults(wrap, searchEl ? searchEl.value : '', wrap.dataset.activeFilter);
+        }
+      }
+    });
+
+    document.addEventListener('input', (e) => {
+      if (e.target && e.target.classList.contains('tupa-live-search')) {
+        const wrap = e.target.closest('.tupa-browser-card');
+        if (wrap) {
+          this.updateTupaSearchResults(wrap, e.target.value, wrap.dataset.activeFilter || 'all');
+        }
+      }
     });
   }
 
@@ -687,7 +910,7 @@ class HercarBotApp {
     this.currentAttachedImage = null;
     if (this.fileInput) this.fileInput.value = '';
     if (this.previewBar) this.previewBar.style.display = 'none';
-    if (this.previewImg) this.previewImg.src = '';
+    if (this.previewImg) this.previewImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   }
 
   /* ==========================================================================
@@ -3425,12 +3648,32 @@ class HercarBotApp {
       {
         id: 'cmd-cotizador-tupa',
         title: 'Cotizador Interactivo de Tasas TUPA',
-        desc: 'Calcula el monto total para matrículas, carnés, certificados y títulos',
+        desc: 'Calcula el monto total desglosado por cuenta BN (00-638-002361 y 00-638-025736)',
         category: 'Trámites Académicos',
         icon: 'bi-receipt-cutoff',
         color: '#ea580c',
         tags: 'tupa tasas costos precios tramite certificado modular titulacion carne',
         action: () => this.triggerAction('ver_cotizador_tupa')
+      },
+      {
+        id: 'cmd-buscador-tupa',
+        title: 'Buscador Oficial TUPA 2026 (66 Conceptos)',
+        desc: 'Busca en vivo entre los 43 trámites TUPA y 23 ítems productivos (R.D. 020-2026)',
+        category: 'Trámites Académicos',
+        icon: 'bi-search',
+        color: '#0284c7',
+        tags: 'tarifario completo tupa 2026 buscador 66 items toga birrete certificado tercio revalidacion',
+        action: () => this.triggerAction('ver_buscador_tupa')
+      },
+      {
+        id: 'cmd-personalizacion',
+        title: 'Estudio de Personalización Pro (Temas, Avatar, Perfil)',
+        desc: 'Cambia colores institucionales, avatar 3D, tamaño de texto y perfil de usuario',
+        category: 'Configuración & Sistema',
+        icon: 'bi-palette-fill',
+        color: '#ec4899',
+        tags: 'personalizar customizacion tema paleta color avatar fuente accesibilidad perfil',
+        action: () => this.triggerAction('abrir_personalizacion')
       },
       {
         id: 'cmd-calendario',
@@ -3789,7 +4032,7 @@ class HercarBotApp {
               <p>El costo según el TUPA oficial es de <strong>${tramite.costo}</strong>.</p>
               <p class="small text-muted"><strong>Plazo de entrega:</strong> ${tramite.plazo} &bull; <strong>Canal:</strong> ${tramite.responsable}</p>
               <div class="interactive-button-grid mt-3">
-                <button class="interactive-btn" data-chat-action="ver_tramite_detalle" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
+                <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
                 <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuenta Banco de la Nación</button>
               </div>
             </div>
@@ -4164,14 +4407,35 @@ class HercarBotApp {
     if (!this.messagesContainer) return;
     this.messagesContainer.innerHTML = '';
 
+    const prefs = this.getUserPrefs();
+    const profileMap = {
+      postulante: {
+        badge: '🎯 Modo Postulante Admisión 2026',
+        sub: 'Descubre nuestras 4 carreras públicas (incluyendo APSTI → 2027 Computación e Informática), modalidades de ingreso, Academia Pre Tecno y tasas de inscripción:'
+      },
+      estudiante: {
+        badge: '📚 Modo Estudiante Regular HERCAR',
+        sub: 'Accede rápido a matrícula paso a paso (S/ 250 en BN 00-638-002361), calculadoras de notas/DPI, calendario 2026-II y buscador completo TUPA:'
+      },
+      egresado: {
+        badge: '🎓 Modo Egresado y Titulación',
+        sub: 'Organiza tu expediente con checklists interactivos para el Examen de Suficiencia (S/ 200), Trámite de Título (S/ 60 + S/ 100) y Curso de Inglés (00-638-025736):'
+      },
+      general: {
+        badge: 'Información oficial del Instituto Superior Hermanos Cárcamo · Paita 2026',
+        sub: 'Soy tu asesora virtual del <strong>Instituto Superior Hermanos Cárcamo</strong> de Paita. Selecciona uno de los temas principales, personaliza tu entorno o escribe tu duda:'
+      }
+    };
+    const pCfg = profileMap[prefs.userProfile] || profileMap.general;
+
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
         <div class="welcome-badge">
-          <i class="bi bi-patch-check-fill text-primary"></i> Información oficial del Instituto Superior Hermanos Cárcamo · Paita 2026
+          <i class="bi bi-patch-check-fill text-primary"></i> ${pCfg.badge}
         </div>
         <h1 class="welcome-title">¡Hola! ¿En qué te puedo ayudar hoy? 👋</h1>
         <p class="welcome-subtitle">
-          Soy tu asesora virtual del <strong>Instituto Superior Hermanos Cárcamo</strong> de Paita. Selecciona uno de los temas principales o escribe tu duda en el chat:
+          ${pCfg.sub}
         </p>
 
         <!-- Banner Visual Institucional del Campus Real -->
@@ -4337,6 +4601,8 @@ class HercarBotApp {
             <button class="prompt-chip" data-prompt="Comparar las 4 carreras del instituto">⚖️ Comparar 4 Carreras</button>
             <button class="prompt-chip" data-prompt="Calendario académico 2026 y fechas clave">📅 Calendario 2026-II</button>
             <button class="prompt-chip" data-prompt="¿Cómo justificar inasistencias por salud o trabajo?">📝 Justificar Faltas</button>
+            <button class="prompt-chip" data-prompt="Buscador completo de tarifas TUPA 2026">🔎 Tarifario TUPA (66 ítems)</button>
+            <button class="prompt-chip" data-chat-action="abrir_personalizacion">🎨 Personalizar Entorno</button>
           </div>
         </div>
       </div>
@@ -4466,9 +4732,11 @@ class HercarBotApp {
       `;
     }
 
+    const avatarSrc = this.getBotAvatarUrl();
+    const avatarFit = this.getUserPrefs().avatar === 'escudo' ? 'contain' : 'cover';
     msgEl.innerHTML = `
-      <div class="bot-avatar-badge" style="background: #fff; padding: 3px; overflow: hidden; border: 2px solid #e2e8f0;">
-        <img src="assets/img/logo-hercar.png" alt="HERCAR" style="width:100%; height:100%; object-fit:contain; border-radius:8px;" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'; this.onerror=function(){this.parentElement.innerHTML='<i class=\\'bi bi-mortarboard-fill\\' style=\\'color:#0f3380;font-size:1rem;\\'></i>'}">
+      <div class="bot-avatar-badge" style="background: #fff; padding: 2px; overflow: hidden; border: 2px solid var(--line-2);">
+        <img src="${avatarSrc}" alt="HERCAR" style="width:100%; height:100%; object-fit:${avatarFit}; border-radius:50%;" onerror="this.src='assets/img/logo-hercar.png'; this.onerror=function(){this.parentElement.innerHTML='<i class=\\'bi bi-mortarboard-fill\\' style=\\'color:#0f3380;font-size:1rem;\\'></i>'}">
       </div>
       <div class="msg-bubble-bot"${spokenSummary ? ` data-spoken-text="${this.escapeHtml(spokenSummary)}"` : ''}>
         ${thoughtHtml}
@@ -5024,7 +5292,20 @@ ${text}
       return;
     }
 
-    // 14.7 Cotizador y Simulador de Pagos TUPA 2026
+    // 14.7A Buscador Completo Oficial TUPA 2026 (43 procedimientos 00-638-002361 + 23 productivas 00-638-025736)
+    if (norm.includes('tarifario') || norm.includes('buscador tupa') || norm.includes('tupa completo') || norm.includes('66 items') || norm.includes('lista de costos') || norm.includes('todos los pagos') || norm.includes('toga') || norm.includes('birrete') || norm.includes('medalla') || norm.includes('brindis') || norm.includes('porta titulo') || norm.includes('pre tecno') || norm.includes('tercio superior') || norm.includes('transferencia por error') || norm.includes('alquiler de auditorio')) {
+      const kw = (norm.includes('toga') || norm.includes('birrete')) ? 'Toga'
+        : norm.includes('pre tecno') ? 'Pre Tecno'
+        : norm.includes('tercio superior') ? 'Tercio'
+        : norm.includes('medalla') ? 'Medalla'
+        : norm.includes('transferencia por error') ? 'error de cuenta'
+        : norm.includes('auditorio') ? 'Auditorio' : '';
+      this.renderBuscadorTupaCompleto(kw);
+      this.logQuery('pagos');
+      return;
+    }
+
+    // 14.7B Cotizador y Simulador de Pagos TUPA 2026
     if (norm.includes('cotizador') || norm.includes('cotizar') || norm.includes('calcular pago') || norm.includes('tasas tupa') || norm.includes('tupa') || norm.includes('cuanto voy a pagar') || norm.includes('costo de tramites') || norm.includes('simulador de pagos') || norm.includes('sumar pagos') || (norm.includes('cuanto cuesta') && (norm.includes('certificado') || norm.includes('constancia') || norm.includes('traslado') || norm.includes('convalidacion') || norm.includes('duplicado') || norm.includes('reincorporacion') || norm.includes('reserva') || norm.includes('licencia') || norm.includes('recuperacion')))) {
       this.renderCotizadorTupa();
       this.logQuery('pagos');
@@ -6713,7 +6994,7 @@ ${text}
         <div class="p-3 rounded-3 mb-3 border shadow-sm" style="background: linear-gradient(135deg, #091a3e 0%, #163e8c 100%); color: #ffffff;">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
             <div class="d-flex align-items-center gap-2">
-              <img src="https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png" alt="Logo" style="width: 28px; height: 28px; background: #fff; border-radius: 6px; padding: 2px;">
+              <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo" style="width: 28px; height: 28px; background: #fff; border-radius: 6px; padding: 2px;">
               <span class="small text-white-50 fw-semibold">Banco de la Nación — Pago Presencial en Ventanilla</span>
             </div>
             <span class="badge bg-warning text-dark fw-bold">Indicar DNI + Nombre</span>
@@ -6947,7 +7228,23 @@ ${text}
       '7. Boleta electrónica de pago y copia sellada por el área de Tesorería por derecho de Examen de Suficiencia (S/ 200.00 soles).'
     ];
 
-    const reqHtml = reqs.map(r => `<li class="py-1"><i class="bi bi-check-circle-fill text-primary me-2"></i><span>${r.replace(/^\d+\.\s*/, '')}</span></li>`).join('');
+    const storeKey = 'hercarbot_checklist_suficiencia';
+    let checked = [];
+    try { checked = JSON.parse(localStorage.getItem(storeKey)) || []; } catch {}
+    const total = reqs.length;
+    const done = checked.filter(i => i >= 0 && i < total).length;
+    const pct = Math.round((done / total) * 100);
+
+    const reqHtml = reqs.map((r, idx) => {
+      const isDone = checked.includes(idx);
+      const labelTxt = r.replace(/^\d+\.\s*/, '');
+      return `
+        <div class="hercar-checklist-item ${isDone ? 'checked' : ''}" data-check-store="${storeKey}" data-check-idx="${idx}" role="checkbox" aria-checked="${isDone}" tabindex="0">
+          <input type="checkbox" class="form-check-input mt-1 flex-shrink-0" ${isDone ? 'checked' : ''} style="pointer-events:none;">
+          <span class="checklist-text"><strong>${idx + 1}.</strong> ${labelTxt}</span>
+        </div>
+      `;
+    }).join('');
 
     const html = `
       <div class="faq-card-custom" style="border-top: 4px solid #dc2626;">
@@ -6956,11 +7253,21 @@ ${text}
           <span class="badge bg-warning text-dark fw-bold">Derecho: S/ 200.00 (2da opción S/ 100.00)</span>
         </div>
         <h4 class="fw-bold mb-1 text-dark">Requisitos para Solicitar Examen de Suficiencia Profesional</h4>
-        <p class="small text-muted mb-3">Presenta tu expediente <strong>debidamente foliado</strong> con los <strong>7 requisitos oficiales</strong>:</p>
+        <p class="small text-muted mb-2">Presenta tu expediente <strong>debidamente foliado</strong> con los <strong>7 requisitos oficiales</strong> (haz clic para marcar tu avance):</p>
 
-        <ol class="ps-3 small mb-3" style="line-height: 1.55;">
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center small mb-1">
+            <span class="fw-bold text-primary checklist-progress-label" data-progress-for="${storeKey}"><i class="bi bi-check2-all me-1"></i>${done} de ${total} requisitos listos (${pct}%)</span>
+            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none text-muted" data-reset-checklist="${storeKey}" style="font-size:0.74rem;">Reiniciar</button>
+          </div>
+          <div class="progress" style="height: 7px;">
+            <div class="progress-bar bg-success checklist-progress-bar" data-progress-bar="${storeKey}" style="width: ${pct}%;"></div>
+          </div>
+        </div>
+
+        <div class="small mb-3">
           ${reqHtml}
-        </ol>
+        </div>
 
         <div class="row g-2 mb-3 small">
           <div class="col-sm-6">
@@ -7020,11 +7327,24 @@ ${text}
       '10. Ficha de Actividades: Copia de Ficha de Actividades (solo para egresados del Sistema Tradicional del 2008 hacia abajo) — Derecho: S/ 12.00.'
     ];
 
-    const reqHtml = reqs.map(r => {
+    const storeKey = 'hercarbot_checklist_titulo';
+    let checked = [];
+    try { checked = JSON.parse(localStorage.getItem(storeKey)) || []; } catch {}
+    const total = reqs.length;
+    const done = checked.filter(i => i >= 0 && i < total).length;
+    const pct = Math.round((done / total) * 100);
+
+    const reqHtml = reqs.map((r, idx) => {
+      const isDone = checked.includes(idx);
       const itemHtml = (typeof r === 'string')
         ? r.replace(/^\d+\.\s*/, '')
         : `<strong>${r.titulo}:</strong> ${r.detalle}`;
-      return `<li class="py-1"><i class="bi bi-check2-square text-primary me-2"></i><span>${itemHtml}</span></li>`;
+      return `
+        <div class="hercar-checklist-item ${isDone ? 'checked' : ''}" data-check-store="${storeKey}" data-check-idx="${idx}" role="checkbox" aria-checked="${isDone}" tabindex="0">
+          <input type="checkbox" class="form-check-input mt-1 flex-shrink-0" ${isDone ? 'checked' : ''} style="pointer-events:none;">
+          <span class="checklist-text"><strong>${idx + 1}.</strong> ${itemHtml}</span>
+        </div>
+      `;
     }).join('');
 
     const html = `
@@ -7034,13 +7354,23 @@ ${text}
           <span class="badge bg-warning text-dark fw-bold">Formato S/ 60 + Título S/ 100</span>
         </div>
         <h4 class="fw-bold mb-1 text-dark">Requisitos para Trámite de Título Profesional</h4>
-        <div class="p-2 px-3 bg-light rounded border small mb-3">
+        <div class="p-2 px-3 bg-light rounded border small mb-2">
           <strong><i class="bi bi-folder-fill text-warning me-1"></i> Presentación del Expediente:</strong> La documentación deberá presentarse <strong>debidamente foliada</strong>, en <strong>folder A/4</strong> y acompañada de un <strong>sobre manila A4</strong>.
         </div>
 
-        <ol class="ps-3 small mb-3" style="line-height: 1.55;">
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center small mb-1">
+            <span class="fw-bold text-primary checklist-progress-label" data-progress-for="${storeKey}"><i class="bi bi-check2-all me-1"></i>${done} de ${total} requisitos listos (${pct}%)</span>
+            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none text-muted" data-reset-checklist="${storeKey}" style="font-size:0.74rem;">Reiniciar</button>
+          </div>
+          <div class="progress" style="height: 7px;">
+            <div class="progress-bar bg-success checklist-progress-bar" data-progress-bar="${storeKey}" style="width: ${pct}%;"></div>
+          </div>
+        </div>
+
+        <div class="small mb-3">
           ${reqHtml}
-        </ol>
+        </div>
 
         <div class="p-3 rounded-3 border small mb-3" style="background: #fef2f2; border-color: #fecaca !important; color: #991b1b;">
           <strong class="d-block mb-1"><i class="bi bi-bank me-1"></i>NOTA IMPORTANTE DE PAGO (SOLO VENTANILLA BN):</strong>
@@ -7068,6 +7398,133 @@ ${text}
       { label: "📋 Requisitos Examen Suficiencia", prompt: "¿Cuáles son los requisitos del Examen de Suficiencia Profesional?" },
       { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
     ]);
+  }
+
+  toggleRequirementChecklist(storeKey, idx, el) {
+    let checked = [];
+    try { checked = JSON.parse(localStorage.getItem(storeKey)) || []; } catch {}
+    if (checked.includes(idx)) {
+      checked = checked.filter(i => i !== idx);
+    } else {
+      checked.push(idx);
+    }
+    localStorage.setItem(storeKey, JSON.stringify(checked));
+
+    const isDone = checked.includes(idx);
+    el.classList.toggle('checked', isDone);
+    el.setAttribute('aria-checked', String(isDone));
+    const cb = el.querySelector('input[type="checkbox"]');
+    if (cb) cb.checked = isDone;
+
+    const total = storeKey === 'hercarbot_checklist_titulo' ? 10 : 7;
+    const done = checked.filter(i => i >= 0 && i < total).length;
+    const pct = Math.round((done / total) * 100);
+    const parent = el.closest('.faq-card-custom');
+    if (parent) {
+      const label = parent.querySelector(`.checklist-progress-label[data-progress-for="${storeKey}"]`);
+      const bar = parent.querySelector(`.checklist-progress-bar[data-progress-bar="${storeKey}"]`);
+      if (label) label.innerHTML = `<i class="bi bi-check2-all me-1"></i>${done} de ${total} requisitos listos (${pct}%)`;
+      if (bar) bar.style.width = `${pct}%`;
+    }
+  }
+
+  /**
+   * Buscador Completo Interactivo de las 66 Tasas Oficiales TUPA 2026 (R.D. N° 020-2026)
+   */
+  renderBuscadorTupaCompleto(initialQuery = '', initialFilter = 'all') {
+    const tupa = (typeof TUPA_2026_COMPLETO !== 'undefined') ? TUPA_2026_COMPLETO : null;
+    const listGeneral = tupa?.procedimientosCuentaGeneral || [];
+    const listProd = tupa?.actividadesProductivasCuentaIngles || [];
+    const totalAll = listGeneral.length + listProd.length;
+
+    const html = `
+      <div class="faq-card-custom tupa-browser-card" data-active-filter="${this.escapeHtml(initialFilter)}" style="border-top: 4px solid #0284c7;">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+          <span class="badge bg-primary px-3 py-1"><i class="bi bi-search me-1"></i>Buscador TUPA 2026 (${totalAll} conceptos)</span>
+          <span class="badge bg-danger text-white">Solo Ventanilla Banco de la Nación</span>
+        </div>
+        <h4 class="fw-bold mb-1 text-dark">Tarifario Completo Oficial R.D. N° 020-2026</h4>
+        <p class="small text-muted mb-2">Busca cualquier trámite o servicio oficial para ver su costo exacto y en qué cuenta del Banco de la Nación se deposita:</p>
+
+        <div class="input-group input-group-sm mb-2">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control tupa-live-search" value="${this.escapeHtml(initialQuery)}" placeholder="Buscar: matrícula, certificado, suficiencia, inglés, tercio, toga, traslado..." aria-label="Buscar trámite o tarifa en el TUPA 2026">
+        </div>
+
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 ${initialFilter === 'all' ? 'active btn-primary text-white' : ''}" data-tupa-filter="all">Todos (${totalAll})</button>
+          <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 ${initialFilter === '002361' ? 'active btn-primary text-white' : ''}" data-tupa-filter="002361">TUPA 00-638-002361 (${listGeneral.length})</button>
+          <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 ${initialFilter === '025736' ? 'active btn-primary text-white' : ''}" data-tupa-filter="025736">Inglés / Prod. 00-638-025736 (${listProd.length})</button>
+        </div>
+
+        <div class="tupa-search-table-wrap mb-3">
+          <table class="table table-sm table-hover mb-0 small align-middle">
+            <thead class="table-light sticky-top">
+              <tr>
+                <th>Concepto / Procedimiento TUPA 2026</th>
+                <th class="text-end">Tasa</th>
+                <th class="text-center">Cuenta BN</th>
+              </tr>
+            </thead>
+            <tbody class="tupa-results-tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-info py-2 px-3 small mb-3">
+          <strong><i class="bi bi-bank me-1"></i> Recuerda:</strong> Paga solo en <strong>ventanilla BN</strong> (NO Págalo.pe ni agentes). En <code>00-638-002361</code> registra en <strong>pagos.ieshercar.edu.pe</strong>; en <code>00-638-025736</code> saca <strong>2 copias al voucher</strong> y entrégalos en Tesorería.
+        </div>
+
+        <div class="interactive-button-grid">
+          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-primary"></i> Copiar las 2 Cuentas BN</button>
+          <button class="interactive-btn" data-chat-action="ver_cotizador_tupa"><i class="bi bi-calculator text-warning"></i> Sumar Varios Trámites</button>
+        </div>
+      </div>
+    `;
+
+    this.appendBotMessage(html, `En pantalla tienes el buscador oficial del Tupa dos mil veintiséis con los sesenta y seis conceptos oficiales divididos entre la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno y la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis.`, [
+      { label: "🧮 Sumar trámites en Cotizador", prompt: "Cotizador de trámites TUPA 2026" },
+      { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
+    ]);
+
+    const cards = this.messagesContainer.querySelectorAll('.tupa-browser-card');
+    const latestCard = cards[cards.length - 1];
+    if (latestCard) {
+      this.updateTupaSearchResults(latestCard, initialQuery, initialFilter);
+    }
+  }
+
+  updateTupaSearchResults(container, query = '', filter = 'all') {
+    const tbody = container.querySelector('.tupa-results-tbody');
+    if (!tbody || typeof TUPA_2026_COMPLETO === 'undefined') return;
+    const allItems = [
+      ...(TUPA_2026_COMPLETO.procedimientosCuentaGeneral || []),
+      ...(TUPA_2026_COMPLETO.actividadesProductivasCuentaIngles || [])
+    ];
+    const qNorm = this.normalizeText(query);
+    const filtered = allItems.filter(it => {
+      if (filter === '002361' && it.cuenta !== '00-638-002361') return false;
+      if (filter === '025736' && it.cuenta !== '00-638-025736') return false;
+      if (!qNorm) return true;
+      return this.normalizeText(it.concepto + ' ' + it.cuenta + ' ' + it.costo).includes(qNorm);
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-3">No se encontraron procedimientos para esa búsqueda.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(it => {
+      const isProd = it.cuenta === '00-638-025736';
+      return `
+        <tr>
+          <td>${this.escapeHtml(it.concepto)}</td>
+          <td class="text-end fw-bold text-nowrap">S/ ${Number(it.costo).toFixed(2)}</td>
+          <td class="text-center text-nowrap">
+            <span class="badge ${isProd ? 'bg-info text-dark' : 'bg-warning text-dark'} font-monospace">${it.cuenta}</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   renderCarreraCompleta(carrera) {
@@ -8317,6 +8774,7 @@ ${text}
         this.logQuery('tramites');
         break;
       case 'ver_tramite_especifico':
+      case 'ver_tramite_detalle':
         const tramite = GUIA_TRAMITES_TUPA.find(t => t.id === val);
         if (tramite) {
           this.renderTramiteDetalle(tramite);
@@ -8462,6 +8920,14 @@ ${text}
       case 'ver_tramite_titulo':
         this.renderTramiteTitulo();
         this.logQuery('titulacion');
+        break;
+      case 'ver_buscador_tupa':
+        this.renderBuscadorTupaCompleto();
+        this.logQuery('pagos');
+        break;
+      case 'abrir_personalizacion':
+        const btnCustom = document.getElementById('btn-customize-studio');
+        if (btnCustom) btnCustom.click();
         break;
       case 'copiar_cuenta_bn':
         this.copyData('00-638-002361', 'Cuenta Corriente BN (TUPA)');

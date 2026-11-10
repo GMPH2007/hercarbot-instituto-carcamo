@@ -760,10 +760,11 @@
       await HercarSQL.init();
       const stats = HercarSQL.getStats();
 
-      document.getElementById('cntTotalUsers').textContent = stats.totalUsers;
-      document.getElementById('cntAdmins').textContent = stats.adminsCount;
-      document.getElementById('cntTeachers').textContent = stats.teachersCount;
-      document.getElementById('cntAuditLogs').textContent = stats.totalLogs;
+      const setCnt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      setCnt('cntTotalUsers', stats.totalUsers);
+      setCnt('cntAdmins', stats.adminsCount);
+      setCnt('cntTeachers', stats.teachersCount);
+      setCnt('cntAuditLogs', stats.totalLogs);
 
       isCleanInitialState = (stats.totalUsers === 0);
 

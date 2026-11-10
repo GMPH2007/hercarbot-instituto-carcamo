@@ -1246,7 +1246,8 @@ body.dark-theme .btn-fut-chip:hover {
   transition: all var(--dur) var(--ease);
   font-family: var(--font);
   position: relative;
-  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .interactive-btn:hover {
@@ -5616,3 +5617,228 @@ body.dark-theme #futEntityQuickType .btn.active {
 .sidebar-login-btn:hover i {
   color: #ffffff !important;
 }
+
+/* ============================================================
+   18. PERSONALIZACIÓN PRO, CONTRASTE MODO OSCURO Y COMPONENTES 2026
+   ============================================================ */
+
+/* El contenedor pill ya dibuja el anillo de foco accesible al escribir */
+#chat-input:focus-visible,
+#search-history-input:focus-visible,
+#paletteInput:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Corrección integral de contraste para alertas claras en Modo Oscuro */
+body.dark-theme [style*="#fef2f2"],
+body.dark-theme .alert-danger {
+  background: rgba(153, 27, 27, 0.28) !important;
+  border-color: rgba(248, 113, 113, 0.45) !important;
+  color: #fecaca !important;
+}
+body.dark-theme [style*="#fef2f2"] strong,
+body.dark-theme [style*="#fef2f2"] b,
+body.dark-theme [style*="#fef2f2"] span,
+body.dark-theme .alert-danger strong,
+body.dark-theme .alert-danger a {
+  color: #fee2e2 !important;
+}
+body.dark-theme [style*="#fef2f2"] code,
+body.dark-theme .alert-danger code {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #fde047 !important;
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+body.dark-theme [style*="#fffbeb"],
+body.dark-theme .alert-warning {
+  background: rgba(180, 83, 9, 0.26) !important;
+  border-color: rgba(251, 191, 36, 0.45) !important;
+  color: #fef3c7 !important;
+}
+body.dark-theme [style*="#fffbeb"] strong,
+body.dark-theme [style*="#fffbeb"] b,
+body.dark-theme [style*="#fffbeb"] span,
+body.dark-theme .alert-warning strong,
+body.dark-theme .alert-warning p {
+  color: #fef3c7 !important;
+}
+body.dark-theme [style*="#fffbeb"] code,
+body.dark-theme .alert-warning code {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #fde047 !important;
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+body.dark-theme [style*="#f0fdf4"],
+body.dark-theme .alert-success {
+  background: rgba(22, 101, 52, 0.28) !important;
+  border-color: rgba(74, 222, 128, 0.4) !important;
+  color: #dcfce7 !important;
+}
+body.dark-theme [style*="#f0fdf4"] strong,
+body.dark-theme [style*="#f0fdf4"] span,
+body.dark-theme .alert-success strong {
+  color: #dcfce7 !important;
+}
+
+body.dark-theme [style*="#e0f2fe"],
+body.dark-theme [style*="#eff6ff"],
+body.dark-theme .alert-info {
+  background: rgba(3, 105, 161, 0.26) !important;
+  border-color: rgba(56, 189, 248, 0.42) !important;
+  color: #e0f2fe !important;
+}
+body.dark-theme [style*="#e0f2fe"] strong,
+body.dark-theme [style*="#eff6ff"] strong,
+body.dark-theme .alert-info strong {
+  color: #bae6fd !important;
+}
+body.dark-theme .alert-info code {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #7dd3fc !important;
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+/* Paletas Institucionales Personalizables (Estudio de Personalización) */
+body[data-hercar-palette="oceano"] {
+  --brand: #0369a1;
+  --brand-mid: #0284c7;
+  --brand-light: #0ea5e9;
+  --brand-glow: rgba(2, 132, 199, 0.16);
+  --bg-sidebar: #082f49;
+  --bg-sidebar-2: #062135;
+}
+body[data-hercar-palette="tecnologico"] {
+  --brand: #047857;
+  --brand-mid: #059669;
+  --brand-light: #10b981;
+  --brand-glow: rgba(16, 185, 129, 0.16);
+  --bg-sidebar: #062c22;
+  --bg-sidebar-2: #041e17;
+}
+body[data-hercar-palette="ejecutivo"] {
+  --brand: #312e81;
+  --brand-mid: #4338ca;
+  --brand-light: #6366f1;
+  --brand-glow: rgba(79, 70, 229, 0.16);
+  --bg-sidebar: #16153a;
+  --bg-sidebar-2: #0f0e29;
+}
+
+/* Tamaño de Fuente Accesible */
+body[data-hercar-font="large"] .bot-content-body,
+body[data-hercar-font="large"] .msg-bubble-user,
+body[data-hercar-font="large"] .welcome-subtitle {
+  font-size: 1.04rem !important;
+  line-height: 1.62 !important;
+}
+body[data-hercar-font="xlarge"] .bot-content-body,
+body[data-hercar-font="xlarge"] .msg-bubble-user,
+body[data-hercar-font="xlarge"] .welcome-subtitle {
+  font-size: 1.14rem !important;
+  line-height: 1.68 !important;
+}
+
+/* Densidad Compacta */
+body[data-hercar-density="compact"] .features-pill-grid {
+  gap: 8px !important;
+}
+body[data-hercar-density="compact"] .feature-pill {
+  padding: 9px 11px !important;
+}
+body[data-hercar-density="compact"] .msg-bubble-bot {
+  padding: 11px 14px !important;
+}
+
+/* Checklists Interactivos (Suficiencia & Título) */
+.hercar-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  margin-bottom: 6px;
+  background: var(--bg-white);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.hercar-checklist-item:hover {
+  border-color: var(--brand-light);
+}
+.hercar-checklist-item.checked {
+  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.4);
+}
+.hercar-checklist-item.checked .checklist-text {
+  text-decoration: line-through;
+  opacity: 0.78;
+}
+body.dark-theme .hercar-checklist-item {
+  background: #0f1b36;
+  border-color: #1e3a6e;
+  color: #f1f5f9;
+}
+body.dark-theme .hercar-checklist-item.checked {
+  background: rgba(22, 163, 74, 0.18);
+  border-color: rgba(74, 222, 128, 0.45);
+}
+
+/* Estudio de Personalización Cards */
+.custom-palette-option,
+.custom-chip-option {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: var(--bg-white);
+  transition: all 0.18s ease;
+  text-align: left;
+  width: 100%;
+}
+.custom-palette-option.active,
+.custom-chip-option.active {
+  border-color: var(--brand-light);
+  background: rgba(37, 99, 235, 0.08);
+  box-shadow: 0 4px 12px var(--brand-glow);
+}
+.palette-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+body.dark-theme #modalCustomStudio .modal-body {
+  background: #0b1428 !important;
+  color: #f1f5f9 !important;
+}
+body.dark-theme .custom-palette-option,
+body.dark-theme .custom-chip-option {
+  background: #111c38 !important;
+  border-color: #1e3a6e !important;
+  color: #f1f5f9 !important;
+}
+body.dark-theme .custom-palette-option.active,
+body.dark-theme .custom-chip-option.active {
+  border-color: #60a5fa !important;
+  background: rgba(37, 99, 235, 0.22) !important;
+}
+
+/* Buscador TUPA 2026 */
+.tupa-search-table-wrap {
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+body.dark-theme .tupa-search-table-wrap {
+  border-color: #1e3a6e;
+}
+

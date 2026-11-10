@@ -204,7 +204,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- Estilos HercarBot IA Premium con Cache Buster -->
-  <link rel="stylesheet" href="css/style.css?v=20261110a">
+  <link rel="stylesheet" href="css/style.css?v=20261110b">
 
   <!-- Desbloqueador Inmediato de Clics y Purga de Caché Estancada -->
   <style>
@@ -236,7 +236,7 @@
         if ('caches' in window) {
           caches.keys().then(function(keys) {
             for (var k of keys) {
-              if (k !== 'hercarbot-pwa-v2026-v11') { caches.delete(k); }
+              if (k !== 'hercarbot-pwa-v2026-v12') { caches.delete(k); }
             }
           });
         }
@@ -295,7 +295,7 @@
         <div class="sidebar-history-search mb-3">
           <div class="input-group input-group-sm">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" id="search-history-input" class="form-control" placeholder="Buscar en historial..." autocomplete="off">
+            <input type="text" id="search-history-input" class="form-control" placeholder="Buscar en historial..." aria-label="Buscar en el historial de conversaciones" autocomplete="off">
           </div>
         </div>
 
@@ -412,6 +412,9 @@
           <button id="btn-toggle-widget-mode" class="control-btn d-none d-md-flex" title="Alternar Vista Flotante sobre Web ieshercar.edu.pe">
             <i class="bi bi-window-stack" style="color:#0284c7;"></i>
           </button>
+          <button id="btn-customize-studio" class="control-btn" data-bs-toggle="modal" data-bs-target="#modalCustomStudio" title="Estudio de Personalización Pro (Tema, Perfil, Avatar y Accesibilidad)">
+            <i class="bi bi-palette-fill" style="color:#ec4899;"></i>
+          </button>
           <button id="btn-theme-toggle" class="control-btn" title="Modo Oscuro / Claro">
             <i class="bi bi-moon-stars-fill" style="color:#60a5fa;"></i>
           </button>
@@ -490,7 +493,7 @@
           <div id="chat-image-preview-bar" class="chat-image-preview-bar" style="display: none;">
             <div class="preview-content-box">
               <div class="preview-thumb-wrapper">
-                <img id="chat-preview-img" src="" alt="Previsualización de imagen">
+                <img id="chat-preview-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Previsualización de imagen">
                 <button type="button" id="btn-remove-image-preview" class="btn-remove-preview" title="Quitar imagen">
                   <i class="bi bi-x-circle-fill"></i>
                 </button>
@@ -514,7 +517,7 @@
           </div>
 
           <form id="chat-form" class="chat-form-box">
-            <input type="file" id="chat-file-input" accept="image/*" style="display: none;">
+            <input type="file" id="chat-file-input" accept="image/*" aria-label="Adjuntar imagen o comprobante bancario" style="display: none;">
             <button type="button" id="btn-attach-image" class="input-btn btn-attach" title="Adjuntar Imagen o Voucher">
               <i class="bi bi-image"></i>
             </button>
@@ -522,6 +525,7 @@
               type="text" 
               id="chat-input" 
               class="chat-textarea" 
+              aria-label="Escribe tu consulta para HercarBot IA"
               placeholder="Hazme cualquier pregunta sobre el Instituto Superior Hermanos Cárcamo..." 
               autocomplete="off"
             >
@@ -550,7 +554,7 @@
       <div class="modal-content border-0 shadow-lg rounded-4" style="overflow: hidden;">
         <div class="modal-header text-white" style="background: linear-gradient(135deg, #0e2d6c 0%, #1646b0 100%);">
           <div class="d-flex align-items-center gap-2">
-            <img src="https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png" alt="Logo" style="width: 28px; height: 28px; object-fit: contain; background: #fff; border-radius: 6px; padding: 2px;">
+            <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo" style="width: 28px; height: 28px; object-fit: contain; background: #fff; border-radius: 6px; padding: 2px;">
             <h5 class="modal-title fw-bold mb-0" id="modalTopicsDirectoryLabel">Directorio de Consultas — HercarBot IA</h5>
           </div>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -596,6 +600,7 @@
                 <div class="d-flex flex-column gap-1">
                   <button class="btn btn-sm btn-light text-start text-dark fw-bold border-0 py-1" data-bs-dismiss="modal" data-chat-action="ver_numero_cuenta_bn">🏦 Las 2 Cuentas BN (00-638-002361 / 025736)</button>
                   <button class="btn btn-sm btn-light text-start text-primary fw-bold border-0 py-1" data-bs-dismiss="modal" data-chat-action="ver_cotizador_tupa">🧮 Cotizador TUPA 2026</button>
+                  <button class="btn btn-sm btn-light text-start text-info fw-bold border-0 py-1" data-bs-dismiss="modal" data-chat-action="ver_buscador_tupa">🔎 Buscador Completo TUPA 2026 (66 ítems)</button>
                   <button class="btn btn-sm btn-light text-start text-danger fw-bold border-0 py-1" data-bs-dismiss="modal" data-chat-action="ver_metodos_pago_digitales">🚫 Regla BN: NO Págalo.pe (Solo Ventanilla)</button>
                   <button class="btn btn-sm btn-light text-start text-dark border-0 py-1" data-bs-dismiss="modal" data-chat-action="ver_matricula_paso_a_paso">💰 Matrícula S/ 250 Paso a Paso</button>
                   <button class="btn btn-sm btn-light text-start text-dark border-0 py-1" data-bs-dismiss="modal" data-chat-action="ver_curso_ingles">🇬🇧 Curso de Inglés (Cta. 00-638-025736)</button>
@@ -757,7 +762,132 @@
     </div>
   </div>
 
-      <!-- Modal Generador Oficial de FUT -->
+  <!-- Modal Estudio de Personalización Pro -->
+  <div class="modal fade" id="modalCustomStudio" tabindex="-1" aria-labelledby="modalCustomStudioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header text-white" style="background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 100%);">
+          <div class="d-flex align-items-center gap-2">
+            <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-palette-fill fs-5"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="modalCustomStudioLabel">Estudio de Personalización Pro</h5>
+              <small class="text-white-50" style="font-size: 0.76rem;">Adapta colores, avatar IA, perfil académico, tipografía y voz a tu gusto</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-4" style="background: #f8fafc;">
+          <!-- 1. Paletas Institucionales -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small mb-2 d-block"><i class="bi bi-brush-fill text-primary me-1"></i> Paleta Visual del Entorno:</label>
+            <div class="row g-2">
+              <div class="col-6 col-md-3">
+                <button type="button" class="custom-palette-option d-flex align-items-center gap-2" data-pref-palette="hercar">
+                  <span class="palette-swatch" style="background: linear-gradient(135deg, #0e2d6c, #f59e0b);"></span>
+                  <div class="small lh-sm"><strong class="d-block">HERCAR</strong><span class="text-muted" style="font-size:0.7rem;">Oficial Azul</span></div>
+                </button>
+              </div>
+              <div class="col-6 col-md-3">
+                <button type="button" class="custom-palette-option d-flex align-items-center gap-2" data-pref-palette="oceano">
+                  <span class="palette-swatch" style="background: linear-gradient(135deg, #0369a1, #38bdf8);"></span>
+                  <div class="small lh-sm"><strong class="d-block">Paita Mar</strong><span class="text-muted" style="font-size:0.7rem;">Puerto Cian</span></div>
+                </button>
+              </div>
+              <div class="col-6 col-md-3">
+                <button type="button" class="custom-palette-option d-flex align-items-center gap-2" data-pref-palette="tecnologico">
+                  <span class="palette-swatch" style="background: linear-gradient(135deg, #047857, #34d399);"></span>
+                  <div class="small lh-sm"><strong class="d-block">APSTI 2027</strong><span class="text-muted" style="font-size:0.7rem;">Esmeralda TI</span></div>
+                </button>
+              </div>
+              <div class="col-6 col-md-3">
+                <button type="button" class="custom-palette-option d-flex align-items-center gap-2" data-pref-palette="ejecutivo">
+                  <span class="palette-swatch" style="background: linear-gradient(135deg, #312e81, #818cf8);"></span>
+                  <div class="small lh-sm"><strong class="d-block">Ejecutivo</strong><span class="text-muted" style="font-size:0.7rem;">Índigo Pro</span></div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Modo de Atención / Perfil de Usuario -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small mb-2 d-block"><i class="bi bi-person-badge-fill text-success me-1"></i> Perfil de Orientación Personalizado:</label>
+            <div class="row g-2">
+              <div class="col-6 col-sm-3">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-profile="general">🌟 Todo el Portal</button>
+              </div>
+              <div class="col-6 col-sm-3">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-profile="postulante">🎯 Postulante 2026</button>
+              </div>
+              <div class="col-6 col-sm-3">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-profile="estudiante">📚 Estudiante</button>
+              </div>
+              <div class="col-6 col-sm-3">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-profile="egresado">🎓 Egresado / Título</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Avatar de HercarBot + Apariencia -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small mb-2 d-block"><i class="bi bi-robot text-primary me-1"></i> Avatar de la Asesora IA:</label>
+              <div class="d-flex gap-2">
+                <button type="button" class="custom-chip-option d-flex align-items-center gap-2" data-pref-avatar="avatar-ia">
+                  <img src="assets/img/hercarbot-avatar.jpg" alt="Avatar 3D" style="width:28px;height:28px;border-radius:8px;object-fit:cover;">
+                  <span class="small fw-semibold">HercarBot 3D</span>
+                </button>
+                <button type="button" class="custom-chip-option d-flex align-items-center gap-2" data-pref-avatar="escudo">
+                  <img src="assets/img/logo-hercar.png" alt="Escudo Oficial" style="width:28px;height:28px;border-radius:8px;object-fit:contain;">
+                  <span class="small fw-semibold">Escudo IESTP</span>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small mb-2 d-block"><i class="bi bi-moon-stars-fill text-warning me-1"></i> Tema de Iluminación:</label>
+              <div class="d-flex gap-2">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-theme="light">☀️ Modo Claro</button>
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-theme="dark">🌙 Modo Oscuro</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Tipografía y Densidad -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small mb-2 d-block"><i class="bi bi-type text-info me-1"></i> Tamaño de Texto (Accesibilidad):</label>
+              <div class="d-flex gap-2">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-font="normal">Normal</button>
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-font="large">Grande</button>
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-font="xlarge">Extra Grande</button>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small mb-2 d-block"><i class="bi bi-layout-text-window text-secondary me-1"></i> Espaciado de Tarjetas:</label>
+              <div class="d-flex gap-2">
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-density="comfortable">Cómodo</button>
+                <button type="button" class="custom-chip-option small fw-semibold" data-pref-density="compact">Compacto</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-light d-flex justify-content-between flex-wrap gap-2">
+          <button type="button" id="btn-reset-custom-studio" class="btn btn-link btn-sm text-muted text-decoration-none p-0">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Restablecer predeterminados
+          </button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modalVoiceSettings">
+              <i class="bi bi-mic-fill me-1"></i> Ajustar Voz
+            </button>
+            <button type="button" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Listo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Generador Oficial de FUT -->
   <div class="hercar-fut-modal" id="modalGeneradorFUT" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="hercar-fut-box">
       <!-- Encabezado del Modal con botones y accesos rápidos -->
@@ -1090,7 +1220,7 @@
     <div class="hercar-palette-box">
       <div class="palette-search-bar">
         <i class="bi bi-search palette-search-icon"></i>
-        <input type="text" id="paletteInput" class="palette-input" placeholder="Escribe para buscar carreras, pagos, trámites o simulador..." autocomplete="off">
+        <input type="text" id="paletteInput" class="palette-input" aria-label="Buscar comandos, carreras, pagos y herramientas" placeholder="Escribe para buscar carreras, pagos, trámites o simulador..." autocomplete="off">
         <span class="palette-esc-badge" id="paletteCloseBtn">ESC</span>
       </div>
       <div class="palette-results-wrapper" id="paletteResults">
@@ -1112,7 +1242,7 @@
   <!-- Botón Burbuja Flotante Launcher para Modo Widget / Portal Oficial -->
   <div id="hercar-widget-launcher" class="hercar-widget-launcher" title="Abrir Asistente Virtual HercarBot IA">
     <div class="launcher-avatar-wrap position-relative">
-      <img src="assets/img/logo-hercar.png" alt="HercarBot IA Logo">
+      <img src="assets/img/hercarbot-avatar.jpg" id="launcher-avatar-img" alt="HercarBot IA Logo" style="border-radius: 50%; object-fit: cover;">
       <span class="launcher-online-dot"></span>
     </div>
     <div class="launcher-text-box">
@@ -1125,7 +1255,7 @@
   <div id="hercar-toast-container" class="hercar-toast-container" aria-live="polite"></div>
 
   <!-- Base de Conocimiento y Lógica del Asistente con Cache Buster -->
-  <script src="js/knowledge-base.js?v=20261110a"></script>
-  <script src="js/chatbot.js?v=20261110a"></script>
+  <script src="js/knowledge-base.js?v=20261110b"></script>
+  <script src="js/chatbot.js?v=20261110b"></script>
 </body>
 </html>

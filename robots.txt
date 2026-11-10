@@ -14,8 +14,9 @@ Allow: /apple-touch-icon.png
 Allow: /manifest.json
 Allow: /sitemap.xml
 
-# Bloquear panel administrativo privado
+# Bloquear panel administrativo y registro privado
 Disallow: /admin.html
+Disallow: /register.html
 
 # Googlebot e Indexación de Imágenes y Favicon Oficial
 User-agent: Googlebot

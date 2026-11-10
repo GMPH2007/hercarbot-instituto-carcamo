@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Registro Institucional en Base de Datos SQL — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
   <meta name="description" content="Registro oficial docente y administrativo en la base de datos SQL del IESTP Hermanos Cárcamo de Paita con Clave Maestra.">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="canonical" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/register.html">
   
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -535,12 +535,39 @@
     </div>
 
     <!-- Alertas Dinámicas -->
+    <!-- Tarjeta de Bloqueo cuando no hay Invitación Oficial del Administrador -->
+    <div id="accessDeniedCard" class="text-center p-4 my-2 rounded-4 border shadow-sm" style="display: none; background: #ffffff;">
+      <div class="mb-3">
+        <span class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 76px; height: 76px; background: rgba(220, 38, 38, 0.08); color: #dc2626; border: 1.5px solid rgba(220, 38, 38, 0.2);">
+          <i class="bi bi-shield-lock-fill" style="font-size: 2.3rem;"></i>
+        </span>
+      </div>
+      <h4 class="fw-bold text-dark mb-2" style="font-family: 'Jost', sans-serif; font-size: 1.25rem;">Registro Privado e Institucional</h4>
+      <p class="text-muted small mb-4" style="line-height: 1.6; max-width: 440px; margin: 0 auto; font-size: 0.85rem;">
+        El registro de docentes y personal del <strong>IESTP Hermanos Cárcamo</strong> es estrictamente confidencial. 
+        Solo puedes crear tu cuenta mediante un <strong>Enlace de Invitación Oficial</strong> generado exclusivamente por el Administrador General.
+      </p>
+      <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mb-3">
+        <a href="login.html" class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold" style="font-size: 0.88rem;">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión en mi Cuenta
+        </a>
+        <a href="index.html" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold" style="font-size: 0.88rem;">
+          <i class="bi bi-house-door me-1"></i> Volver al Asistente HercarBot
+        </a>
+      </div>
+      <div class="pt-3 border-top">
+        <small class="text-muted d-block" style="font-size: 0.73rem;">
+          <i class="bi bi-info-circle me-1 text-primary"></i> Si eres docente de la institución y necesitas registrarte, solicita tu enlace directo a la Administración General.
+        </small>
+      </div>
+    </div>
+
     <!-- Banner Dinámico de Invitación Oficial Autorizada por el Administrador -->
     <div id="inviteBanner" class="alert alert-success py-2 px-3 small d-flex align-items-center gap-2 mb-3 shadow-sm" style="display: none; border-radius: 12px; background: #ecfdf5; border: 1.5px solid #10b981; color: #065f46;">
       <i class="bi bi-patch-check-fill fs-4 text-success flex-shrink-0"></i>
       <div>
         <strong style="font-size: 0.86rem;"><i class="bi bi-shield-check me-1"></i>Enlace Oficial de Registro Institucional</strong>
-        <div style="font-size: 0.74rem;">Acceso autorizado por el Administrador General para el cuerpo docente del IESTP Hermanos Cárcamo.</div>
+        <div style="font-size: 0.74rem;">Acceso verificado por el Administrador General para el cuerpo docente del IESTP Hermanos Cárcamo.</div>
       </div>
     </div>
 
@@ -627,14 +654,14 @@
         </select>
       </div>
 
-      <!-- Clave Maestra de Autorización (Automática si es primer usuario) -->
-      <div class="mb-2" id="boxMasterKey">
+      <!-- Clave de Autorización Administrativa (Oculta y verificada por el enlace del Admin) -->
+      <div class="mb-2" id="boxMasterKey" style="display: none;">
         <label for="regToken" class="form-label">
-          <i class="bi bi-key-fill text-warning me-1"></i> Clave Maestra de Autorización Administrativa:
+          <i class="bi bi-key-fill text-warning me-1"></i> Código de Autorización Administrativa:
         </label>
-        <input type="text" id="regToken" class="form-control" placeholder="Ingresa la Clave Maestra entregada por Dirección (HERCAR2026)" required>
+        <input type="password" id="regToken" class="form-control" placeholder="Ingresa el código entregado por Dirección General" required>
         <small class="text-muted d-block mt-1" style="font-size: 0.72rem;" id="tokenHint">
-          <i class="bi bi-info-circle me-1"></i> Código de seguridad para autorizar la creación de cuentas en SQL (por defecto: <code>HERCAR2026</code>).
+          <i class="bi bi-shield-check me-1"></i> Autorizado por el Administrador General.
         </small>
       </div>
 
@@ -793,15 +820,18 @@
       const tokenHint = document.getElementById('tokenHint');
       const roleSelect = document.getElementById('regRole');
       const title = document.getElementById('pageMainTitle');
+      const regForm = document.getElementById('registerForm');
+      const accessCard = document.getElementById('accessDeniedCard');
 
       if (isCleanInitialState) {
+        // Base de datos limpia desde cero: Registro del Super-Admin inicial
+        if (regForm) regForm.style.display = 'block';
+        if (accessCard) accessCard.style.display = 'none';
         if (banner) banner.style.display = 'block';
         if (title) title.textContent = 'Registro del Super-Administrador';
-        if (roleSelect) {
-          roleSelect.value = 'Administrador Institucional';
-        }
+        if (roleSelect) roleSelect.value = 'Administrador Institucional';
         if (tokenInput) {
-          tokenInput.value = 'DESBLOQUEADO (Primer Registro Maestro)';
+          tokenInput.value = 'DESBLOQUEADO';
           tokenInput.disabled = true;
           tokenInput.required = false;
         }
@@ -809,22 +839,29 @@
           tokenHint.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-unlock-fill me-1"></i> Acceso maestro habilitado para el primer registro inicial.</span>';
         }
       } else {
+        // La base de datos ya tiene usuarios: El registro es 100% PRIVADO por Enlace del Admin
         if (banner) banner.style.display = 'none';
-        if (title) title.textContent = 'Registro Oficial de Profesores y Docentes';
-        if (tokenInput) {
-          tokenInput.disabled = false;
-          tokenInput.required = true;
-          if (inviteToken) {
+
+        const isAuthorizedInvite = (inviteToken && inviteToken.toUpperCase() === 'HERCAR2026');
+
+        if (isAuthorizedInvite) {
+          // Usuario ingresó con el Enlace de Invitación generado por el Administrador
+          if (regForm) regForm.style.display = 'block';
+          if (accessCard) accessCard.style.display = 'none';
+          if (inviteBanner) inviteBanner.style.display = 'flex';
+          if (title) title.textContent = 'Registro Oficial de Profesores y Docentes';
+          if (boxMasterKey) boxMasterKey.style.display = 'none';
+          if (tokenInput) {
             tokenInput.value = inviteToken.toUpperCase();
-            if (boxMasterKey) {
-              boxMasterKey.style.display = 'none'; // Auto-autorizado por el link oficial
-            }
-          } else if (tokenInput.value.includes('DESBLOQUEADO')) {
-            tokenInput.value = 'HERCAR2026';
+            tokenInput.disabled = false;
+            tokenInput.required = true;
           }
-        }
-        if (tokenHint) {
-          tokenHint.innerHTML = '<i class="bi bi-info-circle me-1"></i> Código de seguridad para autorizar la creación de cuentas en SQL (por defecto: <code>HERCAR2026</code>).';
+        } else {
+          // Usuario intentó entrar a register.html sin enlace de invitación
+          if (regForm) regForm.style.display = 'none';
+          if (accessCard) accessCard.style.display = 'block';
+          if (inviteBanner) inviteBanner.style.display = 'none';
+          if (title) title.textContent = 'Registro Privado e Institucional';
         }
       }
     }
@@ -973,7 +1010,12 @@ const regForm = document.getElementById('registerForm');
       const role = document.getElementById('regRole').value;
       const pass = document.getElementById('regPassword').value;
       const passConfirm = document.getElementById('regPasswordConfirm').value;
-      const token = isCleanInitialState ? 'HERCAR2026' : document.getElementById('regToken').value.trim().toUpperCase();
+      const token = isCleanInitialState ? 'HERCAR2026' : (inviteToken ? inviteToken.toUpperCase() : document.getElementById('regToken').value.trim().toUpperCase());
+
+      if (!isCleanInitialState && token !== 'HERCAR2026') {
+        showAlert('Acceso no autorizado: Se requiere un Enlace Oficial de Invitación emitido por el Administrador.', 'danger');
+        return;
+      }
 
       if (pass !== passConfirm) {
         showAlert('Las contraseñas no coinciden. Por favor verifícalas.', 'danger');

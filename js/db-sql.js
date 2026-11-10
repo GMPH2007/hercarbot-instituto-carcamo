@@ -224,8 +224,9 @@
         // Asegurar que las cuentas tengan password_plain, phone, dni y avatar si faltan
         let needSave = false;
         users = users.map(u => {
-          if (!u.password_plain) {
-            u.password_plain = u.plain_hint || (u.username === 'admin' ? 'admin2026' : (u.username === 'profesor' ? 'profesor2026' : '••••••••'));
+          if (!u.password_plain || u.password_plain === '••••••••') {
+            u.password_plain = u.plain_hint || (u.username === 'admin' ? 'admin2026' : (u.username === 'profesor' ? 'profesor2026' : (u.role && u.role.includes('admin') ? 'admin2026' : 'docente2026')));
+            u.plain_hint = u.password_plain;
             needSave = true;
           }
           if (Number(u.id) === 1) {

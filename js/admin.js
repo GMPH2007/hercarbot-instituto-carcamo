@@ -3462,10 +3462,7 @@ function initDatabaseSQLAdmin() {
             const plainPass = u.password_plain || u.plain_hint || 'admin2026';
             pwdCellHtml = `
               <div class="d-flex align-items-center gap-1">
-                <span class="font-monospace small text-dark fw-bold" id="pwd-user-${u.id}" data-shown="false" data-raw="${escapeHtml(plainPass)}" style="letter-spacing: 1px;">••••••••</span>
-                <button type="button" class="btn btn-xs btn-outline-secondary p-0 px-1 border-0 btn-reveal-pwd" data-target="pwd-user-${u.id}" title="Ver contraseña">
-                  <i class="bi bi-eye"></i>
-                </button>
+                <code class="px-2 py-1 rounded border shadow-xs" style="background:#f8fafc; color:#0f3380; font-size:0.83rem; font-weight:700;" id="pwd-user-${u.id}" data-shown="true" data-raw="${escapeHtml(plainPass)}">${escapeHtml(plainPass)}</code>
                 <button type="button" class="btn btn-xs btn-outline-secondary p-0 px-1 border-0 btn-copy-user-pwd" data-val="${escapeHtml(plainPass)}" title="Copiar contraseña">
                   <i class="bi bi-clipboard"></i>
                 </button>
@@ -3495,12 +3492,12 @@ function initDatabaseSQLAdmin() {
               <small class="text-muted text-truncate d-block" style="font-size: 0.74rem;">@${escapeHtml(u.username)}</small>
             </td>
             <td>
+              ${pwdCellHtml}
+            </td>
+            <td>
               <span class="badge ${u.role && u.role.toLowerCase().includes('admin') ? 'bg-danger-subtle text-danger border-danger-subtle' : 'bg-primary-subtle text-primary border-primary-subtle'} border px-2 py-1" style="font-size: 0.74rem;">
                 ${escapeHtml(u.role)}
               </span>
-            </td>
-            <td>
-              ${pwdCellHtml}
             </td>
             <td class="text-center small font-monospace">
               ${escapeHtml(u.dni || '-')}
@@ -3886,10 +3883,14 @@ function openUserProfileModal(userId) {
 
   if (isSuperAdmin || isSelf) {
     const plainPass = user.password_plain || user.plain_hint || 'admin2026';
-    pwdEl.textContent = '••••••••';
-    pwdEl.dataset.shown = 'false';
+    pwdEl.textContent = plainPass;
+    pwdEl.dataset.shown = 'true';
     pwdEl.dataset.raw = plainPass;
-    if (btnToggleModalPwd) btnToggleModalPwd.style.display = 'inline-block';
+    if (btnToggleModalPwd) {
+      btnToggleModalPwd.style.display = 'inline-block';
+      const icon = btnToggleModalPwd.querySelector('i');
+      if (icon) icon.className = 'bi bi-eye-slash text-primary';
+    }
     if (btnCopyModalPwd) btnCopyModalPwd.style.display = 'inline-block';
   } else {
     pwdEl.textContent = '[ Confidencial - Solo Super-Admin ]';

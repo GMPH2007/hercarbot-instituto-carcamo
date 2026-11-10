@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>Registro Institucional en Base de Datos SQL — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
-  <meta name="description" content="Registro oficial docente y administrativo en la base de datos SQL del IESTP Hermanos Cárcamo de Paita con Clave Maestra.">
+  <title>Registro Institucional Docente — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  <meta name="description" content="Registro oficial docente y administrativo del IESTP Hermanos Cárcamo de Paita.">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="canonical" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/register.html">
   
@@ -511,17 +511,7 @@
     </div>
 
     <h2 class="auth-title" id="pageMainTitle">Registro Oficial de Profesores y Docentes</h2>
-    <p class="auth-subtitle">Crea tu cuenta oficial como docente del IESTP Hermanos Cárcamo para acceder al panel directamente en el motor relacional HercarSQL.</p>
-
-    <!-- Indicador de Seguridad Institucional Limpio y Compacto -->
-    <div class="d-flex justify-content-between align-items-center mb-3 p-2 px-3 rounded-pill border" style="background: rgba(37, 99, 235, 0.06); border-color: rgba(37, 99, 235, 0.18) !important;">
-      <span class="small text-muted" style="font-size: 0.76rem;">
-        <i class="bi bi-shield-check text-primary me-1"></i> Base de Datos Relacional SQL
-      </span>
-      <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size: 0.70rem;">
-        <i class="bi bi-check-circle-fill me-1"></i> Motor SQL Activo
-      </span>
-    </div>
+    <p class="auth-subtitle">Crea tu cuenta oficial como docente del IESTP Hermanos Cárcamo para acceder al sistema institucional.</p>
 
     <!-- BANNER DINÁMICO CUANDO ES EL PRIMER REGISTRO (DESDE CERO) -->
     <div id="firstAdminBanner" class="initial-admin-alert" style="display: none;">
@@ -585,7 +575,7 @@
         </div>
         <div class="mt-1">
           <button type="button" class="btn btn-sm btn-link text-decoration-none fw-bold p-0 text-primary" id="btnOpenAvatarModalLink" style="font-size: 0.82rem;">
-            <i class="bi bi-image me-1"></i> Elegir o Subir Foto de Perfil (Ventana Flotante)
+            <i class="bi bi-image me-1"></i> Elegir o Subir Foto de Perfil
           </button>
           <input type="hidden" id="regAvatarData" value="">
         </div>
@@ -625,7 +615,7 @@
       <div class="row g-2 mb-2">
         <div class="col-sm-6">
           <label for="regUsername" class="form-label">
-            <i class="bi bi-person-badge text-primary me-1"></i> Usuario SQL:
+            <i class="bi bi-person-badge text-primary me-1"></i> Nombre de Usuario:
           </label>
           <input type="text" id="regUsername" class="form-control" placeholder="ej: usuario_docente" required>
         </div>
@@ -704,14 +694,14 @@
       </div>
 
       <button type="submit" class="btn-auth-primary" id="btnRegisterSubmit">
-        <i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar y Guardar en Base de Datos SQL
+        <i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar Cuenta Institucional
       </button>
     </form>
 
     <!-- Opciones de Reinicio y Enlaces -->
     <div class="auth-links auth-links-border">
       <div class="mb-2 auth-subtext">
-        <span>¿Ya tienes tu cuenta registrada en SQL?</span>
+        <span>¿Ya tienes una cuenta institucional?</span>
         <a href="login.html" class="fw-bold ms-1">
           <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión aquí
         </a>
@@ -1039,7 +1029,7 @@ const regForm = document.getElementById('registerForm');
 
       const btnSubmit = document.getElementById('btnRegisterSubmit');
       btnSubmit.disabled = true;
-      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Registrando en tabla SQL users con hash SHA-256...';
+      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Registrando cuenta institucional...';
 
       try {
         const res = await HercarSQL.registerUser({
@@ -1056,7 +1046,7 @@ const regForm = document.getElementById('registerForm');
         });
 
         if (res.success) {
-          showAlert(`¡Cuenta registrada exitosamente en la base de datos SQL (${res.user.role})! Redirigiendo al Login...`, 'success');
+          showAlert(`¡Cuenta institucional registrada exitosamente (${res.user.role})! Redirigiendo al Login...`, 'success');
           sessionStorage.setItem('last_registered_email', email);
           refreshCountersAndState();
           setTimeout(() => {
@@ -1065,13 +1055,13 @@ const regForm = document.getElementById('registerForm');
         } else {
           showAlert(res.message, 'danger');
           btnSubmit.disabled = false;
-          btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar y Guardar en Base de Datos SQL';
+          btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar Cuenta Institucional';
         }
       } catch (err) {
         console.error(err);
-        showAlert('Error al procesar la inserción en la base de datos SQL.', 'danger');
+        showAlert('Error al procesar el registro institucional.', 'danger');
         btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar y Guardar en Base de Datos SQL';
+        btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar Cuenta Institucional';
       }
     });
 

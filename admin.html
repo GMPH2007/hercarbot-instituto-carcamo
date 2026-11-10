@@ -907,8 +907,8 @@
         <div>
           <div class="d-flex align-items-center gap-2">
             <h4 class="fw-bold mb-0 text-dark"><i class="bi bi-database-fill-check text-success me-2"></i>Base de Datos Relacional SQL (HercarSQL)</h4>
-            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill" style="font-size: 0.72rem;">
-              <i class="bi bi-circle-fill text-success me-1" style="font-size: 0.5rem;"></i> Motor SQL Activo
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill" style="font-size: 0.72rem;">
+              <i class="bi bi-circle-fill text-primary me-1" style="font-size: 0.5rem;"></i> Motor SQL Activo
             </span>
           </div>
           <p class="text-muted small mb-0 mt-1">
@@ -916,7 +916,7 @@
           </p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-          <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm" id="btn-open-invite-modal" title="Generar y copiar enlace oficial para invitar a docentes a registrarse">
+          <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" id="btn-open-invite-modal" title="Generar y copiar enlace oficial para invitar a docentes a registrarse">
             <i class="bi bi-link-45deg me-1"></i> Generar Link de Registro Docente
           </button>
           <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm" id="btn-reset-sql-zero" title="Vaciar la base de datos a CERO (0) para inicio limpio sin datos de muestra">
@@ -973,10 +973,10 @@
           <div class="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between sql-metric-card" style="background: #f8fafc; border-color: #e2e8f0;">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <span class="text-muted small fw-semibold">Motor & Criptografía</span>
-              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem;"><i class="bi bi-database-check me-1"></i>MySQL 8.0</span>
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem;"><i class="bi bi-database-check me-1"></i>MySQL 8.0</span>
             </div>
             <div class="d-flex align-items-baseline gap-2 mt-auto">
-              <span class="h3 fw-bold text-success mb-0">SHA-256</span>
+              <span class="h3 fw-bold text-primary mb-0">SHA-256</span>
               <small class="text-muted">WebCrypto</small>
             </div>
           </div>
@@ -1003,7 +1003,7 @@
           <!-- Banner de Blindaje Anti-Hacker y Reconocimiento de IP -->
           <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-2 px-3 rounded-3" style="background: rgba(14, 45, 108, 0.04); border: 1px solid rgba(14, 45, 108, 0.15);">
             <div class="d-flex align-items-center gap-2 small">
-              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1">
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">
                 <i class="bi bi-shield-check me-1"></i>HercarShield Anti-Hacker Activo
               </span>
               <span class="text-muted d-none d-md-inline" style="font-size: 0.74rem;">
@@ -1042,8 +1042,8 @@
               </select>
             </div>
             <div class="col-12 col-md-2 text-md-end">
-              <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm w-100" id="btnExportUsersCSV" title="Descargar nómina de usuarios en formato Excel / CSV">
-                <i class="bi bi-file-earmark-excel-fill text-success me-1"></i> Exportar CSV
+              <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm w-100" id="btnExportUsersCSV" title="Descargar nómina de usuarios en formato Excel / CSV">
+                <i class="bi bi-file-earmark-excel-fill text-primary me-1"></i> Exportar CSV
               </button>
             </div>
           </div>
@@ -1053,15 +1053,15 @@
               <thead class="table-light">
                 <tr>
                   <th style="width: 45px;" class="text-center">ID</th>
-                  <th style="width: 52px;" class="text-center">Foto</th>
-                  <th style="width: 200px;">Nombres y Cargo</th>
-                  <th style="width: 180px;">Usuario / Correo</th>
-                  <th style="width: 130px;">Rol</th>
-                  <th style="width: 160px;">Contraseña Registrada</th>
+                  <th style="width: 50px;" class="text-center">Foto</th>
+                  <th style="width: 190px;">Nombres y Cargo</th>
+                  <th style="width: 170px;">Usuario / Correo</th>
+                  <th style="width: 155px;">Contraseña Registrada</th>
+                  <th style="width: 125px;">Rol</th>
                   <th style="width: 110px;" class="text-center">DNI / Celular</th>
                   <th style="width: 80px;" class="text-center">Estado</th>
-                  <th style="width: 140px; white-space: nowrap;" class="text-end pe-3">Último Acceso</th>
-                  <th style="width: 125px;" class="text-center">Acciones</th>
+                  <th style="width: 130px; white-space: nowrap;" class="text-end pe-2">Último Acceso</th>
+                  <th style="width: 110px;" class="text-center">Acciones</th>
                 </tr>
               </thead>
               <tbody id="sql-users-table-body">
@@ -1393,7 +1393,7 @@
   <div class="modal fade" id="modalInviteDocente" tabindex="-1" aria-labelledby="modalInviteDocenteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 540px;">
       <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-        <div class="modal-header border-0" style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); color: #ffffff; padding: 1.2rem 1.5rem;">
+        <div class="modal-header border-0" style="background: linear-gradient(135deg, #0e2d6c 0%, #1d4ed8 100%); color: #ffffff; padding: 1.2rem 1.5rem;">
           <div class="d-flex align-items-center gap-2">
             <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
               <i class="bi bi-link-45deg fs-3 text-warning"></i>
@@ -1408,12 +1408,12 @@
 
         <div class="modal-body p-4">
           <p class="small text-muted mb-3" style="font-size: 0.84rem; line-height: 1.45;">
-            Genera un enlace oficial protegido para invitar a los docentes a registrarse. Los profesores podrán ingresar sus datos, DNI, celular y foto de perfil. Al registrarse, se guardará en la base de datos SQL y se redirigirán al Login institucional.
+            Genera un enlace oficial protegido para invitar a los docentes a registrarse. Los profesores podrán ingresar sus datos, DNI, celular y foto de perfil. Al registrarse, se guardará en el sistema y se redirigirán al Login institucional.
           </p>
 
           <div class="mb-3">
             <label for="inviteFilterCareer" class="form-label small fw-bold text-dark">
-              <i class="bi bi-mortarboard text-success me-1"></i> Preseleccionar Carrera / Programa:
+              <i class="bi bi-mortarboard text-primary me-1"></i> Preseleccionar Carrera / Programa:
             </label>
             <select id="inviteFilterCareer" class="form-select form-select-sm">
               <option value="" selected>🌐 Todas las Carreras (Docente elige su área)</option>
@@ -1427,7 +1427,7 @@
 
           <div class="mb-3">
             <label for="inviteFilterRole" class="form-label small fw-bold text-dark">
-              <i class="bi bi-person-gear text-success me-1"></i> Rol a Asignar:
+              <i class="bi bi-person-gear text-primary me-1"></i> Rol a Asignar:
             </label>
             <select id="inviteFilterRole" class="form-select form-select-sm">
               <option value="Docente Evaluador" selected>👨‍🏫 Docente Evaluador / Carrera</option>
@@ -1435,52 +1435,44 @@
             </select>
           </div>
 
-          <div class="mb-3 p-3 rounded-3" style="background: rgba(4, 120, 87, 0.05); border: 1.5px dashed rgba(4, 120, 87, 0.3);">
+          <div class="mb-3 p-3 rounded-3" style="background: rgba(37, 99, 235, 0.05); border: 1.5px dashed rgba(37, 99, 235, 0.3);">
             <label class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
-              <span><i class="bi bi-link-45deg text-success me-1"></i>Enlace Generado (con Token Institucional):</span>
-              <span id="inviteCopyFeedback" class="badge bg-success" style="display: none; font-size: 0.72rem;">¡Copiado!</span>
+              <span><i class="bi bi-link-45deg text-primary me-1"></i>Enlace Generado (con Token Institucional):</span>
+              <span id="inviteCopyFeedback" class="badge bg-primary" style="display: none; font-size: 0.72rem;">¡Copiado!</span>
             </label>
             <div class="input-group">
               <input type="text" id="inviteGeneratedLink" class="form-control form-control-sm font-monospace text-primary bg-white" readonly onclick="this.select();">
-              <button class="btn btn-sm btn-success px-3" type="button" id="btnCopyInviteLink" title="Copiar enlace">
+              <button class="btn btn-sm btn-primary px-3 shadow-sm" type="button" id="btnCopyInviteLink" style="background:#0f3380; border-color:#0f3380;" title="Copiar enlace">
                 <i class="bi bi-clipboard-check me-1"></i> Copiar
               </button>
             </div>
             <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-              <i class="bi bi-shield-check text-success me-1"></i>Incluye token <code>HERCAR2026</code> para autorizar automáticamente el registro.
+              <i class="bi bi-shield-check text-primary me-1"></i>Enlace verificado para autorizar automáticamente el registro.
             </small>
           </div>
 
           <!-- Código QR Generado Dinámicamente para Escaneo con Celular -->
-          <div class="text-center my-3 p-3 rounded-3 border d-flex flex-column align-items-center" style="background: rgba(6, 95, 70, 0.04);">
+          <div class="text-center my-3 p-3 rounded-3 border d-flex flex-column align-items-center" style="background: rgba(14, 45, 108, 0.03);">
             <div class="d-flex align-items-center justify-content-center bg-white p-2 rounded-3 shadow-sm border mb-2" style="width: 140px; height: 140px;">
               <img id="inviteQrCodeImg" src="" alt="Código QR de Registro Oficial" style="width: 124px; height: 124px; object-fit: contain;">
             </div>
             <small class="text-muted fw-semibold" style="font-size: 0.74rem;">
-              <i class="bi bi-qr-code-scan text-success me-1"></i> Código QR Oficial: Los docentes pueden escanearlo con la cámara de su celular
+              <i class="bi bi-qr-code-scan text-primary me-1"></i> Código QR Oficial: Los docentes pueden escanearlo con la cámara de su celular
             </small>
           </div>
 
           <div class="d-flex flex-wrap gap-2 pt-2 border-top">
-            <a href="#" id="btnShareInviteWhatsApp" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm">
+            <a href="#" id="btnShareInviteWhatsApp" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm">
               <i class="bi bi-whatsapp"></i> Compartir por WhatsApp
             </a>
-            <a href="#" id="btnTestInviteLink" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm">
+            <a href="#" id="btnTestInviteLink" target="_blank" class="btn btn-sm btn-primary rounded-pill px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm" style="background:#0f3380; border-color:#0f3380;">
               <i class="bi bi-box-arrow-up-right"></i> Probar Enlace
             </a>
           </div>
         </div>
 
-        <div class="modal-footer border-0 pt-0 d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
-          <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" id="btnToggleUserStatus">
-              <i class="bi bi-pause-circle me-1"></i> Suspender
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm" id="btnDeleteModalProfile" title="Eliminar este usuario de la base de datos SQL">
-              <i class="bi bi-trash3-fill me-1"></i> Borrar Perfil
-            </button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-4 ms-auto" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
@@ -1497,7 +1489,7 @@
             <i class="bi bi-person-badge-fill fs-4 text-warning"></i>
             <div>
               <h5 class="modal-title fw-bold mb-0" id="modalUserProfileLabel" style="font-size: 1.1rem; color: #ffffff;">Perfil Oficial de Usuario</h5>
-              <small class="text-light opacity-75" style="font-size: 0.74rem;">Base de Datos Relacional SQL IESTP Hermanos Cárcamo</small>
+              <small class="text-light opacity-75" style="font-size: 0.74rem;">Sistema Institucional IESTP Hermanos Cárcamo</small>
             </div>
           </div>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -1531,7 +1523,7 @@
                 <strong class="font-monospace text-dark" id="modalProfilePhone">--------</strong>
               </div>
               <div class="col-6 mt-2">
-                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-person-fill me-1"></i>Usuario SQL:</span>
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-person-fill me-1"></i>Nombre de Usuario:</span>
                 <strong class="font-monospace text-primary" id="modalProfileUsername">@usuario</strong>
               </div>
               <div class="col-6 mt-2">
@@ -1539,7 +1531,7 @@
                 <strong class="font-monospace text-dark text-truncate d-block" id="modalProfileEmail">correo@ieshercar.edu.pe</strong>
               </div>
               <div class="col-12 mt-2">
-                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-key-fill me-1 text-warning"></i>Contraseña Registrada en Base de Datos:</span>
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-key-fill me-1 text-primary"></i>Contraseña Registrada:</span>
                 <div class="d-flex align-items-center gap-2 mt-1">
                   <span class="font-monospace fw-bold text-dark p-1 px-2 rounded border bg-white" id="modalProfilePassword" data-shown="false" data-raw="" style="letter-spacing: 1.5px; font-size: 0.88rem;">••••••••</span>
                   <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-0" id="btnToggleModalPassword" title="Mostrar/Ocultar contraseña">
@@ -1576,7 +1568,7 @@
                 </button>
               </div>
             </div>
-            <small class="text-muted d-block mt-2" style="font-size: 0.72rem;">Formatos aceptados: JPG, PNG o WebP. Se guarda directamente en SQL.</small>
+            <small class="text-muted d-block mt-2" style="font-size: 0.72rem;">Formatos aceptados: JPG, PNG o WebP. Se guarda en tu perfil institucional.</small>
           </div>
 
           <!-- Restablecimiento Directo de Contraseña por el Administrador -->
@@ -1594,7 +1586,15 @@
           </div>
         </div>
 
-        <div class="modal-footer border-0 pt-0">
+        <div class="modal-footer border-0 pt-0 d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" id="btnToggleUserStatus">
+              <i class="bi bi-pause-circle me-1"></i> Suspender
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm" id="btnDeleteModalProfile" title="Eliminar este perfil de usuario">
+              <i class="bi bi-trash3-fill me-1"></i> Borrar Perfil
+            </button>
+          </div>
           <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>

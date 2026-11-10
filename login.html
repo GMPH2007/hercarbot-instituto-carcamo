@@ -563,7 +563,7 @@
           <!-- Paso 1: Solicitar Token de Seguridad -->
           <div id="recoveryStep1">
             <p class="small mb-3" style="line-height: 1.45;">
-              Ingresa el correo institucional o usuario registrado. El sistema consultará la tabla SQL de usuarios y generará un <strong>Código de Recuperación de 6 dígitos</strong>.
+              Ingresa el correo institucional o usuario registrado. El sistema verificará tu cuenta y generará un <strong>Código de Recuperación de 6 dígitos</strong>.
             </p>
             <div class="mb-3">
               <label for="recoveryEmail" class="form-label">Correo Institucional o Usuario:</label>
@@ -610,7 +610,7 @@
             </div>
 
             <button type="button" class="btn-auth-primary" id="btnConfirmPasswordReset">
-              <i class="bi bi-check2-circle me-2"></i> Actualizar Contraseña en SQL
+              <i class="bi bi-check2-circle me-2"></i> Actualizar Contraseña
             </button>
           </div>
         </div>
@@ -682,7 +682,7 @@
         showAlert('✅ Has cerrado sesión exitosamente. Tus credenciales han sido protegidas.', 'success');
       } else if (registeredUser) {
         document.getElementById('inputEmail').value = registeredUser;
-        showAlert('¡Cuenta creada exitosamente en la base de datos SQL! Ingresa tu contraseña para entrar al panel.', 'success');
+        showAlert('¡Cuenta creada exitosamente! Ingresa tu contraseña para entrar al panel.', 'success');
         sessionStorage.removeItem('last_registered_email');
       }
     }
@@ -743,12 +743,12 @@
 
       const btnSubmit = document.getElementById('btnLoginSubmit');
       btnSubmit.disabled = true;
-      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Verificando en Base de Datos SQL...';
+      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Verificando credenciales...';
 
       try {
         const res = await HercarSQL.authenticate(login, pwd);
         if (res.success) {
-          showAlert(`¡Bienvenido, ${res.user.name}! Sesión autenticada en SQL. Entrando al Panel de Control...`, 'success');
+          showAlert(`¡Bienvenido, ${res.user.name}! Sesión autenticada correctamente. Entrando al Panel de Control...`, 'success');
           sessionStorage.setItem('hercar_admin_session', JSON.stringify(res.user));
           sessionStorage.setItem('hercar_current_user', JSON.stringify(res.user));
           if (document.getElementById('rememberMe').checked) {
@@ -816,12 +816,12 @@
             document.getElementById('recoveryTokenInput').value = res.token;
             document.getElementById('recoveryStep1').style.display = 'none';
             document.getElementById('recoveryStep2').style.display = 'block';
-            showRecoveryAlert(`Código generado para ${res.email}. Ingresa tu nueva contraseña para actualizar en SQL.`, 'success');
+            showRecoveryAlert(`Código generado para ${res.email}. Ingresa tu nueva contraseña para actualizar tu acceso.`, 'success');
           } else {
             showRecoveryAlert(res.message, 'danger');
           }
         } catch (e) {
-          showRecoveryAlert('Error al generar código de recuperación en base de datos.', 'danger');
+          showRecoveryAlert('Error al generar código de recuperación.', 'danger');
         } finally {
           btnRequestToken.disabled = false;
           btnRequestToken.innerHTML = '<i class="bi bi-shield-check me-2"></i> Generar Código de Seguridad';
@@ -852,7 +852,7 @@
         }
 
         btnConfirmReset.disabled = true;
-        btnConfirmReset.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Actualizando registro SQL...';
+        btnConfirmReset.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Actualizando contraseña...';
 
         try {
           const res = await HercarSQL.confirmPasswordReset(targetRecoveryEmail, token, newPass);
@@ -862,16 +862,16 @@
             document.getElementById('inputPassword').value = newPass;
             setTimeout(() => {
               if (recoveryModalInstance) recoveryModalInstance.hide();
-              showAlert('¡Contraseña actualizada con éxito en la base de datos SQL! Ahora presiona "Entrar al Panel de Control".', 'success');
+              showAlert('¡Contraseña actualizada con éxito! Ahora presiona "Entrar al Panel de Control".', 'success');
             }, 1200);
           } else {
             showRecoveryAlert(res.message, 'danger');
           }
         } catch (e) {
-          showRecoveryAlert('Error al actualizar la contraseña en la base de datos.', 'danger');
+          showRecoveryAlert('Error al actualizar la contraseña.', 'danger');
         } finally {
           btnConfirmReset.disabled = false;
-          btnConfirmReset.innerHTML = '<i class="bi bi-check2-circle me-2"></i> Actualizar Contraseña en SQL';
+          btnConfirmReset.innerHTML = '<i class="bi bi-check2-circle me-2"></i> Actualizar Contraseña';
         }
       });
     }

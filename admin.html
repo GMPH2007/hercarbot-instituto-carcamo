@@ -1000,19 +1000,9 @@
       <div class="tab-content" id="sqlPillsTabContent">
         <!-- Pestaña: Tabla de Usuarios -->
         <div class="tab-pane fade show active" id="tab-sql-users" role="tabpanel">
-          <!-- Banner de Blindaje Anti-Hacker y Reconocimiento de IP -->
-          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-2 px-3 rounded-3" style="background: rgba(14, 45, 108, 0.04); border: 1px solid rgba(14, 45, 108, 0.15);">
-            <div class="d-flex align-items-center gap-2 small">
-              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">
-                <i class="bi bi-shield-check me-1"></i>HercarShield Anti-Hacker Activo
-              </span>
-              <span class="text-muted d-none d-md-inline" style="font-size: 0.74rem;">
-                &bull; 0 Puertas Traseras &bull; Cifrado SHA-256 &bull; Detección de IP &bull; Anti-Fuerza Bruta
-              </span>
-            </div>
-            <div id="role-view-badge" class="small fw-semibold text-primary">
-              <i class="bi bi-shield-lock me-1"></i> IP Reconocida: <span id="display-client-ip" class="font-monospace">190.237.45.12 (Paita)</span>
-            </div>
+          <!-- Reconocimiento de Sesión e IP -->
+          <div class="d-flex justify-content-end align-items-center mb-2">
+            <div id="role-view-badge" class="small text-muted"></div>
           </div>
 
           <!-- Barra de Búsqueda y Filtros en Tiempo Real -->
@@ -1056,7 +1046,14 @@
                   <th style="width: 50px;" class="text-center">Foto</th>
                   <th style="width: 190px;">Nombres y Cargo</th>
                   <th style="width: 170px;">Usuario / Correo</th>
-                  <th style="width: 155px;">Contraseña Registrada</th>
+                  <th style="width: 175px;">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span>Contraseña</span>
+                      <button type="button" class="btn btn-xs btn-link text-decoration-none p-0 text-primary fw-semibold" id="btnToggleAllTablePasswords" title="Mostrar u ocultar todas las contraseñas">
+                        <i class="bi bi-eye"></i> <span id="labelToggleAllPwd">Ver</span>
+                      </button>
+                    </div>
+                  </th>
                   <th style="width: 125px;">Rol</th>
                   <th style="width: 110px;" class="text-center">DNI / Celular</th>
                   <th style="width: 80px;" class="text-center">Estado</th>
@@ -1533,12 +1530,12 @@
               <div class="col-12 mt-2">
                 <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-key-fill me-1 text-primary"></i>Contraseña Registrada:</span>
                 <div class="d-flex align-items-center gap-2 mt-1">
-                  <span class="font-monospace fw-bold text-dark p-1 px-2 rounded border bg-white" id="modalProfilePassword" data-shown="false" data-raw="" style="letter-spacing: 1.5px; font-size: 0.88rem;">••••••••</span>
-                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-0" id="btnToggleModalPassword" title="Mostrar/Ocultar contraseña">
-                    <i class="bi bi-eye"></i>
+                  <span class="font-monospace fw-bold text-dark p-1 px-3 rounded border bg-white shadow-xs" id="modalProfilePassword" data-shown="false" data-raw="" style="letter-spacing: 2px; font-size: 0.92rem; min-width: 140px; display: inline-block;">••••••••</span>
+                  <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-xs fw-semibold" id="btnToggleModalPassword" title="Mostrar u ocultar contraseña">
+                    <i class="bi bi-eye me-1"></i> <span id="labelModalTogglePwd">Ver Clave</span>
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-0" id="btnCopyModalPassword" title="Copiar contraseña">
-                    <i class="bi bi-clipboard"></i>
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 shadow-xs" id="btnCopyModalPassword" title="Copiar contraseña">
+                    <i class="bi bi-clipboard me-1"></i> Copiar
                   </button>
                 </div>
               </div>

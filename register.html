@@ -666,10 +666,6 @@
               <i class="bi bi-eye-fill"></i>
             </span>
           </div>
-          <div id="regCapsLockWarning" class="alert alert-warning py-1 px-2 small mt-2 mb-0 d-flex align-items-center gap-1" style="display: none; border-radius: 8px; font-size: 0.74rem;">
-            <i class="bi bi-exclamation-triangle-fill text-warning"></i>
-            <span>Bloq Mayús activado</span>
-          </div>
           <div class="mt-2">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <small class="text-muted" style="font-size: 0.72rem;">Nivel de seguridad:</small>
@@ -1105,19 +1101,8 @@ const regForm = document.getElementById('registerForm');
     const pwdRegInput = document.getElementById('regPassword');
     const strBar = document.getElementById('pwdStrengthBar');
     const strLabel = document.getElementById('pwdStrengthLabel');
-    const regCapsWarn = document.getElementById('regCapsLockWarning');
 
     if (pwdRegInput) {
-      const checkRegCaps = (e) => {
-        if (regCapsWarn && e.getModifierState && e.getModifierState('CapsLock')) {
-          regCapsWarn.style.display = 'flex';
-        } else if (regCapsWarn) {
-          regCapsWarn.style.display = 'none';
-        }
-      };
-      pwdRegInput.addEventListener('keyup', checkRegCaps);
-      pwdRegInput.addEventListener('keydown', checkRegCaps);
-
       pwdRegInput.addEventListener('input', () => {
         const val = pwdRegInput.value;
         if (!strBar || !strLabel) return;

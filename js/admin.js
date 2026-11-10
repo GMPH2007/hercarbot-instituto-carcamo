@@ -3462,8 +3462,11 @@ function initDatabaseSQLAdmin() {
             const plainPass = u.password_plain || u.plain_hint || 'admin2026';
             pwdCellHtml = `
               <div class="d-flex align-items-center gap-1">
-                <code class="px-2 py-1 rounded border shadow-xs" style="background:#f8fafc; color:#0f3380; font-size:0.83rem; font-weight:700;" id="pwd-user-${u.id}" data-shown="true" data-raw="${escapeHtml(plainPass)}">${escapeHtml(plainPass)}</code>
-                <button type="button" class="btn btn-xs btn-outline-secondary p-0 px-1 border-0 btn-copy-user-pwd" data-val="${escapeHtml(plainPass)}" title="Copiar contraseña">
+                <code class="px-2 py-1 rounded border shadow-xs" style="background:#f8fafc; color:#0f3380; font-size:0.83rem; font-weight:700; letter-spacing:2px; min-width:85px; display:inline-block;" id="pwd-user-${u.id}" data-shown="false" data-raw="${escapeHtml(plainPass)}">••••••••</code>
+                <button type="button" class="btn btn-xs btn-outline-primary p-0 px-2 py-1 border-0 btn-reveal-pwd" data-target="pwd-user-${u.id}" title="Ver u ocultar contraseña">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button type="button" class="btn btn-xs btn-outline-secondary p-0 px-2 py-1 border-0 btn-copy-user-pwd" data-val="${escapeHtml(plainPass)}" title="Copiar contraseña">
                   <i class="bi bi-clipboard"></i>
                 </button>
               </div>
@@ -3538,16 +3541,54 @@ function initDatabaseSQLAdmin() {
               const isShown = el.dataset.shown === 'true';
               if (isShown) {
                 el.innerText = '••••••••';
+                el.style.letterSpacing = '2px';
                 el.dataset.shown = 'false';
-                btn.querySelector('i').className = 'bi bi-eye';
+                btn.querySelector('i').className = 'bi bi-eye text-primary';
+                btn.title = 'Ver contraseña';
               } else {
                 el.innerText = el.dataset.raw;
+                el.style.letterSpacing = 'normal';
                 el.dataset.shown = 'true';
-                btn.querySelector('i').className = 'bi bi-eye-slash text-primary';
+                btn.querySelector('i').className = 'bi bi-eye-slash text-muted';
+                btn.title = 'Ocultar contraseña';
               }
             }
           });
         });
+
+        // Botón global en encabezado de tabla: Ver todas / Ocultar todas las contraseñas
+        const btnToggleAll = document.getElementById('btnToggleAllTablePasswords');
+        if (btnToggleAll) {
+          btnToggleAll.onclick = () => {
+            const allPwdCodes = document.querySelectorAll('[id^="pwd-user-"]');
+            const firstCode = allPwdCodes[0];
+            const willShow = firstCode ? firstCode.dataset.shown !== 'true' : true;
+            allPwdCodes.forEach(codeEl => {
+              const btn = document.querySelector(`.btn-reveal-pwd[data-target="${codeEl.id}"]`);
+              if (willShow) {
+                codeEl.innerText = codeEl.dataset.raw;
+                codeEl.style.letterSpacing = 'normal';
+                codeEl.dataset.shown = 'true';
+                if (btn) {
+                  btn.querySelector('i').className = 'bi bi-eye-slash text-muted';
+                  btn.title = 'Ocultar contraseña';
+                }
+              } else {
+                codeEl.innerText = '••••••••';
+                codeEl.style.letterSpacing = '2px';
+                codeEl.dataset.shown = 'false';
+                if (btn) {
+                  btn.querySelector('i').className = 'bi bi-eye text-primary';
+                  btn.title = 'Ver contraseña';
+                }
+              }
+            });
+            const lbl = document.getElementById('labelToggleAllPwd');
+            if (lbl) lbl.textContent = willShow ? 'Ocultar' : 'Ver';
+            const icon = btnToggleAll.querySelector('i');
+            if (icon) icon.className = willShow ? 'bi bi-eye-slash' : 'bi bi-eye';
+          };
+        }
 
         document.querySelectorAll('.btn-copy-user-pwd').forEach(btn => {
           btn.addEventListener('click', (ev) => {
@@ -3883,17 +3924,20 @@ function openUserProfileModal(userId) {
 
   if (isSuperAdmin || isSelf) {
     const plainPass = user.password_plain || user.plain_hint || 'admin2026';
-    pwdEl.textContent = plainPass;
-    pwdEl.dataset.shown = 'true';
+    pwdEl.textContent = '••••••••';
+    pwdEl.style.letterSpacing = '2px';
+    pwdEl.dataset.shown = 'false';
     pwdEl.dataset.raw = plainPass;
     if (btnToggleModalPwd) {
       btnToggleModalPwd.style.display = 'inline-block';
-      const icon = btnToggleModalPwd.querySelector('i');
-      if (icon) icon.className = 'bi bi-eye-slash text-primary';
+      btnToggleModalPwd.className = 'btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-xs fw-semibold';
+      btnToggleModalPwd.innerHTML = '<i class="bi bi-eye me-1"></i> <span id="labelModalTogglePwd">Ver Clave</span>';
+      btnToggleModalPwd.title = 'Mostrar contraseña';
     }
     if (btnCopyModalPwd) btnCopyModalPwd.style.display = 'inline-block';
   } else {
     pwdEl.textContent = '[ Confidencial - Solo Super-Admin ]';
+    pwdEl.style.letterSpacing = 'normal';
     pwdEl.dataset.shown = 'false';
     pwdEl.dataset.raw = '';
     if (btnToggleModalPwd) btnToggleModalPwd.style.display = 'none';
@@ -3997,16 +4041,22 @@ const btnToggleModalPwd = document.getElementById('btnToggleModalPassword');
 if (btnToggleModalPwd) {
   btnToggleModalPwd.addEventListener('click', () => {
     const el = document.getElementById('modalProfilePassword');
-    if (el) {
+    if (el && el.dataset.raw) {
       const isShown = el.dataset.shown === 'true';
       if (isShown) {
         el.innerText = '••••••••';
+        el.style.letterSpacing = '2px';
         el.dataset.shown = 'false';
-        btnToggleModalPwd.querySelector('i').className = 'bi bi-eye';
+        btnToggleModalPwd.className = 'btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-xs fw-semibold';
+        btnToggleModalPwd.innerHTML = '<i class="bi bi-eye me-1"></i> <span id="labelModalTogglePwd">Ver Clave</span>';
+        btnToggleModalPwd.title = 'Mostrar contraseña';
       } else {
         el.innerText = el.dataset.raw;
+        el.style.letterSpacing = 'normal';
         el.dataset.shown = 'true';
-        btnToggleModalPwd.querySelector('i').className = 'bi bi-eye-slash text-primary';
+        btnToggleModalPwd.className = 'btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 shadow-xs fw-semibold';
+        btnToggleModalPwd.innerHTML = '<i class="bi bi-eye-slash me-1"></i> <span id="labelModalTogglePwd">Ocultar</span>';
+        btnToggleModalPwd.title = 'Ocultar contraseña';
       }
     }
   });

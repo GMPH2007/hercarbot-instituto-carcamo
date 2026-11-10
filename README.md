@@ -22,8 +22,8 @@
 2. **Monitor de Red Neuronal & Sinapsis en Tiempo Real:** Un canvas interactivo animado que muestra la propagación de impulsos en 4 capas (Entrada Léxica, Oculta Semántica, Oculta Entidades y Salida de Intención) con sandbox de inferencia en vivo (precisión calculada de 99.4% y latencia de ~16 ms).
 3. **Síntesis de Voz Humana Femenina ("Voz de Chica Asesora"):** Motor fonético universal con Web Speech API calibrado acústicamente (prioridad para voces naturales Dalia, Salma, Jimena o Google Español). Elimina la monotonía y cualquier distorsión metálica, introduce micro-pausas respiratorias de 65 ms y sincroniza un halo pulsante de locución activa en el avatar.
 4. **Convertidor Fonético Universal de Números:** Convierte al vuelo todos los dígitos a palabras en español fluido:
-   - Cuentas corrientes del Banco de la Nación: `00-631-012948` &rarr; *"cero cero, seis tres uno, cero doce, nueve cuatro ocho"*.
-   - Tasas y aranceles TUPA: `S/ 120.00` &rarr; *"ciento veinte soles"*.
+   - Cuentas oficiales del Banco de la Nación: `00-638-002361` (TUPA General) &rarr; *"cero cero, seis tres ocho, cero cero dos tres seis uno"*, y `00-638-025736` (Curso de Inglés / Productivas).
+   - Tasas y aranceles TUPA 2026: `S/ 250.00` (Matrícula) &rarr; *"doscientos cincuenta soles"*.
    - Escalas de notas: `0 a 20` &rarr; *"cero a veinte"*, `nota 13` &rarr; *"nota mínima trece"*.
    - Horarios: `8:00 a.m.` &rarr; *"ocho de la mañana"*, `1:15 p.m.` &rarr; *"una y quince de la tarde"*.
    - Semestres y ciclos romanos: `Ciclos I al VI` &rarr; *"Ciclos uno al seis"*.
@@ -90,14 +90,13 @@
 - Balotario temático y Simulador Interactivo de Admisión de 8 preguntas con puntaje automático.
 - Gratuidad de la enseñanza: 100% pública y sin pensiones mensuales.
 
-### D. Guía de Pagos en el Banco de la Nación:
-- Cuenta Corriente oficial N° `00-631-012948` y CCI `018-631-000631012948-52`.
-- Procedimiento para subir el comprobante a `pagos.ieshercar.edu.pe`.
-- Cuenta especial para curso de inglés de titulación: `00-638-025736`.
+### D. Guía de Pagos en Ventanilla del Banco de la Nación (Solo Ventanilla — NO Págalo.pe):
+- **Cuenta Corriente TUPA General:** `00-638-002361` (Matrícula Ordinaria S/ 250.00, Admisión S/ 200.00, Examen de Suficiencia S/ 200.00, Formato/Derecho de Título S/ 60.00 + S/ 100.00, Certificados, Constancias). Registro de voucher y emisión de boleta electrónica en `pagos.ieshercar.edu.pe`.
+- **Cuenta Curso de Inglés / Actividades Productivas:** `00-638-025736` (Inglés Básico S/ 400.00, Pre Tecno S/ 400.00, Ciclo de Actualización S/ 400.00). Sacar **2 copias al voucher** y entregarlos en Tesorería en la oficina del instituto.
 
-### E. TUPA y Trámites Académicos:
-- Matrícula regular (S/ 120.00), Certificados Modulares, Titulación Profesional, Carné de Medio Pasaje MINEDU y Constancias de Estudio.
-- Generador Oficial de Formato Único de Trámite (FUT) con impresión lista para Mesa de Partes Virtual.
+### E. TUPA 2026, Titulación y Trámites Académicos:
+- Matrícula Ordinaria (S/ 250.00), Examen de Admisión (S/ 200.00), Examen de Suficiencia Profesional (7 requisitos, S/ 200.00), Trámite de Título Profesional (10 requisitos en folder A/4 + sobre manila, S/ 60.00 + S/ 100.00), Certificados Modulares (S/ 25.00), Constancias (S/ 15.00) y transición 2027 de APSTI a Computación e Informática.
+- Generador Oficial de Formato Único de Trámite (FUT) con impresión lista para Mesa de Partes Virtual (`sistema.ieshercar.edu.pe/registro-tramite/`).
 
 ---
 
@@ -136,7 +135,7 @@
 2. Explica las tarjetas de indicadores KPI con sus insignias de tendencia porcentual.
 3. Muestra la sección de **Monitor de Red Neuronal Institucional**:
    - Observa el **Canvas Interactivo de Topología Sináptica en Vivo**, explicando las 4 capas de propagación tensorial (Entrada Léxica NFD, Oculta Semántica, Oculta Entidades y Salida de Intención) con 64 nodos activos.
-   - Utiliza el **Sandbox de Inferencia en Tiempo Real** para evaluar frases en vivo (ej. *"¿Qué pasa si jalo un curso?"* o *"Cuenta corriente Banco de la Nación 00-631-012948"*) y presiona **"Escuchar Veredicto"**.
+   - Utiliza el **Sandbox de Inferencia en Tiempo Real** para evaluar frases en vivo (ej. *"¿Qué pasa si jalo un curso?"* o *"Cuentas Banco de la Nación 00-638-002361 y 00-638-025736"*) y presiona **"Escuchar Veredicto"**.
 4. Muestra el **Laboratorio y Calibrador de Voz Femenina** con selector acústico, filtros fonéticos y control de cadencia/tono.
 5. Muestra la tabla de **Auditoría de Consultas en Tiempo Real** con estados de resolución y botón de reproducción auditiva.
 6. Haz clic en el botón superior **📄 Informe Ejecutivo PDF**:

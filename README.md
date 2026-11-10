@@ -1,6 +1,16 @@
-# 🎓 HercarBot IA — Asistente Virtual Inteligente Institucional v5.0
-### IESTP "Hermanos Cárcamo" - Paita, Piura
-**Proyecto Final de Aplicación de Inteligencia Artificial, Redes Neuronales y Tecnologías de la Información**
+# 🎓 HercarBot IA — Asistente Virtual Oficial con Inteligencia Artificial
+### IESTP "Hermanos Cárcamo" - Paita, Piura, Perú
+**Portal Web Oficial, Orientador Vocacional y Asistente Académico Inteligente 2026**
+
+[![Sitio Web Oficial](https://img.shields.io/badge/🌐_Sitio_Web_Oficial-gmph2007.github.io%2Fhercarbot--instituto--carcamo-0f3380?style=for-the-badge&logo=google-chrome&logoColor=white)](https://gmph2007.github.io/hercarbot-instituto-carcamo/)
+[![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub_Pages-22c55e?style=for-the-badge&logo=github&logoColor=white)](https://gmph2007.github.io/hercarbot-instituto-carcamo/)
+[![Estado](https://img.shields.io/badge/Estado-100%25_Activo_y_Público-3b82f6?style=for-the-badge)](https://gmph2007.github.io/hercarbot-instituto-carcamo/)
+[![MINEDU Perú](https://img.shields.io/badge/Institución-IESTP_Hermanos_Cárcamo_Paita-red?style=for-the-badge)](https://ieshercar.edu.pe)
+
+---
+
+> 🚀 **Ingresa directamente al Asistente Virtual en Vivo:**  
+> 👉 **[https://gmph2007.github.io/hercarbot-instituto-carcamo/](https://gmph2007.github.io/hercarbot-instituto-carcamo/)**
 
 ---
 

@@ -227,6 +227,50 @@ body {
 }
 
 /* Historial de Conversaciones - Espacioso y Dedicado (Estilo ChatGPT) */
+
+/* ============================================================
+   BUSCADOR EN VIVO DE HISTORIAL EN SIDEBAR (ALTO CONTRASTE)
+   ============================================================ */
+.sidebar-history-search {
+  padding: 0 12px;
+}
+.sidebar-history-search .input-group {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 9px !important;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.sidebar-history-search .input-group:focus-within {
+  border-color: #38bdf8 !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3) !important;
+}
+.sidebar-history-search .input-group-text {
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  padding: 7px 8px 7px 11px !important;
+}
+#search-history-input {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-size: 0.83rem !important;
+  font-weight: 500 !important;
+  padding: 7px 10px 7px 2px !important;
+}
+#search-history-input::placeholder {
+  color: rgba(226, 232, 240, 0.72) !important;
+  opacity: 1 !important;
+}
+#search-history-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  background: transparent !important;
+}
+
 .history-section-wrapper {
   display: flex;
   flex-direction: column;
@@ -515,6 +559,7 @@ body {
   transform: scale(1.05);
 }
 
+.header-meta h1,
 .header-meta h4 {
   font-size: 0.95rem;
   font-weight: 800;
@@ -523,11 +568,97 @@ body {
   margin: 0;
 }
 
+.header-quick-portals {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: fit-content;
+}
+.header-quick-portals::-webkit-scrollbar {
+  display: none;
+}
+
+.header-search-btn {
+  height: 34px;
+  padding: 0 12px;
+  background: #f1f5f9;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--txt-2);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: max-content;
+  transition: all var(--dur);
+}
+.header-search-btn:hover {
+  background: #ffffff;
+  border-color: var(--brand);
+  color: var(--brand);
+  box-shadow: var(--s-1);
+}
+.header-search-btn .palette-kbd {
+  background: rgba(148, 163, 184, 0.22);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--txt-2);
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+body.dark-theme .header-search-btn {
+  background: #111c38;
+  border-color: #1e3a6e;
+  color: #f1f5f9;
+}
+body.dark-theme .header-search-btn:hover {
+  background: #1b2a52;
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+body.dark-theme .header-search-btn .palette-kbd {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #94a3b8;
+}
+
+@media (max-width: 1240px) {
+  .header-search-btn {
+    width: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    border-radius: var(--r2) !important;
+  }
+  .header-search-btn .search-label,
+  .header-search-btn .palette-kbd {
+    display: none !important;
+  }
+}
+
 .header-controls {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .quick-portal-chip {
@@ -554,6 +685,37 @@ body {
   box-shadow: var(--s-2);
 }
 .quick-portal-chip:hover i {
+  color: #ffffff !important;
+}
+
+.btn-fut-chip {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #0284c7 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+.btn-fut-chip i {
+  color: #ffffff !important;
+}
+.btn-fut-chip:hover {
+  background: #0369a1 !important;
+  border-color: #0369a1 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+body.dark-theme .btn-fut-chip {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #38bdf8 !important;
+}
+body.dark-theme .btn-fut-chip:hover {
+  background: #0369a1 !important;
   color: #ffffff !important;
 }
 
@@ -1188,7 +1350,7 @@ body {
   background: #fafafa;
   border: 1px solid var(--line);
   border-radius: var(--r2);
-  padding: 12px 14px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   gap: 13px;
@@ -1198,8 +1360,31 @@ body {
 .carrera-interactive-item:hover {
   background: #ffffff;
   border-color: var(--brand);
-  transform: translateX(5px);
+  transform: translateX(4px);
   box-shadow: var(--s-2);
+}
+
+.carrera-item-content {
+  flex: 1;
+  min-width: 0;
+}
+.carrera-item-title {
+  font-size: 0.90rem;
+  line-height: 1.25;
+  color: var(--txt-1);
+}
+.carrera-item-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+  font-size: 0.77rem;
+}
+.carrera-item-arrow {
+  flex-shrink: 0;
+  font-size: 0.95rem;
 }
 
 .carrera-item-icon {
@@ -1562,6 +1747,53 @@ body.dark-theme .fallback-icon-box {
   border-top: 1px solid var(--line);
   flex-shrink: 0;
 }
+/* Barra de Consultas Rápidas Flotante */
+.chat-quick-chips-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2px 8px 6px;
+}
+.quick-chip-btn {
+  white-space: nowrap;
+  border: 1px solid #bae6fd;
+  background: #f0f9ff;
+  color: #0369a1;
+  border-radius: 99px;
+  padding: 4px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.quick-chip-btn:hover {
+  background: #0284c7;
+  color: #ffffff !important;
+  border-color: #0284c7;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+.quick-chip-btn:hover i {
+  color: #ffffff !important;
+}
+body.dark-theme .quick-chip-btn {
+  background: #0c1c38;
+  border-color: #1e3a6e;
+  color: #7dd3fc;
+}
+body.dark-theme .quick-chip-btn:hover {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff !important;
+}
+
 .input-box-wrapper {
   max-width: 880px;
   margin: 0 auto;
@@ -1945,7 +2177,11 @@ body.dark-theme .fallback-icon-box {
   }
 
   .input-disclaimer {
-    display: none !important; /* Libera valioso espacio vertical en celular */
+    display: block !important;
+    font-size: 0.62rem !important;
+    margin-top: 3px !important;
+    line-height: 1.25 !important;
+    opacity: 0.8 !important;
   }
 
   .chat-messages-viewport {
@@ -2440,6 +2676,12 @@ body.dark-theme .carrera-interactive-item h6 {
   color: #ffffff !important;
 }
 body.dark-theme .carrera-interactive-item p {
+  color: #94a3b8 !important;
+}
+body.dark-theme .carrera-item-title {
+  color: #ffffff !important;
+}
+body.dark-theme .carrera-item-desc {
   color: #94a3b8 !important;
 }
 
@@ -4060,9 +4302,10 @@ body.dark-theme .feature-pill {
   }
 }
 
-/* 5. Modo Widget Flotante (Conmutador 🗗 en Cabecera) */
+/* 5. Modo Widget Flotante Ultra-Moderno (Vista sobre el Campus Oficial) */
 body.hercar-widget-mode {
   background: url('../assets/img/campus-hercar.jpg') center/cover no-repeat fixed !important;
+  overflow: hidden !important;
 }
 
 body.hercar-widget-mode::before {
@@ -4078,8 +4321,8 @@ body.hercar-widget-mode::before {
   font-weight: 700;
   font-size: 0.88rem;
   z-index: 9990;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   pointer-events: none;
 }
 
@@ -4090,26 +4333,164 @@ body.hercar-widget-mode .app-sidebar {
 body.hercar-widget-mode .chat-main-area,
 body.hercar-widget-mode main {
   position: fixed !important;
-  right: 20px !important;
-  bottom: 20px !important;
+  right: 24px !important;
+  bottom: 24px !important;
   width: 420px !important;
-  height: 640px !important;
-  max-height: 85vh !important;
-  border-radius: 22px !important;
+  height: 650px !important;
+  max-width: calc(100vw - 32px) !important;
+  max-height: calc(100vh - 80px) !important;
+  border-radius: 26px !important;
   overflow: hidden !important;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 2px #0284c7 !important;
+  background: #ffffff !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 25px 65px -10px rgba(0, 0, 0, 0.55), 0 0 30px rgba(2, 132, 199, 0.25) !important;
   z-index: 9995 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  animation: widgetSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+@keyframes widgetSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+body.dark-theme.hercar-widget-mode .chat-main-area,
+body.dark-theme.hercar-widget-mode main {
+  background: #0d172e !important;
+  border-color: rgba(56, 189, 248, 0.3) !important;
+  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(2, 132, 199, 0.3) !important;
+}
+
+/* Ocultar elementos sobrantes en la cabecera del widget flotante */
 body.hercar-widget-mode .header-quick-portals,
-body.hercar-widget-mode .header-portals {
+body.hercar-widget-mode .header-portals,
+body.hercar-widget-mode .header-search-btn,
+body.hercar-widget-mode #btn-sound-toggle,
+body.hercar-widget-mode #btn-topics-modal,
+body.hercar-widget-mode #btn-export-chat,
+body.hercar-widget-mode .sidebar-toggle-btn {
   display: none !important;
 }
 
+/* Cabecera optimizada del widget flotante */
+body.hercar-widget-mode .chat-top-header {
+  padding: 10px 14px !important;
+  min-height: 54px !important;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%) !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+body.hercar-widget-mode .header-meta h1,
+.header-meta h4 {
+  font-size: 0.90rem !important;
+}
+
+/* Barra de Chips Rápidos en modo Widget: scroll horizontal fluido */
+body.hercar-widget-mode .chat-quick-chips-bar {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  padding: 2px 4px 6px !important;
+  gap: 6px !important;
+  scrollbar-width: none !important;
+}
+body.hercar-widget-mode .chat-quick-chips-bar::-webkit-scrollbar {
+  display: none !important;
+}
+body.hercar-widget-mode .quick-chip-btn {
+  font-size: 0.72rem !important;
+  padding: 5px 10px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ajustes del Hero y Grid en Modo Widget */
 body.hercar-widget-mode .features-pill-grid {
   grid-template-columns: repeat(2, 1fr) !important;
   gap: 8px !important;
+}
+body.hercar-widget-mode .welcome-title {
+  font-size: 1.25rem !important;
+}
+body.hercar-widget-mode .campus-banner-img-wrap {
+  height: 120px !important;
+}
+body.hercar-widget-mode .feature-pill {
+  padding: 8px 10px !important;
+}
+body.hercar-widget-mode .feature-pill strong {
+  font-size: 0.76rem !important;
+}
+body.hercar-widget-mode .feature-pill small {
+  font-size: 0.68rem !important;
+  line-height: 1.2 !important;
+}
+
+/* Botón Flotante Launcher (Burbuja Flotante estilo Copilot / Intercom) */
+.hercar-widget-launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-radius: 99px;
+  padding: 8px 18px 8px 10px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 12px 30px rgba(2, 132, 199, 0.45);
+  cursor: pointer;
+  z-index: 9998;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pulseLauncher 3s infinite;
+}
+.hercar-widget-launcher:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 16px 36px rgba(2, 132, 199, 0.6);
+}
+.hercar-widget-launcher .launcher-avatar-wrap img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 2px;
+  object-fit: contain;
+}
+.hercar-widget-launcher .launcher-online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: #10b981;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
+.hercar-widget-launcher .launcher-title {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.hercar-widget-launcher .launcher-subtitle {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.9;
+  line-height: 1.1;
+}
+@keyframes pulseLauncher {
+  0%, 100% { box-shadow: 0 12px 30px rgba(2, 132, 199, 0.45); }
+  50% { box-shadow: 0 12px 36px rgba(2, 132, 199, 0.75); }
+}
+
+body.hercar-widget-minimized .chat-main-area {
+  display: none !important;
+}
+body.hercar-widget-minimized .hercar-widget-launcher {
+  display: inline-flex !important;
 }
 
 /* 6. Botón Flotante del Tour (FAB) - Desactivado para no tapar la barra de chat */
@@ -4227,11 +4608,14 @@ body.dark-theme .hercar-tour-btn.skip {
 }
 
 /* 7. Modal del Generador de FUT */
+/* ==========================================================================
+   MODAL GENERADOR OFICIAL DE FUT (FORMATO ÚNICO DE TRÁMITE)
+   ========================================================================== */
 .hercar-fut-modal {
   position: fixed;
   inset: 0;
-  background: rgba(9, 14, 28, 0.75);
-  backdrop-filter: blur(5px);
+  background: rgba(9, 14, 28, 0.78);
+  backdrop-filter: blur(6px);
   z-index: 10005;
   display: none;
   align-items: center;
@@ -4246,37 +4630,64 @@ body.dark-theme .hercar-tour-btn.skip {
 .hercar-fut-box {
   background: #ffffff;
   color: #0f172a;
-  width: min(520px, 95vw);
-  border-radius: 20px;
+  width: min(780px, 96vw);
+  border-radius: 22px;
   padding: 24px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);
-  max-height: 90vh;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  max-height: 92vh;
   overflow-y: auto;
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-.hercar-fut-box h3 {
-  margin: 0 0 6px;
-  color: #0f172a;
-  font-size: 1.18rem;
+.fut-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.fut-section-title {
+  font-size: 0.94rem;
   font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-.hercar-fut-box p {
-  margin: 0 0 14px;
-  font-size: 0.85rem;
-  color: #475569;
+.fut-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fut-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
 }
 
 .fut-field {
   width: 100%;
-  padding: 10px 14px;
-  margin-bottom: 12px;
+  padding: 9px 13px;
+  margin-bottom: 8px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
-  font-size: 0.9rem;
-  background: #f8fafc;
+  font-size: 0.88rem;
+  background: #ffffff;
   color: #0f172a;
   font-family: inherit;
+  transition: all 0.2s ease;
 }
 
 .fut-field:focus {
@@ -4284,6 +4695,88 @@ body.dark-theme .hercar-tour-btn.skip {
   border-color: #0284c7;
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.fut-info-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.fut-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.fut-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fut-info-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.fut-info-val {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fut-conditional-box {
+  background: #ffffff;
+  border: 1px dashed #38bdf8;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  animation: futFadeIn 0.25s ease;
+}
+
+@keyframes futFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fut-check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.fut-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.15s ease;
+}
+
+.fut-check-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.fut-check-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #0284c7;
+  cursor: pointer;
 }
 
 .fut-actions {
@@ -4301,6 +4794,9 @@ body.dark-theme .hercar-tour-btn.skip {
   cursor: pointer;
   font-size: 0.86rem;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fut-btn.primary {
@@ -4315,43 +4811,808 @@ body.dark-theme .hercar-tour-btn.skip {
 }
 
 .fut-btn.secondary {
-  background: #e2e8f0;
+  background: #f1f5f9;
   color: #334155;
+  border: 1px solid #cbd5e1;
 }
 
 .fut-btn.secondary:hover {
-  background: #cbd5e1;
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
-body.dark-theme .hercar-fut-box {
-  background: #0f172a;
-  color: #f8fafc;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+
+/* ==========================================================================
+   NUEVAS MEJORAS DE DISEÑO: RED NEURONAL IA, AUDIO UI Y CONTROL DE VOZ v5.0
+   ========================================================================== */
+
+/* Botón de Red Neuronal con Pulso de Energía */
+.btn-neural-pulse {
+  position: relative;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(37, 99, 235, 0.2) 100%) !important;
+  border: 1px solid rgba(6, 182, 212, 0.4) !important;
+  color: #0284c7 !important;
+  border-radius: 999px !important;
+  padding: 6px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  transition: all 0.25s ease !important;
 }
 
-body.dark-theme .hercar-fut-box h3 {
-  color: #f8fafc;
+.btn-neural-pulse:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%) !important;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.4) !important;
+  transform: translateY(-1px);
 }
 
-body.dark-theme .hercar-fut-box p {
+.neural-dot-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #06b6d4;
+  box-shadow: 0 0 8px #06b6d4;
+  display: inline-block;
+  animation: neural-glow 1.8s infinite alternate;
+}
+
+@keyframes neural-glow {
+  0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 4px #06b6d4; }
+  100% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px #38bdf8; }
+}
+
+/* Botón de Efectos de Sonido */
+#btn-sound-toggle.sound-off {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+/* Avatar de HercarBot cuando está hablando (Halo animado) */
+.bot-avatar-badge.speaking {
+  animation: avatar-speaking-glow 1.2s infinite alternate ease-in-out;
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 18px rgba(6, 182, 212, 0.55) !important;
+}
+
+@keyframes avatar-speaking-glow {
+  0% { box-shadow: 0 0 6px rgba(6, 182, 212, 0.3); }
+  100% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.8), 0 0 0 4px rgba(56, 189, 248, 0.25); }
+}
+
+/* Ondas de voz más dinámicas y elegantes */
+.voice-wave-container {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 10px;
+  background: rgba(14, 45, 108, 0.08);
+  border-radius: 999px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.voice-wave-container.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.voice-wave-container .wave-bar {
+  display: inline-block;
+  width: 3px;
+  height: 6px;
+  background: linear-gradient(180deg, #0284c7 0%, #2563eb 100%);
+  border-radius: 99px;
+  transition: height 0.15s ease;
+}
+
+.voice-wave-container.active .wave-bar:nth-child(1) { animation: wave-anim 0.8s infinite 0.1s ease-in-out; }
+.voice-wave-container.active .wave-bar:nth-child(2) { animation: wave-anim 0.8s infinite 0.25s ease-in-out; }
+.voice-wave-container.active .wave-bar:nth-child(3) { animation: wave-anim 0.8s infinite 0.4s ease-in-out; }
+.voice-wave-container.active .wave-bar:nth-child(4) { animation: wave-anim 0.8s infinite 0.2s ease-in-out; }
+
+@keyframes wave-anim {
+  0%, 100% { height: 5px; }
+  50% { height: 18px; }
+}
+
+/* Calificación de Respuestas Útiles 👍/👎 */
+.tool-btn.rated-up {
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+
+.tool-btn.rated-down {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Modal del Monitor de Red Neuronal */
+.neural-modal-header {
+  background: linear-gradient(135deg, #07152f 0%, #0c275a 50%, #10377e 100%);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.neural-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.telemetry-card {
+  background: rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: all 0.2s ease;
+}
+
+.telemetry-card:hover {
+  transform: translateY(-2px);
+  border-color: #38bdf8;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12);
+}
+
+.telemetry-card .t-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+.telemetry-card .t-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 2px;
+  display: block;
+}
+
+.neural-canvas-wrapper {
+  background: #060d1d;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6);
+}
+
+#neural-network-canvas {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+.neural-live-badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(6, 182, 212, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  backdrop-filter: blur(8px);
+}
+
+/* Modo Oscuro para el Monitor y Botones Nuevos */
+body.dark-theme .btn-neural-pulse {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(37, 99, 235, 0.25) 100%) !important;
+  color: #38bdf8 !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+body.dark-theme .telemetry-card {
+  background: #111c38;
+  border-color: #1e3a6e;
+}
+
+body.dark-theme .telemetry-card .t-label {
   color: #94a3b8;
 }
 
-body.dark-theme .fut-field {
-  background: #1e293b;
-  border-color: #334155;
+body.dark-theme .telemetry-card .t-val {
   color: #f8fafc;
 }
 
-body.dark-theme .fut-field:focus {
-  background: #1e293b;
-  border-color: #38bdf8;
+body.dark-theme .voice-wave-container {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-body.dark-theme .fut-btn.secondary {
+/* ==========================================================================
+   PALETA DE COMANDOS INTELIGENTE SPOTLIGHT (CTRL + K)
+   ========================================================================== */
+
+.palette-kbd {
+  background: rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 6px;
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #64748b;
+  font-weight: 600;
+}
+
+body.dark-theme .palette-kbd {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #94a3b8;
+}
+
+.hercar-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+  animation: paletteFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes paletteFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.hercar-palette-box {
+  width: 92%;
+  max-width: 640px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+body.dark-theme .hercar-palette-box {
+  background: #0f172a;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.palette-search-bar {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  gap: 12px;
+}
+
+body.dark-theme .palette-search-bar {
+  border-bottom-color: #1e293b;
+}
+
+.palette-search-icon {
+  font-size: 1.25rem;
+  color: #2563eb;
+}
+
+body.dark-theme .palette-search-icon {
+  color: #38bdf8;
+}
+
+.palette-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #0f172a;
+  outline: none;
+}
+
+body.dark-theme .palette-input {
+  color: #f8fafc;
+}
+
+.palette-esc-badge {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 3px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+body.dark-theme .palette-esc-badge {
   background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.palette-results-wrapper {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 8px 10px;
+}
+
+.palette-category-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  padding: 8px 12px 4px;
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #1e293b;
+}
+
+body.dark-theme .palette-item {
+  color: #e2e8f0;
+}
+
+.palette-item:hover,
+.palette-item.active {
+  background: #f1f5f9;
+  color: #2563eb;
+}
+
+body.dark-theme .palette-item:hover,
+body.dark-theme .palette-item.active {
+  background: #1e293b;
+  color: #38bdf8;
+}
+
+.palette-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.palette-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.palette-item-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  display: block;
+}
+
+.palette-item-sub {
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+body.dark-theme .palette-item-sub {
+  color: #94a3b8;
+}
+
+.palette-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+body.dark-theme .palette-footer {
+  background: #090d16;
+  border-top-color: #1e293b;
+  color: #94a3b8;
+}
+
+.palette-shortcuts {
+  display: flex;
+  gap: 12px;
+}
+
+.palette-shortcuts kbd {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+
+body.dark-theme .palette-shortcuts kbd {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+/* ==========================================================================
+   WIDGET DE RAZONAMIENTO COGNITIVO NEURAL (THINKING STEP)
+   ========================================================================== */
+
+.neural-thought-details {
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 10px;
+  padding: 6px 12px;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  transition: all 0.2s ease;
+}
+
+body.dark-theme .neural-thought-details {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(51, 65, 85, 0.7);
+}
+
+.neural-thought-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: #334155;
+}
+
+body.dark-theme .neural-thought-summary {
+  color: #94a3b8;
+}
+
+.neural-thought-summary::-webkit-details-marker {
+  display: none;
+}
+
+.neural-thought-body {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(203, 213, 225, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+body.dark-theme .neural-thought-body {
+  border-top-color: rgba(71, 85, 105, 0.6);
+}
+
+.thought-tensor-item {
+  color: #475569;
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+body.dark-theme .thought-tensor-item {
   color: #cbd5e1;
 }
 
+.thought-tensor-item code {
+  font-size: 0.72rem;
+  background: rgba(37, 99, 235, 0.08);
+  color: #1d4ed8;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+body.dark-theme .thought-tensor-item code {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+/* ==========================================================================
+   VISUALIZADOR EQUALIZER DE VOZ ACTIVA
+   ========================================================================== */
+
+.voice-speech-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.v-bar {
+  width: 2.5px;
+  height: 4px;
+  background: #2563eb;
+  border-radius: 2px;
+  transition: height 0.1s ease;
+}
+
+body.dark-theme .v-bar {
+  background: #38bdf8;
+}
+
+.speaking .voice-speech-bars .v-bar:nth-child(1) {
+  animation: equalizerBounce 0.5s ease-in-out infinite alternate;
+}
+.speaking .voice-speech-bars .v-bar:nth-child(2) {
+  animation: equalizerBounce 0.4s ease-in-out 0.1s infinite alternate;
+}
+.speaking .voice-speech-bars .v-bar:nth-child(3) {
+  animation: equalizerBounce 0.6s ease-in-out 0.2s infinite alternate;
+}
+.speaking .voice-speech-bars .v-bar:nth-child(4) {
+  animation: equalizerBounce 0.45s ease-in-out 0.15s infinite alternate;
+}
+
+@keyframes equalizerBounce {
+  0% { height: 3px; }
+  100% { height: 13px; }
+}
 
 
+
+
+
+
+/* ==========================================================================
+   ALTO CONTRASTE Y SOPORTE DE TEMAS PARA MODAL GENERADOR DE FUT
+   ========================================================================== */
+/* Modo Claro (Por Defecto) */
+.hercar-fut-box {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(203, 213, 225, 0.8) !important;
+}
+.hercar-fut-box h4 {
+  color: #0f172a !important;
+}
+.fut-section {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.fut-section-title {
+  color: #0f172a !important;
+}
+.fut-section label {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+.fut-field {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 500 !important;
+}
+.fut-field::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+.fut-field:focus {
+  background: #ffffff !important;
+  border-color: #0284c7 !important;
+  color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18) !important;
+}
+.fut-field option {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+.fut-info-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%) !important;
+  border: 1px solid #bae6fd !important;
+}
+.fut-info-label {
+  color: #475569 !important;
+}
+.fut-info-val {
+  color: #0f172a !important;
+}
+.fut-check-item {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+.fut-check-item:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+/* Modo Oscuro (body.dark-theme) */
+body.dark-theme .hercar-fut-box {
+  background: #0d172e !important;
+  color: #f8fafc !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85) !important;
+}
+body.dark-theme .hercar-fut-box h4 {
+  color: #ffffff !important;
+}
+body.dark-theme .hercar-fut-box p.text-muted {
+  color: #cbd5e1 !important;
+}
+body.dark-theme .fut-section {
+  background: #111c38 !important;
+  border: 1px solid #1e3a6e !important;
+}
+body.dark-theme .fut-section-title {
+  color: #ffffff !important;
+}
+body.dark-theme .fut-section label,
+body.dark-theme .fut-section .form-label {
+  color: #f1f5f9 !important;
+  font-weight: 600 !important;
+}
+body.dark-theme .fut-field {
+  background: #070e22 !important;
+  border: 1.5px solid rgba(148, 163, 184, 0.4) !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+body.dark-theme .fut-field::placeholder {
+  color: rgba(226, 232, 240, 0.7) !important;
+  opacity: 1 !important;
+}
+body.dark-theme .fut-field:focus {
+  background: #070e22 !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3) !important;
+}
+body.dark-theme .fut-field option {
+  background: #070e22 !important;
+  color: #ffffff !important;
+}
+body.dark-theme .fut-info-card {
+  background: rgba(30, 58, 138, 0.3) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+}
+body.dark-theme .fut-info-label {
+  color: #94a3b8 !important;
+}
+body.dark-theme .fut-info-val {
+  color: #38bdf8 !important;
+}
+body.dark-theme .fut-check-item {
+  background: #070e22 !important;
+  border: 1.5px solid #1e3a6e !important;
+  color: #f1f5f9 !important;
+  font-weight: 500 !important;
+}
+body.dark-theme .fut-check-item:hover {
+  background: #111c38 !important;
+  border-color: #38bdf8 !important;
+}
+body.dark-theme .fut-conditional-box {
+  background: rgba(14, 165, 233, 0.12) !important;
+  border: 1px dashed rgba(56, 189, 248, 0.45) !important;
+}
+body.dark-theme .fut-btn.secondary {
+  background: #111c38 !important;
+  color: #f1f5f9 !important;
+  border-color: #1e3a6e !important;
+}
+body.dark-theme .fut-btn.secondary:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+
+/* ==========================================================================
+   ESTILOS MEJORADOS: PLANTILLAS RÁPIDAS Y SELECTOR DE ENTIDAD DEL FUT
+   ========================================================================== */
+.fut-template-bar {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+.fut-tpl-btn {
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 1.25 !important;
+  cursor: pointer !important;
+}
+.fut-tpl-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+#futEntityQuickType .btn {
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  padding: 2.5px 8px !important;
+}
+
+/* Modo Oscuro para Plantillas y Selector */
+body.dark-theme .fut-template-bar {
+  background: #091329 !important;
+  border: 1px solid #1e3a6e !important;
+}
+body.dark-theme .fut-template-bar span.text-muted,
+body.dark-theme .fut-template-bar span.text-dark {
+  color: #e2e8f0 !important;
+}
+body.dark-theme .fut-tpl-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #f8fafc !important;
+}
+body.dark-theme .fut-tpl-btn:hover {
+  background: rgba(56, 189, 248, 0.22) !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+}
+body.dark-theme .fut-header-title {
+  color: #ffffff !important;
+}
+body.dark-theme .fut-header-subtitle {
+  color: #94a3b8 !important;
+}
+body.dark-theme #futEntityQuickType .btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #e2e8f0 !important;
+}
+body.dark-theme #futEntityQuickType .btn.active {
+  background: #0284c7 !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+}
+
+
+
+/* ==========================================================================
+   BOTÓN LOGIN EN PIE DEL SIDEBAR (Pill Blanco Interactivo)
+   ========================================================================== */
+.sidebar-bottom {
+  padding: 10px 14px;
+  border-top: 1px solid var(--line-side);
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-login-btn {
+  background: #ffffff;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-login-btn:hover {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.35);
+}
+
+.sidebar-login-btn:hover i {
+  color: #ffffff !important;
+}

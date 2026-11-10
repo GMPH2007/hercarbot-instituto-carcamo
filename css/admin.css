@@ -933,3 +933,327 @@ body.dark-theme .admin-toast {
   border-color: #1e3a6e;
   box-shadow: 0 12px 30px rgba(0,0,0,0.5);
 }
+
+/* ==========================================================================
+   MEJORAS PROYECTO FINAL: RED NEURONAL, CALIBRADOR DE VOZ Y AUDITORÍA EN VIVO
+   ========================================================================== */
+
+/* Badges de Tendencia en Tarjetas Métricas */
+.metric-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 99px;
+  margin-top: 4px;
+}
+.metric-trend.up {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+.metric-trend.neutral {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+/* Monitor de Red Neuronal en Admin */
+.admin-neural-card {
+  background: linear-gradient(135deg, #07152f 0%, #0d234d 100%);
+  color: #ffffff;
+  border-radius: var(--admin-radius);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(7, 21, 47, 0.3);
+}
+
+.neural-stat-box {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.25s ease;
+}
+
+.neural-stat-box:hover {
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.2);
+}
+
+.neural-stat-box .ns-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.neural-stat-box .ns-val {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+.neural-stat-box .ns-sub {
+  font-size: 0.73rem;
+  color: #38bdf8;
+  margin-top: 2px;
+}
+
+/* Laboratorio de Voz Femenina en Admin */
+.voice-lab-box {
+  background: #ffffff;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  padding: 22px;
+  box-shadow: var(--admin-shadow-sm);
+}
+
+.voice-sample-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.voice-sample-btn:hover {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #15803d;
+  transform: translateX(3px);
+}
+
+.voice-sample-btn i {
+  font-size: 1.1rem;
+  color: #0284c7;
+}
+
+/* Auditoría de Consultas en Vivo */
+.audit-table-badge {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 99px;
+  font-weight: 700;
+}
+
+.confidence-meter {
+  width: 70px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+  border-radius: 99px;
+}
+
+/* Modo Oscuro para las Nuevas Secciones del Admin */
+body.dark-theme .voice-lab-box {
+  background: #111c38;
+  border-color: #1e3a6e;
+}
+
+body.dark-theme .voice-sample-btn {
+  background: #091224;
+  border-color: #1e355b;
+  color: #cbd5e1;
+}
+
+body.dark-theme .voice-sample-btn:hover {
+  background: #152648;
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+body.dark-theme .confidence-meter {
+  background: #1e293b;
+}
+
+
+
+/* ============================================================
+   ESTILOS DE ALTO CONTRASTE PARA SECCIÓN SQL EN PANEL ADMIN
+   ============================================================ */
+.sql-metric-card {
+  transition: all 0.2s ease;
+}
+.sql-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+body.dark-theme .sql-metric-card {
+  background: #0d172e !important;
+  border-color: #1e3a6e !important;
+  color: #f1f5f9 !important;
+}
+body.dark-theme .sql-metric-card .text-muted {
+  color: #94a3b8 !important;
+}
+body.dark-theme #database-sql .table thead.table-light th {
+  background: #0d172e !important;
+  color: #f8fafc !important;
+  border-color: #1e3a6e !important;
+}
+body.dark-theme #database-sql .table tbody tr td {
+  background: #111c38 !important;
+  color: #f1f5f9 !important;
+  border-color: #1e3a6e !important;
+}
+body.dark-theme #database-sql .table tbody tr:hover td {
+  background: #17264a !important;
+}
+body.dark-theme #database-sql .table tbody tr td .text-dark {
+  color: #ffffff !important;
+}
+body.dark-theme #database-sql .table tbody tr td .text-muted {
+  color: #cbd5e1 !important;
+}
+
+
+/* ==========================================================================
+   WIDGET FLOTANTE HERCABOT IA EN PANEL DE CONTROL
+   ========================================================================== */
+.hercar-floating-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  background: linear-gradient(135deg, #0e2d6c 0%, #0369a1 100%);
+  color: #ffffff !important;
+  text-decoration: none !important;
+  padding: 8px 16px 8px 10px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 28px rgba(3, 105, 161, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+.hercar-floating-widget:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 35px rgba(3, 105, 161, 0.65);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff !important;
+}
+.hercar-widget-avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.hercar-widget-avatar img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.hercar-widget-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 11px;
+  height: 11px;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: widgetPulse 2s infinite;
+}
+@keyframes widgetPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.hercar-widget-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.hercar-widget-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+.hercar-widget-status {
+  font-size: 0.68rem;
+  color: #bae6fd;
+  font-weight: 500;
+}
+.hercar-widget-icon {
+  font-size: 1.15rem;
+  color: #facc15;
+}
+@media (max-width: 576px) {
+  .hercar-floating-widget {
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 12px 6px 8px;
+  }
+  .hercar-widget-status {
+    display: none;
+  }
+}
+
+
+/* Botones de accion para revelar y copiar contrasena en tabla de usuarios SQL */
+.btn-reveal-pwd, .btn-copy-user-pwd {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.btn-reveal-pwd:hover, .btn-copy-user-pwd:hover {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  transform: scale(1.08);
+}
+
+body.dark-theme .btn-reveal-pwd,
+body.dark-theme .btn-copy-user-pwd {
+  color: #94a3b8;
+}
+
+body.dark-theme .btn-reveal-pwd:hover,
+body.dark-theme .btn-copy-user-pwd:hover {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+}

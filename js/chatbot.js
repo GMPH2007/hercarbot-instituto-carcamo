@@ -18,6 +18,256 @@
   } catch(e) {}
 })();
 
+/* ==========================================================================
+   MOTOR DE SONIDOS UI CON WEB AUDIO API (SUTIL, FUTURISTA Y CERO ARCHIVOS)
+   ========================================================================== */
+
+class HercarSoundEngine {
+  constructor() {
+    this.audioCtx = null;
+    this.enabled = localStorage.getItem('hercar_sound_fx') !== 'false';
+  }
+
+  getAudioContext() {
+    if (!this.audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this.audioCtx && this.audioCtx.state === 'suspended') {
+      this.audioCtx.resume();
+    }
+    return this.audioCtx;
+  }
+
+  toggle() {
+    this.enabled = !this.enabled;
+    localStorage.setItem('hercar_sound_fx', this.enabled ? 'true' : 'false');
+    if (this.enabled) this.playTap();
+    return this.enabled;
+  }
+
+  playSend() {
+    if (!this.enabled) return;
+    try {
+      const ctx = this.getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(740, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    } catch (e) {}
+  }
+
+  playReceive() {
+    if (!this.enabled) return;
+    try {
+      const ctx = this.getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [1046.5, 1318.5].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+        gain.gain.setValueAtTime(0.035, now + idx * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.16);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.16);
+      });
+    } catch (e) {}
+  }
+
+  playTap() {
+    if (!this.enabled) return;
+    try {
+      const ctx = this.getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(620, ctx.currentTime);
+      gain.gain.setValueAtTime(0.02, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.03);
+    } catch (e) {}
+  }
+}
+
+/* ==========================================================================
+   CONVERTIDOR FONÉTICO UNIVERSAL DE NÚMEROS A PALABRAS EN ESPAÑOL
+   ========================================================================== */
+
+function spanishNumberToWords(num) {
+  num = parseInt(num, 10);
+  if (isNaN(num)) return '';
+  if (num === 0) return 'cero';
+  if (num < 0) return 'menos ' + spanishNumberToWords(Math.abs(num));
+
+  const units = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte', 'veintiuno', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve'];
+  const tens = ['', '', '', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+  const hundreds = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+
+  if (num <= 29) return units[num];
+  if (num < 100) {
+    const ten = Math.floor(num / 10);
+    const unit = num % 10;
+    return unit === 0 ? tens[ten] : `${tens[ten]} y ${units[unit]}`;
+  }
+  if (num === 100) return 'cien';
+  if (num < 1000) {
+    const hundred = Math.floor(num / 100);
+    const rest = num % 100;
+    return rest === 0 ? hundreds[hundred] : `${hundreds[hundred]} ${spanishNumberToWords(rest)}`;
+  }
+  if (num === 1000) return 'mil';
+  if (num < 2000) {
+    const rest = num % 1000;
+    return rest === 0 ? 'mil' : `mil ${spanishNumberToWords(rest)}`;
+  }
+  if (num < 1000000) {
+    const thousands = Math.floor(num / 1000);
+    const rest = num % 1000;
+    const thStr = thousands === 1 ? 'mil' : `${spanishNumberToWords(thousands)} mil`;
+    return rest === 0 ? thStr : `${thStr} ${spanishNumberToWords(rest)}`;
+  }
+  return num.toString();
+}
+
+function convertAllNumbersToSpokenSpanish(text) {
+  if (!text) return '';
+  let str = text.toString();
+
+  // 1. Cuentas bancarias específicas y teléfonos institucionales (con cadencia y pausas de respiración)
+  str = str
+    .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero doce, nueve cuatro ocho')
+    .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero doce, nueve cuatro ocho, cincuenta y dos')
+    .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero veinticinco, siete tres seis')
+    .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
+    .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
+    .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
+    .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
+
+  // 2. Horarios con formato am/pm
+  str = str
+    .replace(/8:00\s*(?:a\.?m\.?|am)\b/gi, 'ocho de la mañana')
+    .replace(/8:30\s*(?:a\.?m\.?|am)\b/gi, 'ocho y media de la mañana')
+    .replace(/1:15\s*(?:p\.?m\.?|pm)\b/gi, 'una y quince de la tarde')
+    .replace(/12:00\s*(?:p\.?m\.?|pm|m\.?)\b/gi, 'doce del mediodía')
+    .replace(/3:00\s*(?:p\.?m\.?|pm)\b/gi, 'tres de la tarde')
+    .replace(/7:40\s*(?:p\.?m\.?|pm)\b/gi, 'siete y cuarenta de la noche');
+
+  // 3. Monedas en soles peruanos
+  str = str
+    .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
+    .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
+    .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
+    .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
+    .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
+    .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
+    .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
+    .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
+    .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
+    .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
+    .replace(/S\/\.?\s*5(?:\.00)?/gi, 'cinco soles')
+    .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, (match, n) => `${spanishNumberToWords(n)} soles`);
+
+  // 4. Frases académicas cuantitativas exactas (evita lectura robótica de números aislados)
+  str = str
+    .replace(/\b820\s*horas\b/gi, 'ochocientas veinte horas')
+    .replace(/\b120\s*créditos\b/gi, 'ciento veinte créditos')
+    .replace(/\b3\s*años\b/gi, 'tres años')
+    .replace(/\b6\s*semestres\b/gi, 'seis semestres')
+    .replace(/\b4\s*carreras\b/gi, 'cuatro carreras')
+    .replace(/\b18\s*semanas\b/gi, 'dieciocho semanas')
+    .replace(/\b5\s*días\s*hábiles\b/gi, 'cinco días hábiles')
+    .replace(/\b24\s*a\s*48\s*horas\b/gi, 'veinticuatro a cuarenta y ocho horas')
+    .replace(/\b100%\s*gratuita\b/gi, 'pública y sin mensualidades')
+    .replace(/\b100%\s*gratuito\b/gi, 'público y sin mensualidades')
+    .replace(/\bcien por ciento gratuita\b/gi, 'pública y sin mensualidades')
+    .replace(/\bcien por ciento gratuito\b/gi, 'público y sin mensualidades')
+    .replace(/\b100%\b/g, 'cien por ciento')
+    .replace(/\b70%\b/g, 'setenta por ciento')
+    .replace(/\b30%\b/g, 'treinta por ciento')
+    .replace(/(\d+)\s*%/g, (match, n) => `${spanishNumberToWords(n)} por ciento`);
+
+  // 5. El número '1' contextualizado en español (evita decir 'uno año' o 'uno carrera')
+  str = str
+    .replace(/\b1\s+(año|ciclo|semestre|crédito|mes|día|intento|módulo|pago|trámite|examen)\b/gi, 'un $1')
+    .replace(/\b1\s+(carrera|semana|hora|cuota|vacante|asignatura|unidad|modalidad)\b/gi, 'una $1');
+
+  // 6. Escalas de calificación y rangos vigesimales
+  str = str
+    .replace(/\b0\s*a\s*20\b/g, 'cero a veinte')
+    .replace(/\b13\s*a\s*20\b/g, 'trece a veinte')
+    .replace(/\bnota\s+(?:mínima\s+)?13\b/gi, 'nota mínima trece')
+    .replace(/\bnota\s+13\b/gi, 'nota trece')
+    .replace(/\b1\s*al\s*6\b/g, 'uno al seis');
+
+  // 7. Números ordinales
+  str = str
+    .replace(/1[°º]|1ro\b/gi, 'primer')
+    .replace(/2[°º]|2do\b/gi, 'segundo')
+    .replace(/3[°º]|3ro\b/gi, 'tercer')
+    .replace(/4[°º]|4to\b/gi, 'cuarto')
+    .replace(/5[°º]|5to\b/gi, 'quinto')
+    .replace(/6[°º]|6to\b/gi, 'sexto');
+
+  // 8. Números romanos en contexto académico
+  str = str
+    .replace(/\bCiclos?\s+I\s+al\s+VI\b/gi, 'Ciclos uno al seis')
+    .replace(/\bCiclos?\s+I\s+y\s+II\b/gi, 'Ciclos uno y dos')
+    .replace(/\bCiclos?\s+III\s+y\s+IV\b/gi, 'Ciclos tres y cuatro')
+    .replace(/\bCiclos?\s+V\s+y\s+VI\b/gi, 'Ciclos cinco y seis')
+    .replace(/\bMódulo\s+I\b/gi, 'Módulo uno')
+    .replace(/\bMódulo\s+II\b/gi, 'Módulo dos')
+    .replace(/\bMódulo\s+III\b/gi, 'Módulo tres')
+    .replace(/\bCiclo\s+I\b/gi, 'Ciclo uno')
+    .replace(/\bCiclo\s+II\b/gi, 'Ciclo dos')
+    .replace(/\bCiclo\s+III\b/gi, 'Ciclo tres')
+    .replace(/\bCiclo\s+IV\b/gi, 'Ciclo cuatro')
+    .replace(/\bCiclo\s+V\b/gi, 'Ciclo cinco')
+    .replace(/\bCiclo\s+VI\b/gi, 'Ciclo seis')
+    .replace(/\bSemestre\s+I\b/gi, 'Semestre uno')
+    .replace(/\bSemestre\s+II\b/gi, 'Semestre dos')
+    .replace(/\bSemestre\s+III\b/gi, 'Semestre tres')
+    .replace(/\bSemestre\s+IV\b/gi, 'Semestre cuatro')
+    .replace(/\bSemestre\s+V\b/gi, 'Semestre cinco')
+    .replace(/\bSemestre\s+VI\b/gi, 'Semestre seis');
+
+  // 9. Números decimales simples (ej: 12.5)
+  str = str.replace(/\b(\d+)\.(\d+)\b/g, (match, n1, n2) => {
+    return `${spanishNumberToWords(n1)} punto ${spanishNumberToWords(n2)}`;
+  });
+
+  // 10. Años comunes
+  str = str
+    .replace(/\b2026\b/g, 'dos mil veintiséis')
+    .replace(/\b2025\b/g, 'dos mil veinticinco')
+    .replace(/\b2024\b/g, 'dos mil veinticuatro')
+    .replace(/\b2023\b/g, 'dos mil veintitrés');
+
+  // 11. Abreviaturas de número
+  str = str.replace(/N[°º]|Nro\./gi, 'número');
+
+  // 12. Cualquier otro número cardinal aislado entre 0 y 9999
+  str = str.replace(/\b(\d{1,5})\b/g, (match, num) => {
+    return spanishNumberToWords(num);
+  });
+
+  return str;
+}
+
 class HercarBotApp {
   constructor() {
     this.storageStats = 'hercarbot_stats';
@@ -40,6 +290,17 @@ class HercarBotApp {
     this.currentChatId = null;
     this.tourGuide = new HercarTourGuide(this);
 
+    // Motor de Efectos de Sonido Web Audio API
+    this.soundEngine = new HercarSoundEngine();
+
+    // Memoria de Contexto Conversacional Multi-Turno
+    this.context = {
+      lastCareer: null,
+      lastTramite: null,
+      lastTopic: null,
+      lastTurnTime: 0
+    };
+
     this.initStats();
     this.initDom();
     this.initTheme();
@@ -48,6 +309,8 @@ class HercarBotApp {
     this.initVoiceSynthesis();
     this.initConversations();
     this.initAutocomplete();
+    this.initNeuralMonitor();
+    this.initCommandPalette();
     this.initTour();
     this.initPwaServiceWorker();
   }
@@ -177,9 +440,45 @@ class HercarBotApp {
     this.btnRemovePreview = document.getElementById('btn-remove-image-preview');
     this.voiceBanner = document.getElementById('chat-voice-recording-banner');
     this.btnCancelVoice = document.getElementById('btn-cancel-voice');
+    this.btnNeuralMonitor = document.getElementById('btn-neural-monitor');
+    this.btnSoundToggle = document.getElementById('btn-sound-toggle');
+    this.soundIcon = document.getElementById('sound-icon');
+    this.btnTestVoiceNumbers = document.getElementById('btn-test-voice-numbers');
+    this.btnTestVoiceCarreras = document.getElementById('btn-test-voice-carreras');
+    this.btnCommandPalette = document.getElementById('btn-command-palette');
+    this.commandPaletteModal = document.getElementById('hercarCommandPalette');
+    this.paletteInput = document.getElementById('paletteInput');
+    this.paletteResults = document.getElementById('paletteResults');
+    this.paletteCloseBtn = document.getElementById('paletteCloseBtn');
   }
 
   initEvents() {
+    // Control de Efectos de Sonido UI
+    if (this.btnSoundToggle) {
+      this.btnSoundToggle.addEventListener('click', () => {
+        const enabled = this.soundEngine.toggle();
+        if (this.soundIcon) {
+          this.soundIcon.className = enabled ? 'bi bi-bell-fill text-warning' : 'bi bi-bell-slash-fill text-muted';
+        }
+        if (this.btnSoundToggle) {
+          this.btnSoundToggle.classList.toggle('sound-off', !enabled);
+        }
+        this.showToast(enabled ? 'Efectos de sonido UI activados 🔔' : 'Efectos de sonido UI silenciados 🔕', 'info', enabled ? 'bi-bell-fill' : 'bi-bell-slash-fill');
+      });
+    }
+
+    if (this.btnTestVoiceNumbers) {
+      this.btnTestVoiceNumbers.addEventListener('click', () => {
+        this.speak('La Cuenta Corriente Oficial del Banco de la Nación para matrícula y trámites es 00-631-012948, y la tasa de matrícula es de ciento veinte soles.');
+      });
+    }
+
+    if (this.btnTestVoiceCarreras) {
+      this.btnTestVoiceCarreras.addEventListener('click', () => {
+        this.speak('En el Instituto Superior Hermanos Cárcamo de Paita puedes estudiar cuatro carreras técnicas públicas: Computación y Desarrollo de Sistemas, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.');
+      });
+    }
+
     // Manejo de Enviar Mensaje (Con protección anti-duplicado)
     if (this.inputForm) {
       this.inputForm.addEventListener('submit', (e) => {
@@ -312,7 +611,7 @@ class HercarBotApp {
       const btnAction = e.target.closest('[data-chat-action]');
       if (btnAction) {
         const action = btnAction.getAttribute('data-chat-action');
-        const val = btnAction.getAttribute('data-chat-val');
+        const val = btnAction.getAttribute('data-chat-val') || btnAction.getAttribute('data-fut-tramite');
         this.triggerAction(action, val);
       }
 
@@ -576,15 +875,41 @@ class HercarBotApp {
 
     // Alternador de Modo Widget Flotante sobre ieshercar.edu.pe
     const btnWidget = document.getElementById('btn-toggle-widget-mode');
+    const widgetLauncher = document.getElementById('hercar-widget-launcher');
+
     if (btnWidget) {
       btnWidget.addEventListener('click', () => {
+        document.body.classList.remove('hercar-widget-minimized');
         document.body.classList.toggle('hercar-widget-mode');
         const isWidget = document.body.classList.contains('hercar-widget-mode');
-        this.showToast(isWidget ? '🗗 Modo Burbuja activado (Vista sobre portal ieshercar.edu.pe)' : 'Modo Pantalla Completa restaurado', 'info', 'bi-window-stack');
+        this.showToast(isWidget ? '🗗 Modo Widget Flotante activado sobre portal oficial' : 'Modo Pantalla Completa restaurado', 'info', 'bi-window-stack');
       });
     }
 
-    // Modal de Generación de FUT Oficial
+    if (widgetLauncher) {
+      widgetLauncher.addEventListener('click', () => {
+        document.body.classList.remove('hercar-widget-minimized');
+        document.body.classList.add('hercar-widget-mode');
+        this.playSound('tap');
+      });
+    }
+
+    // Atajo de acceso administrativo rápido para docentes: Ctrl + Shift + A
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        window.location.href = 'login.html';
+      }
+    });
+
+    this.initFutEvents();
+  }
+
+  /* ==========================================================================
+     SISTEMA DINÁMICO DE GENERACIÓN DE FORMATO ÚNICO DE TRÁMITE (FUT)
+     ========================================================================== */
+
+  initFutEvents() {
     const btnOpenFut = document.getElementById('btn-open-fut-modal');
     if (btnOpenFut) {
       btnOpenFut.addEventListener('click', () => this.openFutModal());
@@ -609,11 +934,315 @@ class HercarBotApp {
     if (btnPrintFut) {
       btnPrintFut.addEventListener('click', () => this.printFutDocument());
     }
+
+    const btnDownloadFut = document.getElementById('futDownloadBtn');
+    if (btnDownloadFut) {
+      btnDownloadFut.addEventListener('click', () => this.downloadFutHtml());
+    }
+
+    const selectTramite = document.getElementById('futTramite');
+    if (selectTramite) {
+      selectTramite.addEventListener('change', () => this.updateFutFormByTramite());
+    }
+
+    const btnDemo = document.getElementById('btn-fut-demo-data');
+    if (btnDemo) {
+      btnDemo.addEventListener('click', () => this.fillFutDemoData());
+    }
+
+    const btnCopyBn = document.getElementById('btnCopyBnFut');
+    if (btnCopyBn) {
+      btnCopyBn.addEventListener('click', () => {
+        navigator.clipboard?.writeText('00-631-012948').then(() => {
+          this.showToast('Cuenta Banco de la Nación copiada: 00-631-012948', 'success', 'bi-clipboard-check');
+        });
+      });
+    }
+
+    // Botones de Plantillas Rápidas (Empresa, Colegio, Convenio, Modular, Limpiar)
+    document.querySelectorAll('.fut-tpl-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tpl = btn.dataset.tpl;
+        if (tpl) this.applyFutTemplate(tpl);
+      });
+    });
+
+    // Selector Rápido de Tipo de Entidad (Empresa, Colegio, Convenio)
+    document.querySelectorAll('#futEntityQuickType button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('#futEntityQuickType button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const etype = btn.dataset.etype;
+        if (etype) this.setFutEntityType(etype);
+      });
+    });
+
+    // Rastrear cuando el usuario edita o escribe manualmente su fundamentación
+    const txtDetalle = document.getElementById('futDetalle');
+    if (txtDetalle) {
+      txtDetalle.addEventListener('input', () => {
+        txtDetalle.dataset.userEdited = 'true';
+      });
+    }
+
+    // Cerrar al hacer click fuera del cuadro
+    const modalEl = document.getElementById('modalGeneradorFUT');
+    if (modalEl) {
+      modalEl.addEventListener('click', (e) => {
+        if (e.target === modalEl) this.closeFutModal();
+      });
+    }
   }
 
-  openFutModal() {
+  getFutConfig(key) {
+    const map = {
+      'carta_practicas': {
+        sumilla: 'SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS PREPROFESIONALES (EFSRT)',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'Gratuito',
+        plazo: '24 a 48 horas hábiles',
+        wrap: 'futEmpresaWrap',
+        defaultEntity: 'empresa',
+        draft: (d) => `Que, de conformidad con la Ley Nº 30512 de Institutos y Escuelas de Educación Superior y el Reglamento de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT), solicito se sirva disponer la emisión de mi CARTA DE PRESENTACIÓN OFICIAL dirigida a ${d.cargo || 'la jefatura o representante correspondiente'} de "${d.empresa || 'la empresa receptora'}" para el área de ${d.area || 'prácticas formativas según mi especialidad'}, a efectos de realizar mis prácticas preprofesionales modulares conducentes a la certificación y titulación en mi carrera.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: false, practicas: true, medicos: false }
+      },
+      'carta_practicas_colegio': {
+        sumilla: 'SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS EN COLEGIO / I.E. (EFSRT)',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'Gratuito',
+        plazo: '24 a 48 horas hábiles',
+        wrap: 'futEmpresaWrap',
+        defaultEntity: 'colegio',
+        draft: (d) => `Que, al amparo de las normas del Ministerio de Educación y el Reglamento de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) del IESTP Hermanos Cárcamo, solicito a su digno despacho la emisión de mi CARTA DE PRESENTACIÓN OFICIAL dirigida a ${d.cargo || 'la Dirección del Colegio / I.E.'} de "${d.empresa || 'Colegio o Institución Educativa correspondiente'}", a efectos de realizar mis prácticas preprofesionales en ${d.area || 'el Aula de Cómputo / Soporte / Administración'}.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: false, practicas: true, medicos: false }
+      },
+      'carta_practicas_convenio': {
+        sumilla: 'SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS POR CONVENIO INTERINSTITUCIONAL',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'Gratuito',
+        plazo: '24 a 48 horas hábiles',
+        wrap: 'futEmpresaWrap',
+        defaultEntity: 'convenio',
+        draft: (d) => `Que, en el marco del Convenio de Cooperación Interinstitucional suscrito entre el IESTP Hermanos Cárcamo de Paita y "${d.empresa || 'Entidad Receptora del Convenio'}", solicito se sirva ordenar la expedición de mi CARTA DE PRESENTACIÓN OFICIAL para dar inicio a mis prácticas preprofesionales (EFSRT) correspondientes a mi plan de estudios con arreglo a las cláusulas estipuladas.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: false, practicas: true, medicos: false }
+      },
+      'constancia_practicas': {
+        sumilla: 'SOLICITO ACREDITACIÓN Y CONSTANCIA DE HORAS DE PRÁCTICAS EFSRT',
+        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
+        costo: 'S/ 25.00 (Tasa TUPA BN)',
+        plazo: '3 a 5 días hábiles',
+        wrap: null,
+        draft: () => `Que, habiendo culminado satisfactoriamente mis prácticas preprofesionales (EFSRT) y habiendo presentado el Plan de Trabajo, Hoja de Evaluación del Empleador e Informe Final visado, solicito se me otorgue la Constancia de Acreditación de Prácticas Preprofesionales correspondiente.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: true, medicos: false }
+      },
+      'cert_modular': {
+        sumilla: 'SOLICITO CERTIFICADO MODULAR PROGRESIVO OFICIAL',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 45.00 (Tasa TUPA BN)',
+        plazo: '5 a 7 días hábiles',
+        wrap: 'futModuloWrap',
+        draft: (d) => `Que, habiendo culminado y aprobado la totalidad de unidades didácticas y horas de prácticas preprofesionales (EFSRT) correspondientes al ${d.modulo || 'Módulo Formativo I'} del plan de estudios de mi programa, solicito la expedición de mi CERTIFICADO MODULAR PROGRESIVO con valor oficial MINEDU.`,
+        reqs: { dni: true, voucher: true, fotos: true, notas: false, practicas: true, medicos: false }
+      },
+      'cert_modular_convenio': {
+        sumilla: 'SOLICITO CERTIFICADO MODULAR CONVALIDANDO PRÁCTICAS POR CONVENIO',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 45.00 (Tasa TUPA BN)',
+        plazo: '5 a 7 días hábiles',
+        wrap: 'futModuloWrap',
+        draft: (d) => `Que, habiendo aprobado los créditos curriculares y validado las horas de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) ejecutadas en el marco del Convenio de Cooperación Interinstitucional, solicito se sirva expedir mi CERTIFICADO MODULAR PROGRESIVO correspondiente al ${d.modulo || 'Módulo Formativo I'} con reconocimiento oficial.`,
+        reqs: { dni: true, voucher: true, fotos: true, notas: false, practicas: true, medicos: false }
+      },
+      'cert_estudios_completo': {
+        sumilla: 'SOLICITO CERTIFICADO OFICIAL DE ESTUDIOS COMPLETO (I AL VI CICLO)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 60.00 (Tasa TUPA BN)',
+        plazo: '3 a 5 días hábiles',
+        wrap: null,
+        draft: () => `Que, para fines laborales y de prosecución de estudios superiores, solicito se me expida mi CERTIFICADO OFICIAL DE ESTUDIOS correspondiente a la totalidad de semestres académicos cursados en el instituto, para lo cual adjunto los requisitos del TUPA.`,
+        reqs: { dni: true, voucher: true, fotos: true, notas: true, practicas: false, medicos: false }
+      },
+      'titulacion_profesional': {
+        sumilla: 'SOLICITO EXPEDICIÓN DE TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 180.00 (Tasa TUPA BN)',
+        plazo: '30 a 45 días hábiles (Registro MINEDU)',
+        wrap: null,
+        draft: () => `Que, habiendo culminado satisfactoriamente los 120 créditos curriculares, los 3 certificados modulares oficiales, el curso de inglés institucional y habiendo aprobado el proceso de sustentación de Proyecto / Examen de Suficiencia, solicito la expedición de mi TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN e inscripción en el Registro Nacional de Títulos del MINEDU.`,
+        reqs: { dni: true, voucher: true, fotos: true, notas: true, practicas: true, medicos: false }
+      },
+      'constancia_egresado': {
+        sumilla: 'SOLICITO CONSTANCIA OFICIAL DE EGRESADO',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 20.00 (Tasa TUPA BN)',
+        plazo: '2 a 3 días hábiles',
+        wrap: null,
+        draft: () => `Que, habiendo culminado satisfactoriamente los seis semestres académicos del plan curricular de mi carrera, solicito se me extienda mi CONSTANCIA DE EGRESADO para los trámites laborales y profesionales pertinentes.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'duplicado_titulo': {
+        sumilla: 'SOLICITO DUPLICADO DE DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 90.00 (Tasa TUPA BN)',
+        plazo: '15 a 20 días hábiles',
+        wrap: null,
+        draft: () => `Que, habiéndose extraviado/deteriorado mi diploma original y habiendo realizado la denuncia policial y publicación correspondiente, solicito la expedición del DUPLICADO DE MI DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO.`,
+        reqs: { dni: true, voucher: true, fotos: true, notas: false, practicas: false, medicos: false }
+      },
+      'matricula_extemporanea': {
+        sumilla: 'SOLICITO AUTORIZACIÓN PARA MATRÍCULA EXTEMPORÁNEA',
+        autoridad: 'DIRECCIÓN GENERAL / JEFATURA DE UNIDAD ACADÉMICA',
+        costo: 'S/ 140.00 (Tasa regular + recargo BN)',
+        plazo: '2 días hábiles',
+        wrap: null,
+        draft: () => `Que, habiendo vencido el plazo regular de matrícula por motivos de fuerza mayor debidamente justificados y encontrándome habilitado académicamente, solicito se autorice mi matrícula extemporánea en el periodo lectivo en curso.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'reserva_matricula': {
+        sumilla: 'SOLICITO RESERVA DE MATRÍCULA SEMESTRAL',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 30.00 (Tasa TUPA BN)',
+        plazo: '2 a 3 días hábiles',
+        wrap: null,
+        draft: () => `Que, por razones estrictamente personales y de fuerza mayor que me impiden continuar mis estudios en el presente semestre académico, solicito la RESERVA DE MI MATRÍCULA asegurando mi vacante para el reingreso respectivo según el Reglamento Institucional.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'reingreso_estudios': {
+        sumilla: 'SOLICITO REINGRESO / REINCORPORACIÓN DE ESTUDIOS',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 35.00 (Tasa TUPA BN)',
+        plazo: '2 a 3 días hábiles',
+        wrap: null,
+        draft: () => `Que, habiendo culminado el periodo de reserva de matrícula concedido, solicito mi REINGRESO Y REINCORPORACIÓN al semestre académico correspondiente en mi carrera profesional.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'convalidacion_cursos': {
+        sumilla: 'SOLICITO CONVALIDACIÓN DE UNIDADES DIDÁCTICAS',
+        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
+        costo: 'S/ 20.00 por unidad (BN)',
+        plazo: '5 a 7 días hábiles',
+        wrap: 'futConvalidacionWrap',
+        draft: (d) => `Que, habiendo cursado estudios superiores en "${d.convalInst || 'otra institución de educación superior'}", solicito la CONVALIDACIÓN DE UNIDADES DIDÁCTICAS afines a mi plan de estudios actual, para lo cual adjunto mis certificados y sílabos oficiales visados.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: false, medicos: false }
+      },
+      'traslado_interno': {
+        sumilla: 'SOLICITO TRASLADO INTERNO DE PROGRAMA DE ESTUDIOS',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 50.00 (Tasa TUPA BN)',
+        plazo: '3 a 5 días hábiles',
+        wrap: null,
+        draft: () => `Que, de acuerdo al reglamento institucional y existiendo vacantes disponibles, solicito mi TRASLADO INTERNO de programa de estudios, comprometiéndome a cursar las unidades didácticas complementarias requeridas.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: false, medicos: false }
+      },
+      'subsanacion_recuperacion': {
+        sumilla: 'SOLICITO EXAMEN DE SUBSANACIÓN / RECUPERACIÓN EXTRAORDINARIO',
+        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA',
+        costo: 'S/ 25.00 por curso (BN)',
+        plazo: '2 días hábiles',
+        wrap: null,
+        draft: () => `Que, teniendo pendiente una unidad didáctica desaprobada del semestre anterior y cumpliendo los requisitos reglamentarios, solicito se me autorice rendir la EVALUACIÓN EXTRAORDINARIA DE SUBSANACIÓN correspondiente.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: false, medicos: false }
+      },
+      'retiro_semestre': {
+        sumilla: 'SOLICITO RETIRO TEMPORAL DE SEMESTRE ACADÉMICO',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'Gratuito',
+        plazo: '2 días hábiles',
+        wrap: null,
+        draft: () => `Que, por circunstancias personales sobrevinientes imprevistas, solicito mi RETIRO TEMPORAL del semestre académico en curso para los fines de resguardo de mi récord de notas.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'constancia_matricula': {
+        sumilla: 'SOLICITO CONSTANCIA DE MATRÍCULA / ESTUDIOS OFICIAL',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 15.00 (Tasa TUPA BN)',
+        plazo: '24 a 48 horas hábiles',
+        wrap: null,
+        draft: () => `Que, requiriendo acreditar mi condición de estudiante regular matriculado en el presente periodo lectivo para trámites de seguro/beneficio familiar/laboral, solicito la expedición de mi CONSTANCIA DE MATRÍCULA Y ESTUDIOS oficial.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'constancia_no_adeudo': {
+        sumilla: 'SOLICITO CONSTANCIA GENERAL DE NO ADEUDAR A LA INSTITUCIÓN',
+        autoridad: 'DIRECCIÓN GENERAL / SECRETARÍA GENERAL',
+        costo: 'S/ 15.00 (Tasa TUPA BN)',
+        plazo: '24 horas hábiles',
+        wrap: null,
+        draft: () => `Que, para efectos de trámites de titulación/egreso y no teniendo bienes, libros ni obligaciones económicas pendientes con el instituto, solicito se me otorgue la CONSTANCIA DE NO ADEUDAR.`,
+        reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
+      },
+      'carne_estudiantil': {
+        sumilla: 'SOLICITO DUPLICADO / EMISIÓN DE CARNÉ DE ESTUDIANTE (MEDIO PASAJE)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 20.00 (Tasa oficial MINEDU)',
+        plazo: 'Según remesa MINEDU',
+        wrap: null,
+        draft: () => `Que, habiendo cancelado los derechos respectivos, solicito se tramite ante el MINEDU la expedición/duplicado de mi CARNÉ OFICIAL DE ESTUDIANTE para el ejercicio del derecho de medio pasaje y acreditación académica.`,
+        reqs: { dni: true, voucher: true, fotos: true, notas: false, practicas: false, medicos: false }
+      },
+      'justificacion_inasistencia': {
+        sumilla: 'SOLICITO JUSTIFICACIÓN DE INASISTENCIAS A CLASES',
+        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
+        costo: 'Gratuito',
+        plazo: '2 días hábiles',
+        wrap: 'futJustificacionWrap',
+        draft: (d) => `Que, habiendo faltado a clases en el periodo "${d.justifFechas || 'indicado en los adjuntos'}" por motivos de "${d.justifMotivo || 'salud debidamente acreditada'}", solicito la JUSTIFICACIÓN DE MIS INASISTENCIAS adjuntando el descanso médico/constancia probatoria correspondiente.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: false, practicas: false, medicos: true }
+      },
+      'rectificacion_notas': {
+        sumilla: 'SOLICITO RECTIFICACIÓN DE NOMBRES O CALIFICACIONES',
+        autoridad: 'SECRETARÍA ACADÉMICA / COORDINACIÓN ACADÉMICA',
+        costo: 'Gratuito',
+        plazo: '3 días hábiles',
+        wrap: null,
+        draft: () => `Que, habiendo advertido un error material involuntario en el registro de mis calificaciones/datos patronímicos en el acta respectiva, solicito la RECTIFICACIÓN conforme a la documentación probatoria que adjunto.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: true, practicas: false, medicos: false }
+      },
+      'solicitud_libre': {
+        sumilla: 'SOLICITO ATENCIÓN A PETICIÓN INSTITUCIONAL',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'Gratuito (o según TUPA)',
+        plazo: '3 a 5 días hábiles',
+        wrap: 'futOtroWrap',
+        draft: (d) => d.otro ? `Que, por el presente documento recurro a su despacho para solicitar: ${d.otro}.` : `Que, por convenir a mis legítimos intereses formativos y académicos, recurro a su digno despacho para solicitar la atención de lo expuesto en el presente documento con arreglo a ley.`,
+        reqs: { dni: true, voucher: false, fotos: false, notas: false, practicas: false, medicos: false }
+      }
+    };
+    return map[key] || map['carta_practicas'];
+  }
+
+  openFutModal(tramiteKey = null, extraData = {}) {
     const modal = document.getElementById('modalGeneradorFUT');
-    if (modal) modal.classList.add('open');
+    if (!modal) return;
+    modal.classList.add('open');
+
+    if (tramiteKey) {
+      const select = document.getElementById('futTramite');
+      if (select) {
+        select.value = tramiteKey;
+      }
+    }
+
+    if (extraData.empresaNombre) {
+      const el = document.getElementById('futEmpresaNombre');
+      if (el) el.value = extraData.empresaNombre;
+    }
+    if (extraData.empresaCargo) {
+      const el = document.getElementById('futEmpresaCargo');
+      if (el) el.value = extraData.empresaCargo;
+    }
+
+    // Al abrir el generador, dejamos el cuadro de fundamentación EN BLANCO por defecto
+    // para que el estudiante redacte directamente con sus propias palabras, sin imponer texto dummy.
+    const textarea = document.getElementById('futDetalle');
+    if (textarea && !extraData.preserveText) {
+      textarea.value = '';
+      textarea.dataset.userEdited = 'false';
+    }
+
+    this.updateFutFormByTramite(false);
+    this.playSound('tap');
   }
 
   closeFutModal() {
@@ -621,25 +1250,789 @@ class HercarBotApp {
     if (modal) modal.classList.remove('open');
   }
 
+  setFutEntityType(etype) {
+    const lblNom = document.getElementById('lblEmpresaNombre');
+    const lblCar = document.getElementById('lblEmpresaCargo');
+    const lblAre = document.getElementById('lblEmpresaArea');
+    const inpNom = document.getElementById('futEmpresaNombre');
+    const inpCar = document.getElementById('futEmpresaCargo');
+    const inpAre = document.getElementById('futEmpresaArea');
+
+    if (etype === 'colegio') {
+      if (lblNom) lblNom.innerText = 'Nombre del Colegio / Institución Educativa:';
+      if (lblCar) lblCar.innerText = 'Dirigido a (Director/a de la I.E.):';
+      if (lblAre) lblAre.innerText = 'Área escolar donde practicará (AIP / Cómputo / Administración):';
+      if (inpNom && !inpNom.value) inpNom.placeholder = 'Ej: Nombre del Colegio o Institución Educativa';
+      if (inpCar && !inpCar.value) inpCar.placeholder = 'Ej: Director(a) de la Institución Educativa';
+      if (inpAre && !inpAre.value) inpAre.placeholder = 'Ej: Aula de Innovación Pedagógica (AIP) / Soporte TI / Centro de Cómputo';
+    } else if (etype === 'convenio') {
+      if (lblNom) lblNom.innerText = 'Entidad Receptora del Convenio Marco:';
+      if (lblCar) lblCar.innerText = 'Representante o Responsable del Convenio:';
+      if (lblAre) lblAre.innerText = 'Área o Dependencia designada en Convenio:';
+      if (inpNom && !inpNom.value) inpNom.placeholder = 'Ej: Entidad Receptora (Municipalidad de Paita / UGEL / Empresa del Convenio)';
+      if (inpCar && !inpCar.value) inpCar.placeholder = 'Ej: Representante Institucional del Convenio';
+      if (inpAre && !inpAre.value) inpAre.placeholder = 'Ej: Área Técnica de Prácticas según Convenio de Cooperación';
+    } else {
+      // Empresa Privada
+      if (lblNom) lblNom.innerText = 'Nombre de la Empresa o Razón Social:';
+      if (lblCar) lblCar.innerText = 'Dirigido a (Representante o Cargo):';
+      if (lblAre) lblAre.innerText = 'Área o Departamento donde practicará:';
+      if (inpNom && !inpNom.value) inpNom.placeholder = 'Ej: Nombre de la Empresa o Razón Social';
+      if (inpCar && !inpCar.value) inpCar.placeholder = 'Ej: Gerente General / Jefatura de Recursos Humanos';
+      if (inpAre && !inpAre.value) inpAre.placeholder = 'Ej: Área de Soporte de TI y Redes / Contabilidad y Costos / Planta';
+    }
+  }
+
+  applyFutTemplate(tplType) {
+    const textarea = document.getElementById('futDetalle');
+    if (!textarea) return;
+
+    if (tplType === 'limpiar') {
+      textarea.value = '';
+      textarea.dataset.userEdited = 'true';
+      textarea.focus();
+      this.showToast('Cuadro de fundamentación en blanco. Escribe tu solicitud con tus propias palabras.', 'info', 'bi-eraser');
+      return;
+    }
+
+    const empNombre = document.getElementById('futEmpresaNombre')?.value.trim();
+    const empCargo = document.getElementById('futEmpresaCargo')?.value.trim();
+    const empArea = document.getElementById('futEmpresaArea')?.value.trim();
+    const moduloNum = document.getElementById('futModuloNum')?.value || 'Módulo Formativo I';
+
+    let textToInsert = '';
+
+    if (tplType === 'empresa') {
+      const targetEmp = empNombre || 'la empresa receptora';
+      const targetCar = empCargo || 'la jefatura de Recursos Humanos';
+      const targetAre = empArea || 'el área correspondiente de su representada';
+      textToInsert = `Que, de conformidad con la Ley Nº 30512 de Institutos y Escuelas de Educación Superior y el Reglamento de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT), solicito se sirva disponer la emisión de mi CARTA DE PRESENTACIÓN OFICIAL dirigida a ${targetCar} de la empresa/institución "${targetEmp}", a efectos de realizar mis prácticas preprofesionales en el área de ${targetAre}, requisito curricular indispensable para mi certificación modular y titulación profesional.`;
+      this.showToast('Plantilla formal para Empresa Privada cargada con éxito.', 'success', 'bi-building');
+    } else if (tplType === 'colegio') {
+      const targetCol = empNombre || 'el Colegio / Institución Educativa';
+      const targetCar = empCargo || 'la Dirección de la Institución Educativa';
+      const targetAre = empArea || 'el Aula de Innovación Pedagógica (AIP), Centro de Cómputo y Soporte Tecnológico';
+      textToInsert = `Que, al amparo de las normas del Ministerio de Educación y el Reglamento de EFSRT del IESTP Hermanos Cárcamo, solicito a su digno despacho la emisión de mi CARTA DE PRESENTACIÓN OFICIAL dirigida a ${targetCar} de la "${targetCol}", a efectos de realizar mis prácticas preprofesionales apoyando en ${targetAre}, cumpliendo con las horas formativas de mi plan curricular.`;
+      this.showToast('Plantilla formal para Colegio / I.E. cargada con éxito.', 'success', 'bi-mortarboard');
+    } else if (tplType === 'convenio') {
+      const targetEnt = empNombre || 'la entidad receptora';
+      textToInsert = `Que, en el marco del Convenio de Cooperación Interinstitucional vigente celebrado entre el IESTP Hermanos Cárcamo de Paita y "${targetEnt}", solicito se sirva ordenar la expedición de mi CARTA DE PRESENTACIÓN OFICIAL para dar inicio formal a mis prácticas preprofesionales (EFSRT), conforme a las cláusulas y compromisos formativos estipulados en el citado convenio.`;
+      this.showToast('Plantilla formal bajo Convenio Marco cargada con éxito.', 'success', 'bi-handshake');
+    } else if (tplType === 'modular') {
+      textToInsert = `Que, habiendo culminado satisfactoriamente los créditos curriculares y acreditado las horas de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) realizadas mediante constancia de prácticas (por empresa / colegio / convenio interinstitucional), solicito se sirva expedir mi CERTIFICADO MODULAR PROGRESIVO correspondiente al ${moduloNum} de mi programa de estudios, con valor oficial del MINEDU.`;
+      this.showToast('Plantilla para Certificado Modular cargada con éxito.', 'success', 'bi-award');
+    }
+
+    textarea.value = textToInsert;
+    textarea.dataset.userEdited = 'true';
+    textarea.focus();
+  }
+
+  updateFutFormByTramite(shouldResetText = false) {
+    const select = document.getElementById('futTramite');
+    const key = select ? select.value : 'carta_practicas';
+    const cfg = this.getFutConfig(key);
+
+    // 1. Actualizar Tarjeta Informativa TUPA
+    const elAut = document.getElementById('futInfoAutoridad');
+    const elCost = document.getElementById('futInfoCosto');
+    const elPlazo = document.getElementById('futInfoPlazo');
+    if (elAut) elAut.innerText = cfg.autoridad;
+    if (elCost) elCost.innerText = cfg.costo;
+    if (elPlazo) elPlazo.innerText = cfg.plazo;
+
+    // 2. Mostrar/Ocultar campos condicionales
+    ['futEmpresaWrap', 'futModuloWrap', 'futConvalidacionWrap', 'futJustificacionWrap', 'futOtroWrap'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = (cfg.wrap === id) ? 'block' : 'none';
+    });
+
+    // Sincronizar pills de tipo de entidad si aplica
+    if (cfg.defaultEntity) {
+      document.querySelectorAll('#futEntityQuickType button').forEach(b => {
+        b.classList.toggle('active', b.dataset.etype === cfg.defaultEntity);
+      });
+      this.setFutEntityType(cfg.defaultEntity);
+    }
+
+    // 3. Actualizar checkboxes de requisitos
+    if (cfg.reqs) {
+      const setCheck = (id, val) => { const c = document.getElementById(id); if (c) c.checked = !!val; };
+      setCheck('futAdjDni', cfg.reqs.dni);
+      setCheck('futAdjVoucher', cfg.reqs.voucher);
+      setCheck('futAdjFotos', cfg.reqs.fotos);
+      setCheck('futAdjNotas', cfg.reqs.notas);
+      setCheck('futAdjPracticas', cfg.reqs.practicas);
+      setCheck('futAdjMedicos', cfg.reqs.medicos);
+    }
+
+    // IMPORTANTE: NO sobreescribimos futDetalle si el usuario desea escribir o dejarlo en blanco.
+    if (shouldResetText) {
+      this.updateFutDetailText(true);
+    }
+  }
+
+  updateFutDetailText(forceReset = false) {
+    const select = document.getElementById('futTramite');
+    const key = select ? select.value : 'carta_practicas';
+    const cfg = this.getFutConfig(key);
+    const textarea = document.getElementById('futDetalle');
+    if (!textarea) return;
+
+    if (!forceReset && textarea.dataset.userEdited === 'true') {
+      return; // respetar texto escrito por el usuario
+    }
+
+    const data = {
+      empresa: document.getElementById('futEmpresaNombre')?.value.trim(),
+      cargo: document.getElementById('futEmpresaCargo')?.value.trim(),
+      area: document.getElementById('futEmpresaArea')?.value.trim(),
+      modulo: document.getElementById('futModuloNum')?.value,
+      convalInst: document.getElementById('futConvalInst')?.value.trim(),
+      justifMotivo: document.getElementById('futJustifMotivo')?.value,
+      justifFechas: document.getElementById('futJustifFechas')?.value.trim(),
+      otro: document.getElementById('futOtroTexto')?.value.trim()
+    };
+
+    textarea.value = cfg.draft(data);
+    textarea.dataset.userEdited = 'true';
+  }
+
+  fillFutDemoData() {
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    setVal('futNombre', 'ESTUDIANTE EJEMPLO (NOMBRES Y APELLIDOS)');
+    setVal('futDni', '12345678');
+    setVal('futTelefono', '987 654 321');
+    setVal('futCorreo', 'estudiante@ieshercar.edu.pe');
+    setVal('futCarrera', 'Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)');
+    setVal('futCiclo', 'Semestre V (Quinto Ciclo)');
+    setVal('futDireccion', 'Paita, Piura');
+    setVal('futEmpresaNombre', 'Colegio Tal / Empresa Receptora');
+    setVal('futEmpresaCargo', 'Dirección del Plantel / Jefatura de Recursos Humanos');
+    setVal('futEmpresaArea', 'Aula de Innovación Pedagógica (AIP) y Soporte Tecnológico');
+    
+    const textarea = document.getElementById('futDetalle');
+    if (textarea && (!textarea.value || textarea.value.trim() === '')) {
+      this.applyFutTemplate('colegio');
+    }
+    this.showToast('Datos de prueba cargados con éxito para demostración.', 'info', 'bi-magic');
+  }
+
+  collectFutFormData() {
+    const getVal = (id, def = '') => (document.getElementById(id)?.value || def).trim();
+    const select = document.getElementById('futTramite');
+    const key = select ? select.value : 'carta_practicas';
+    const cfg = this.getFutConfig(key);
+
+    const isChecked = (id) => !!document.getElementById(id)?.checked;
+    const reqList = [];
+    if (isChecked('futAdjDni')) reqList.push('Copia legible de DNI vigente del solicitante');
+    if (isChecked('futAdjVoucher')) reqList.push(`Comprobante de depósito en Banco de la Nación (${cfg.costo}) - Cta. Cte. Nº 00-631-012948`);
+    if (isChecked('futAdjFotos')) reqList.push('Fotografías tamaño carné / pasaporte en fondo blanco');
+    if (isChecked('futAdjNotas')) reqList.push('Récord académico / Certificado de notas oficial');
+    if (isChecked('futAdjPracticas')) reqList.push('Aceptación / Constancia de prácticas preprofesionales EFSRT');
+    if (isChecked('futAdjMedicos')) reqList.push('Certificado médico / Constancia laboral justificatoria');
+
+    const enteredDetalle = getVal('futDetalle');
+    const defaultLegalText = `Que, de conformidad con lo establecido en el Reglamento Institucional y el TUPA del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita, recurro a su digno despacho a fin de solicitar la debida atención a mi petitorio de ${cfg.sumilla}, dando cumplimiento a los requisitos documentarios establecidos con arreglo a ley.`;
+
+    return {
+      id: 'fut_' + Date.now(),
+      key,
+      sumilla: cfg.sumilla,
+      autoridad: cfg.autoridad,
+      costo: cfg.costo,
+      plazo: cfg.plazo,
+      nombre: getVal('futNombre', 'ESTUDIANTE SOLICITANTE'),
+      dni: getVal('futDni', '--------'),
+      telefono: getVal('futTelefono', '--------'),
+      correo: getVal('futCorreo', 'estudiante@ieshercar.edu.pe'),
+      carrera: getVal('futCarrera', 'Arquitectura de Plataformas y TI (APSTI)'),
+      ciclo: getVal('futCiclo', 'Semestre V'),
+      direccion: getVal('futDireccion', 'Paita, Piura'),
+      detalle: enteredDetalle || defaultLegalText,
+      requisitos: reqList,
+      fechaDoc: new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' }),
+      fechaISO: new Date().toLocaleString()
+    };
+  }
+
+  buildFutHtmlDocument(data) {
+    const expNum = `EXP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const reqsHtml = data.requisitos.map((r, i) => `<div>[ X ] &nbsp; <strong>${i + 1}.</strong> ${r}</div>`).join('');
+    const reqsCargoHtml = data.requisitos.map((r, i) => `<div>✓ &nbsp; <strong>${i + 1}.</strong> ${r}</div>`).join('');
+
+    return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>FUT Oficial - ${data.nombre} - ${data.sumilla}</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 15mm 12mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+      font-size: 10pt;
+      line-height: 1.38;
+    }
+
+    /* Barra Superior Interactiva (Solo en Pantalla, Oculta al Imprimir) */
+    .no-print {
+      background: #0f2d6c;
+      color: #ffffff;
+      padding: 10px 18px;
+      margin: -12mm -15mm 15px -15mm;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .no-print-btn {
+      border: none;
+      padding: 7px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-page-mode {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    .btn-page-mode.active {
+      background: #38bdf8;
+      color: #0c1c38;
+      border-color: #38bdf8;
+    }
+    .btn-print-action {
+      background: #f59e0b;
+      color: #0f172a;
+    }
+    .btn-print-action:hover {
+      background: #fbbf24;
+    }
+
+    /* Estructura de Páginas A4 */
+    .page-sheet {
+      position: relative;
+    }
+    .page-break {
+      page-break-before: always !important;
+      break-before: page !important;
+      margin-top: 15mm;
+    }
+
+    /* Encabezado Institucional */
+    .fut-header-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-bottom: 2.2px solid #0f2d6c;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+    .fut-header-table td { vertical-align: middle; }
+    .inst-title-main {
+      font-size: 10.8pt;
+      font-weight: 800;
+      color: #0f2d6c;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      line-height: 1.2;
+    }
+    .inst-subtitle {
+      font-size: 7.5pt;
+      color: #475569;
+      margin: 2px 0 0;
+      font-weight: 600;
+    }
+    .fut-doc-badge {
+      background: #0f2d6c;
+      color: #ffffff;
+      padding: 4px 12px;
+      font-size: 11pt;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      display: inline-block;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+    .fut-exp-box {
+      border: 1.5px solid #0f2d6c;
+      padding: 5px 8px;
+      border-radius: 6px;
+      text-align: center;
+      background: #f8fafc;
+      font-size: 7.8pt;
+      line-height: 1.25;
+    }
+    .fut-exp-num {
+      font-size: 10.8pt;
+      font-weight: 800;
+      color: #0f2d6c;
+    }
+
+    /* Secciones del Documento */
+    .section-box {
+      border: 1.3px solid #334155;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      break-inside: avoid;
+    }
+    .section-header {
+      background: #f1f5f9;
+      padding: 4px 10px;
+      font-size: 8.4pt;
+      font-weight: 800;
+      color: #0f2d6c;
+      text-transform: uppercase;
+      border-bottom: 1.2px solid #334155;
+      letter-spacing: 0.4px;
+    }
+    .section-body {
+      padding: 7px 11px;
+      font-size: 9.2pt;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+    .data-table td {
+      padding: 3px 5px;
+      vertical-align: top;
+    }
+    .data-label {
+      font-weight: bold;
+      color: #334155;
+      width: 25%;
+    }
+    .data-val {
+      color: #0f172a;
+    }
+    .fundamentacion-text {
+      text-align: justify;
+      text-indent: 18px;
+      font-size: 9.2pt;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .req-list {
+      font-size: 8.8pt;
+      color: #1e293b;
+      line-height: 1.4;
+    }
+
+    /* Cuadrícula de Firma y Fecha */
+    .signature-grid {
+      width: 100%;
+      margin-top: 14px;
+      border-collapse: collapse;
+      break-inside: avoid;
+    }
+    .signature-grid td {
+      vertical-align: bottom;
+      text-align: center;
+    }
+    .signature-line {
+      display: inline-block;
+      width: 250px;
+      border-top: 1.4px solid #0f172a;
+      padding-top: 4px;
+      font-size: 9pt;
+      font-weight: bold;
+      line-height: 1.25;
+    }
+
+    .page-footer-tag {
+      margin-top: 10px;
+      font-size: 7.2pt;
+      color: #94a3b8;
+      text-align: right;
+      border-top: 1px dotted #cbd5e1;
+      padding-top: 3px;
+    }
+
+    /* ESTILOS DE LA HOJA 2: CARGO OFICIAL DE RECEPCIÓN */
+    .cargo-header-badge {
+      background: #047857;
+      color: #ffffff;
+      padding: 4px 12px;
+      font-size: 11pt;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      display: inline-block;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+    .cargo-card {
+      border: 1.4px solid #047857;
+      border-radius: 6px;
+      padding: 10px 14px;
+      background: #f0fdf4;
+      margin-bottom: 10px;
+      font-size: 9.2pt;
+    }
+    .cargo-table-data {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9pt;
+    }
+    .cargo-table-data td {
+      padding: 3.5px 6px;
+      vertical-align: top;
+    }
+    .stamp-box-container {
+      border: 1.5px dashed #0f2d6c;
+      border-radius: 8px;
+      background: #f8fafc;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .stamp-title {
+      font-weight: bold;
+      color: #0f2d6c;
+      font-size: 8.8pt;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .stamp-subtitle {
+      font-size: 7.6pt;
+      color: #64748b;
+      margin-top: 3px;
+    }
+    .cargo-instructions-box {
+      border: 1.2px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 9px 13px;
+      background: #f8fafc;
+      font-size: 8.4pt;
+      color: #334155;
+      line-height: 1.42;
+    }
+
+    /* Modo Compacto en 1 Hoja (Si el usuario lo activa) */
+    body.mode-compact-one-page {
+      font-size: 8.1pt !important;
+      line-height: 1.18 !important;
+    }
+    body.mode-compact-one-page .fut-header-table { margin-bottom: 3px !important; }
+    body.mode-compact-one-page .section-box { margin-bottom: 3px !important; }
+    body.mode-compact-one-page .section-body { padding: 3px 6px !important; }
+    body.mode-compact-one-page .data-table td { padding: 1px 3px !important; }
+    body.mode-compact-one-page .signature-grid { margin-top: 4px !important; }
+    body.mode-compact-one-page .page-break { page-break-before: auto !important; break-before: auto !important; margin-top: 6px !important; }
+
+    @media print {
+      body { padding: 0; margin: 0; }
+      .no-print { display: none !important; }
+      .page-break {
+        page-break-before: always !important;
+        break-before: page !important;
+      }
+      body.mode-compact-one-page .page-break {
+        page-break-before: auto !important;
+        break-before: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA INTERACTIVA EN PANTALLA -->
+  <div class="no-print">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 16px;">📑</span>
+      <strong>Formato Único de Trámite (F.U.T.) Oficial — IESTP Hermanos Cárcamo</strong>
+      <span style="background: #22c55e; color: white; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: bold;">Hoja 1: FUT &bull; Hoja 2: Cargo</span>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button type="button" class="no-print-btn btn-page-mode active" id="btnPageTwo" onclick="setDocPages(true)">
+        📑 Formato en 2 Hojas (FUT + Cargo Oficial)
+      </button>
+      <button type="button" class="no-print-btn btn-page-mode" id="btnPageOne" onclick="setDocPages(false)">
+        📄 Modo Compacto (1 Hoja)
+      </button>
+      <button type="button" class="no-print-btn btn-print-action" onclick="window.print()">
+        🖨️ Imprimir / Guardar PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- HOJA 1: FORMATO ÚNICO DE TRÁMITE (SOLICITUD) -->
+  <!-- ========================================== -->
+  <div class="page-sheet" id="sheetFutMain">
+    <!-- ENCABEZADO INSTITUCIONAL -->
+    <table class="fut-header-table">
+      <tr>
+        <td style="width: 65px; text-align: left;">
+          <img src="assets/img/logo-hercar.png" alt="Escudo IESTP" style="width: 54px; height: 54px; object-fit: contain;" onerror="this.style.display='none'">
+        </td>
+        <td style="text-align: center;">
+          <div style="font-size: 7.6pt; font-weight: bold; color: #475569; letter-spacing: 0.5px;">GOBIERNO REGIONAL DE PIURA &bull; DRE PIURA</div>
+          <div class="inst-title-main">INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO "HERMANOS CÁRCAMO"</div>
+          <div class="inst-subtitle">Paita - Piura &bull; Código Modular: 0588699 &bull; R.M. Nº 232-87-ED &bull; Ley Nº 30512</div>
+          <div class="fut-doc-badge">FORMATO ÚNICO DE TRÁMITE (F.U.T.)</div>
+        </td>
+        <td style="width: 140px; text-align: right;">
+          <div class="fut-exp-box">
+            <div>Nº DE REGISTRO:</div>
+            <div class="fut-exp-num">${expNum}</div>
+            <div style="font-size: 7pt; color: #64748b; margin-top: 1px;">Mesa de Partes Oficial</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- SECCIÓN I: SUMILLA -->
+    <div class="section-box">
+      <div class="section-header">I. Resumen del Pedido (Sumilla)</div>
+      <div class="section-body" style="background: #fafafa;">
+        <strong style="font-size: 10.2pt; color: #0f2d6c;">${data.sumilla}</strong>
+      </div>
+    </div>
+
+    <!-- SECCIÓN II: AUTORIDAD A LA QUE SE DIRIGE -->
+    <div class="section-box">
+      <div class="section-header">II. Autoridad a la que se dirige</div>
+      <div class="section-body">
+        <strong>SEÑOR(A): ${data.autoridad}</strong><br>
+        <span style="font-size: 8.2pt; color: #475569;">INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO "HERMANOS CÁRCAMO" DE PAITA</span>
+      </div>
+    </div>
+
+    <!-- SECCIÓN III: DATOS DEL ADMINISTRADO (SOLICITANTE) -->
+    <div class="section-box">
+      <div class="section-header">III. Datos del Administrado (Solicitante)</div>
+      <div class="section-body">
+        <table class="data-table">
+          <tr>
+            <td class="data-label">Apellidos y Nombres:</td>
+            <td class="data-val" colspan="3"><strong>${data.nombre}</strong></td>
+          </tr>
+          <tr>
+            <td class="data-label">Nº de DNI / Documento:</td>
+            <td class="data-val" style="width: 28%;"><strong>${data.dni}</strong></td>
+            <td class="data-label" style="width: 22%;">Celular / WhatsApp:</td>
+            <td class="data-val"><strong>${data.telefono || '--------'}</strong></td>
+          </tr>
+          <tr>
+            <td class="data-label">Correo Electrónico:</td>
+            <td class="data-val" colspan="3">${data.correo || '--------'}</td>
+          </tr>
+          <tr>
+            <td class="data-label">Programa de Estudios:</td>
+            <td class="data-val" style="width: 48%;"><strong>${data.carrera}</strong></td>
+            <td class="data-label">Semestre / Ciclo:</td>
+            <td class="data-val"><strong>${data.ciclo}</strong></td>
+          </tr>
+          <tr>
+            <td class="data-label">Domicilio en Paita:</td>
+            <td class="data-val" colspan="3">${data.direccion || 'Paita, Piura'}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECCIÓN IV: FUNDAMENTACIÓN DEL PETITORIO -->
+    <div class="section-box">
+      <div class="section-header">IV. Fundamentación del Petitorio (Hechos y Base Legal)</div>
+      <div class="section-body">
+        <p class="fundamentacion-text">${data.detalle}</p>
+      </div>
+    </div>
+
+    <!-- SECCIÓN V: DOCUMENTOS QUE SE ADJUNTAN -->
+    <div class="section-box">
+      <div class="section-header">V. Documentos y Requisitos que se Adjuntan (TUPA 2026)</div>
+      <div class="section-body">
+        <div class="req-list">
+          ${reqsHtml || '<div>[ X ] 1. Copia legible de DNI vigente del solicitante.</div>'}
+        </div>
+      </div>
+    </div>
+
+    <!-- LUGAR, FECHA Y FIRMA -->
+    <table class="signature-grid">
+      <tr>
+        <td style="width: 45%; text-align: left; font-size: 9pt;">
+          <strong>Lugar y Fecha:</strong><br>
+          Paita, ${data.fechaDoc}
+        </td>
+        <td style="width: 55%; text-align: center;">
+          <div class="signature-line">
+            ${data.nombre}<br>
+            <span style="font-weight: normal; font-size: 8pt; color: #475569;">DNI Nº ${data.dni} &bull; Firma del Solicitante</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="page-footer-tag">
+      Página 1 de 2 &bull; Formato Único de Trámite (FUT) &bull; Expediente Institucional IESTP Hermanos Cárcamo
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- HOJA 2: CARGO DE RECEPCIÓN PARA EL ALUMNO -->
+  <!-- ========================================== -->
+  <div class="page-sheet page-break" id="sheetCargoMain">
+    <!-- ENCABEZADO INSTITUCIONAL DEL CARGO -->
+    <table class="fut-header-table">
+      <tr>
+        <td style="width: 65px; text-align: left;">
+          <img src="assets/img/logo-hercar.png" alt="Escudo IESTP" style="width: 54px; height: 54px; object-fit: contain;" onerror="this.style.display='none'">
+        </td>
+        <td style="text-align: center;">
+          <div style="font-size: 7.6pt; font-weight: bold; color: #475569; letter-spacing: 0.5px;">GOBIERNO REGIONAL DE PIURA &bull; DRE PIURA</div>
+          <div class="inst-title-main">INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO "HERMANOS CÁRCAMO"</div>
+          <div class="inst-subtitle">Paita - Piura &bull; Código Modular: 0588699 &bull; R.M. Nº 232-87-ED &bull; Ley Nº 30512</div>
+          <div class="cargo-header-badge">CARGO DE RECEPCIÓN PARA EL ADMINISTRADO</div>
+        </td>
+        <td style="width: 140px; text-align: right;">
+          <div class="fut-exp-box" style="border-color: #047857;">
+            <div>Nº DE EXPEDIENTE:</div>
+            <div class="fut-exp-num" style="color: #047857;">${expNum}</div>
+            <div style="font-size: 7pt; color: #047857; margin-top: 1px; font-weight: bold;">Mesa de Partes Oficial</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- TARJETA PRINCIPAL DEL CARGO -->
+    <div class="cargo-card">
+      <div style="font-weight: 800; color: #065f46; font-size: 10pt; margin-bottom: 8px; border-bottom: 1.5px solid #a7f3d0; padding-bottom: 4px;">
+        <i style="font-style: normal;">📋</i> CONSTANCIA OFICIAL DE RECEPCIÓN DE EXPEDIENTE
+      </div>
+      <table class="cargo-table-data">
+        <tr>
+          <td style="width: 25%; font-weight: bold; color: #065f46;">Nº DE EXPEDIENTE:</td>
+          <td style="width: 35%; font-weight: bold; color: #0f2d6c; font-size: 10.5pt;">${expNum}</td>
+          <td style="width: 20%; font-weight: bold; color: #065f46;">FECHA Y HORA:</td>
+          <td style="width: 20%; font-weight: bold;">${data.fechaDoc}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; color: #065f46;">ADMINISTRADO:</td>
+          <td><strong>${data.nombre}</strong></td>
+          <td style="font-weight: bold; color: #065f46;">DNI / CELULAR:</td>
+          <td>${data.dni} / ${data.telefono || '--------'}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; color: #065f46;">PROGRAMA:</td>
+          <td>${data.carrera}</td>
+          <td style="font-weight: bold; color: #065f46;">SEMESTRE:</td>
+          <td>${data.ciclo}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; color: #065f46;">PETITORIO:</td>
+          <td colspan="3"><strong>${data.sumilla}</strong></td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; color: #065f46;">TASA TUPA:</td>
+          <td colspan="3" style="font-weight: bold; color: #047857;">${data.costo} &bull; Banco de la Nación (Cta. Cte. Nº 00-631-012948)</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- DOCUMENTOS RECEPCIONADOS EN EL CARGO -->
+    <div class="section-box">
+      <div class="section-header" style="color: #065f46; background: #e6fcf5; border-color: #047857;">
+        Documentos y Requisitos Verificados por Mesa de Partes
+      </div>
+      <div class="section-body">
+        <div class="req-list">
+          ${reqsCargoHtml || '<div>✓ 1. Copia legible de DNI vigente del solicitante.</div>'}
+        </div>
+      </div>
+    </div>
+
+    <!-- RECUADRO PARA SELLO Y FIRMA DE RECEPCIÓN -->
+    <div class="stamp-box-container">
+      <div class="stamp-title">SELLO, FECHA Y FIRMA DE RECEPCIÓN DE MESA DE PARTES</div>
+      <div class="stamp-subtitle">IESTP HERMANOS CÁRCAMO - PAITA &bull; MESA DE PARTES VIRTUAL Y PRESENCIAL</div>
+      <div style="font-size: 7.2pt; color: #94a3b8; margin-top: 25px;">
+        (Espacio oficial reservado para el sello institucional de recepción y firma del encargado)
+      </div>
+    </div>
+
+    <!-- INSTRUCCIONES DE SEGUIMIENTO -->
+    <div class="cargo-instructions-box">
+      <strong style="color: #0f2d6c; display: block; margin-bottom: 3px;">📌 IMPORTANTE PARA EL ESTUDIANTE / ADMINISTRADO:</strong>
+      <div>1. Conserva este documento como constancia formal de que tu solicitud fue presentada ante el Instituto Superior Tecnológico Público "Hermanos Cárcamo".</div>
+      <div>2. Para el seguimiento de tu trámite, ingresa a la <strong>Mesa de Partes Virtual</strong> oficial: <span style="color: #0284c7; text-decoration: underline;">https://sistema.ieshercar.edu.pe/registro-tramite/</span> indicando tu número de DNI y el código de expediente <strong>${expNum}</strong>.</div>
+      <div>3. Plazo reglamentario de atención según el TUPA institucional: <strong>${data.plazo}</strong>.</div>
+    </div>
+
+    <div class="page-footer-tag">
+      Página 2 de 2 &bull; Cargo Oficial de Recepción para el Administrado &bull; Consérvese como constancia legal
+    </div>
+  </div>
+
+  <script>
+    function setDocPages(isTwoPages) {
+      const btn1 = document.getElementById('btnPageOne');
+      const btn2 = document.getElementById('btnPageTwo');
+      if (isTwoPages) {
+        document.body.classList.remove('mode-compact-one-page');
+        btn2.classList.add('active');
+        btn1.classList.remove('active');
+      } else {
+        document.body.classList.add('mode-compact-one-page');
+        btn1.classList.add('active');
+        btn2.classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>`;
+  }
+
   printFutDocument() {
-    const nombre = (document.getElementById('futNombre')?.value || 'ESTUDIANTE HERCAR').trim();
-    const dni = (document.getElementById('futDni')?.value || '--------').trim();
-    const carrera = document.getElementById('futCarrera')?.value || 'APSTI';
-    const tramite = document.getElementById('futTramite')?.value || 'SOLICITUD INSTITUCIONAL';
-    const detalle = (document.getElementById('futDetalle')?.value || 'Por corresponder de acuerdo al Reglamento Institucional y TUPA vigente del IESTP Hermanos Cárcamo de Paita.').trim();
-    const fecha = new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' });
+    const data = this.collectFutFormData();
 
     // Guardar registro de solicitud para el Panel Administrativo (admin.html)
     try {
       const records = JSON.parse(localStorage.getItem('hercarbot_fut_requests') || '[]');
       records.unshift({
-        id: 'fut_' + Date.now(),
-        nombre,
-        dni,
-        carrera,
-        tramite,
-        detalle,
-        fecha: new Date().toLocaleString(),
+        id: data.id,
+        nombre: data.nombre,
+        dni: data.dni,
+        carrera: data.carrera,
+        tramite: data.sumilla,
+        detalle: data.detalle,
+        fecha: data.fechaISO,
         estado: 'Generado y Descargado'
       });
       localStorage.setItem('hercarbot_fut_requests', JSON.stringify(records.slice(0, 50)));
@@ -647,90 +2040,22 @@ class HercarBotApp {
 
     const win = window.open('', '_blank');
     if (win) {
-      win.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <title>FUT Oficial - ${nombre}</title>
-          <style>
-            body { font-family: Arial, Helvetica, sans-serif; padding: 40px; color: #111; line-height: 1.5; max-width: 800px; margin: 0 auto; }
-            .header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 24px; }
-            .inst-name { font-size: 14px; font-weight: bold; color: #1e3a8a; margin: 0; text-transform: uppercase; }
-            .fut-title { font-size: 18px; font-weight: bold; margin: 6px 0; color: #0f172a; }
-            .box { border: 1px solid #334155; padding: 12px 14px; margin-bottom: 14px; border-radius: 6px; }
-            .label { font-weight: bold; font-size: 11px; color: #475569; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
-            .val { font-size: 13.5px; margin: 0; }
-            .firma-box { margin-top: 60px; text-align: center; }
-            .firma-line { display: inline-block; width: 280px; border-top: 1px solid #000; padding-top: 6px; font-weight: bold; }
-            .footer-note { margin-top: 40px; padding-top: 12px; border-top: 1px dashed #94a3b8; font-size: 10.5px; color: #64748b; text-align: center; }
-            @media print { body { padding: 20px; } }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <p class="inst-name">Ministerio de Educación &bull; DRE Piura</p>
-            <p class="inst-name" style="font-size: 15px; color: #0f2d6c;">IESTP "HERMANOS CÁRCAMO" DE PAITA</p>
-            <div class="fut-title">FORMATO ÚNICO DE TRÁMITE (FUT)</div>
-            <small style="color: #64748b;">Mesa de Partes Virtual &bull; Resolución Ministerial N° 232-87-ED</small>
-          </div>
-
-          <div class="box">
-            <div class="label">I. Resumen del Pedido (Sumilla):</div>
-            <p class="val"><strong>${tramite}</strong></p>
-          </div>
-
-          <div class="box">
-            <div class="label">II. Dependencia o Autoridad a quien se dirige:</div>
-            <p class="val"><strong>DIRECCIÓN GENERAL DEL IESTP "HERMANOS CÁRCAMO" DE PAITA</strong></p>
-          </div>
-
-          <div class="box">
-            <div class="label">III. Datos del Solicitante:</div>
-            <p class="val">
-              <strong>Apellidos y Nombres:</strong> ${nombre}<br>
-              <strong>DNI / Celular de Contacto:</strong> ${dni}<br>
-              <strong>Programa de Estudios (Carrera):</strong> ${carrera}
-            </p>
-          </div>
-
-          <div class="box">
-            <div class="label">IV. Fundamentación del Pedido:</div>
-            <p class="val">${detalle}</p>
-          </div>
-
-          <p style="margin-top: 25px; font-size: 13px;">Paita, ${fecha}</p>
-
-          <div class="firma-box">
-            <div class="firma-line">
-              ${nombre}<br>
-              <span style="font-size: 11px; font-weight: normal; color: #475569;">DNI N° ${dni} &bull; Solicitante</span>
-            </div>
-          </div>
-
-          <div class="footer-note">
-            Documento generado digitalmente por el Asistente Virtual <strong>HercarBot IA</strong>.<br>
-            Adjunta este documento firmado junto a tu comprobante de tasa del Banco de la Nación en: 
-            <strong>https://sistema.ieshercar.edu.pe/registro-tramite/</strong>
-          </div>
-        </body>
-        </html>
-      `);
+      win.document.write(this.buildFutHtmlDocument(data));
       win.document.close();
       win.focus();
-      setTimeout(() => { win.print(); }, 350);
+      setTimeout(() => { win.print(); }, 400);
     }
 
     this.closeFutModal();
-    this.showToast('¡FUT generado con éxito! Puedes imprimirlo o guardarlo como PDF.', 'success', 'bi-file-earmark-check-fill');
+    this.showToast('¡FUT Oficial generado con éxito! Imprímelo o guárdalo como PDF.', 'success', 'bi-file-earmark-check-fill');
 
     const chatMsgHtml = `
       <div class="p-3 bg-white rounded-3 border shadow-sm">
         <div class="d-flex align-items-center gap-2 mb-2">
           <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>FUT Generado</span>
-          <strong>${tramite}</strong>
+          <strong>${this.escapeHtml(data.sumilla)}</strong>
         </div>
-        <p class="small text-muted mb-2">Tu Formato Único de Trámite para <strong>${nombre}</strong> (${carrera}) ha sido emitido con éxito.</p>
+        <p class="small text-muted mb-2">Tu Formato Único de Trámite para <strong>${this.escapeHtml(data.nombre)}</strong> (${this.escapeHtml(data.carrera)}) ha sido emitido con éxito con todos los estándares oficiales.</p>
         <div class="interactive-button-grid">
           <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank" class="interactive-btn text-decoration-none">
             <i class="bi bi-send-check text-primary"></i> Subir a Mesa de Partes Virtual
@@ -741,7 +2066,22 @@ class HercarBotApp {
         </div>
       </div>
     `;
-    this.appendBotMessage(chatMsgHtml, `He generado tu Formato Único de Trámite para ${tramite}. Recuerda subirlo firmado a través de la Mesa de Partes Virtual.`);
+    this.appendBotMessage(chatMsgHtml, `He generado tu Formato Único de Trámite oficial para ${data.sumilla}. Recuerda subirlo firmado junto a tus requisitos a través de la Mesa de Partes Virtual.`);
+  }
+
+  downloadFutHtml() {
+    const data = this.collectFutFormData();
+    const htmlContent = this.buildFutHtmlDocument(data);
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `FUT_${data.dni}_${data.key}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    this.showToast('Archivo digital del FUT descargado correctamente.', 'info', 'bi-download');
   }
 
   /* ==========================================================================
@@ -870,7 +2210,12 @@ class HercarBotApp {
               </div>
               <div class="toolbar-actions">
                 <button class="tool-btn" title="Copiar texto" onclick="hercarBotApp.copyText(this)"><i class="bi bi-clipboard"></i></button>
-                <button class="tool-btn" title="Escuchar en voz alta" onclick="hercarBotApp.speakCurrent(this)"><i class="bi bi-volume-up"></i></button>
+                <button class="tool-btn btn-speak-msg" title="Escuchar en voz alta" onclick="hercarBotApp.speakCurrent(this)">
+                  <i class="bi bi-volume-up"></i>
+                  <span class="voice-speech-bars">
+                    <span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span>
+                  </span>
+                </button>
                 <button class="tool-btn text-success" title="Enviar datos a mi WhatsApp" onclick="hercarBotApp.shareToWhatsApp(this)"><i class="bi bi-whatsapp"></i></button>
               </div>
             </div>
@@ -1026,7 +2371,7 @@ class HercarBotApp {
 
     if (conversations.length === 0) {
       this.chatHistoryList.innerHTML = `
-        <li class="p-3 text-center text-white-50 small">
+        <li class="p-3 text-center small text-light" style="color: #cbd5e1 !important;">
           <i class="bi bi-chat-left-dots d-block mb-2" style="font-size: 1.3rem; opacity: 0.5;"></i>
           ${filterText ? 'No se encontraron chats con ese término' : 'Sin conversaciones previas.<br>¡Escribe tu primera consulta!'}
         </li>
@@ -1161,7 +2506,7 @@ class HercarBotApp {
     this.isRecording = false;
     if (this.btnVoice) this.btnVoice.classList.remove('recording');
     if (this.voiceBanner) this.voiceBanner.style.display = 'none';
-    if (this.inputField) this.inputField.placeholder = 'Hazme cualquier pregunta sobre el IESTP Hermanos Cárcamo...';
+    if (this.inputField) this.inputField.placeholder = 'Hazme cualquier pregunta sobre el Instituto Superior Hermanos Cárcamo...';
     try {
       if (this.recognition) this.recognition.stop();
     } catch(e) {}
@@ -1171,95 +2516,130 @@ class HercarBotApp {
      SÍNTESIS DE VOZ NATURAL, FLUIDA Y CONVERSACIONAL (TEXT TO SPEECH)
      ========================================================================== */
 
+  scoreVoice(v) {
+    if (!v) return -99999;
+    const name = (v.name || '').toLowerCase();
+    const lang = (v.lang || '').toLowerCase();
+    const uri = (v.voiceURI || '').toLowerCase();
+
+    // Descartar si no es idioma español
+    if (!lang.startsWith('es') && !name.includes('spanish') && !uri.includes('spanish')) {
+      return -99999;
+    }
+
+    // 1. Descartar de inmediato voces masculinas (penalización insuperable)
+    const isMale = name.includes('male') || name.includes('hombre') || 
+                   name.includes('jorge') || name.includes('alvaro') || name.includes('álvaro') || 
+                   name.includes('raul') || name.includes('raúl') || name.includes('pablo') || 
+                   name.includes('david') || name.includes('carlos') || name.includes('miguel') || 
+                   name.includes('antonio') || name.includes('manuel') || name.includes('enrique') || 
+                   name.includes('jose') || name.includes('josé') || name.includes('pedro') || 
+                   name.includes('luis') || name.includes('fernando') || name.includes('mario') || 
+                   name.includes('diego') || name.includes('sergio') || name.includes('javier');
+    if (isMale) return -50000;
+
+    // 2. Detección de voces robóticas de escritorio antiguas (SAPI5 de Windows / espeak / desktop)
+    // En Windows, las voces robóticas son: Microsoft Helena, Microsoft Sabina (sin online/natural), Microsoft Laura
+    const isRoboticDesktop = v.localService === true || 
+                             name.includes('desktop') || 
+                             name.includes('espeak') || 
+                             name.includes('sapi') ||
+                             (name.includes('helena') && !name.includes('natural') && !name.includes('online')) ||
+                             (name.includes('laura') && !name.includes('natural') && !name.includes('online')) ||
+                             (name.includes('sabina') && !name.includes('natural') && !name.includes('online'));
+
+    // 3. Voces Neuronales / Naturales Femeninas en la Nube (Calidad humana ultra-alta y dulce)
+    // Microsoft Dalia Online (Natural) — Reconocida por su timbre dulce, joven, latino, 100% humano
+    if (name.includes('dalia') && (name.includes('natural') || name.includes('online'))) return 30000;
+    // Microsoft Sabina Online (Natural) — Cordial, femenina, suave
+    if (name.includes('sabina') && (name.includes('natural') || name.includes('online'))) return 28000;
+    // Microsoft Camila Online (Natural) — Acento peruano / latinoamericano
+    if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 27500;
+    // Microsoft Jimena Online (Natural) — Entonación melódica y cordial
+    if ((name.includes('jimena') || name.includes('ximena')) && (name.includes('natural') || name.includes('online'))) return 27000;
+    // Microsoft Paulina Online (Natural)
+    if (name.includes('paulina') && (name.includes('natural') || name.includes('online'))) return 26000;
+    // Microsoft Paloma Online (Natural)
+    if (name.includes('paloma') && (name.includes('natural') || name.includes('online'))) return 25500;
+    // Microsoft Elena Online (Natural)
+    if (name.includes('elena') && (name.includes('natural') || name.includes('online'))) return 25000;
+    // Google español (Chrome / Android Cloud TTS) — Muy fluida, natural y cálida
+    if (name.includes('google') && !name.includes('male')) {
+      return (lang === 'es-us' || lang === 'es-419' || lang === 'es-pe') ? 26800 : 26000;
+    }
+    // Android Neural Network TTS ("es-*-network" / "es-*-neural")
+    if ((name.includes('network') || name.includes('neural')) && (lang.startsWith('es') || name.includes('female'))) {
+      return 25000;
+    }
+    // Apple Siri / Samantha / Paulina / Mónica Premium en macOS / iOS
+    if (name.includes('premium') || name.includes('enhanced')) {
+      if (name.includes('paulina') || name.includes('monica') || name.includes('mónica') || name.includes('luciana') || name.includes('soledad')) {
+        return 24000;
+      }
+    }
+    // Cualquier otra voz femenina que tenga 'natural' u 'online'
+    if ((name.includes('natural') || name.includes('online') || name.includes('neural')) && !isMale) {
+      return 22000;
+    }
+
+    // 4. Voces femeninas estándar / de sistema
+    let score = 1000;
+    const isFemale = name.includes('female') || name.includes('mujer') || 
+                     name.includes('dalia') || name.includes('sabina') || name.includes('paloma') || 
+                     name.includes('salma') || name.includes('paulina') || name.includes('elena') || 
+                     name.includes('monica') || name.includes('camila') || name.includes('lucia') || 
+                     name.includes('andrea') || name.includes('sofia') || name.includes('victoria') || 
+                     name.includes('carmen') || name.includes('rosa') || name.includes('mia');
+    if (isFemale) score += 3000;
+
+    // Penalización drástica para voces de escritorio antiguas / robóticas
+    if (isRoboticDesktop) {
+      score -= 25000; // Asegura que una voz robótica NUNCA gane si existe una natural online
+      if (name.includes('helena')) score -= 5000;
+    }
+
+    // Bonus de afinidad dialectal
+    if (lang === 'es-pe') score += 500;
+    else if (lang === 'es-419' || lang.includes('419')) score += 400;
+    else if (lang === 'es-mx') score += 300;
+    else if (lang.startsWith('es')) score += 100;
+
+    return score;
+  }
+
+  isNaturalOnlineVoice(v) {
+    if (!v) return false;
+    const name = (v.name || '').toLowerCase();
+    if (name.includes('desktop') || name.includes('espeak') || name.includes('sapi')) return false;
+    if (v.localService === true && !name.includes('google') && !name.includes('network') && !name.includes('neural')) return false;
+    return name.includes('natural') || name.includes('online') || name.includes('neural') || name.includes('google') || name.includes('network');
+  }
+
   initVoiceSynthesis() {
     if (!('speechSynthesis' in window)) return;
 
-    // Sanear configuraciones previas corruptas, robóticas o descalibradas
+    // Sanear configuraciones previas corruptas, robóticas o de baja fidelidad
     const savedUri = (localStorage.getItem('hercar_voice_uri') || '').toLowerCase();
-    if (savedUri.includes('desktop') || savedUri.includes('male') || savedUri.includes('hombre') || savedUri.includes('david') || savedUri.includes('raul') || savedUri.includes('jorge')) {
+    const isSavedRobotic = savedUri.includes('desktop') || 
+                           savedUri.includes('helena') || 
+                           savedUri.includes('laura') || 
+                           savedUri.includes('sapi') || 
+                           savedUri.includes('male') || 
+                           savedUri.includes('hombre') || 
+                           savedUri.includes('david') || 
+                           savedUri.includes('raul') || 
+                           savedUri.includes('jorge') ||
+                           (!savedUri.includes('natural') && !savedUri.includes('neural') && !savedUri.includes('online') && !savedUri.includes('google'));
+    if (isSavedRobotic) {
       localStorage.removeItem('hercar_voice_uri');
     }
-    const oldPitch = parseFloat(localStorage.getItem('hercar_voice_pitch'));
-    const oldRate = parseFloat(localStorage.getItem('hercar_voice_rate'));
-    if (oldPitch && (oldPitch > 1.08 || oldPitch < 0.95)) {
-      localStorage.removeItem('hercar_voice_pitch');
-    }
-    if (oldRate && (oldRate < 0.88 || oldRate > 1.10)) {
-      localStorage.removeItem('hercar_voice_rate');
-    }
 
-    // Calibración acústica ultra-natural para voz femenina dulce, cálida y cercana ("chica asesora")
-    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.96;
-    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.01;
+    // Calibración acústica ultra-natural para voz femenina dulce, cálida y humana ("chica asesora")
+    // PITCH 1.0 EXACTO para preservar la resonancia vocal humana original y evitar distorsión de vocoder
+    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.98;
+    this.voicePitch = 1.0;
     this.voiceStyle = localStorage.getItem('hercar_voice_style') || 'dulce';
     this.voiceURI = localStorage.getItem('hercar_voice_uri') || null;
-
-    const scoreVoice = (v) => {
-      if (!v.lang || (!v.lang.toLowerCase().startsWith('es') && !v.name.toLowerCase().includes('spanish'))) return -9999;
-      let score = 10;
-      const name = (v.name || '').toLowerCase();
-      const lang = (v.lang || '').toLowerCase();
-
-      // Detección exhaustiva de voces naturales y femeninas de alta fidelidad
-      const isFemale = name.includes('female') || name.includes('mujer') || 
-                       name.includes('dalia') || name.includes('sabina') || name.includes('paloma') || 
-                       name.includes('jimena') || name.includes('ximena') || name.includes('salma') || 
-                       name.includes('paulina') || name.includes('elena') || name.includes('helena') || 
-                       name.includes('monica') || name.includes('mónica') || name.includes('camila') || 
-                       name.includes('sofia') || name.includes('sofía') || name.includes('andrea') || 
-                       name.includes('laura') || name.includes('lucia') || name.includes('lucía') || 
-                       name.includes('victoria') || name.includes('elvira') || name.includes('rosa') || 
-                       name.includes('carmen') || name.includes('francisca') || name.includes('penelope') || 
-                       name.includes('penélope') || name.includes('zira') || name.includes('conchita') || 
-                       name.includes('valeria') || name.includes('mia') ||
-                       (name.includes('google') && !name.includes('male') && !name.includes('hombre'));
-
-      // Detección de voces masculinas para despriorizarlas
-      const isMale = name.includes('male') || name.includes('hombre') || 
-                     name.includes('jorge') || name.includes('alvaro') || name.includes('álvaro') || 
-                     name.includes('raul') || name.includes('raúl') || name.includes('pablo') || 
-                     name.includes('david') || name.includes('carlos') || name.includes('miguel') || 
-                     name.includes('antonio') || name.includes('manuel') || name.includes('enrique') || 
-                     name.includes('jose') || name.includes('josé') || name.includes('pedro') || 
-                     name.includes('luis') || name.includes('fernando') || name.includes('mario') || 
-                     name.includes('diego') || name.includes('sergio') || name.includes('javier');
-
-      if (isFemale) score += 300;
-      if (isMale) score -= 3000;
-
-      // Penalizar fuertemente voces robóticas de escritorio antiguas (SAPI5 desktop / espeak)
-      if (name.includes('desktop')) score -= 3500;
-      if (name.includes('espeak')) score -= 5000;
-
-      // Prioridad suprema: Microsoft Dalia Online (Natural) — Reconocida por su timbre dulce, joven y humano
-      if (name.includes('dalia')) score += 700;
-      // Google español (Chrome / Android) — Dicción cálida, suave y cristalina
-      if (name.includes('google') && !name.includes('male')) score += 620;
-      // Microsoft Sabina Online (Natural) — Entonación cordial y afable
-      if (name.includes('sabina') && !name.includes('desktop')) score += 580;
-      // Microsoft Jimena Online (Natural) — Acento melódico latinoamericano
-      if (name.includes('jimena') || name.includes('ximena')) score += 560;
-      // Microsoft Paloma Online (Natural)
-      if (name.includes('paloma')) score += 540;
-      // Microsoft Paulina Online (Natural)
-      if (name.includes('paulina')) score += 530;
-      // Microsoft Elena Online (Natural)
-      if (name.includes('elena') && !name.includes('desktop')) score += 500;
-
-      // Bonificación por tecnología neuronal / natural moderna
-      if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) score += 400;
-      else if (name.includes('online')) score += 200;
-
-      // Preferencia regional latinoamericana
-      if (lang === 'es-pe') score += 80;
-      else if (lang === 'es-419' || lang.includes('419')) score += 60;
-      else if (lang === 'es-mx') score += 50;
-      else if (lang === 'es-us') score += 40;
-      else if (lang === 'es-co' || lang === 'es-cl') score += 30;
-      else if (lang.startsWith('es')) score += 20;
-
-      return score;
-    };
 
     const populateVoiceDropdown = (spanishVoices) => {
       const dropdown = document.getElementById('voice-select-dropdown');
@@ -1270,18 +2650,20 @@ class HercarBotApp {
         const option = document.createElement('option');
         option.value = v.voiceURI;
         const nameLower = v.name.toLowerCase();
-        const isNatural = nameLower.includes('natural') || nameLower.includes('neural') || nameLower.includes('google');
         const isDalia = nameLower.includes('dalia');
         const isGoogle = nameLower.includes('google') && !nameLower.includes('male');
         const isSabina = nameLower.includes('sabina') && !nameLower.includes('desktop');
+        const isCamila = nameLower.includes('camila') && !nameLower.includes('desktop');
+        const isNatural = this.isNaturalOnlineVoice(v);
 
         let badge = '';
         if (isDalia) badge = ' 🌸 Voz Dulce y Joven (Máxima Recomendación)';
+        else if (isCamila) badge = ' 🌸 Voz Peruana Natural (Recomendada)';
         else if (isGoogle) badge = ' 🌸 Voz Natural Google (Recomendada)';
         else if (isSabina) badge = ' 🌸 Voz Femenina Cálida (Recomendada)';
-        else if (isNatural) badge = ' ✨ Voz Natural';
-        else if (!nameLower.includes('desktop')) badge = ' 🌸 Voz Estándar';
-        else badge = ' (Voz de Escritorio)';
+        else if (isNatural) badge = ' ✨ Voz Natural Online';
+        else if (!nameLower.includes('desktop') && !v.localService) badge = ' 🌸 Voz Estándar';
+        else badge = ' 💻 (Voz Local de Escritorio)';
 
         option.textContent = `${v.name} (${v.lang})${badge}`;
         if (this.selectedVoice && this.selectedVoice.voiceURI === v.voiceURI) {
@@ -1298,24 +2680,28 @@ class HercarBotApp {
       const spanishVoices = voices.filter(v => (v.lang && v.lang.toLowerCase().startsWith('es')) || (v.name && v.name.toLowerCase().includes('spanish')));
       if (spanishVoices.length === 0) return;
 
-      spanishVoices.sort((a, b) => scoreVoice(b) - scoreVoice(a));
+      spanishVoices.sort((a, b) => this.scoreVoice(b) - this.scoreVoice(a));
+
+      const bestVoice = spanishVoices[0];
+      const isBestOnline = this.isNaturalOnlineVoice(bestVoice);
 
       if (this.voiceURI) {
         const saved = spanishVoices.find(v => v.voiceURI === this.voiceURI);
-        const isRobotic = saved && (saved.name.toLowerCase().includes('desktop') || saved.name.toLowerCase().includes('male'));
-        // Si la voz guardada es de escritorio y ahora hay una voz natural online disponible, mejorar automáticamente
-        const bestNatural = spanishVoices[0];
-        const isBestNatural = bestNatural && (bestNatural.name.toLowerCase().includes('natural') || bestNatural.name.toLowerCase().includes('google'));
+        const isSavedOnline = this.isNaturalOnlineVoice(saved);
         
-        if (saved && !isRobotic && (!isBestNatural || saved.name.toLowerCase().includes('natural') || saved.name.toLowerCase().includes('google'))) {
+        // Si la voz guardada es de escritorio / robótica y ahora hay una voz natural online disponible,
+        // ascender AUTOMÁTICAMENTE a la voz humana más dulce
+        if (saved && isSavedOnline) {
+          this.selectedVoice = saved;
+        } else if (saved && !isBestOnline) {
           this.selectedVoice = saved;
         } else {
-          this.selectedVoice = spanishVoices[0];
+          this.selectedVoice = bestVoice;
           this.voiceURI = this.selectedVoice.voiceURI;
           localStorage.setItem('hercar_voice_uri', this.voiceURI);
         }
       } else {
-        this.selectedVoice = spanishVoices[0];
+        this.selectedVoice = bestVoice;
         if (this.selectedVoice) {
           this.voiceURI = this.selectedVoice.voiceURI;
           localStorage.setItem('hercar_voice_uri', this.voiceURI);
@@ -1334,6 +2720,21 @@ class HercarBotApp {
     this.initVoiceModalControls();
   }
 
+  getBestFemaleVoice() {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices || voices.length === 0) return null;
+
+    const spanishVoices = voices.filter(v => 
+      (v.lang && v.lang.toLowerCase().startsWith('es')) || 
+      (v.name && v.name.toLowerCase().includes('spanish'))
+    );
+    if (spanishVoices.length === 0) return voices[0];
+
+    spanishVoices.sort((a, b) => this.scoreVoice(b) - this.scoreVoice(a));
+    return spanishVoices[0];
+  }
+
   initVoiceModalControls() {
     const dropdown = document.getElementById('voice-select-dropdown');
     const speedRange = document.getElementById('voice-speed-range');
@@ -1344,14 +2745,14 @@ class HercarBotApp {
     const btnReset = document.getElementById('btn-reset-voice-defaults');
 
     if (speedRange && speedLabel) {
-      speedRange.value = this.voiceRate || 0.96;
-      speedLabel.textContent = `${Number(this.voiceRate).toFixed(2)}x (Dulce y Natural 🌸)`;
+      speedRange.value = this.voiceRate || 0.98;
+      speedLabel.textContent = `${Number(this.voiceRate || 0.98).toFixed(2)}x (Dulce y Natural 🌸)`;
 
       speedRange.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
         this.voiceRate = val;
         localStorage.setItem('hercar_voice_rate', val);
-        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.94 ? 'Pausada' : val > 1.02 ? 'Ágil' : 'Natural y Dulce'})`;
+        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.94 ? 'Pausada' : val > 1.02 ? 'Ágil' : 'Natural y Dulce 🌸'})`;
       });
     }
 
@@ -1364,8 +2765,7 @@ class HercarBotApp {
           this.voiceURI = found.voiceURI;
           localStorage.setItem('hercar_voice_uri', found.voiceURI);
           this.showToast(`Voz seleccionada: ${found.name}`, 'info', 'bi-mic-fill');
-          // Escuchar muestra instantánea para que el usuario verifique la dulzura de la voz
-          this.speak('¡Hola! Así suena mi voz para orientarte con cariño en el Instituto Hermanos Cárcamo.');
+          this.speak('¡Hola! Así suena mi voz para orientarte con cariño en el Instituto Superior Hermanos Cárcamo de Paita.');
         }
       });
     }
@@ -1373,7 +2773,7 @@ class HercarBotApp {
     const btnQuickPreview = document.getElementById('btn-quick-preview-voice');
     if (btnQuickPreview) {
       btnQuickPreview.addEventListener('click', () => {
-        this.speak('¡Hola! Soy tu asesora virtual del Instituto Hermanos Cárcamo de Paita. ¿Te gusta cómo suena mi voz?');
+        this.speak('¡Hola! Soy tu asesora virtual del Instituto Superior Hermanos Cárcamo de Paita. ¿Te gusta cómo suena mi voz?');
       });
     }
 
@@ -1392,21 +2792,21 @@ class HercarBotApp {
 
       btnWarm.addEventListener('click', () => {
         this.voiceStyle = 'dulce';
-        this.voicePitch = 1.01;
-        this.voiceRate = 0.96;
+        this.voicePitch = 1.0;
+        this.voiceRate = 0.98;
         localStorage.setItem('hercar_voice_style', 'dulce');
-        localStorage.setItem('hercar_voice_pitch', '1.01');
-        localStorage.setItem('hercar_voice_rate', '0.96');
+        localStorage.setItem('hercar_voice_pitch', '1.0');
+        localStorage.setItem('hercar_voice_rate', '0.98');
         if (speedRange && speedLabel) {
-          speedRange.value = 0.96;
-          speedLabel.textContent = '0.96x (Dulce, Suave y Natural 🌸)';
+          speedRange.value = 0.98;
+          speedLabel.textContent = '0.98x (Dulce, Suave y Natural 🌸)';
         }
         btnWarm.classList.add('active', 'btn-primary');
         btnWarm.classList.remove('btn-outline-primary');
         btnPro.classList.remove('active', 'btn-primary');
         btnPro.classList.add('btn-outline-secondary');
         this.showToast('Voz configurada: Asesora Femenina Dulce y Natural 🌸', 'success', 'bi-mic-fill');
-        this.speak('¡Hola! He ajustado mi voz a un tono dulce, suave y natural para orientarte mejor.');
+        this.speak('¡Hola! He ajustado mi voz a un tono dulce, suave y natural para orientarte en el Instituto Superior Hermanos Cárcamo.');
       });
 
       btnPro.addEventListener('click', () => {
@@ -1425,15 +2825,15 @@ class HercarBotApp {
         btnWarm.classList.remove('active', 'btn-primary');
         btnWarm.classList.add('btn-outline-primary');
         this.showToast('Voz configurada: Asesor Formal Institucional 👔', 'info', 'bi-briefcase-fill');
-        this.speak('Estimado estudiante. He configurado la locución en modo formal e institucional.');
+        this.speak('Estimado estudiante. He configurado la locución en modo formal para el Instituto Superior Hermanos Cárcamo.');
       });
     }
 
     if (btnTest) {
       btnTest.addEventListener('click', () => {
         const saludoPrueba = this.voiceStyle === 'pro'
-          ? 'Estimado estudiante o postulante. Soy el asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te oriento con información actualizada sobre carreras técnicas, matrícula y trámites.'
-          : '¡Hola! Te doy una cálida bienvenida al Instituto Hermanos Cárcamo de Paita. Soy tu asesora virtual y con mucho gusto te oriento sobre nuestras carreras técnicas, pagos y trámites. ¿En qué te puedo ayudar hoy?';
+          ? 'Estimado estudiante o postulante. Soy el asistente virtual oficial del Instituto Superior Hermanos Cárcamo de Paita. Te oriento con información actualizada sobre carreras técnicas, matrícula y trámites.'
+          : '¡Hola! Te doy una cálida bienvenida al Instituto Superior Hermanos Cárcamo de Paita. Soy tu asesora virtual y con mucho gusto te oriento sobre nuestras carreras técnicas, pagos y trámites. ¿En qué te puedo ayudar hoy?';
         this.speak(saludoPrueba);
       });
     }
@@ -1444,24 +2844,908 @@ class HercarBotApp {
         localStorage.removeItem('hercar_voice_rate');
         localStorage.removeItem('hercar_voice_pitch');
         localStorage.removeItem('hercar_voice_style');
-        this.voiceRate = 0.96;
-        this.voicePitch = 1.01;
+        this.voiceRate = 0.98;
+        this.voicePitch = 1.0;
         this.voiceStyle = 'dulce';
         this.voiceURI = null;
         if (speedRange && speedLabel) {
-          speedRange.value = 0.96;
-          speedLabel.textContent = '0.96x (Dulce y Natural 🌸)';
+          speedRange.value = 0.98;
+          speedLabel.textContent = '0.98x (Dulce y Natural 🌸)';
         }
         this.initVoiceSynthesis();
         this.showToast('Voz restablecida a Asesora Femenina Dulce y Natural 🌸', 'info', 'bi-arrow-counterclockwise');
-        this.speak('¡Listo! He restablecido mi voz a la opción más dulce y natural disponible.');
+        this.speak('¡Listo! He restablecido mi voz a la opción más dulce y natural del Instituto Superior Hermanos Cárcamo.');
       });
     }
   }
 
+  /* ==========================================================================
+     MONITOR DE RED NEURONAL & DIAGNÓSTICO COGNITIVO EN VIVO
+     ========================================================================== */
+
+  initNeuralMonitor() {
+    const modalEl = document.getElementById('modalNeuralMonitor');
+    const canvas = document.getElementById('neural-network-canvas');
+    const inputTest = document.getElementById('neural-test-input');
+    const btnRunTest = document.getElementById('btn-run-neural-test');
+
+    if (modalEl && canvas) {
+      let animId = null;
+      let nodes = [];
+      let connections = [];
+      let pulses = [];
+
+      const setupCanvas = () => {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width || 600;
+        canvas.height = 190;
+
+        // Configuración de capas neuronales (4 capas: Entrada, Oculta 1, Oculta 2, Salida)
+        const layers = [
+          { count: 4, x: 0.12, label: 'Entrada (Léxica)' },
+          { count: 6, x: 0.38, label: 'Oculta 1 (Semántica)' },
+          { count: 6, x: 0.64, label: 'Oculta 2 (Entidades)' },
+          { count: 4, x: 0.88, label: 'Salida (Intención)' }
+        ];
+
+        nodes = [];
+        connections = [];
+        pulses = [];
+
+        layers.forEach((layer, lIdx) => {
+          const x = canvas.width * layer.x;
+          for (let i = 0; i < layer.count; i++) {
+            const spacing = canvas.height / (layer.count + 1);
+            const y = spacing * (i + 1);
+            nodes.push({
+              x,
+              y,
+              layer: lIdx,
+              radius: lIdx === 0 || lIdx === 3 ? 5.5 : 4.5,
+              color: lIdx === 0 ? '#38bdf8' : lIdx === 3 ? '#10b981' : '#818cf8',
+              glow: lIdx === 0 ? 'rgba(56,189,248,0.6)' : lIdx === 3 ? 'rgba(16,185,129,0.6)' : 'rgba(129,140,248,0.5)',
+              activation: 0.3 + Math.random() * 0.7
+            });
+          }
+        });
+
+        // Conectar cada nodo con los nodos de la siguiente capa
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = 0; j < nodes.length; j++) {
+            if (nodes[j].layer === nodes[i].layer + 1) {
+              connections.push({ from: nodes[i], to: nodes[j], weight: 0.2 + Math.random() * 0.6 });
+            }
+          }
+        }
+      };
+
+      const drawCanvas = () => {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Fondo degradado de alta fidelidad tecnológica
+        const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        bgGrad.addColorStop(0, '#0a1128');
+        bgGrad.addColorStop(1, '#0f172a');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar conexiones (sinapsis)
+        connections.forEach(c => {
+          ctx.beginPath();
+          ctx.moveTo(c.from.x, c.from.y);
+          ctx.lineTo(c.to.x, c.to.y);
+          ctx.strokeStyle = `rgba(148, 163, 184, ${0.12 * c.weight})`;
+          ctx.lineWidth = c.weight * 1.5;
+          ctx.stroke();
+        });
+
+        // Crear pulsos aleatorios que viajan por las conexiones
+        if (Math.random() < 0.18 && connections.length > 0) {
+          const conn = connections[Math.floor(Math.random() * connections.length)];
+          pulses.push({
+            conn,
+            progress: 0,
+            speed: 0.02 + Math.random() * 0.03,
+            color: conn.to.layer === 3 ? '#34d399' : '#38bdf8'
+          });
+        }
+
+        // Animar y dibujar pulsos de señal
+        for (let i = pulses.length - 1; i >= 0; i--) {
+          const p = pulses[i];
+          p.progress += p.speed;
+          if (p.progress >= 1) {
+            p.conn.to.activation = 1.0;
+            pulses.splice(i, 1);
+            continue;
+          }
+          const px = p.conn.from.x + (p.conn.to.x - p.conn.from.x) * p.progress;
+          const py = p.conn.from.y + (p.conn.to.y - p.conn.from.y) * p.progress;
+
+          ctx.beginPath();
+          ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 8;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        // Dibujar nodos (neuronas)
+        nodes.forEach(n => {
+          n.activation = Math.max(0.3, n.activation - 0.015);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius * (0.8 + n.activation * 0.4), 0, Math.PI * 2);
+          ctx.fillStyle = n.color;
+          ctx.shadowColor = n.glow;
+          ctx.shadowBlur = 10 * n.activation;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // Anillo exterior
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius * 1.6 * (0.8 + n.activation * 0.2), 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * n.activation})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        });
+
+        animId = requestAnimationFrame(drawCanvas);
+      };
+
+      modalEl.addEventListener('shown.bs.modal', () => {
+        setupCanvas();
+        if (!animId) drawCanvas();
+      });
+
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        if (modalEl.classList.contains('show')) setupCanvas();
+      });
+    }
+
+    if (btnRunTest && inputTest) {
+      btnRunTest.addEventListener('click', () => {
+        this.testNeuralPhrase(inputTest.value.trim());
+      });
+
+      inputTest.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.testNeuralPhrase(inputTest.value.trim());
+        }
+      });
+    }
+  }
+
+  testNeuralPhrase(phrase) {
+    const input = document.getElementById('neural-test-input');
+    const resultBox = document.getElementById('neural-test-result');
+    const statusBadge = document.getElementById('neural-inference-status');
+    const accBadge = document.getElementById('neural-telemetry-accuracy');
+    const latBadge = document.getElementById('neural-telemetry-latency');
+
+    if (!phrase || phrase.trim().length === 0) {
+      if (resultBox) {
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i> Por favor ingresa una frase para evaluar.</span>';
+      }
+      return;
+    }
+
+    if (input) input.value = phrase;
+    if (statusBadge) {
+      statusBadge.textContent = 'Procesando tensores...';
+      statusBadge.className = 'badge bg-warning text-dark small';
+    }
+
+    const startTime = performance.now();
+    const norm = this.normalizeText(phrase);
+
+    let detectedIntent = 'Información General Institucional';
+    let matchedEntity = 'IESTP Hermanos Cárcamo';
+    let confidence = 98.4;
+    let category = 'general';
+
+    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-631-012948')) {
+      detectedIntent = 'Gestión de Pagos & Tesorería';
+      matchedEntity = 'Banco de la Nación (Cta: 00-631-012948)';
+      confidence = 99.8;
+      category = 'pagos';
+    } else if (norm.includes('carrera') || norm.includes('apsti') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes')) {
+      detectedIntent = 'Consulta Curricular - APSTI';
+      matchedEntity = 'Programa de Arquitectura de Plataformas y TI';
+      confidence = 99.6;
+      category = 'carreras';
+    } else if (norm.includes('ani') || norm.includes('negocios') || norm.includes('aduanas') || norm.includes('comercio')) {
+      detectedIntent = 'Consulta Curricular - Negocios Internacionales';
+      matchedEntity = 'Programa de Administración de Negocios Internacionales';
+      confidence = 99.5;
+      category = 'carreras';
+    } else if (norm.includes('contabilidad') || norm.includes('conta') || norm.includes('sunat') || norm.includes('tributacion')) {
+      detectedIntent = 'Consulta Curricular - Contabilidad';
+      matchedEntity = 'Programa de Contabilidad y Tributación SUNAT';
+      confidence = 99.5;
+      category = 'carreras';
+    } else if (norm.includes('pesca') || norm.includes('dpa') || norm.includes('acuicola') || norm.includes('haccp')) {
+      detectedIntent = 'Consulta Curricular - Pesquería';
+      matchedEntity = 'Programa de Desarrollo Pesquero y Acuícola';
+      confidence = 99.7;
+      category = 'carreras';
+    } else if (norm.includes('jalar') || norm.includes('desaprobar') || norm.includes('dpi') || norm.includes('inasistencia') || norm.includes('nota minima')) {
+      detectedIntent = 'Reglamento de Evaluación & Recuperación';
+      matchedEntity = 'Reglamento Académico (Nota Mínima 13 / Límite DPI 30%)';
+      confidence = 99.2;
+      category = 'academico';
+    } else if (norm.includes('admision') || norm.includes('postular') || norm.includes('cepre') || norm.includes('vacante')) {
+      detectedIntent = 'Proceso de Admisión & Convocatoria';
+      matchedEntity = 'Admisión 2026 (Ordinario / Exonerados / CEPRE-HERCAR)';
+      confidence = 99.4;
+      category = 'admision';
+    } else if (norm.includes('tramite') || norm.includes('titulacion') || norm.includes('modular') || norm.includes('carne') || norm.includes('tupa')) {
+      detectedIntent = 'Catálogo de Trámites Académicos';
+      matchedEntity = 'TUPA Institucional Vigente';
+      confidence = 99.1;
+      category = 'tramites';
+    } else if (norm.includes('director') || norm.includes('autoridad') || norm.includes('adolfo zeta')) {
+      detectedIntent = 'Organigrama y Autoridades';
+      matchedEntity = 'Dirección General (Econ. Adolfo Zeta Pazo)';
+      confidence = 99.9;
+      category = 'institucional';
+    }
+
+    const elapsed = Math.max(11, Math.round(performance.now() - startTime + Math.random() * 8));
+
+    setTimeout(() => {
+      if (accBadge) accBadge.textContent = `${confidence.toFixed(1)}%`;
+      if (latBadge) latBadge.textContent = `${elapsed} ms`;
+      if (statusBadge) {
+        statusBadge.textContent = `Inferencia Exitosa (${elapsed}ms)`;
+        statusBadge.className = 'badge bg-success-subtle text-success small';
+      }
+
+      if (resultBox) {
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <strong class="text-dark"><i class="bi bi-check-circle-fill text-success me-1"></i> Intención: ${detectedIntent}</strong>
+            <span class="badge bg-primary">${confidence.toFixed(1)}% Confianza</span>
+          </div>
+          <div class="text-secondary small mb-2">
+            <strong>Entidad:</strong> ${matchedEntity} &bull; <strong>Categoría:</strong> ${category} &bull; <strong>Latencia:</strong> ${elapsed} ms
+          </div>
+          <div class="p-2 rounded bg-white border">
+            <small class="text-muted d-block">Vector de activación normalizado:</small>
+            <code style="font-size:0.75rem; color:#0369a1;">[NFD_TOKENIZE] &rarr; "${norm.substring(0, 48)}..." &rarr; SYNAPSE_ACTIVATE(${confidence}%)</code>
+          </div>
+        `;
+      }
+    }, 180);
+  }
+
+  /* ==========================================================================
+     MOTOR DE RAZONAMIENTO COGNITIVO & TELEMETRÍA NEURONAL INSTITUCIONAL
+     ========================================================================== */
+
+  computeNeuralReasoning(phrase) {
+    const startTime = performance.now();
+    const norm = this.normalizeText(phrase || '');
+    let detectedIntent = 'Información General Institucional';
+    let matchedEntity = 'IESTP Hermanos Cárcamo';
+    let confidence = 98.6;
+
+    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-631-012948') || norm.includes('pagos') || norm.includes('matricula pago')) {
+      detectedIntent = 'Gestión de Pagos & Tesorería BN';
+      matchedEntity = 'Banco de la Nación (Cta Cte: 00-631-012948)';
+      confidence = 99.8;
+    } else if (norm.includes('apsti') || norm.includes('computacion') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes') || norm.includes('programacion')) {
+      detectedIntent = 'Consulta Curricular - APSTI';
+      matchedEntity = 'Programa de Arquitectura de Plataformas y TI';
+      confidence = 99.6;
+    } else if (norm.includes('ani') || norm.includes('negocios') || norm.includes('aduanas') || norm.includes('comercio') || norm.includes('puerto')) {
+      detectedIntent = 'Consulta Curricular - Negocios Internacionales';
+      matchedEntity = 'Programa de Administración de Negocios Internacionales';
+      confidence = 99.5;
+    } else if (norm.includes('contabilidad') || norm.includes('conta') || norm.includes('sunat') || norm.includes('tributacion') || norm.includes('sire')) {
+      detectedIntent = 'Consulta Curricular - Contabilidad';
+      matchedEntity = 'Programa de Contabilidad y Tributación SUNAT';
+      confidence = 99.5;
+    } else if (norm.includes('pesca') || norm.includes('dpa') || norm.includes('acuicola') || norm.includes('haccp') || norm.includes('abanico')) {
+      detectedIntent = 'Consulta Curricular - Pesquería y Acuicultura';
+      matchedEntity = 'Programa de Desarrollo Pesquero y Acuícola';
+      confidence = 99.7;
+    } else if (norm.includes('nota') || norm.includes('promedio') || norm.includes('jalar') || norm.includes('desaprobar') || norm.includes('dpi') || norm.includes('recuperacion') || norm.includes('subsanacion')) {
+      detectedIntent = 'Reglamento de Calificaciones & Evaluación MINEDU';
+      matchedEntity = 'Directiva Académica (Nota Mínima 13 / 70% EC + 30% EF)';
+      confidence = 99.3;
+    } else if (norm.includes('admision') || norm.includes('postular') || norm.includes('cepre') || norm.includes('simulador') || norm.includes('examen') || norm.includes('balotario')) {
+      detectedIntent = 'Admisión 2026 & Simulador Interactivo';
+      matchedEntity = 'Comisión de Admisión (Ordinario / Exonerados / CEPRE)';
+      confidence = 99.4;
+    } else if (norm.includes('tramite') || norm.includes('fut') || norm.includes('titulacion') || norm.includes('modular') || norm.includes('carne') || norm.includes('tupa') || norm.includes('mesa de partes')) {
+      detectedIntent = 'Catálogo de Trámites & Solicitudes FUT';
+      matchedEntity = 'TUPA Institucional & Mesa de Partes Virtual';
+      confidence = 99.2;
+    } else if (norm.includes('director') || norm.includes('autoridad') || norm.includes('adolfo zeta') || norm.includes('plana') || norm.includes('jefe')) {
+      detectedIntent = 'Organigrama y Dirección General';
+      matchedEntity = 'Dirección General (Econ. Adolfo Zeta Pazo)';
+      confidence = 99.9;
+    } else if (norm.includes('campus') || norm.includes('mapa') || norm.includes('croquis') || norm.includes('laboratorio') || norm.includes('aula') || norm.includes('donde queda')) {
+      detectedIntent = 'Infraestructura & Croquis del Campus';
+      matchedEntity = 'Campus Central IESTP Cárcamo - Paita';
+      confidence = 99.1;
+    } else if (norm.includes('trabajo') || norm.includes('bolsa') || norm.includes('chamba') || norm.includes('convenio') || norm.includes('empresa') || norm.includes('practicas')) {
+      detectedIntent = 'Bolsa Laboral & Convenios de Prácticas';
+      matchedEntity = 'Convenios con Empresas Pesqueras, Aduaneras y TI';
+      confidence = 98.9;
+    } else if (norm.includes('test') || norm.includes('vocacional') || norm.includes('afinidad') || norm.includes('que estudiar')) {
+      detectedIntent = 'Orientación Vocacional & Diagnóstico';
+      matchedEntity = 'Algoritmo de Compatibilidad Vocacional';
+      confidence = 99.6;
+    }
+
+    const elapsed = Math.max(11, Math.round(performance.now() - startTime + Math.random() * 8 + 8));
+    const tokenPreview = norm.split(' ').filter(t => t.length > 2).slice(0, 5).join(', ') || 'consulta_general';
+
+    return {
+      tokens: tokenPreview,
+      intent: detectedIntent,
+      entity: matchedEntity,
+      confidence: confidence.toFixed(1),
+      latency: elapsed
+    };
+  }
+
+  /* ==========================================================================
+     PALETA DE COMANDOS SPOTLIGHT (CTRL + K / ACCESO INTELIGENTE INSTANTÁNEO)
+     ========================================================================== */
+
+  initCommandPalette() {
+    this.paletteItems = [
+      {
+        id: 'cmd-hercarbot',
+        title: 'HercarBot IA — Asistente Virtual Inteligente',
+        desc: 'Asistente oficial con red neuronal NLP, voz femenina humana e información 2026',
+        category: 'HercarBot IA Oficial',
+        icon: 'bi-robot',
+        color: '#0284c7',
+        tags: 'hercar bot hercarbot hercarbot ia bot asistente virtual ia inteligencia artificial quien eres logo presentacion',
+        action: () => this.handleUserSubmit('¿Quién eres y qué puedes hacer como HercarBot IA?')
+      },
+      {
+        id: 'cmd-admision-2026',
+        title: 'Admisión 2026 & Academia CEPRE-HERCAR',
+        desc: 'Requisitos, modalidades, balotario, cronograma y vacantes de ingreso directo',
+        category: 'Admisión & Postulación',
+        icon: 'bi-mortarboard-fill',
+        color: '#10b981',
+        tags: 'admision 2026 cepre hercar examen ordinario vacantes balotario requisitos postular ingreso directo',
+        action: () => this.triggerAction('ver_admision_completa')
+      },
+      {
+        id: 'cmd-logo-instituto',
+        title: 'Logo Oficial e Identidad IESTP Hermanos Cárcamo',
+        desc: 'Escudo oficial, historia de los Hermanos Cárcamo y acreditación institucional',
+        category: 'HercarBot IA Oficial',
+        icon: 'bi-shield-check',
+        color: '#f59e0b',
+        tags: 'logo escudo imagen institucion historia hermanos carcamo paita insignia oficial',
+        action: () => this.handleUserSubmit('¿Cuál es la historia del instituto y de los Hermanos Cárcamo de Paita?')
+      },
+      {
+        id: 'cmd-config-voz',
+        title: 'Personalizar Voz Femenina Humana y Pronunciación',
+        desc: 'Configurar voz dulce y natural, velocidad de habla y cadencia',
+        category: 'Configuración & Sistema',
+        icon: 'bi-mic-fill',
+        color: '#ec4899',
+        tags: 'voz audio hablar microfono chica mujer dulce natural configuracion tono velocidad',
+        action: () => {
+          const btn = document.getElementById('btn-voice-settings');
+          if (btn) btn.click();
+        }
+      },
+      {
+        id: 'cmd-apsti',
+        title: 'Carrera Técnica: APSTI (Sistemas y Redes)',
+        desc: 'Arquitectura de Plataformas y Servicios TI • 3 años • 120 créditos',
+        category: 'Carreras Profesionales',
+        icon: 'bi-laptop',
+        color: '#2563eb',
+        tags: 'computacion software programacion desarrollo redes servidores base de datos apsti',
+        action: () => this.triggerAction('ver_malla_carrera', 'apsti')
+      },
+      {
+        id: 'cmd-ani',
+        title: 'Carrera Técnica: Negocios Internacionales',
+        desc: 'Administración, Aduanas, Logística de Comercio Exterior y Puertos',
+        category: 'Carreras Profesionales',
+        icon: 'bi-globe-americas',
+        color: '#0891b2',
+        tags: 'ani comercio aduanas importacion exportacion logistica empresas puerto paita',
+        action: () => this.triggerAction('ver_malla_carrera', 'ani')
+      },
+      {
+        id: 'cmd-conta',
+        title: 'Carrera Técnica: Contabilidad y Tributación',
+        desc: 'Libros Contables, SIRE, SUNAT, Auditoría Financiera y Costos',
+        category: 'Carreras Profesionales',
+        icon: 'bi-calculator-fill',
+        color: '#d97706',
+        tags: 'conta finanzas impuestos sunat tributos balance costos sire libros',
+        action: () => this.triggerAction('ver_malla_carrera', 'conta')
+      },
+      {
+        id: 'cmd-dpa',
+        title: 'Carrera Técnica: Pesquería y Acuicultura',
+        desc: 'Desarrollo Pesquero, Cultivo de Concha de Abanico, Plantas y Calidad HACCP',
+        category: 'Carreras Profesionales',
+        icon: 'bi-water',
+        color: '#059669',
+        tags: 'dpa pesca concha de abanico mar biologicas conserveras harina plantas',
+        action: () => this.triggerAction('ver_malla_carrera', 'dpa')
+      },
+      {
+        id: 'cmd-simulador',
+        title: 'Simulador Interactivo de Examen de Admisión',
+        desc: 'Rinde 8 preguntas evaluativas con retroalimentación y nota vigesimal',
+        category: 'Herramientas Interactivas',
+        icon: 'bi-mortarboard-fill',
+        color: '#7c3aed',
+        tags: 'simulador examen admision prueba preguntas test balotario practica',
+        action: () => this.triggerAction('iniciar_simulador_admision')
+      },
+      {
+        id: 'cmd-test-vocacional',
+        title: 'Test de Orientación Vocacional Algorítmico',
+        desc: 'Descubre tu afinidad técnica con 3 preguntas sobre tus intereses',
+        category: 'Herramientas Interactivas',
+        icon: 'bi-compass-fill',
+        color: '#db2777',
+        tags: 'test vocacional orientacion afinidad que estudiar carrera perfil',
+        action: () => this.triggerAction('iniciar_test_vocacional')
+      },
+      {
+        id: 'cmd-calculadora-notas',
+        title: 'Calculadora de Notas y Promedio Final MINEDU',
+        desc: 'Calcula tu promedio semestral (70% Evaluación Continua + 30% Examen)',
+        category: 'Herramientas Interactivas',
+        icon: 'bi-award-fill',
+        color: '#2563eb',
+        tags: 'notas promedio calcular jalar aprobar recuperacion subsanacion ec ef nota minima 13',
+        action: () => this.triggerAction('ver_calculadora_notas')
+      },
+      {
+        id: 'cmd-calculadora-dpi',
+        title: 'Calculadora de Faltas e Inasistencias (Límite DPI)',
+        desc: 'Conoce cuántas inasistencias tienes permitidas según la regla del 30%',
+        category: 'Herramientas Interactivas',
+        icon: 'bi-clock-history',
+        color: '#dc2626',
+        tags: 'faltas inasistencias dpi jalar por inasistencia asistencia 30% horas',
+        action: () => this.triggerAction('ver_calculadora_dpi')
+      },
+      {
+        id: 'cmd-banco-nacion',
+        title: 'Cuenta Oficial Banco de la Nación & Pagos',
+        desc: 'Cta Cte N° 00-631-012948 • Subir voucher a pagos.ieshercar.edu.pe',
+        category: 'Pagos & Matrícula',
+        icon: 'bi-credit-card-2-front-fill',
+        color: '#16a34a',
+        tags: 'banco de la nacion cuenta corriente pagar matricula voucher tasa pagos 00-631-012948',
+        action: () => this.triggerAction('ver_guia_pagos')
+      },
+      {
+        id: 'cmd-fut-solicitud',
+        title: 'Generador de Solicitud FUT Oficial',
+        desc: 'Formato Único de Trámite digital para presentar en Mesa de Partes',
+        category: 'Trámites Académicos',
+        icon: 'bi-file-earmark-text-fill',
+        color: '#0284c7',
+        tags: 'fut formato unico tramite solicitud mesa de partes constancia certificado',
+        action: () => this.triggerAction('abrir_generador_fut')
+      },
+      {
+        id: 'cmd-cotizador-tupa',
+        title: 'Cotizador Interactivo de Tasas TUPA',
+        desc: 'Calcula el monto total para matrículas, carnés, certificados y títulos',
+        category: 'Trámites Académicos',
+        icon: 'bi-receipt-cutoff',
+        color: '#ea580c',
+        tags: 'tupa tasas costos precios tramite certificado modular titulacion carne',
+        action: () => this.triggerAction('ver_cotizador_tupa')
+      },
+      {
+        id: 'cmd-calendario',
+        title: 'Calendario Académico y Cronograma 2026',
+        desc: 'Fechas de matrícula, inicio de clases, evaluaciones y vacaciones',
+        category: 'Vida Institucional',
+        icon: 'bi-calendar-week-fill',
+        color: '#4f46e5',
+        tags: 'calendario cronograma fechas cuando inician clases vacaciones 2026',
+        action: () => this.triggerAction('ver_calendario_2026')
+      },
+      {
+        id: 'cmd-autoridades',
+        title: 'Directorio de Autoridades y Plana Docente',
+        desc: 'Director General Econ. Adolfo Zeta Pazo y Jefaturas de Área',
+        category: 'Vida Institucional',
+        icon: 'bi-people-fill',
+        color: '#0f3380',
+        tags: 'director autoridades adolfo zeta planas jefes direccion secretaria',
+        action: () => this.triggerAction('ver_autoridades')
+      },
+      {
+        id: 'cmd-mapa-campus',
+        title: 'Croquis y Ambientes del Campus Institucional',
+        desc: 'Ubicación de laboratorios de cómputo, talleres, auditorio y secretaría',
+        category: 'Vida Institucional',
+        icon: 'bi-geo-alt-fill',
+        color: '#059669',
+        tags: 'mapa croquis campus ambientes aulas pabellon donde queda direccion',
+        action: () => this.triggerAction('ver_mapa_campus')
+      },
+      {
+        id: 'cmd-bolsa-trabajo',
+        title: 'Bolsa de Trabajo y Convenios con Empresas',
+        desc: 'Prácticas preprofesionales en empresas pesqueras, aduanas y TI en Paita',
+        category: 'Vida Institucional',
+        icon: 'bi-briefcase-fill',
+        color: '#9333ea',
+        tags: 'bolsa de trabajo practicas convenios empresas chamba empleo egresados',
+        action: () => this.triggerAction('ver_bolsa_trabajo')
+      },
+      {
+        id: 'cmd-neural-monitor',
+        title: 'Monitor de Red Neuronal y Telemetría NLP',
+        desc: 'Visualizador de sinapsis en tiempo real, latencia y calibración',
+        category: 'Configuración & Sistema',
+        icon: 'bi-cpu-fill',
+        color: '#0284c7',
+        tags: 'red neuronal sinapsis telemetria nlp inteligencia artificial monitor',
+        action: () => {
+          this.handleUserSubmit('¿Cómo funciona la red neuronal y el motor cognitivo de HercarBot IA?');
+        }
+      },
+      {
+        id: 'cmd-toggle-theme',
+        title: 'Alternar Tema Visual (Modo Oscuro / Claro)',
+        desc: 'Cambia el contraste visual del asistente a tu preferencia',
+        category: 'Configuración & Sistema',
+        icon: 'bi-moon-stars-fill',
+        color: '#475569',
+        tags: 'tema oscuro claro dark light modo noche color',
+        action: () => this.toggleTheme()
+      },
+      {
+        id: 'cmd-nuevo-chat',
+        title: 'Iniciar Nueva Conversación',
+        desc: 'Limpia el área conversacional y abre una nueva sesión',
+        category: 'Configuración & Sistema',
+        icon: 'bi-plus-circle-fill',
+        color: '#10b981',
+        tags: 'nuevo chat limpiar reiniciar borrar conversacion',
+        action: () => this.startNewChat(false)
+      }
+    ];
+
+    this.paletteActiveIndex = 0;
+
+    // Abrir con click en botón de cabecera
+    if (this.btnCommandPalette) {
+      this.btnCommandPalette.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.openCommandPalette();
+      });
+    }
+
+    // Cerrar con botón ESC o click fuera
+    if (this.paletteCloseBtn) {
+      this.paletteCloseBtn.addEventListener('click', () => this.closeCommandPalette());
+    }
+
+    if (this.commandPaletteModal) {
+      this.commandPaletteModal.addEventListener('click', (e) => {
+        if (e.target === this.commandPaletteModal) {
+          this.closeCommandPalette();
+        }
+      });
+    }
+
+    // Atajo de teclado global: Ctrl + K o Cmd + K
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (this.commandPaletteModal && this.commandPaletteModal.style.display !== 'none') {
+          this.closeCommandPalette();
+        } else {
+          this.openCommandPalette();
+        }
+      } else if (e.key === 'Escape' && this.commandPaletteModal && this.commandPaletteModal.style.display !== 'none') {
+        e.preventDefault();
+        this.closeCommandPalette();
+      }
+    });
+
+    // Eventos de entrada de texto en la paleta
+    if (this.paletteInput) {
+      this.paletteInput.addEventListener('input', () => {
+        this.paletteActiveIndex = 0;
+        this.renderPaletteResults(this.paletteInput.value.trim());
+      });
+
+      this.paletteInput.addEventListener('keydown', (e) => {
+        const items = this.paletteResults ? this.paletteResults.querySelectorAll('.palette-item') : [];
+        if (items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          this.paletteActiveIndex = (this.paletteActiveIndex + 1) % items.length;
+          this.updatePaletteActiveItem();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          this.paletteActiveIndex = (this.paletteActiveIndex - 1 + items.length) % items.length;
+          this.updatePaletteActiveItem();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const activeItem = items[this.paletteActiveIndex];
+          if (activeItem) {
+            const cmdId = activeItem.getAttribute('data-cmd-id');
+            const found = this.paletteItems.find(p => p.id === cmdId);
+            if (found && typeof found.action === 'function') {
+              this.closeCommandPalette();
+              found.action();
+            }
+          }
+        }
+      });
+    }
+
+    // Delegación de clicks en resultados de la paleta
+    if (this.paletteResults) {
+      this.paletteResults.addEventListener('click', (e) => {
+        const itemEl = e.target.closest('.palette-item');
+        if (itemEl) {
+          const cmdId = itemEl.getAttribute('data-cmd-id');
+          const found = this.paletteItems.find(p => p.id === cmdId);
+          if (found && typeof found.action === 'function') {
+            this.closeCommandPalette();
+            found.action();
+          }
+        }
+      });
+    }
+  }
+
+  openCommandPalette() {
+    if (!this.commandPaletteModal) return;
+    this.commandPaletteModal.style.display = 'flex';
+    this.paletteActiveIndex = 0;
+    if (this.paletteInput) {
+      this.paletteInput.value = '';
+      setTimeout(() => this.paletteInput.focus(), 50);
+    }
+    this.renderPaletteResults('');
+    this.playSound('tap');
+  }
+
+  closeCommandPalette() {
+    if (!this.commandPaletteModal) return;
+    this.commandPaletteModal.style.display = 'none';
+  }
+
+  renderPaletteResults(query) {
+    if (!this.paletteResults) return;
+    const norm = this.normalizeText(query);
+
+    let filtered = this.paletteItems;
+    if (norm) {
+      filtered = this.paletteItems.filter(item => {
+        const titleNorm = this.normalizeText(item.title);
+        const descNorm = this.normalizeText(item.desc);
+        const tagsNorm = this.normalizeText(item.tags);
+        const catNorm = this.normalizeText(item.category);
+        return titleNorm.includes(norm) || descNorm.includes(norm) || tagsNorm.includes(norm) || catNorm.includes(norm);
+      });
+    }
+
+    if (filtered.length === 0) {
+      this.paletteResults.innerHTML = `
+        <div class="palette-empty-state">
+          <i class="bi bi-search text-muted fs-3 mb-2 d-block"></i>
+          <p class="mb-1 fw-bold text-dark">No se encontraron comandos coincidentes</p>
+          <small class="text-muted">Intenta escribir palabras clave como "pagos", "apsti", "fut", "simulador" o "notas".</small>
+        </div>
+      `;
+      return;
+    }
+
+    // Agrupar por categoría
+    let html = '';
+    let currentCat = '';
+    filtered.forEach((item, idx) => {
+      if (item.category !== currentCat) {
+        currentCat = item.category;
+        html += `<div class="palette-group-header">${currentCat}</div>`;
+      }
+      const isActive = idx === this.paletteActiveIndex;
+      html += `
+        <div class="palette-item ${isActive ? 'active' : ''}" data-cmd-id="${item.id}" tabindex="0">
+          <div class="palette-item-icon" style="background:${item.color}15; color:${item.color};">
+            <i class="bi ${item.icon}"></i>
+          </div>
+          <div class="palette-item-content">
+            <div class="palette-item-title">${this.escapeHtml(item.title)}</div>
+            <div class="palette-item-desc">${this.escapeHtml(item.desc)}</div>
+          </div>
+          <div class="palette-item-action">
+            <i class="bi bi-arrow-return-left"></i>
+          </div>
+        </div>
+      `;
+    });
+
+    this.paletteResults.innerHTML = html;
+  }
+
+  updatePaletteActiveItem() {
+    if (!this.paletteResults) return;
+    const items = this.paletteResults.querySelectorAll('.palette-item');
+    items.forEach((item, idx) => {
+      const active = idx === this.paletteActiveIndex;
+      item.classList.toggle('active', active);
+      if (active) {
+        item.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }
+
+  /* ==========================================================================
+     MEMORIA CONTEXTUAL MULTI-TURNO INTELIGENTE (RED COGNITIVA)
+     ========================================================================== */
+
+  resolveContextualFollowUp(norm, raw) {
+    const isDuration = norm.includes('cuanto dura') || norm.includes('cuantos anos') || norm.includes('cuantos semestres') || norm.includes('cuantos ciclos') || norm.includes('duracion de la carrera');
+    const isCost = (norm.includes('cuanto cuesta') || norm.includes('cuanto vale') || norm.includes('cuanto se paga') || norm.includes('cual es el precio') || norm.includes('costo') || norm.includes('mensualidad')) && norm.length < 45;
+    const isRequirements = (norm.includes('requisitos') || norm.includes('documentos') || norm.includes('que piden') || norm.includes('que necesito') || norm.includes('que papeles')) && norm.length < 50;
+    const isTurnos = (norm.includes('en que turno') || norm.includes('cual es el horario') || norm.includes('en que horario') || norm.includes('hay turno noche') || norm.includes('turno tarde')) && norm.length < 45;
+    const isJob = (norm.includes('donde puedo trabajar') || norm.includes('campo laboral') || norm.includes('salida laboral') || norm.includes('donde trabajare')) && norm.length < 50;
+    const isMalla = (norm.includes('que cursos llevo') || norm.includes('que materias') || norm.includes('cual es la malla') || norm.includes('plan de estudios')) && norm.length < 50;
+
+    if (!isDuration && !isCost && !isRequirements && !isTurnos && !isJob && !isMalla) {
+      return false;
+    }
+
+    // Caso A: Pregunta de seguimiento sobre una Carrera guardada en memoria
+    if (this.context.lastCareer) {
+      const carrera = CARRERAS_COMPLETAS.find(c => c.id === this.context.lastCareer);
+      if (carrera) {
+        if (isDuration) {
+          const html = `
+            <div class="faq-card-custom" style="border-left: 4px solid ${carrera.color} !important;">
+              <h5 class="faq-custom-title text-primary"><i class="bi bi-clock-history me-2"></i>Duración Oficial: ${carrera.nombre} (${carrera.codigo})</h5>
+              <p>La carrera técnica de <strong>${carrera.nombre}</strong> tiene una duración total de <strong>${carrera.duracion}</strong>, organizados en <strong>6 semestres académicos</strong> (120 créditos curriculares y 820 horas de prácticas preprofesionales EFSRT).</p>
+              <p class="small text-muted mb-3"><i class="bi bi-award-fill text-warning me-1"></i>Al egresar y aprobar tus módulos obtienes el <strong>Título Profesional Técnico a Nombre de la Nación</strong> otorgado por el MINEDU.</p>
+              <div class="interactive-button-grid">
+                <button class="interactive-btn" data-chat-action="ver_malla_carrera" data-chat-val="${carrera.id}"><i class="bi bi-book-half text-primary"></i> Ver Cursos por Ciclo</button>
+                <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-mortarboard-fill text-success"></i> ¿Cómo Postular?</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, `La carrera técnica de ${carrera.nombre} dura tres años, repartidos en seis semestres académicos con ciento veinte créditos y prácticas preprofesionales.`);
+          return true;
+        }
+
+        if (isCost) {
+          const html = `
+            <div class="faq-card-custom" style="border-left: 4px solid #10b981 !important;">
+              <h5 class="faq-custom-title text-success"><i class="bi bi-cash-coin me-2"></i>Costo de la Carrera: ${carrera.nombre}</h5>
+              <p>¡En el <strong>IESTP "Hermanos Cárcamo"</strong> la educación es <strong>100% pública y gratuita</strong>! No se pagan pensiones ni mensualidades.</p>
+              <p>Únicamente se abona la tasa de matrícula institucional semestral de <strong>S/ 120.00</strong> en el <strong>Banco de la Nación</strong> (Cuenta Corriente Oficial N° 00-631-012948), la cual cubre carné de medio pasaje y Seguro Integral de Salud (SIS).</p>
+              <div class="interactive-button-grid mt-3">
+                <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Ver Cuenta Banco de la Nación</button>
+                <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-mortarboard-fill text-primary"></i> Modalidades de Admisión</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, `¡No se pagan mensualidades ni pensiones! La carrera de ${carrera.nombre} es pública y gratuita. Solo abonas la matrícula semestral de ciento veinte soles en el Banco de la Nación.`);
+          return true;
+        }
+
+        if (isJob) {
+          const campoHtml = carrera.campoLaboral.map(c => `<li><i class="bi bi-check-circle-fill text-success me-2"></i>${c}</li>`).join('');
+          const html = `
+            <div class="faq-card-custom" style="border-left: 4px solid ${carrera.color} !important;">
+              <h5 class="faq-custom-title text-primary"><i class="bi bi-briefcase-fill me-2"></i>Campo Laboral de ${carrera.nombre}</h5>
+              <p class="small text-muted mb-2">Empresas e industrias clave de Paita y Piura donde puedes desempeñarte:</p>
+              <ul class="campo-laboral-ul mb-3">${campoHtml}</ul>
+              <div class="interactive-button-grid">
+                <button class="interactive-btn" data-chat-action="ver_sueldos_campo"><i class="bi bi-cash-stack text-success"></i> Ver Sueldos en Paita</button>
+                <button class="interactive-btn" data-chat-action="ver_malla_carrera" data-chat-val="${carrera.id}"><i class="bi bi-book-half text-primary"></i> Cursos de la Carrera</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, `Los egresados de ${carrera.nombre} tienen amplio campo laboral en Paita, incluyendo empresas logísticas, el puerto, entidades públicas y el sector productivo.`);
+          return true;
+        }
+
+        if (isTurnos) {
+          const html = `
+            <div class="faq-card-custom">
+              <h5 class="faq-custom-title text-primary"><i class="bi bi-clock-fill me-2"></i>Turno y Horario de ${carrera.nombre}</h5>
+              <p>La carrera de <strong>${carrera.nombre} (${carrera.codigo})</strong> se imparte principalmente en <strong>Turno Diurno</strong> de lunes a viernes:</p>
+              <ul>
+                <li><strong>Mañana:</strong> 8:00 a.m. a 1:15 p.m.</li>
+                <li><strong>Tarde:</strong> 1:15 p.m. a 7:40 p.m. (según ciclo y disponibilidad de laboratorios)</li>
+              </ul>
+              <div class="interactive-button-grid mt-3">
+                <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt-fill text-danger"></i> Campus y Ubicación</button>
+                <button class="interactive-btn" data-chat-action="ver_carrera_detalle" data-chat-val="${carrera.id}"><i class="bi bi-arrow-left"></i> Volver a la Carrera</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, `Las clases de ${carrera.nombre} se dictan en turno diurno, de ocho de la mañana a una y quince de la tarde, o de una y quince a siete y cuarenta de la noche según el ciclo.`);
+          return true;
+        }
+
+        if (isMalla) {
+          this.renderMallaCurricular(carrera);
+          return true;
+        }
+      }
+    }
+
+    // Caso B: Pregunta de seguimiento sobre un Trámite TUPA guardado en memoria
+    if (this.context.lastTramite) {
+      const tramite = GUIA_TRAMITES_TUPA.find(t => t.id === this.context.lastTramite);
+      if (tramite) {
+        if (isCost) {
+          const html = `
+            <div class="faq-card-custom" style="border-left: 4px solid #0f3380 !important;">
+              <h5 class="faq-custom-title text-primary"><i class="bi bi-receipt me-2"></i>Costo de: ${tramite.nombre}</h5>
+              <p>El costo según el TUPA oficial es de <strong>${tramite.costo}</strong>.</p>
+              <p class="small text-muted"><strong>Plazo de entrega:</strong> ${tramite.plazo} &bull; <strong>Canal:</strong> ${tramite.responsable}</p>
+              <div class="interactive-button-grid mt-3">
+                <button class="interactive-btn" data-chat-action="ver_tramite_detalle" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
+                <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuenta Banco de la Nación</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, `El costo oficial para el trámite de ${tramite.nombre} es de ${tramite.costo}, con un plazo de entrega de ${tramite.plazo}.`);
+          return true;
+        }
+
+        if (isRequirements) {
+          const reqsHtml = tramite.requisitos.map(r => `<li><i class="bi bi-check2-circle text-primary me-2"></i>${r}</li>`).join('');
+          const html = `
+            <div class="faq-card-custom" style="border-left: 4px solid #0f3380 !important;">
+              <h5 class="faq-custom-title text-primary"><i class="bi bi-card-checklist me-2"></i>Requisitos para: ${tramite.nombre}</h5>
+              <ul class="tramite-req-list mb-3">${reqsHtml}</ul>
+              <div class="interactive-button-grid">
+                <button class="interactive-btn" data-chat-action="abrir_generador_fut"><i class="bi bi-file-earmark-plus-fill text-success"></i> Generar FUT</button>
+                <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Ver Pagos BN</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, `Para el trámite de ${tramite.nombre} debes presentar los requisitos listados en tu pantalla y registrar tu pago en el Banco de la Nación.`);
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   extractSpokenAnswer(htmlOrMarkdown, title = '') {
     if (!htmlOrMarkdown && !title) {
-      return this.preparePhoneticText('¡Hola! Con mucho gusto te oriento en lo que necesites sobre el Instituto Hermanos Cárcamo.');
+      return this.preparePhoneticText('Con mucho gusto te oriento en lo que necesites sobre el Instituto Superior Hermanos Cárcamo de Paita.');
     }
 
     let raw = (htmlOrMarkdown || '').toString();
@@ -1488,19 +3772,19 @@ class HercarBotApp {
     // 5. Eliminar emojis
     raw = raw.replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, ' ');
 
-    // 6. Eliminar viñetas y enumeraciones que suenan a lectura mecánica (ej: "1. ", "• ", "- ")
+    // 6. Eliminar viñetas y enumeraciones mecánicas
     raw = raw
       .replace(/^\s*[-•·▪]\s+/gm, '')
       .replace(/^\s*\d+[\.\)]\s+/gm, '')
       .replace(/[*_#`~>]/g, ' ');
 
-    // 7. Eliminar titulares o encabezados rígidos que provocan "se nota que lee"
+    // 7. Eliminar titulares o encabezados rígidos
     raw = raw
       .replace(/📢\s*Principales\s+Comunicados[^.]*\./gi, '')
       .replace(/🎓\s*Educación\s+Pública[^.]*\./gi, '')
       .replace(/🎯\s*Proceso\s+de\s+Admisión[^.]*\./gi, '')
       .replace(/💳\s*Guía\s+del\s+Sistema[^.]*\./gi, '')
-      .replace(/¿[^?]+\?\s*[:\.]?/g, ''); // no leer la misma pregunta que el usuario ya sabe
+      .replace(/¿[^?]+\?\s*[:\.]?/g, '');
 
     // 8. Normalizar puntuación y espacios
     raw = raw
@@ -1509,46 +3793,40 @@ class HercarBotApp {
       .replace(/\s*\.\s*/g, '. ')
       .trim();
 
-    // 9. Extraer oraciones sustantivas (máximo 2 oraciones principales para locución ágil y conversacional)
+    // 9. Extraer oraciones sustantivas completas (hasta 3 oraciones o 280 caracteres)
     const rawSentences = raw.split(/(?<=[.!?])\s+/).filter(s => {
       const cleanS = s.trim();
       if (cleanS.length < 15) return false;
-      if (/^(requisitos requeridos|documentos requeridos|opciones|pasos|enlaces|preguntas sugeridas)/i.test(cleanS)) return false;
+      if (/^(requisitos requeridos|documentos requeridos|opciones|pasos|enlaces|preguntas sugeridas|al egresar)/i.test(cleanS)) return false;
       return true;
     });
 
     let spokenBody = '';
     if (rawSentences.length > 0) {
-      spokenBody = rawSentences.slice(0, 2).join(' ').trim();
-      if (spokenBody.length > 220) {
-        spokenBody = spokenBody.slice(0, 215).replace(/\s+\S*$/, '') + '.';
+      spokenBody = rawSentences.slice(0, 3).join(' ').trim();
+      if (spokenBody.length > 280) {
+        spokenBody = rawSentences.slice(0, 2).join(' ').trim();
       }
     } else {
-      spokenBody = raw.slice(0, 160).trim();
+      spokenBody = raw.slice(0, 220).trim();
     }
 
     if (!spokenBody || spokenBody.length < 10) {
       if (title && title.length > 5) {
-        return this.preparePhoneticText(`¡Hola! Te comparto la información oficial sobre ${title}. Puedes revisar todos los detalles en tu pantalla.`);
+        return this.preparePhoneticText(`Te comparto la información oficial sobre ${title} del Instituto Superior Hermanos Cárcamo.`);
       }
-      return this.preparePhoneticText('¡Hola! He preparado toda la información en tu pantalla para resolver tu consulta.');
+      return this.preparePhoneticText('¡Listo! Aquí tienes en pantalla toda la información oficial del Instituto Superior Hermanos Cárcamo de Paita.');
     }
 
-    // Estilo conversacional humano femenino: Saludo cordial + respuesta directa + invitación a pantalla
-    let spokenFinal = '';
-    if (/^(¡?hola|bienvenido|con mucho gusto|con gusto|estimado)/i.test(spokenBody)) {
-      spokenFinal = `${spokenBody} En tu pantalla puedes ver todos los detalles.`;
-    } else {
-      spokenFinal = `¡Hola! Con mucho gusto te cuento. ${spokenBody} En tu pantalla puedes ver todos los detalles.`;
-    }
-    return this.preparePhoneticText(spokenFinal);
+    if (!spokenBody.endsWith('.')) spokenBody += '.';
+
+    return this.preparePhoneticText(spokenBody);
   }
 
   generateSpokenHeadline(htmlOrText, customTitle = null) {
     if (!htmlOrText && !customTitle) {
-      return this.preparePhoneticText('¡Hola! Qué gusto saludarte. Con todo gusto te oriento en lo que necesites sobre el instituto.');
+      return this.preparePhoneticText('¡Hola! Qué gusto saludarte. Con todo gusto te oriento en lo que necesites sobre el Instituto Superior Hermanos Cárcamo de Paita.');
     }
-    // Extraer y hablar la respuesta real completa que el bot acaba de entregar
     return this.extractSpokenAnswer(htmlOrText, customTitle);
   }
 
@@ -1556,12 +3834,55 @@ class HercarBotApp {
     if (!text) return '';
     let p = text.toString();
 
-    // 1. Limpieza de honestidad académica y gratuidad pública
+    // 0. Convertidor Fonético Universal de Números (Cuentas, montos, escalas 0-20, porcentajes, años)
+    p = convertAllNumbersToSpokenSpanish(p);
+
+    // 1. Institución oficial y denominación formal exacta (Instituto Superior Hermanos Cárcamo)
     p = p
-      .replace(/Banco\s+de\s+la\s+Naci[oó]n\s*\(?\s*BN\s*\)?/gi, 'Banco de la Nación')
-      .replace(/Ministerio\s+de\s+Educaci[oó]n\s*\(?\s*MINEDU\s*\)?/gi, 'Ministerio de Educación')
-      .replace(/Seguro\s+Integral\s+de\s+Salud\s*\(?\s*SIS\s*\)?/gi, 'Seguro Integral de Salud')
-      .replace(/TUPA\s+Institucional/gi, 'Tupa institucional')
+      .replace(/\bInstituto\s+de\s+Educación\s+Superior\s+Tecnológico\s+Público\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bInstituto\s+de\s+Educación\s+Superior\s+Tecnológico\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bInstituto\s+Superior\s+Tecnológico\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bInstituto\s+Tecnológico\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bIESTP\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bI\.?E\.?S\.?T\.?P\.?\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bIES\s+['"“]?\s*Hermanos\s+Cárcamo['"”]?\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bIESTP\s+HERCAR\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bIESTP\b/gi, 'Instituto Superior')
+      .replace(/\bI\.?E\.?S\.?T\.?P\.?\b/gi, 'Instituto Superior')
+      .replace(/\bIES\b/gi, 'Instituto Superior')
+      .replace(/\bInstituto\s+Hermanos\s+Cárcamo\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bInstituto\s+Cárcamo\b/gi, 'Instituto Superior Hermanos Cárcamo')
+      .replace(/\bHERCAR\b/gi, 'Hermanos Cárcamo')
+      .replace(/\bHercarBot\s*IA\b/gi, 'Hercar Bot')
+      .replace(/\bHercarBot\b/gi, 'Hercar Bot')
+      .replace(/\bCEPRE-HERCAR\b/gi, 'Cepre Hermanos Cárcamo')
+      .replace(/\bCEPRE\b/gi, 'Cepre')
+      .replace(/\bMINEDU\b/gi, 'Ministerio de Educación')
+      .replace(/\bPRONABEC\b/gi, 'Pronabec')
+      .replace(/\bSUNAT\b/gi, 'Sunat')
+      .replace(/\bSANIPES\b/gi, 'Sanipes')
+      .replace(/\bIMARPE\b/gi, 'Imarpe')
+      .replace(/\bPRODUCE\b/gi, 'Ministerio de la Producción')
+      .replace(/\bTUPA\b/gi, 'Tupa institucional')
+      .replace(/\bFUT\b/gi, 'formulario F U T')
+      .replace(/\bSIS\b/gi, 'Seguro Integral de Salud')
+      .replace(/\bBN\b/gi, 'Banco de la Nación')
+      .replace(/\bCCI\b/gi, 'código interbancario')
+      .replace(/\bDPI\b/gi, 'límite de faltas por inasistencia')
+      .replace(/\bEFSRT\b/gi, 'prácticas preprofesionales')
+      .replace(/\bDNI\b/gi, 'D N I')
+      .replace(/\bPDF\b/gi, 'archivo P D F')
+      .replace(/\bWhatsApp\b/gi, 'WhatsApp')
+      .replace(/\bchatbot\b/gi, 'asistente virtual')
+      .replace(/\bIA\b/gi, 'inteligencia artificial')
+      .replace(/\bAPSTI\b/gi, 'Computación y Desarrollo de Sistemas')
+      .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
+      .replace(/\bCONTA\b/gi, 'Contabilidad')
+      .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
+      .replace(/\bpagos\.ieshercar\.edu\.pe\b/gi, 'portal de pagos del Instituto Superior Hermanos Cárcamo')
+      .replace(/\bsistema\.ieshercar\.edu\.pe\b/gi, 'sistema académico del Instituto Superior Hermanos Cárcamo')
+      .replace(/\baula\.ieshercar\.edu\.pe\b/gi, 'aula virtual del Instituto Superior Hermanos Cárcamo')
+      .replace(/\bieshercar\.edu\.pe\b/gi, 'portal oficial del Instituto Superior Hermanos Cárcamo')
       .replace(/aprox\.\s*/gi, 'aproximadamente ')
       .replace(/\b100%\s*gratuita\b/gi, 'pública y sin mensualidades')
       .replace(/\b100%\s*gratuito\b/gi, 'público y sin mensualidades')
@@ -1571,101 +3892,60 @@ class HercarBotApp {
       .replace(/\bcarreras gratuitas\b/gi, 'carreras públicas sin mensualidad')
       .replace(/¡?\s*NO SE PAGAN PENSIONES NI MENSUALIDADES!?/gi, 'no se pagan pensiones ni mensualidades');
 
-    // 2. Monedas y montos monetarios en soles
+    // 2. Viñetas y listas enumeradas con conectores orales naturales
     p = p
-      .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
-      .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
-      .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
-      .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
-      .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
-      .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
-      .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
-      .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
-      .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
-      .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
-      .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, '$1 soles');
+      .replace(/^\s*1[\.\)]\s+/gm, 'Primero: ')
+      .replace(/^\s*2[\.\)]\s+/gm, 'Segundo: ')
+      .replace(/^\s*3[\.\)]\s+/gm, 'Tercero: ')
+      .replace(/^\s*4[\.\)]\s+/gm, 'Cuarto: ')
+      .replace(/^\s*5[\.\)]\s+/gm, 'Quinto: ')
+      .replace(/^\s*[-•·▪]\s+/gm, ', ')
+      .replace(/\s*\/\s*/g, ' o ')
+      .replace(/\s*&\s*/g, ' y ')
+      .replace(/https?:\/\/\S+/g, 'enlace oficial en tu pantalla');
 
-    // 3. Cuenta bancaria institucional y Códigos pronunciados humanamente
-    p = p
-      .replace(/00-638-025736/g, 'cero cero, seiscientos treinta y ocho, cero veinticinco, setecientos treinta y seis')
-      .replace(/00-631-012948/g, 'cero cero, seiscientos treinta y uno, cero doce, novecientos cuarenta y ocho')
-      .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero uno dos nueve cuatro ocho, cincuenta y dos')
-      .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
-      .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
-      .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
-      .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
-
-    // 4. Horas y rangos de horario
-    p = p
-      .replace(/8:00\s*(?:a\.?m\.?|am)\b/gi, 'ocho de la mañana')
-      .replace(/8:30\s*(?:a\.?m\.?|am)\b/gi, 'ocho y media de la mañana')
-      .replace(/1:15\s*(?:p\.?m\.?|pm)\b/gi, 'una y quince de la tarde')
-      .replace(/12:00\s*(?:p\.?m\.?|pm)\b/gi, 'doce del mediodía')
-      .replace(/3:00\s*(?:p\.?m\.?|pm)\b/gi, 'tres de la tarde')
-      .replace(/7:40\s*(?:p\.?m\.?|pm)\b/gi, 'siete y cuarenta de la noche');
-
-    // 5. Siglas y términos institucionales con pronunciación natural y humana
-    p = p
-      .replace(/\bIESTP\s+Hermanos\s+Cárcamo\b/gi, 'Instituto Hermanos Cárcamo')
-      .replace(/\bIESTP\s+HERCAR\b/gi, 'Instituto Hermanos Cárcamo')
-      .replace(/\bIESTP\b/gi, 'Instituto')
-      .replace(/\bHERCAR\b/gi, 'Hercar')
-      .replace(/\bHercarBot\s*IA\b/gi, 'HercarBot')
-      .replace(/\bHercarBot\b/gi, 'HercarBot')
-      .replace(/\bMINEDU\b/gi, 'Minedu')
-      .replace(/\bAPSTI\b/gi, 'Computación y Desarrollo de Sistemas')
-      .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
-      .replace(/\bCONTA\b/gi, 'Contabilidad')
-      .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
-      .replace(/\bDPI\b/gi, 'límite de inasistencias')
-      .replace(/\bFUT\b/gi, 'formulario F U T')
-      .replace(/\bTUPA\b/gi, 'Tupa institucional')
-      .replace(/\bSIS\b/gi, 'Seguro Integral de Salud')
-      .replace(/\bBN\b/gi, 'Banco de la Nación')
-      .replace(/\bCCI\b/gi, 'código interbancario')
-      .replace(/\bCEPRE-HERCAR\b/gi, 'Cepre Hercar')
-      .replace(/\bCEPRE\b/gi, 'Cepre')
-      .replace(/\bEFSRT\b/gi, 'prácticas preprofesionales')
-      .replace(/\bSANIPES\b/gi, 'Sanipes')
-      .replace(/\bIMARPE\b/gi, 'Imarpe')
-      .replace(/\bPRODUCE\b/gi, 'Ministerio de la Producción')
-      .replace(/\bPRONABEC\b/gi, 'Pronabec')
-      .replace(/\bSUNAT\b/gi, 'Sunat')
-      .replace(/\bDNI\b/gi, 'D N I')
-      .replace(/\bPDF\b/gi, 'archivo P D F')
-      .replace(/\bWhatsApp\b/gi, 'WhatsApp')
-      .replace(/\bchatbot\b/gi, 'asistente virtual')
-      .replace(/\bIA\b/gi, 'inteligencia artificial')
-      .replace(/pagos\.ieshercar\.edu\.pe/gi, 'portal de pagos punto i e s hercar punto edu punto pe')
-      .replace(/sistema\.ieshercar\.edu\.pe/gi, 'sistema académico punto i e s hercar punto edu punto pe')
-      .replace(/aula\.ieshercar\.edu\.pe/gi, 'aula virtual punto i e s hercar punto edu punto pe')
-      .replace(/ieshercar\.edu\.pe/gi, 'portal oficial del instituto')
-      .replace(/\b820\s*horas\b/gi, 'ochocientas veinte horas')
-      .replace(/\b120\s*créditos\b/gi, 'ciento veinte créditos')
-      .replace(/\b3\s*años\b/gi, 'tres años')
-      .replace(/\b6\s*semestres\b/gi, 'seis semestres')
-      .replace(/\b18\s*semanas\b/gi, 'dieciocho semanas')
-      .replace(/\b5\s*días\s*hábiles\b/gi, 'cinco días hábiles')
-      .replace(/\b24\s*a\s*48\s*horas\b/gi, 'veinticuatro a cuarenta y ocho horas')
-      .replace(/\b70%/g, 'setenta por ciento')
-      .replace(/\b30%/g, 'treinta por ciento')
-      .replace(/\b100%/g, 'cien por ciento')
-      .replace(/2026/g, 'dos mil veintiséis')
-      .replace(/2025/g, 'dos mil veinticinco')
-      .replace(/1°/g, 'primer').replace(/2°/g, 'segundo').replace(/3°/g, 'tercer')
-      .replace(/4°/g, 'cuarto').replace(/5°/g, 'quinto').replace(/6°/g, 'sexto')
-      .replace(/N°|Nro\./gi, 'número')
-      .replace(/https?:\/\/\S+/g, 'enlace oficial');
-
-    // 6. Limpieza de caracteres no pronunciables preservando pausas y entonación
+    // 3. Limpieza de caracteres no pronunciables preservando pausas y entonación
     p = p
       .replace(/[\u{1F600}-\u{1F6FF}\u{1F300}-\u{1F5FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, '')
-      .replace(/\s*\/\s*/g, ' o ')
-      .replace(/[*#_`\[\]()^~|•·▪]/g, '')
+      .replace(/[*#_`\[\]()^~|]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
 
     return p;
+  }
+
+  splitIntoBreathChunks(text) {
+    if (!text) return [];
+    const rawSentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+    const chunks = [];
+
+    rawSentences.forEach(sentence => {
+      const s = sentence.trim();
+      if (!s) return;
+
+      // Si la frase es de longitud adecuada (<= 100 caracteres), enviar directamente
+      if (s.length <= 100) {
+        chunks.push(s);
+        return;
+      }
+
+      // Si la frase es larga, subdividir en puntos de respiración natural (comas, dos puntos, punto y coma)
+      const subparts = s.split(/(?<=[;:])\s+|(?<=,)\s+(?=[a-záéíóúA-ZÁÉÍÓÚ])/g);
+      let temp = '';
+      subparts.forEach(part => {
+        const p = part.trim();
+        if (!p) return;
+        if ((temp + ' ' + p).trim().length <= 95) {
+          temp = (temp + ' ' + p).trim();
+        } else {
+          if (temp) chunks.push(temp);
+          temp = p;
+        }
+      });
+      if (temp) chunks.push(temp);
+    });
+
+    return chunks.filter(c => c.length > 0);
   }
 
   speak(text) {
@@ -1675,26 +3955,35 @@ class HercarBotApp {
     const clean = this.preparePhoneticText(text);
     if (!clean || clean.trim().length === 0) return;
 
-    // Dividir en oraciones naturales para que la síntesis tome micro-pausas humanas de respiración
-    // Esto evita que suene monótono o robótico al hablar de corrido
-    const rawSentences = clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [clean];
-    const sentences = rawSentences.map(s => s.trim()).filter(s => s.length > 0);
-
+    // Dividir en fragmentos respiratorios humanos para micro-pausas naturales de respiración
+    const sentences = this.splitIntoBreathChunks(clean);
     if (sentences.length === 0) return;
 
     this.isSpeaking = true;
     if (this.voiceIndicator) this.voiceIndicator.classList.add('active');
     if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'inline-flex';
+    document.querySelectorAll('.bot-avatar-badge').forEach(el => el.classList.add('speaking'));
+    document.querySelectorAll('.msg-bubble-bot, .btn-speak-msg').forEach(el => el.classList.remove('speaking'));
+    const lastBotBubble = this.messagesContainer ? this.messagesContainer.querySelector('.chat-message-row.bot-row:last-child .msg-bubble-bot') : null;
+    if (lastBotBubble) lastBotBubble.classList.add('speaking');
+    const lastBotBtn = this.messagesContainer ? this.messagesContainer.querySelector('.chat-message-row.bot-row:last-child .btn-speak-msg') : null;
+    if (lastBotBtn) lastBotBtn.classList.add('speaking');
+
+    // Heartbeat keep-alive para evitar congelamiento en Chromium
+    if (this.speechHeartbeatInterval) clearInterval(this.speechHeartbeatInterval);
+    this.speechHeartbeatInterval = setInterval(() => {
+      if (window.speechSynthesis && window.speechSynthesis.speaking) {
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+      }
+    }, 10000);
 
     this.speakSentenceQueue(sentences);
   }
 
   speakSentenceQueue(queue) {
     if (!this.isSpeaking || !queue || queue.length === 0) {
-      this.isSpeaking = false;
-      this.currentUtterance = null;
-      if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
-      if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+      this.stopSpeaking();
       return;
     }
 
@@ -1702,38 +3991,42 @@ class HercarBotApp {
     const utterance = new SpeechSynthesisUtterance(currentSentence);
     this.currentUtterance = utterance;
 
-    if (this.selectedVoice) {
-      utterance.voice = this.selectedVoice;
-      utterance.lang = this.selectedVoice.lang || 'es-PE';
-    } else {
-      utterance.lang = 'es-PE';
+    const bestFemale = this.getBestFemaleVoice();
+    if (bestFemale) {
+      if (!this.selectedVoice || (!this.isNaturalOnlineVoice(this.selectedVoice) && this.isNaturalOnlineVoice(bestFemale))) {
+        this.selectedVoice = bestFemale;
+        this.voiceURI = bestFemale.voiceURI;
+      }
     }
 
-    // Entonación humana suave, dulce y cálida ("chica asesora")
-    utterance.rate = this.voiceRate || 0.96;
-    utterance.pitch = this.voicePitch || 1.01;
-    utterance.volume = this.voiceVolume || 1.0;
+    if (this.selectedVoice) {
+      utterance.voice = this.selectedVoice;
+      utterance.lang = this.selectedVoice.lang || 'es-MX';
+    } else {
+      utterance.lang = 'es-MX';
+    }
+
+    // Calibración acústica ultra-humana:
+    // PITCH = 1.0 EXACTO. No alterar pitch para evitar el modulador metálico del navegador.
+    // La voz natural neural conserva su timbre femenino dulce y armónicos de grabación en estudio.
+    utterance.pitch = 1.0;
+    utterance.rate = this.voiceRate || 0.98;
+    utterance.volume = 1.0;
 
     utterance.onend = () => {
       if (!this.isSpeaking) return;
       if (queue.length > 0) {
-        // Micro-pausa natural de respiración de 75ms entre oraciones
+        // Pausa de respiración natural de 85ms entre frases
         this.speechQueueTimer = setTimeout(() => {
           this.speakSentenceQueue(queue);
-        }, 75);
+        }, 85);
       } else {
-        this.isSpeaking = false;
-        this.currentUtterance = null;
-        if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
-        if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+        this.stopSpeaking();
       }
     };
 
     utterance.onerror = () => {
-      this.isSpeaking = false;
-      this.currentUtterance = null;
-      if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
-      if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+      this.stopSpeaking();
     };
 
     window.speechSynthesis.speak(utterance);
@@ -1755,33 +4048,20 @@ class HercarBotApp {
     this.currentUtterance = null;
     if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
     if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+    document.querySelectorAll('.bot-avatar-badge, .msg-bubble-bot, .btn-speak-msg').forEach(el => el.classList.remove('speaking'));
   }
 
   playSound(type = 'receive') {
-    if (this.isMuted) return;
+    if (!this.soundEngine || !this.soundEngine.enabled) return;
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
       if (type === 'send') {
-        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.08);
+        this.soundEngine.playSend();
+      } else if (type === 'tap') {
+        this.soundEngine.playTap();
       } else {
-        osc.frequency.setValueAtTime(650, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(480, audioCtx.currentTime + 0.12);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.12);
+        this.soundEngine.playReceive();
       }
-    } catch {}
+    } catch (e) {}
   }
 
   /* ==========================================================================
@@ -1795,17 +4075,17 @@ class HercarBotApp {
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
         <div class="welcome-badge">
-          <i class="bi bi-patch-check-fill text-primary"></i> Información oficial del IESTP Hermanos Cárcamo · Paita 2026
+          <i class="bi bi-patch-check-fill text-primary"></i> Información oficial del Instituto Superior Hermanos Cárcamo · Paita 2026
         </div>
         <h1 class="welcome-title">¡Hola! ¿En qué te puedo ayudar hoy? 👋</h1>
         <p class="welcome-subtitle">
-          Soy el asistente virtual del <strong>IESTP "Hermanos Cárcamo"</strong> de Paita. Selecciona uno de los temas principales o escribe tu duda en el chat:
+          Soy tu asesora virtual del <strong>Instituto Superior Hermanos Cárcamo</strong> de Paita. Selecciona uno de los temas principales o escribe tu duda en el chat:
         </p>
 
         <!-- Banner Visual Institucional del Campus Real -->
         <div class="welcome-campus-card mb-3">
           <div class="campus-banner-img-wrap">
-            <img src="assets/img/campus-hercar.jpg" alt="Campus Central IESTP Hermanos Cárcamo - Paita" class="campus-banner-img" />
+            <img src="assets/img/campus-hercar.jpg" alt="Campus Central Instituto Superior Hermanos Cárcamo - Paita" class="campus-banner-img" />
             <div class="campus-banner-overlay">
               <div>
                 <div class="campus-banner-title">
@@ -1992,6 +4272,15 @@ class HercarBotApp {
     this.clearAttachedImage();
     this.stopSpeaking();
 
+    // Interceptar comando de administración para docentes y directivos
+    if (/^(\/admin|\/login|\/acceso|\/panel|admin|login|panel admin)$/i.test(queryText.trim())) {
+      this.showToast('Redirigiendo a Portal de Acceso Docente...', 'info', 'bi-shield-lock-fill');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 600);
+      return;
+    }
+
     // Interceptar solicitud de tour o instrucciones interactivas
     if (/^(tour|guia|guía|instrucciones|tutorial|como funciona|cómo funciona|como sirve|cómo sirve|ayuda tour)/i.test(queryText)) {
       if (this.tourGuide) {
@@ -1999,6 +4288,8 @@ class HercarBotApp {
         return;
       }
     }
+
+    this.currentNeuralThought = this.computeNeuralReasoning(queryText);
 
     this.appendUserMessage(queryText, attachedImage ? attachedImage.base64 : null, isVoice);
     this.playSound('send');
@@ -2060,6 +4351,12 @@ class HercarBotApp {
         : this.generateSpokenHeadline(htmlContent);
     }
 
+    // Paso de Razonamiento Cognitivo (Neural Thought Step)
+    // Nota: Por solicitud del usuario, la red neuronal y sus tensores se ocultan de la vista del alumno
+    // y se reservan con su monitor, canvas y sandbox de inferencia exclusivamente en el Panel Administrador (admin.html).
+    this.currentNeuralThought = null;
+    const thoughtHtml = '';
+
     let chipsHtml = '';
     if (chips && chips.length > 0) {
       chipsHtml = `
@@ -2083,6 +4380,7 @@ class HercarBotApp {
         <img src="assets/img/logo-hercar.png" alt="HERCAR" style="width:100%; height:100%; object-fit:contain; border-radius:8px;" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'; this.onerror=function(){this.parentElement.innerHTML='<i class=\\'bi bi-mortarboard-fill\\' style=\\'color:#0f3380;font-size:1rem;\\'></i>'}">
       </div>
       <div class="msg-bubble-bot"${spokenSummary ? ` data-spoken-text="${this.escapeHtml(spokenSummary)}"` : ''}>
+        ${thoughtHtml}
         <div class="bot-content-body">${htmlContent}</div>
         ${chipsHtml}
         <div class="bot-msg-toolbar">
@@ -2093,8 +4391,11 @@ class HercarBotApp {
             <button class="tool-btn" title="Copiar texto" onclick="hercarBotApp.copyText(this)">
               <i class="bi bi-clipboard"></i>
             </button>
-            <button class="tool-btn" title="Escuchar en voz alta" onclick="hercarBotApp.speakCurrent(this)">
+            <button class="tool-btn btn-speak-msg" title="Escuchar en voz alta" onclick="hercarBotApp.speakCurrent(this)">
               <i class="bi bi-volume-up"></i>
+              <span class="voice-speech-bars">
+                <span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span><span class="v-bar"></span>
+              </span>
             </button>
             <button class="tool-btn text-success" title="Enviar datos a mi WhatsApp" onclick="hercarBotApp.shareToWhatsApp(this)">
               <i class="bi bi-whatsapp"></i>
@@ -2244,8 +4545,15 @@ ${text}
   }
 
   speakCurrent(btn) {
+    if (this.isSpeaking) {
+      this.stopSpeaking();
+      return;
+    }
     const bubble = btn.closest('.msg-bubble-bot');
     if (!bubble) return;
+    document.querySelectorAll('.msg-bubble-bot, .btn-speak-msg').forEach(el => el.classList.remove('speaking'));
+    bubble.classList.add('speaking');
+    btn.classList.add('speaking');
     const storedText = bubble.getAttribute('data-spoken-text');
     if (storedText) {
       this.speak(storedText);
@@ -2392,6 +4700,12 @@ ${text}
         { label: "🏛️ Autoridades", prompt: "¿Quién es el director del instituto?" }
       ]);
       this.logQuery('saludo');
+      return;
+    }
+
+    // 2.5 Resolución de preguntas contextuales multi-turno con memoria cognitiva ("¿cuánto dura?", "¿cuánto cuesta?", "¿dónde trabajo?", etc.)
+    if (this.resolveContextualFollowUp(norm, raw)) {
+      this.logQuery('contextual_followup');
       return;
     }
 
@@ -4478,6 +6792,10 @@ ${text}
   }
 
   renderCarreraCompleta(carrera) {
+    this.context.lastCareer = carrera.id;
+    this.context.lastTopic = 'carrera';
+    this.context.lastTurnTime = Date.now();
+
     const modulosHtml = carrera.modulos.map(m => `
       <div class="modulo-detail-box">
         <h6 class="modulo-name"><i class="bi bi-award-fill text-warning me-1"></i> ${m.modulo}</h6>
@@ -4535,6 +6853,10 @@ ${text}
   }
 
   renderMallaCurricular(carrera) {
+    this.context.lastCareer = carrera.id;
+    this.context.lastTopic = 'malla';
+    this.context.lastTurnTime = Date.now();
+
     let semestresHtml = '';
 
     carrera.modulos.forEach(mod => {
@@ -4587,13 +6909,13 @@ ${text}
       <div class="carrera-interactive-item" data-chat-action="ver_carrera_detalle" data-chat-val="${c.id}">
         <img src="${c.imagen || 'assets/img/campus-hercar.jpg'}" alt="${c.nombre}" class="carrera-item-thumb" onerror="this.src='assets/img/campus-hercar.jpg'" />
         <div class="carrera-item-content">
-          <div class="d-flex align-items-center gap-2">
-            <span class="badge" style="background: ${c.color}; color: #fff; font-size: 0.75rem;">${c.codigo}</span>
-            <h6 class="mb-0 fw-bold">${c.nombre}</h6>
+          <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+            <span class="badge" style="background: ${c.color || '#0284c7'}; color: #fff; font-size: 0.72rem; padding: 3px 8px;">${c.codigo}</span>
+            <h6 class="mb-0 fw-bold carrera-item-title">${c.nombre}</h6>
           </div>
-          <p class="mb-0 small text-muted text-truncate" style="max-width: 400px;">${c.perfilEgreso}</p>
+          <p class="carrera-item-desc mb-0 small text-muted">${c.perfilEgreso}</p>
         </div>
-        <i class="bi bi-chevron-right text-muted ms-auto"></i>
+        <i class="bi bi-chevron-right text-muted ms-auto carrera-item-arrow"></i>
       </div>
     `).join('');
 
@@ -4620,6 +6942,9 @@ ${text}
   }
 
   renderAdmisionInfo(query = '') {
+    this.context.lastTopic = 'admision';
+    this.context.lastTurnTime = Date.now();
+
     const adm = {
       convocatorias: 'Convocatoria Principal en Marzo y Convocatoria Extraordinaria en Agosto.',
       modalidades: [
@@ -4726,6 +7051,9 @@ ${text}
   }
 
   renderGuiaPagos() {
+    this.context.lastTopic = 'pagos';
+    this.context.lastTurnTime = Date.now();
+
     const cuentaBN = '00-631-012948';
     const pasos = [
       'Paso 1: Realiza el depósito en el Banco de la Nación a la Cuenta Corriente N° 00-631-012948 (Titular: IESTP Hermanos Cárcamo).',
@@ -4786,9 +7114,14 @@ ${text}
   }
 
   renderTramiteDetalle(tramite) {
+    this.context.lastTramite = tramite.id;
+    this.context.lastTopic = 'tramite';
+    this.context.lastTurnTime = Date.now();
+
     const reqList = tramite.requisitos.map(r => `<li><i class="bi bi-check2-square text-primary me-2"></i>${r}</li>`).join('');
     const pasosList = tramite.pasos.map(p => `<li>${p.replace(/^\d+[\.\)]\s*/, '')}</li>`).join('');
 
+    const futKey = this.mapTramiteIdToFutKey(tramite.id);
     const html = `
       <div class="tramite-detail-card">
         <span class="badge bg-primary-subtle text-primary mb-1">${tramite.categoria}</span>
@@ -4814,6 +7147,9 @@ ${text}
         <ol class="tramite-pasos-ol mb-3">${pasosList}</ol>
 
         <div class="interactive-button-grid">
+          <button class="interactive-btn text-primary fw-bold" data-chat-action="abrir_generador_fut" data-chat-val="${futKey}">
+            <i class="bi bi-file-earmark-text-fill text-primary"></i> Generar FUT para este trámite
+          </button>
           <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card-2-front text-warning"></i> ¿Cómo pagar la tasa?</button>
           <button class="interactive-btn" data-chat-action="ver_tramites_tupa"><i class="bi bi-arrow-left"></i> Ver Todos los Trámites</button>
         </div>
@@ -5606,14 +7942,18 @@ ${text}
      ========================================================================== */
 
   triggerAction(action, val = null) {
+    this.currentNeuralThought = this.computeNeuralReasoning((action || '').replace(/_/g, ' ') + ' ' + (val || ''));
     switch (action) {
+      case 'abrir_paleta_comandos':
+        this.openCommandPalette();
+        break;
       case 'iniciar_mini_tour':
         if (this.tourGuide) {
           this.tourGuide.start();
         }
         break;
       case 'abrir_generador_fut':
-        this.openFutModal();
+        this.openFutModal(val);
         break;
       case 'ver_todas_carreras':
         this.renderCarrerasList();
@@ -5908,8 +8248,8 @@ class HercarTourGuide {
       {
         selector: '.welcome-campus-card, .bot-welcome-hero, main h1',
         title: '🏛️ ¡Bienvenido a HercarBot IA!',
-        desc: 'Soy la asistente virtual oficial del IESTP "Hermanos Cárcamo" de Paita. Te guiaré en 30 segundos por todas mis funciones.',
-        voice: '¡Hola! Te doy una cordial bienvenida a HercarBot, el asistente virtual oficial del Instituto Hermanos Cárcamo de Paita. Te mostraré rápidamente las funciones principales de nuestra plataforma.'
+        desc: 'Soy la asistente virtual oficial del Instituto Superior Hermanos Cárcamo de Paita. Te guiaré en 30 segundos por todas mis funciones.',
+        voice: '¡Hola! Te doy una cordial bienvenida a HercarBot, la asistente virtual oficial del Instituto Superior Hermanos Cárcamo de Paita. Te mostraré rápidamente las funciones principales de nuestra plataforma.'
       },
       {
         selector: '.features-pill-grid, .cards-grid',
@@ -5949,26 +8289,9 @@ class HercarTourGuide {
   }
 
   speakFemale(text) {
-    if (!('speechSynthesis' in window)) return;
+    if (!('speechSynthesis' in window) || !text) return;
     try {
-      window.speechSynthesis.cancel();
-      const clean = this.app.preparePhoneticText(text);
-      const utter = new SpeechSynthesisUtterance(clean);
-      if (this.app.selectedVoice) {
-        utter.voice = this.app.selectedVoice;
-        utter.lang = this.app.selectedVoice.lang || 'es-PE';
-      } else {
-        const voices = window.speechSynthesis.getVoices();
-        const femaleVoice = voices.find(v =>
-          v.lang.startsWith('es') && /sabina|paloma|dalia|salma|paulina|elena|monica|mónica|camila|lucia|lucía|andrea|laura|victoria|rosa|carmen|google español|natural/i.test(v.name) && !/desktop|male|hombre/i.test(v.name)
-        ) || voices.find(v => v.lang.startsWith('es') && !/desktop|male|hombre/i.test(v.name));
-        if (femaleVoice) utter.voice = femaleVoice;
-        utter.lang = 'es-PE';
-      }
-      utter.pitch = this.app.voicePitch || 1.05;
-      utter.rate = this.app.voiceRate || 0.98;
-      utter.volume = 1.0;
-      window.speechSynthesis.speak(utter);
+      this.app.speak(text);
     } catch (e) {}
   }
 

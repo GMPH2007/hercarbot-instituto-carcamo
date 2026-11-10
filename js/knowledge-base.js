@@ -400,94 +400,290 @@ const GUIA_TRAMITES_TUPA = [
     id: 'tramite-matricula',
     nombre: 'Matrícula Regular y Ratificación Semestral',
     categoria: 'Académico',
-    costo: 'Aprox. S/ 80.00 - S/ 100.00 (Tasa semestral)',
-    plazo: 'Inmediato tras validación de Caja',
+    costo: 'S/ 120.00 (Tasa semestral en Banco de la Nación)',
+    plazo: 'Inmediato tras validación de Caja (24-48 horas)',
     requisitos: [
       'Haber aprobado los cursos correlativos (máximo 2 asignaturas a cargo)',
-      'Comprobante de depósito en el Banco de la Nación',
-      'Ficha de matrícula generada en sistema.ieshercar.edu.pe'
+      'Comprobante de depósito en el Banco de la Nación (Cta. Cte. N° 00-631-012948)',
+      'Ficha de matrícula generada en sistema.ieshercar.edu.pe',
+      'No registrar adeudos de material bibliográfico ni cuotas pendientes'
     ],
     pasos: [
       'Depositar en el Banco de la Nación a la Cta. Cte. N° 00-631-012948.',
       'Subir el voucher a https://pagos.ieshercar.edu.pe/.',
-      'Esperar la validación de Caja (24 horas).',
+      'Esperar la validación de Caja (24 a 48 horas hábiles).',
       'Ingresar a https://sistema.ieshercar.edu.pe/acceso con tu DNI y seleccionar tus asignaturas.',
-      'Descargar tu Ficha Oficial de Matrícula.'
+      'Descargar y guardar tu Ficha Oficial de Matrícula en PDF.'
+    ]
+  },
+  {
+    id: 'tramite-matricula-extemporanea',
+    nombre: 'Matrícula Extemporánea / Fuera de Plazo',
+    categoria: 'Académico',
+    costo: 'S/ 140.00 (Tasa regular + recargo administrativo BN)',
+    plazo: '2 a 3 días hábiles previa autorización de Dirección',
+    requisitos: [
+      'Solicitud mediante Formulario Único de Trámite (FUT) justificando motivo de retraso',
+      'Voucher del Banco de la Nación con el recargo correspondiente',
+      'Disponibilidad de vacante en el turno y sección solicitada'
+    ],
+    pasos: [
+      'Generar FUT dirigido a la Jefatura de Unidad Académica exponiendo el motivo.',
+      'Abonar S/ 140.00 en el Banco de la Nación y subir voucher a pagos.ieshercar.edu.pe.',
+      'Presentar el FUT con voucher validado por Mesa de Partes.',
+      'Una vez aprobado el proveído, registrar asignaturas en el Sistema Académico.'
     ]
   },
   {
     id: 'tramite-certificado-modular',
-    nombre: 'Certificado Modular (Diploma de Módulo)',
+    nombre: 'Certificación Modular Progresiva (Módulos I, II o III)',
     categoria: 'Certificaciones',
-    costo: 'Aprox. S/ 40.00 - S/ 50.00 por módulo',
-    plazo: '7 a 10 días hábiles',
+    costo: 'S/ 45.00 por cada módulo formativo',
+    plazo: '7 a 10 días hábiles (Emisión con firma de Dirección y Jefatura Académica)',
     requisitos: [
-      'Haber aprobado el 100% de los cursos del Módulo I, II o III',
-      'Constancia aprobada de Prácticas Preprofesionales (EFSRT) del módulo',
-      'Comprobante de pago validado en el sistema de pagos',
-      'FUT dirigido a la Dirección General'
+      'Haber aprobado el 100% de las unidades didácticas del Módulo I, II o III',
+      'Constancia aprobatoria de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) del módulo (mínimo 240 a 280 horas)',
+      'Comprobante de pago validado en pagos.ieshercar.edu.pe',
+      'FUT debidamente llenado solicitando el Certificado Modular respectivo'
     ],
     pasos: [
-      'Solicitar tu récord de notas en Secretaría.',
-      'Pagar la tasa en el BN y registrar el voucher en pagos.ieshercar.edu.pe.',
-      'Presentar FUT adjuntando constancia de prácticas por Mesa de Partes en sede Paita.',
-      'Secretaría emite el Certificado Modular oficial con firma y sello del Director.'
+      'Verificar en el Sistema Académico que todas las notas del módulo estén registradas (nota mínima 13).',
+      'Abonar S/ 45.00 en el Banco de la Nación y registrar en pagos.ieshercar.edu.pe.',
+      'Presentar FUT y constancia de prácticas EFSRT por Mesa de Partes Virtual o presencial.',
+      'Secretaría Académica emite el Certificado Modular oficial con valor curricular MINEDU.'
     ]
   },
   {
     id: 'tramite-titulacion',
-    nombre: 'Titulación Profesional Técnica',
+    nombre: 'Título Profesional Técnico a Nombre de la Nación',
     categoria: 'Titulación',
-    costo: 'Según TUPA institucional',
-    plazo: '30 a 45 días (Inscripción en MINEDU)',
+    costo: 'S/ 180.00 (Incluye derecho de jurado, diploma caligráfico y registro MINEDU)',
+    plazo: '30 a 45 días hábiles (Inscripción en el Registro Nacional de Títulos MINEDU)',
     requisitos: [
-      'Haber aprobado los 6 semestres (120 créditos)',
-      'Tener los 3 Certificados Modulares de tu carrera',
-      'Constancia de cumplimiento de Prácticas Preprofesionales (EFSRT)',
-      'Constancia de idioma extranjero (Inglés Básico)',
-      'Aprobación de la sustentación del Proyecto de Innovación / Plan de Negocios',
-      'Constancia de no adeudo a biblioteca ni tesorería'
+      'Haber aprobado los 6 semestres académicos (120 créditos curriculares completos)',
+      'Contar con los 3 Certificados Modulares oficiales emitidos por el instituto',
+      'Constancia global de Prácticas Preprofesionales EFSRT (720 a 840 horas según carrera)',
+      'Constancia de acreditación de idioma extranjero (Inglés nivel A2 emitido por el instituto)',
+      'Aprobación de la sustentación del Proyecto de Innovación Productiva o Examen de Suficiencia',
+      'Constancia de no adeudo general (Biblioteca, Tesorería, Laboratorios y Dirección)',
+      '4 Fotografías tamaño pasaporte en papel mate a color con terno formal'
     ],
     pasos: [
-      'Solicitar expediente de egresado en Secretaría General.',
-      'Presentar proyecto de innovación ante el coordinador de carrera.',
-      'Sustentación pública ante el jurado calificador.',
-      'Emisión y registro oficial del Título a Nombre de la Nación ante el MINEDU.'
+      'Aperturar Expediente de Titulación en Secretaría Académica.',
+      'Designación de asesor y fecha de sustentación del Proyecto de Innovación o Examen.',
+      'Sustentación pública y firma del Acta de Titulación Profesional Técnica.',
+      'Tramitación del diploma oficial ante el MINEDU y entrega en ceremonia solemne.'
+    ]
+  },
+  {
+    id: 'tramite-bachiller-tecnico',
+    nombre: 'Grado de Bachiller Técnico (Ley N° 30512)',
+    categoria: 'Grados',
+    costo: 'S/ 120.00 (Emisión de diploma y registro oficial)',
+    plazo: '20 a 30 días hábiles',
+    requisitos: [
+      'Haber culminado satisfactoriamente los 120 créditos de la carrera técnica',
+      'Haber concluido y aprobado un trabajo de aplicación profesional o proyecto de investigación',
+      'Acreditar conocimiento de un idioma extranjero (Inglés básico-intermedio A2)',
+      'Voucher del Banco de la Nación validado y FUT oficial'
+    ],
+    pasos: [
+      'Presentar solicitud de Bachiller Técnico adjuntando trabajo de aplicación aprobado.',
+      'Validar pago de la tasa oficial en pagos.ieshercar.edu.pe.',
+      'Revisión en Unidad Académica y emisión del diploma con registro oficial.'
     ]
   },
   {
     id: 'tramite-carne',
-    nombre: 'Carné de Educación Superior (Medio Pasaje)',
+    nombre: 'Carné de Educación Superior MINEDU (Medio Pasaje Oficial)',
     categoria: 'Bienestar',
-    costo: 'Aprox. S/ 15.00 - S/ 20.00 (Tasa fijada por MINEDU)',
-    plazo: 'Sujeto al cronograma de entrega del MINEDU',
+    costo: 'S/ 18.00 (Tasa fijada por el Ministerio de Educación)',
+    plazo: 'Según cronograma oficial de remisión de lotes MINEDU (15 a 25 días)',
     requisitos: [
-      'Estar formalmente matriculado en el semestre lectivo',
-      'Fotografía digital tamaño carnet a color con fondo blanco',
-      'Comprobante de pago del Banco de la Nación'
+      'Estar formalmente matriculado en el semestre lectivo vigente',
+      'Fotografía digital tamaño carnet a color con fondo blanco y ropa oscura (JPG/PNG)',
+      'Voucher de pago del Banco de la Nación validado en la plataforma de pagos'
     ],
     pasos: [
-      'Secretaría publica la convocatoria semestral de carné emitida por el MINEDU.',
-      'Realizar el depósito en el BN y registrar el voucher.',
-      'Entregar foto digital en secretaría.',
-      'Recepción física del carné oficial cuando el MINEDU remite el lote a Paita.'
+      'Secretaría Académica publica la convocatoria semestral de carné institucional.',
+      'Abonar S/ 18.00 en el Banco de la Nación y subir comprobante a pagos.ieshercar.edu.pe.',
+      'Cargar o enviar foto digital con las especificaciones técnicas requeridas.',
+      'Recepción física del carné con chip para gozar del 50% de descuento en pasajes urbanos e interurbanos.'
     ]
   },
   {
-    id: 'tramite-constancia-estudios',
-    nombre: 'Constancia de Estudios / Notas / Egresado',
+    id: 'tramite-certificado-estudios',
+    nombre: 'Certificado Oficial de Estudios (Por Ciclo o Completo)',
     categoria: 'Documentos',
-    costo: 'Aprox. S/ 15.00 - S/ 25.00',
-    plazo: '2 a 3 días hábiles',
+    costo: 'S/ 25.00 por ciclo / S/ 60.00 ciclo completo (I al VI)',
+    plazo: '3 a 5 días hábiles',
     requisitos: [
-      'Estar matriculado o haber cursado ciclos en el instituto',
-      'FUT indicando el motivo',
-      'Comprobante de pago validado'
+      'Haber cursado y aprobado las asignaturas correspondientes',
+      'FUT especificando si requiere desglose por ciclo o récord completo',
+      'Comprobante de depósito en el Banco de la Nación',
+      '2 Fotos tamaño carnet para el membrete oficial del certificado'
     ],
     pasos: [
-      'Depositar en el BN y validar en el sistema de pagos.',
-      'Presentar solicitud en Mesa de Partes.',
-      'Recoger el documento en Secretaría.'
+      'Pagar la tasa en el BN y validar comprobante en pagos.ieshercar.edu.pe.',
+      'Presentar FUT y fotos por Mesa de Partes en campus Paita Alta.',
+      'Secretaría confecciona el certificado con sellos de seguridad y firmas de ley.'
+    ]
+  },
+  {
+    id: 'tramite-convalidacion',
+    nombre: 'Convalidación de Unidades Didácticas',
+    categoria: 'Académico',
+    costo: 'S/ 15.00 por cada curso a convalidar',
+    plazo: '7 a 10 días hábiles (Dictamen de Comisión Académica)',
+    requisitos: [
+      'Certificado oficial de estudios de la institución de origen (otro instituto o universidad)',
+      'Sílabos de los cursos aprobados debidamente visados y sellados por la institución de origen',
+      'Coincidencia mínima del 80% de contenidos temáticos y créditos',
+      'FUT detallando la tabla de convalidaciones solicitada'
+    ],
+    pasos: [
+      'Solicitar formato de convalidación en Secretaría o generar FUT en línea.',
+      'Entregar expediente completo con sílabos visados por Mesa de Partes.',
+      'La Comisión Evaluadora emite Resolución Directoral de Convalidación de Asignaturas.'
+    ]
+  },
+  {
+    id: 'tramite-traslado-interno',
+    nombre: 'Traslado Interno de Carrera Profesional',
+    categoria: 'Académico',
+    costo: 'S/ 40.00 (Derecho de traslado y apertura de nuevo legajo)',
+    plazo: '5 a 7 días hábiles (Antes del inicio del semestre)',
+    requisitos: [
+      'Haber aprobado como mínimo el I Ciclo en la carrera de origen en el IESTP Hermanos Cárcamo',
+      'Existencia de vacante disponible en la carrera de destino (APSTI, ANI, CONTA o DPA)',
+      'FUT solicitando traslado interno con justificación vocacional',
+      'Voucher del Banco de la Nación'
+    ],
+    pasos: [
+      'Presentar solicitud durante el periodo de matrícula o ratificación.',
+      'Evaluación del expediente por la Jefatura de Unidad Académica.',
+      'Convalidación automática de cursos transversales comunes y emisión de nueva ficha.'
+    ]
+  },
+  {
+    id: 'tramite-traslado-externo',
+    nombre: 'Traslado Externo Nacional (Desde otro Instituto o Universidad)',
+    categoria: 'Académico',
+    costo: 'S/ 70.00 (Derecho de traslado y convalidación inicial)',
+    plazo: '7 a 12 días hábiles',
+    requisitos: [
+      'Certificado oficial de estudios de educación superior técnica o universitaria',
+      'Constancia de no haber sido separado por medida disciplinaria en la institución de origen',
+      'Sílabos oficiales sellados y copia de DNI',
+      'Voucher del Banco de la Nación'
+    ],
+    pasos: [
+      'Presentar expediente por Mesa de Partes en las fechas fijadas en el cronograma de admisión.',
+      'Evaluación técnica de créditos y vacantes por la Coordinación de Carrera.',
+      'Resolución Directoral de admisión por traslado externo y matrícula formal.'
+    ]
+  },
+  {
+    id: 'tramite-reserva-matricula',
+    nombre: 'Reserva de Matrícula y Licencia Temporal de Estudios',
+    categoria: 'Académico',
+    costo: 'S/ 30.00 (Hasta por 2 semestres lectivos)',
+    plazo: '3 a 5 días hábiles',
+    requisitos: [
+      'FUT solicitando la reserva de vacante antes de finalizar el primer mes de clases',
+      'Exposición de motivos justificados (salud, trabajo, motivos familiares o económicos)',
+      'Comprobante de depósito en el Banco de la Nación'
+    ],
+    pasos: [
+      'Ingresar solicitud mediante FUT en Mesa de Partes Virtual o presencial.',
+      'Abonar la tasa en el BN y registrar comprobante.',
+      'Emisión de constancia oficial de reserva de vacante garantizada hasta por 1 año calendario.'
+    ]
+  },
+  {
+    id: 'tramite-reincorporacion',
+    nombre: 'Reincorporación de Estudios (Retorno tras Reserva)',
+    categoria: 'Académico',
+    costo: 'S/ 35.00',
+    plazo: '3 a 5 días hábiles antes del inicio de clases',
+    requisitos: [
+      'Haber contado con reserva aprobada o no haber excedido los 2 semestres de interrupción',
+      'FUT solicitando reincorporación y adecuación al plan curricular vigente',
+      'Voucher de pago del Banco de la Nación'
+    ],
+    pasos: [
+      'Presentar FUT 15 días antes de iniciar la matrícula del semestre siguiente.',
+      'Evaluación de adecuación de malla curricular si hubo actualización de plan de estudios.',
+      'Habilitación en el Sistema Académico para proceder con la matrícula regular.'
+    ]
+  },
+  {
+    id: 'tramite-rectificacion-matricula',
+    nombre: 'Rectificación de Matrícula (Cambio, Retiro o Inclusión de Curso)',
+    categoria: 'Académico',
+    costo: 'S/ 15.00',
+    plazo: '24 a 48 horas (Dentro de las 2 primeras semanas de clases)',
+    requisitos: [
+      'Ficha de matrícula preliminar del semestre en curso',
+      'FUT indicando las asignaturas que se agregan, retiran o cambian de sección',
+      'Voucher de depósito en el Banco de la Nación'
+    ],
+    pasos: [
+      'Llenar el formulario en Mesa de Partes o en línea.',
+      'Coordinación Académica valida que no exista cruce de horarios.',
+      'Actualización inmediata en el Sistema Académico Institucional.'
+    ]
+  },
+  {
+    id: 'tramite-constancia-egresado',
+    nombre: 'Constancia de Egresado y No Adeudo Institucional',
+    categoria: 'Documentos',
+    costo: 'S/ 20.00',
+    plazo: '2 a 3 días hábiles',
+    requisitos: [
+      'Haber aprobado la totalidad de los 120 créditos de la carrera (I al VI ciclo)',
+      'Constancia de no adeudo emitida por Biblioteca y Laboratorios',
+      'Voucher de pago BN y FUT formal'
+    ],
+    pasos: [
+      'Verificar récord académico completo en el sistema.',
+      'Abonar tasa en el BN y validar en pagos.ieshercar.edu.pe.',
+      'Emisión de Constancia de Egresado oficial para postular a empleos o tramitar prácticas.'
+    ]
+  },
+  {
+    id: 'tramite-duplicado-diploma',
+    nombre: 'Duplicado de Diploma de Título Técnico o Certificado Modular',
+    categoria: 'Documentos',
+    costo: 'S/ 90.00 (Por pérdida, deterioro o rectificación de datos)',
+    plazo: '15 a 20 días hábiles (Requiere publicación en diario y reporte MINEDU)',
+    requisitos: [
+      'Denuncia policial original por pérdida o robo (o entrega del documento deteriorado)',
+      'Publicación de pérdida en diario de circulación regional o nacional',
+      'Copia de DNI vigente y 2 fotos tamaño pasaporte en traje formal',
+      'Comprobante de depósito en el Banco de la Nación'
+    ],
+    pasos: [
+      'Presentar expediente completo con denuncia y recorte de diario por Mesa de Partes.',
+      'Dirección General emite Resolución de anulación del original y autorización de duplicado.',
+      'Emisión del nuevo diploma con sello de "DUPLICADO" y registro en el MINEDU.'
+    ]
+  },
+  {
+    id: 'tramite-justificacion-inasistencia',
+    nombre: 'Justificación Oficial de Inasistencias (Prevención de DPI)',
+    categoria: 'Académico',
+    costo: 'Gratuito (Trámite de Bienestar y Secretaría Académica)',
+    plazo: '48 horas hábiles (Plazo máximo de presentación: 5 días hábiles tras la falta)',
+    requisitos: [
+      'FUT detallando fechas exactas de inasistencia y unidades didácticas afectadas',
+      'Certificado médico original visado por MINSA / EsSalud (o constancia de trabajo en caso de fuerza mayor)',
+      'Copia simple de DNI del estudiante'
+    ],
+    pasos: [
+      'Presentar FUT y sustento médico o laboral dentro de los 5 días de ocurrida la falta.',
+      'Jefatura de Unidad Académica emite proveído de justificación a los docentes responsables.',
+      'Los docentes reprograman evaluaciones o prácticas pendientes sin penalización en nota.'
     ]
   }
 ];
@@ -1070,6 +1266,537 @@ Para postular a la admisión del IESTP Hermanos Cárcamo ya no necesitas ir a tu
 3. Ingresa tu número de DNI y fecha de nacimiento.
 4. Selecciona tu colegio de egreso en Piura o cualquier región del país.
 5. El sistema generará tu **Certificado Oficial con Firma Digital y Código QR** con valor legal pleno.`
+  },
+  {
+    id: 'faq-tupa-tramites-lista',
+    titulo: 'Guía Completa del TUPA Institucional (16 Trámites Oficiales)',
+    keywords: ['tupa', 'tramites tupa', 'costos tramites', 'tasas institucionales', 'lista de tramites', 'cuanto cuesta cada tramite', 'todos los tramites'],
+    categorias: ['tramites'],
+    locucion: "¡Hola! En el instituto disponemos de dieciséis procedimientos oficiales aprobados en nuestro TUPA institucional, entre ellos matrículas, certificados modulares, grado de bachiller técnico y titulación profesional. En tu pantalla tienes el tarifario oficial completo.",
+    respuesta: `📋 **Compendio Oficial de Trámites y Tasas TUPA del IESTP Hermanos Cárcamo:**
+*Los pagos se efectúan en el Banco de la Nación (Cta. Cte. N° **\`00-631-012948\`**) y se validan en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).*
+
+| N° | Trámite Institucional | Tasa Oficial (S/.) | Plazo Estimado |
+|:---|:----------------------|:-------------------|:---------------|
+| 1 | **Matrícula Regular Semestral** | S/. 120.00 | 24 - 48 horas |
+| 2 | **Matrícula Extemporánea** | S/. 140.00 | 48 - 72 horas |
+| 3 | **Certificado Modular Progresivo (I, II o III)** | S/. 45.00 | 7 a 10 días |
+| 4 | **Título Profesional Técnico a Nombre de la Nación** | S/. 180.00 | 30 a 45 días |
+| 5 | **Grado de Bachiller Técnico (Ley 30512)** | S/. 120.00 | 20 a 30 días |
+| 6 | **Carné de Educación Superior MINEDU (Medio Pasaje)** | S/. 18.00 | Lote MINEDU |
+| 7 | **Certificado Oficial de Estudios (Por Ciclo)** | S/. 25.00 | 3 a 5 días |
+| 8 | **Certificado Oficial Completo (I al VI Ciclo)** | S/. 60.00 | 5 a 7 días |
+| 9 | **Convalidación de Unidad Didáctica (Por curso)** | S/. 15.00 | 7 a 10 días |
+| 10 | **Traslado Interno de Carrera** | S/. 40.00 | 5 a 7 días |
+| 11 | **Traslado Externo Nacional** | S/. 70.00 | 7 a 12 días |
+| 12 | **Reserva de Matrícula (Hasta 2 semestres)** | S/. 30.00 | 3 a 5 días |
+| 13 | **Reincorporación de Estudios** | S/. 35.00 | 3 a 5 días |
+| 14 | **Rectificación de Matrícula** | S/. 15.00 | 24 a 48 horas |
+| 15 | **Constancia de Egresado y No Adeudo** | S/. 20.00 | 2 a 3 días |
+| 16 | **Duplicado de Diploma de Título Técnico** | S/. 90.00 | 15 a 20 días |`
+  },
+  {
+    id: 'faq-fut-mesa-de-partes',
+    titulo: '¿Cómo llenar y presentar el Formulario Único de Trámite (FUT)?',
+    keywords: ['fut', 'formulario unico de tramite', 'llenar fut', 'mesa de partes', 'presentar fut', 'modelo de fut', 'solicitud fut', 'descargar fut'],
+    categorias: ['tramites'],
+    locucion: "¡Hola! Para presentar cualquier trámite en el instituto debes utilizar el Formulario Único de Trámite. Puedes generarlo directamente con nuestro botón Generar FUT en la parte superior, o ingresar a la mesa de partes virtual las veinticuatro horas del día.",
+    respuesta: `📄 **Guía para la Generación y Presentación del FUT Institucional:**
+
+El **Formulario Único de Trámite (FUT)** es el documento oficial mediante el cual solicitas trámites académicos y administrativos ante la Dirección General:
+
+* ⚡ **Generador de FUT en Pantalla:** Puedes pulsar el botón azul **"Generar FUT"** en la barra superior o escribir tus datos para previsualizar y descargar tu solicitud en formato PDF listo para imprimir o enviar.
+* 📋 **Datos requeridos en el formulario:**
+  1. **Sumilla:** Resumen claro del pedido (Ej: *"Solicito Emisión de Certificado Modular I"* o *"Solicito Justificación de Inasistencia"*).
+  2. **Datos Personales:** Apellidos y nombres completos, DNI, dirección actual en Paita o Piura, celular y correo electrónico.
+  3. **Programa de Estudio y Semestre:** Carrera técnica (APSTI, ANI, CONTA o DPA), ciclo y turno (diurno o nocturno).
+  4. **Fundamentación:** Exposición breve de los hechos y base de la solicitud.
+  5. **Anexos adjuntos:** Copia de DNI, voucher del Banco de la Nación y sustentos respectivos.
+* 🌐 **Canales de Recepción:**
+  - **Mesa de Partes Virtual 24/7:** [sistema.ieshercar.edu.pe/registro-tramite/](https://sistema.ieshercar.edu.pe/registro-tramite/)
+  - **Mesa de Partes Presencial:** Campus Paita Alta (Lunes a Viernes de 8:00 a.m. a 3:00 p.m.).`
+  },
+  {
+    id: 'faq-balotario-admision',
+    titulo: 'Balotario Completo de Temas para el Examen de Admisión 2026',
+    keywords: ['balotario', 'que viene en el examen', 'temas del examen', 'guia de examen', 'temario admision', 'balotario 2026', 'preguntas del examen', 'que estudiar'],
+    categorias: ['admision'],
+    locucion: "¡Hola! El examen ordinario de admisión consta de cien preguntas de opción múltiple con duración de tres horas. Abarca razonamiento matemático, razonamiento verbal, cultura general, ciencias y realidad de la región Piura. En tu pantalla tienes el temario detallado.",
+    respuesta: `🎯 **Balotario Oficial y Estructura del Examen de Admisión 2026:**
+*La prueba contiene 100 preguntas de opción múltiple (duración: 3 horas) distribuidas de la siguiente manera:*
+
+1. 📐 **Razonamiento Lógico-Matemático (30% - 30 preguntas):**
+   - Planteo de ecuaciones de primer y segundo grado.
+   - Regla de tres simple directa e inversa, porcentajes y regla de interés.
+   - Sucesiones numéricas, literales y figuras en serie.
+   - Razones, proporciones y proporcionalidad geométrica.
+   - Áreas, perímetros y análisis combinatorio elemental.
+2. 📖 **Razonamiento Verbal y Comprensión Lectora (30% - 30 preguntas):**
+   - Comprensión de textos científicos, económicos y descriptivos.
+   - Sinónimos y antónimos contextuales.
+   - Analogías verbales y términos excluidos.
+   - Oraciones incompletas y conectores lógicos de causa, consecuencia y contraste.
+3. 🏛️ **Cultura General y Realidad Regional / Nacional (20% - 20 preguntas):**
+   - Historia y Geografía del Perú y de la Región Piura.
+   - El Puerto de Paita, Terminales Portuarios Euroandinos (TPE) y comercio marítimo.
+   - Héroes patrios: Miguel Grau Seminario y los Hermanos Cárcamo de Paita.
+   - Poderes del Estado, Constitución Política y derechos ciudadanos.
+4. 🔬 **Ciencias Básicas, Medio Ambiente y Tecnología (20% - 20 preguntas):**
+   - Ecosistema del Mar Peruano, Corriente de Humboldt y biodiversidad marina.
+   - Fundamentos de física y química aplicada a la materia y energía.
+   - Tecnologías de la Información y Comunicación (TIC), ciberseguridad e internet.
+   - Principios de higiene y normas sanitarias de inocuidad alimentaria (HACCP).`
+  },
+  {
+    id: 'faq-certificacion-modular',
+    titulo: '¿Cómo funciona la Certificación Modular Progresiva y para qué sirve?',
+    keywords: ['certificacion modular', 'certificado modular', 'diploma modular', 'modulos formativos', 'titulo intermedio', 'certificados por ciclo'],
+    categorias: ['academico', 'carreras'],
+    locucion: "¡Hola! Las certificaciones modulares son diplomas oficiales del Ministerio de Educación que obtienes cada dos semestres al aprobar los cursos y prácticas de cada módulo. Te permiten trabajar formalmente en tu especialidad antes de terminar la carrera.",
+    respuesta: `🥇 **Certificación Modular Progresiva — ¡Trabaja mientras estudias!**
+
+En el IESTP Hermanos Cárcamo la formación técnica está dividida en **3 Módulos Formativos Oficiales**. Cada vez que completas un módulo (1 año académico / 2 semestres) obtienes un diploma con valor oficial MINEDU:
+
+* 💻 **En APSTI (Sistemas y Redes):**
+  - **Módulo I (Ciclos I y II):** *Soporte Técnico, Mantenimiento de Equipos y Redes de Cómputo*.
+  - **Módulo II (Ciclos III y IV):** *Desarrollo de Software y Gestión de Bases de Datos*.
+  - **Módulo III (Ciclos V y VI):** *Administración de Plataformas, Infraestructura Cloud y Seguridad*.
+* 🚢 **En ANI (Negocios Internacionales):**
+  - **Módulo I (Ciclos I y II):** *Gestión Comercial y Administrativa de Negocios*.
+  - **Módulo II (Ciclos III y IV):** *Operatividad Aduanera y Despacho de Exportación / Importación (DAM)*.
+  - **Módulo III (Ciclos V y VI):** *Logística Internacional, Depósitos Portuarios y Cadena de Frío*.
+* 📊 **En CONTA (Contabilidad):**
+  - **Módulo I (Ciclos I y II):** *Procesos Contables, Libros Principales y Planillas PLAME*.
+  - **Módulo II (Ciclos III y IV):** *Costos Industriales y Liquidación Tributaria SUNAT (SIRE / PDT)*.
+  - **Módulo III (Ciclos V y VI):** *Formulación de Estados Financieros, Auditoría y Sistema SIAF-SP*.
+* 🐟 **En DPA (Pesquería y Acuicultura):**
+  - **Módulo I (Ciclos I y II):** *Extracción, Navegación Marina y Artes de Pesca*.
+  - **Módulo II (Ciclos III y IV):** *Producción Acuícola y Granjas de Especies Marinas*.
+  - **Módulo III (Ciclos V y VI):** *Procesamiento de Congelados / Conservas y Calidad HACCP*.`
+  },
+  {
+    id: 'faq-planta-piloto-pesquera',
+    titulo: 'Planta Piloto Pesquera, Congelados y Laboratorio de Control de Calidad HACCP',
+    keywords: ['planta piloto', 'laboratorio pesquero', 'haccp', 'conservas', 'congelado de pota', 'maquinarias dpa', 'autoclaves', 'selladoras', 'sanipes'],
+    categorias: ['carreras', 'institucional'],
+    locucion: "¡Hola! El instituto cuenta con una moderna Planta Piloto Pesquera y laboratorio de microbiología marina donde los estudiantes aprenden en la práctica el procesamiento de congelados de pota y conservas de pescado bajo estrictas normas de calidad sanitaria.",
+    respuesta: `🐟 **Planta Piloto Pesquera y Laboratorio de Control de Calidad (DPA):**
+
+El IESTP Hermanos Cárcamo cuenta con una de las infraestructuras de formación pesquera y acuícola más completas del norte del país:
+
+* 🥫 **Línea de Enlatado y Conservas:**
+  - Selladora semiautomática de latas de hojalata y aluminio.
+  - Autoclave vertical de esterilización térmica con registro termométrico.
+  - Marmitas de cocción y mesas de fileteo en acero inoxidable quirúrgico AISI 316.
+* ❄️ **Línea de Congelado y Procesamiento Hidrobiológico:**
+  - Túnel de congelación rápida para pota (*Dosidicus gigas*), pescado blanco y conchas de abanico.
+  - Cámara de almacenamiento a temperatura bajo cero (-18°C a -25°C).
+  - Detector de metales y balanzas de precisión para empaque al vacío.
+* 🔬 **Laboratorio de Análisis Sensorial y Microbiológico:**
+  - Equipos de incubación para recuento de mesófilos, coliformes y *Salmonella*.
+  - Refractómetros, pH-metros digitales y termocuplas de penetración.
+  - Taller de armado, corte y reparación de redes de enmalle, cerco y palangre.`
+  },
+  {
+    id: 'faq-laboratorios-apsti-cisco',
+    titulo: 'Laboratorios de Cómputo APSTI, Academia Cisco, Linux y Servidores Cloud',
+    keywords: ['laboratorios apsti', 'cisco', 'redes', 'computadoras', 'servidores', 'linux', 'packet tracer', 'programacion', 'hardware', 'software'],
+    categorias: ['carreras', 'institucional'],
+    locucion: "¡Hola! Para la carrera de Sistemas y Redes contamos con tres centros de cómputo con procesadores Core i7, fibra óptica dedicada, switches y routers Cisco para prácticas reales de cableado y servidores Linux en la nube.",
+    respuesta: `💻 **Centros de Cómputo de Alta Tecnología para APSTI:**
+
+La carrera de **Arquitectura de Plataformas y Servicios TI** cuenta con equipamiento especializado de estándar corporativo:
+
+* 🖥️ **Centros de Cómputo 1, 2 y 3:**
+  - Estaciones de trabajo de alto rendimiento con procesadores Intel Core i7, 16 GB de RAM y almacenamiento SSD NVMe.
+  - Monitores panorámicos de alta definición para programación y diseño web.
+  - Conexión simétrica de fibra óptica dedicada para despliegues en la nube.
+* 🌐 **Taller de Conectividad y Redes Cisco:**
+  - Racks con routers y switches administrables Cisco Catalyst.
+  - Patch panels, crimpadoras, herramientas Fluke para certificación de cableado estructurado Cat 6A.
+  - Entorno de simulación de redes complejas con Cisco Packet Tracer y GNS3.
+* ☁️ **Servidores y Entornos de Desarrollo:**
+  - Virtualización con Proxmox, VMware y servidores locales Linux (Ubuntu Server / Debian / Rocky Linux).
+  - Herramientas instaladas: Visual Studio Code, Git, Docker, Node.js, Python, MySQL Workbench, XAMPP, Android Studio y React.`
+  },
+  {
+    id: 'faq-comercio-exterior-ani-vuce',
+    titulo: 'Operaciones Aduaneras VUCE, DAM y Logística en el Puerto de Paita (ANI)',
+    keywords: ['vuce', 'dam', 'aduanas', 'puerto de paita', 'tpe', 'incoterms', 'comercio exterior ani', 'agencia de aduana', 'exportacion pota mango'],
+    categorias: ['carreras'],
+    locucion: "¡Hola! Los estudiantes de Negocios Internacionales se capacitan directamente en el uso de la Ventanilla Única de Comercio Exterior, llenado de la Declaración Aduanera de Mercancías y logística de contenedores refrigerados en el Puerto de Paita.",
+    respuesta: `🚢 **Operatividad Aduanera y Portuaria de Vanguardia (ANI):**
+
+La carrera de **Administración de Negocios Internacionales** está directamente articulada con el movimiento logístico del **Puerto de Paita (Terminales Portuarios Euroandinos - TPE)**:
+
+* 📦 **Ventanilla Única de Comercio Exterior (VUCE):** Capacitación en trámites sanitarios y fitosanitarios ante **SANIPES** (productos pesqueros), **SENASA** (mango, uva y banano orgánico) y **DIGESA**.
+* 📋 **Declaración Aduanera de Mercancías (DAM):** Llenado y liquidación de tributos arancelarios de regímenes de exportación definitiva, importación para el consumo, drawback y admisión temporal.
+* 🌐 **Incoterms 2020 y Logística de Contenedores:** Simulación y costeo de fletes marítimos en contenedores reefer (refrigerados) de 40 pies hacia Estados Unidos, la Unión Europea y Asia.
+* 🔐 **Certificaciones Internacionales de Seguridad:** Conocimiento de las normas BASC (Alianza Empresarial para un Comercio Seguro) y OEA (Operador Económico Autorizado).`
+  },
+  {
+    id: 'faq-contabilidad-sire-sunat',
+    titulo: 'Tributación SIRE SUNAT, PDT 621, PLAME y Software Contable (CONTA)',
+    keywords: ['sire', 'sire sunat', 'pdt 621', 'plame', 'concar', 'siscont', 'tributacion', 'impuestos', 'libros electronicos', 'declaracion sunat'],
+    categorias: ['carreras'],
+    locucion: "¡Hola! En la carrera de Contabilidad aprenderás a dominar el Sistema Integrado de Registros Electrónicos SIRE de la SUNAT, liquidar impuestos mensuales en el PDT, elaborar planillas en el PLAME y gestionar software como Concar.",
+    respuesta: `📊 **Dominio Tributario y Tecnológico SUNAT (Contabilidad):**
+
+El plan de estudios de **Contabilidad** forma profesionales con alta capacidad técnica para responder a las exigencias modernas de la administración tributaria:
+
+* 🏛️ **Sistema Integrado de Registros Electrónicos (SIRE - SUNAT):**
+  - Generación y aceptación de propuestas del Registro de Compras Electrónico (RCE) y Registro de Ventas e Ingresos Electrónico (RVIE).
+  - Manejo de inconsistencias, reemplazos de propuesta y notas de crédito.
+* 🧾 **Declaración y Liquidación Telemática:**
+  - Formulario Virtual Declara Fácil N° 621 (IGV - Renta Mensual).
+  - Planilla Electrónica Mensual (PLAME) y T-Registro para contratos laborales y aportes a EsSalud / ONP.
+  - Declaración Jurada Anual del Impuesto a la Renta de Tercera Categoría.
+* 💻 **Software y Herramientas Especializadas:**
+  - Talleres prácticos con Concar, Siscont y software de gestión contable-financiera.
+  - Manejo de Sistemas Integrados de Administración Financiera del Estado (SIAF-SP) para trabajar en municipalidades y entidades públicas.`
+  },
+  {
+    id: 'faq-convenios-empresas-paita',
+    titulo: 'Convenios Empresariales y Alianzas Estratégicas en Paita y Piura',
+    keywords: ['convenios', 'empresas con convenio', 'alianzas', 'donde trabajar', 'hayduk', 'seafrost', 'tpe', 'empresas paita', 'bolsa laboral empresas'],
+    categorias: ['institucional', 'tramites'],
+    locucion: "¡Hola! El instituto mantiene convenios activos con las empresas pesqueras, logísticas y agroindustriales más importantes de la provincia de Paita, facilitando pasantías, prácticas profesionales remuneradas y empleo directo para nuestros egresados.",
+    respuesta: `🤝 **Red de Convenios y Alianzas Estratégicas del IESTP Hermanos Cárcamo:**
+
+Gracias a su ubicación estratégica en el polo pesquero y portuario más importante del norte del país, el instituto cuenta con vínculos directos con:
+
+* 🚢 **Sector Portuario y Comercio Exterior:**
+  - **Terminales Portuarios Euroandinos (TPE Paita):** Pasantías operativas en patio de contenedores y áreas administrativas.
+  - **Ransa Comercial y Medlog:** Operaciones de almacenamiento aduanero y distribución física.
+  - **Agencias Marítimas y de Aduanas de Paita:** Prácticas para asistentes de despacho aduanero.
+* 🐟 **Sector Pesquero e Hidrobiológico:**
+  - **Seafrost S.A.C.:** Planta congeladora líder en Paita (prácticas en aseguramiento de calidad HACCP y congelado de pota).
+  - **Corporación Hayduk y Austral Group:** Plantas procesadoras de conservas y harina de pescado.
+  - **Pesquera Diamante y Consorcio de Alimentos:** Puestos técnicos en producción y sanidad.
+* 💼 **Sector Agroindustrial y Financiero:**
+  - **Empresas agroexportadoras del Valle del Chira:** Exportación de banano orgánico, mango y uva.
+  - **Caja Municipal de Piura y Cajas de Ahorro:** Plazas para asistentes contables y créditos.
+  - **Municipalidad Provincial de Paita:** Convenios interinstitucionales de apoyo técnico y social.`
+  },
+  {
+    id: 'faq-seguro-sis-estudiantil',
+    titulo: 'Seguro Integral de Salud (SIS Gratuito) y Tópico de Salud',
+    keywords: ['sis', 'seguro gratis', 'seguro sis', 'topico', 'medico', 'enfermedad', 'atencion medica', 'accidente estudiantil'],
+    categorias: ['bienestar'],
+    locucion: "¡Hola! Todos los estudiantes matriculados que no cuenten con EsSalud tienen derecho a afiliarse gratuitamente al Seguro Integral de Salud. En el campus contamos con un tópico médico de atención inmediata para cualquier emergencia de salud.",
+    respuesta: `🏥 **Atención Médica y Seguro Integral de Salud (SIS Gratuito):**
+
+En el marco de la política de bienestar estudiantil del Ministerio de Educación:
+
+* 🛡️ **Afiliación al SIS Gratuito:**
+  - Si no estás asegurado en EsSalud ni en un seguro privado, la **Oficina de Bienestar Estudiantil** tramita tu afiliación inmediata al SIS Gratuito.
+  - Cobertura completa de consultas médicas, medicinas, exámenes de laboratorio, hospitalización y cirugías en postas médicas y en el **Hospital Las Mercedes de Paita**.
+* 🩺 **Tópico Médico del Campus Paita Alta:**
+  - Atención primaria de emergencias, primeros auxilios, curaciones y control de signos vitales.
+  - Horario de atención: Lunes a Viernes de 8:00 a.m. a 2:00 p.m.
+  - Para afiliarte solo debes acercarte con tu **DNI original** a la Oficina de Bienestar Estudiantil.`
+  },
+  {
+    id: 'faq-reserva-matricula',
+    titulo: '¿Cómo solicitar Reserva de Matrícula o Licencia de Estudios?',
+    keywords: ['reserva de matricula', 'reservar matricula', 'licencia de estudios', 'dejar de estudiar temporalmente', 'guardar vacante', 'posponer estudios'],
+    categorias: ['academico', 'tramites'],
+    locucion: "¡Hola! Si por motivos de trabajo, salud o familiares necesitas suspender tus estudios, puedes solicitar formalmente la reserva de tu vacante hasta por dos semestres consecutivos para no perder tus cursos aprobados ni tu derecho de ingreso.",
+    respuesta: `⏸️ **Guía para Solicitar Reserva de Matrícula (Licencia de Estudios):**
+
+Si por razones de fuerza mayor no puedes continuar el semestre, reserva tu vacante formalmente para proteger tu récord académico:
+
+* ⏳ **Plazo para Solicitar:** Debe tramitarse dentro de los primeros **30 días calendario** de iniciado el semestre lectivo.
+* 📌 **Periodo Máximo:** Puedes reservar tu matrícula hasta por **2 semestres académicos consecutivos** (1 año lectivo).
+* 📋 **Requisitos:**
+  1. Formulario Único de Trámite (FUT) dirigido a la Dirección General exponiendo el motivo justificado.
+  2. Voucher de pago del Banco de la Nación por derecho de Reserva de Matrícula (**S/. 30.00**).
+  3. No registrar adeudos con biblioteca ni laboratorios.
+* 🔄 **Reincorporación:** Al término de tu reserva, presentas solicitud de reincorporación quince días antes de iniciar el nuevo semestre para retomar tus clases con total normalidad.`
+  },
+  {
+    id: 'faq-traslado-interno-externo',
+    titulo: 'Requisitos para Traslados Internos y Traslados Externos',
+    keywords: ['traslado', 'traslado interno', 'traslado externo', 'cambiar de carrera', 'venir de otra universidad', 'traslado desde piura', 'cambio de instituto'],
+    categorias: ['academico', 'tramites'],
+    locucion: "¡Hola! Si deseas cambiarte de carrera dentro del instituto o vienes de otra universidad o instituto público o privado, puedes solicitar traslado interno o externo antes del inicio del semestre académico. En tu pantalla tienes los requisitos.",
+    respuesta: `🔀 **Modalidades de Traslado Estudiantil en el IESTP Hermanos Cárcamo:**
+
+1. 🔄 **Traslado Interno (Cambio de Programa de Estudio dentro del Instituto):**
+   - **Requisito:** Haber aprobado por lo menos el I Semestre en la carrera de origen (APSTI, ANI, CONTA o DPA).
+   - **Procedimiento:** Presentar FUT solicitando traslado y justificación vocacional durante el periodo de matrícula + tasa TUPA de S/. 40.00.
+   - **Convalidación:** Los cursos transversales de formación general (comunicación, matemática, inglés, TIC) se convalidan automáticamente.
+
+2. 🏛️ **Traslado Externo Nacional (Desde otro Instituto o Universidad):**
+   - **Requisito:** Proceder de una institución de educación superior con autorización oficial del MINEDU o SUNEDU.
+   - **Documentos:** Certificado oficial de estudios de la institución de procedencia, sílabos visados y constancia de no haber sido separado por sanción disciplinaria.
+   - **Tasa TUPA:** S/. 70.00. La comisión académica evalúa créditos y emite Resolución Directoral de convalidación.`
+  },
+  {
+    id: 'faq-bachiller-tecnico-sunedu',
+    titulo: '¿Qué es el Grado de Bachiller Técnico y qué ventajas ofrece?',
+    keywords: ['bachiller tecnico', 'grado de bachiller', 'bachillerato tecnico', 'ley 30512', 'diferencia entre bachiller y titulo', 'puedo hacer maestria'],
+    categorias: ['academico', 'titulacion'],
+    locucion: "¡Hola! La Ley de Institutos reconoce el Grado de Bachiller Técnico para egresados de carreras de tres años que aprueben un proyecto de aplicación. Te otorga rango superior para ascensos laborales y postular a maestrías en universidades.",
+    respuesta: `🎓 **Grado de Bachiller Técnico (Amparo en la Ley N° 30512):**
+
+El Grado de **Bachiller Técnico** es un grado académico de nivel superior que otorga prestigio y validez en el mercado profesional:
+
+* 🚀 **¿Cómo se obtiene?**
+  1. Haber aprobado satisfactoriamente los **120 créditos curriculares** de la carrera técnica (6 semestres).
+  2. Haber culminado y sustentado un **Trabajo de Aplicación Profesional** o Proyecto de Innovación Tecnológica.
+  3. Acreditar el dominio de un idioma extranjero (Inglés nivel A2).
+* 🌟 **Beneficios y Ventajas Clave:**
+  - **Continuidad de Estudios de Posgrado:** Permite postular directamente a diplomados y maestrías de especialización técnica y profesional en universidades nacionales e internacionales.
+  - **Reconocimiento Salarial:** Habilita el acceso a plazas de nivel técnico profesional y escalas salariales superiores en el Estado (Ley SERVIR) y empresas privadas.
+  - **Inscripción Oficial:** Se inscribe en el Registro Nacional de Grados y Títulos del Ministerio de Educación.`
+  },
+  {
+    id: 'faq-actividades-extracurriculares',
+    titulo: 'Deportes, Talleres Culturales y Proyección Social Estudiantil',
+    keywords: ['deportes', 'campeonatos', 'talleres', 'aniversario', 'copa hercar', 'danzas', 'musica', 'actividades', 'feria'],
+    categorias: ['institucional', 'bienestar'],
+    locucion: "¡Hola! En el instituto promovemos el desarrollo integral: realizamos las olimpiadas deportivas Copa Hermanos Cárcamo, festivales de danzas folclóricas, ferias gastronómicas pesqueras en el puerto y proyectos de voluntariado en Paita.",
+    respuesta: `🏆 **Vida Estudiantil, Cultura, Deporte y Tradición:**
+
+El IESTP Hermanos Cárcamo fomenta la integración, el trabajo en equipo y el liderazgo de sus estudiantes:
+
+* ⚽ **Olimpiadas Deportivas "Copa Hermanos Cárcamo":** Campeonatos intercarreras de fulbito femenino/masculino, vóley y básquetbol durante la Semana Técnica y el Aniversario Institucional.
+* 🎭 **Elencos de Arte y Danzas Folclóricas:** Participación en desfiles cívicos, pasacalles y concursos regionales de marinera norteña, tondero y estampas costumbristas piuranas.
+* 🐟 **Feria Tecnológica e Innovación Marina:** Exposición anual abierta al público de Paita donde los alumnos de DPA preparan degustaciones de conservas artesanales y hamburguesas de pota, y los de APSTI presentan aplicaciones móviles.
+* 🤝 **Proyección Social y Cuidado Ambiental:** Campañas de limpieza de playas en Paita y Yacila, jornadas de reforestación y soporte técnico gratuito a comedores populares.`
+  },
+  {
+    id: 'faq-wifi-biblioteca-virtual',
+    titulo: '¿Cómo acceder a la red Wi-Fi institucional y a la Biblioteca Virtual?',
+    keywords: ['wifi', 'clave wifi', 'internet campus', 'biblioteca virtual', 'biblioteca latina', 'yoleo', 'libros virtuales', 'como entrar a la biblioteca'],
+    categorias: ['plataformas', 'institucional'],
+    locucion: "¡Hola! En todo el campus disponemos de la red Wi-Fi Hermanos Cárcamo para estudiantes. Además, puedes acceder a más de cincuenta mil libros digitales en la Biblioteca Virtual Latina ingresando con tu DNI.",
+    respuesta: `📶 **Acceso a Wi-Fi del Campus y Biblioteca Virtual 24/7:**
+
+* 📡 **Conexión Wi-Fi Estudiantil:**
+  - **Nombre de Red (SSID):** \`HERCAR-ESTUDIANTES\`
+  - **Cobertura:** Pabellones de aulas, laboratorios de cómputo, biblioteca y losa deportiva.
+  - **Acceso:** Solicita la contraseña semestral en el Centro de Cómputo APSTI portando tu carné o constancia de matrícula.
+* 📚 **Biblioteca Virtual Latina (Acceso Gratuito 24/7):**
+  - **Enlace de Ingreso:** [iestphercar.bibliotecalatina.com](https://iestphercar.bibliotecalatina.com/login)
+  - **Usuario:** Tu número de **DNI**.
+  - **Contraseña Inicial:** Tu número de DNI (se sugiere cambiarla al ingresar).
+  - **Contenido:** Miles de libros digitales completos de Ingeniería de Software, Comercio Internacional, Auditoría SUNAT, Biología Marina, Acuicultura y Metodología de Investigación.`
+  },
+  {
+    id: 'faq-duplicado-documentos',
+    titulo: '¿Cómo solicitar Duplicado de Título o Certificados por pérdida?',
+    keywords: ['duplicado de titulo', 'perdi mi titulo', 'duplicado certificado', 'denuncia policial', 'recuperar certificado', 'tramitar duplicado'],
+    categorias: ['tramites'],
+    locucion: "¡Hola! En caso de pérdida o deterioro de tu título técnico o certificado oficial, puedes tramitar un duplicado presentando la denuncia policial original, copia de DNI y voucher del Banco de la Nación en Secretaría Académica.",
+    respuesta: `📑 **Procedimiento para Obtención de Duplicados Oficiales:**
+
+1. 👮 **Denuncia Policial:** Realiza la denuncia formal por pérdida o robo de documento en cualquier comisaría de la Policía Nacional del Perú (PNP) o comisaría digital.
+2. 📰 **Publicación en Diario (Solo para Título):** Realiza una publicación de aviso de pérdida en un diario de circulación regional de Piura (La Hora, El Tiempo o diario judicial).
+3. 💳 **Pago en el Banco de la Nación:**
+   - Duplicado de Título Profesional Técnico: **S/. 90.00**
+   - Duplicado de Certificado Modular: **S/. 40.00**
+   - Duplicado de Certificado de Estudios: **S/. 35.00**
+4. 🏢 **Presentación:** Ingresa expediente completo con FUT por Mesa de Partes para emisión de la Resolución Directoral de Duplicado con registro en el MINEDU.`
+  },
+  {
+    id: 'faq-examen-extraordinario-subsanacion',
+    titulo: '¿Cómo es la Evaluación de Recuperación Pedagógica y Subsanación?',
+    keywords: ['recuperacion', 'subsanacion', 'jale un curso', 'examen de recuperacion', 'desaprobados', 'nota 10', 'nota 11', 'nota 12', 'como apruebo'],
+    categorias: ['academico'],
+    locucion: "¡Hola! Si al terminar el semestre obtienes un promedio final entre diez y doce en un curso, tienes derecho al examen de recuperación pedagógica en la semana dieciocho. Si obtienes trece o más, apruebas la asignatura.",
+    respuesta: `🎯 **Reglamento de Recuperación Pedagógica y Subsanación:**
+
+El régimen de evaluación en el IESTP Hermanos Cárcamo es vigesimal (0 a 20) y la nota mínima aprobatoria es **13**:
+
+* 📝 **Derecho a Evaluación de Recuperación:**
+  - Aplica a estudiantes que al finalizar la semana 17 obtengan un promedio final entre **10, 11 y 12**.
+  - Se rinde durante la **semana 18 del semestre** ante el docente titular de la asignatura.
+  - La nota máxima que puede consignarse en el acta de recuperación es **13**.
+* ⚠️ **Casos de Repitencia Directa:**
+  - Si el promedio final es **igual o menor a 09**, desapruebas sin derecho a recuperación pedagógica.
+  - Si tienes condición de **DPI (Desaprobado por Inasistencias al superar el 30% de faltas)**, tu nota final es cero cinco (05) y debes repetir la unidad didáctica obligatoriamente en el siguiente periodo.`
+  },
+  {
+    id: 'faq-horario-atencion-mesa-partes',
+    titulo: 'Canales y Horarios de Mesa de Partes Presencial y Virtual',
+    keywords: ['mesa de partes horario', 'mesa de partes virtual', 'correo mesa de partes', 'donde dejar documentos', 'telefono mesa de partes', 'atencion presencial'],
+    categorias: ['contacto', 'tramites'],
+    locucion: "¡Hola! Nuestra mesa de partes virtual recibe solicitudes las veinticuatro horas en sistema punto i e s hercar punto edu punto pe. Para atención presencial te esperamos de lunes a viernes de ocho de la mañana a tres de la tarde en el campus de Paita Alta.",
+    respuesta: `📬 **Canales de Atención de Mesa de Partes Institucional:**
+
+* 🌐 **Mesa de Partes Virtual (24 horas / 7 días):**
+  - **Enlace directo:** [sistema.ieshercar.edu.pe/registro-tramite/](https://sistema.ieshercar.edu.pe/registro-tramite/)
+  - Permite ingresar trámites con FUT en PDF y comprobante del Banco de la Nación desde cualquier celular o PC.
+  - Recibes un número de expediente y código de seguimiento para consultar el estado en tiempo real.
+* 🏛️ **Mesa de Partes Presencial:**
+  - **Ubicación:** Pabellón Administrativo, Ventanilla 1, Campus Paita Alta.
+  - **Horario:** Lunes a Viernes de 8:00 a.m. a 3:00 p.m. continuo.
+* ✉️ **Correo de Consultas:** \`mesadepartes@ieshercar.edu.pe\` / \`ieshercar@ieshercar.edu.pe\`
+* 📞 **Teléfono de Mesa de Partes:** (073) 251013`
+  },
+  {
+    id: 'faq-cepre-becas-directas',
+    titulo: 'Academia CEPRE-HERCAR: Metodología, Simulacros y Vacantes de Ingreso Directo',
+    keywords: ['cepre hercar', 'ciclo cero', 'ingreso directo cepre', 'academia cepre', 'vacantes cepre', 'cuanto dura cepre', 'simulacros cepre'],
+    categorias: ['admision'],
+    locucion: "¡Hola! La Academia Cepre-Hercar es nuestro programa oficial de preparación pre-superior. Cuenta con ocho semanas de clases intensivas, simulacros quincenales y vacantes de ingreso directo para los mejores puntajes.",
+    respuesta: `🎯 **Academia Preuniversitaria y Técnica CEPRE-HERCAR:**
+
+La mejor vía de preparación e ingreso directo para estudiantes de Paita, Sullana y Piura:
+
+* 📚 **Características del Programa:**
+  - **Duración:** 8 a 10 semanas de preparación intensiva (Enero a Marzo).
+  - **Turnos:** Mañana (8:00 a.m. a 1:00 p.m.) y Tarde (2:00 p.m. a 7:00 p.m.).
+  - **Plana Docente:** Profesores especialistas en razonamiento matemático, lenguaje, ciencias y cultura regional.
+* 🏆 **Ingreso Directo:**
+  - El **30% al 40% del total de vacantes de admisión** se reservan exclusivamente para ser cubiertas por estricto orden de mérito en la Academia CEPRE-HERCAR.
+  - Se rinden **3 Exámenes Parciales Acumulativos**. Los estudiantes que alcancen los primeros puestos obtienen su constancia de ingreso directo sin rendir el examen ordinario.`
+  },
+  {
+    id: 'faq-perfil-egresado-apsti',
+    titulo: 'Perfil Profesional, Tecnologías y Campo Laboral de APSTI',
+    keywords: ['perfil apsti', 'que hace un apsti', 'sueldo apsti', 'tecnologias apsti', 'trabajo programador paita', 'sistemas paita'],
+    categorias: ['carreras'],
+    locucion: "¡Hola! Como profesional en APSTI serás especialista en desarrollo de software web y móvil, administración de redes corporativas Cisco, gestión de bases de datos y soporte en la nube, con sueldos desde dos mil doscientos hasta más de cuatro mil quinientos soles.",
+    respuesta: `💻 **Perfil del Egresado en Arquitectura de Plataformas y Servicios TI:**
+
+* 🛠️ **Habilidades Clave:**
+  - Creación de plataformas web modernas con JavaScript, React, Node.js y Python.
+  - Diseño y administración de bases de datos relacionales en MySQL, SQL Server y PostgreSQL.
+  - Configuración de redes de datos empresariales, routers y switches Cisco.
+  - Seguridad informática, protección contra intrusiones y despliegues en servidores cloud (AWS / GCP).
+* 💼 **Oportunidades de Empleo en Paita y Piura:**
+  - Departamentos de TI en terminales portuarios (TPE Paita) y almacenes aduaneros.
+  - Empresas pesqueras industriales administrando servidores de planta y conectividad marítima.
+  - Entidades financieras (Caja Piura, bancos) y municipalidades de la región.
+  - Trabajo remoto para empresas tecnológicas nacionales e internacionales.`
+  },
+  {
+    id: 'faq-perfil-egresado-ani',
+    titulo: 'Perfil Profesional y Alta Demanda Laboral en el Puerto de Paita (ANI)',
+    keywords: ['perfil ani', 'que hace un administrador de negocios', 'sueldo ani', 'campo laboral aduanas paita', 'trabajo comercio exterior'],
+    categorias: ['carreras'],
+    locucion: "¡Hola! El egresado en Negocios Internacionales es el gestor clave de exportaciones e importaciones en el Puerto de Paita. Maneja la VUCE, aduanas, logística de contenedores refrigerados y contratos globales con sueldos de dos mil a cinco mil soles.",
+    respuesta: `🚢 **Perfil del Egresado en Administración de Negocios Internacionales:**
+
+* 🌐 **Habilidades Clave:**
+  - Coordinación de despachos aduaneros de exportación e importación en la Intendencia de Aduana de Paita (SUNAT).
+  - Trámites fitosanitarios y de origen en la Ventanilla Única de Comercio Exterior (VUCE).
+  - Gestión de fletes marítimos, reservas de espacio naviero y cadena de frío en contenedores reefer.
+  - Negociación internacional con compradores de Europa, Asia y Norteamérica bajo Incoterms 2020.
+* 💼 **Oportunidades de Empleo en Paita y Piura:**
+  - Agencias de aduanas líderes y operadores logísticos internacionales (Ransa, Medlog, Neptunia).
+  - Empresas agroexportadoras del Valle del Chira (mango, uva, banano orgánico, palta).
+  - Empresas conserveras y exportadoras de pota y pescado congelado en Paita y Talara.`
+  },
+  {
+    id: 'faq-perfil-egresado-conta',
+    titulo: 'Perfil Profesional y Asesoría Tributaria Independiente (Contabilidad)',
+    keywords: ['perfil contabilidad', 'que hace un contador tecnico', 'sueldo contador', 'estudio contable paita', 'campo laboral contabilidad'],
+    categorias: ['carreras'],
+    locucion: "¡Hola! Como profesional en Contabilidad serás el consultor financiero y tributario indispensable para empresas pesqueras, comerciales y estudios contables, liquidando impuestos ante la SUNAT y formulando balances generales.",
+    respuesta: `📊 **Perfil del Egresado en Contabilidad:**
+
+* 🧾 **Habilidades Clave:**
+  - Elaboración y análisis integral de Estados Financieros bajo Normas Internacionales de Información Financiera (NIIF).
+  - Liquidación mensual de impuestos en el sistema SIRE de la SUNAT y PDT 621.
+  - Cálculo de costos de producción en plantas pesqueras, agrícolas e industriales.
+  - Manejo de planillas electrónicas PLAME, CTS, gratificaciones y beneficios laborales.
+* 💼 **Oportunidades de Empleo:**
+  - Contralorías y jefaturas de costos en empresas pesqueras y comerciales de Paita y Piura.
+  - Asistente o auditor contable en estudios tributarios y firmas de auditoría.
+  - Gestión presupuestal con el sistema SIAF en municipalidades y entidades públicas.
+  - Ejercicio libre de la profesión asesorando a pequeñas y medianas empresas (MYPEs).`
+  },
+  {
+    id: 'faq-perfil-egresado-dpa',
+    titulo: 'Perfil Profesional en Plantas de Congelado, Acuicultura y HACCP (DPA)',
+    keywords: ['perfil dpa', 'que hace pesqueria', 'sueldo pesqueria', 'jefe de calidad haccp', 'acuicultura paita', 'plantas pesqueras trabajo'],
+    categorias: ['carreras'],
+    locucion: "¡Hola! El egresado en Desarrollo Pesquero y Acuícola es el profesional insignia de Paita. Supervisa líneas de congelado y conservas de pescado, dirige el aseguramiento de calidad HACCP y gestiona centros acuícolas de concha de abanico con sueldos de dos mil quinientos a seis mil soles.",
+    respuesta: `🐟 **Perfil del Egresado en Desarrollo Pesquero y Acuícola:**
+
+* 🌊 **Habilidades Clave:**
+  - Supervisión de líneas de producción de congelado rápido de pota, calamar y pescado blanco.
+  - Manejo de autoclaves, selladoras y formulación de conservas marinas enlatadas.
+  - Implementación y auditoría de sistemas de inocuidad alimentaria HACCP, BPM y normativas BRC / FDA.
+  - Cultivo y reproducción de concha de abanico, langostinos y peces marinos en sistemas acuícolas.
+* 💼 **Oportunidades de Empleo en Paita y la Costa Peruana:**
+  - Jefe o inspector de aseguramiento de la calidad e inocuidad en plantas procesadoras pesqueras.
+  - Supervisor de producción en congeladoras y conserveras de Paita, Sechura, Chimbote y Pisco.
+  - Técnico extensionista en el Organismo Nacional de Sanidad Pesquera (SANIPES) o IMARPE.
+  - Administrador de centros de cultivo acuícola de concha de abanico en la bahía de Sechura.`
+  },
+  {
+    id: 'faq-historia-hermanos-carcamo',
+    titulo: 'Historia de los Hermanos Cárcamo y Fundación del Instituto en Paita',
+    keywords: ['quienes fueron los hermanos carcamo', 'historia del instituto', 'fundacion', 'por que hermanos carcamo', 'heroes carcamo', 'historia de paita'],
+    categorias: ['institucional'],
+    locucion: "¡Hola! El instituto lleva el nombre de los ilustres Hermanos Cárcamo en honor a los héroes navales y civiles paiteños que defendieron con honor las costas de nuestra patria en el mar de Paita. El instituto fue fundado mediante resolución ministerial para liderar la formación tecnológica del norte peruano.",
+    respuesta: `⚓ **Legado Histórico y Fundación del IESTP "Hermanos Cárcamo":**
+
+* 🎖️ **¿Quiénes fueron los Hermanos Cárcamo?**
+  - Los ilustres **Hermanos Cárcamo** fueron patriotas y marinos paiteños cuya valentía y lealtad a la nación quedaron grabadas en la historia de la provincia de Paita y la costa norte del Perú.
+  - Su ejemplo cívico y sacrificio naval inspiró la denominación del instituto para forjar una juventud con disciplina, honor y compromiso con el desarrollo marítimo y tecnológico.
+* 🏛️ **Creación Institucional:**
+  - Fundado como institución pública de educación superior tecnológica para dar respuesta al auge pesquero, portuario y comercial de Paita.
+  - A lo largo de casi 4 décadas de trayectoria ha formado a más de 30 promociones de profesionales técnicos que hoy lideran empresas, puertos y entidades en todo el Perú y el extranjero.`
+  },
+  {
+    id: 'faq-reglamento-asistencia-puntualidad',
+    titulo: 'Reglamento Interno: Tolerancia de Ingreso, Faltas y Permisos',
+    keywords: ['tolerancia', 'horario de entrada', 'tarde', 'puntualidad', 'reglamento de asistencia', 'cuantos minutos de tolerancia', 'faltas'],
+    categorias: ['academico', 'institucional'],
+    locucion: "¡Hola! En el instituto la tolerancia de ingreso es de diez minutos. Recuerda que la asistencia se registra en cada unidad didáctica y superar el treinta por ciento de inasistencias genera desaprobación por DPI sin derecho a examen.",
+    respuesta: `⏰ **Normativa de Asistencia, Puntualidad y Permanencia:**
+
+* ⏱️ **Tolerancia de Ingreso a Clases:**
+  - Se otorga una **tolerancia máxima de 10 minutos** al inicio de la primera hora pedagógica.
+  - Pasada la tolerancia, el docente consignará tardanza o inasistencia según el avance de la sesión.
+* 🚨 **Regla de Oro del 30% (DPI):**
+  - Según el reglamento nacional de educación superior tecnológica del MINEDU, el estudiante que acumule el **30% o más de inasistencias injustificadas** queda desaprobado automáticamente con nota cero cinco (**05 - DPI**).
+* 📋 **Procedimiento de Permisos:**
+  - Los permisos por comisiones académicas, deportivas o de salud deben ser autorizados previamente por la Jefatura de Unidad Académica.`
+  },
+  {
+    id: 'faq-modalidades-titulacion',
+    titulo: 'Modalidades de Titulación: Proyecto de Innovación vs. Examen de Suficiencia',
+    keywords: ['modalidades de titulacion', 'proyecto de innovacion', 'tesis o examen', 'sustentacion', 'examen de suficiencia', 'como titularme facil'],
+    categorias: ['titulacion'],
+    locucion: "¡Hola! Puedes titularte mediante la sustentación de un Proyecto de Innovación Productiva orientado al puerto o las empresas de Paita, o rindiendo el Examen de Suficiencia Profesional. Ambas alternativas te otorgan el título a nombre de la nación.",
+    respuesta: `🎓 **Comparativa de Modalidades de Titulación Profesional Técnica:**
+
+1. 💡 **Modalidad A: Proyecto de Innovación Tecnológica / Plan de Negocio (Recomendada):**
+   - **En qué consiste:** Elaboración y sustentación pública de una propuesta de mejora productiva o solución tecnológica aplicable al entorno de Paita (ej. sistema web para almacenes portuarios, nuevo producto a base de pota, etc.).
+   - **Participantes:** Puede realizarse de forma individual o en equipos de hasta **2 estudiantes**.
+   - **Asesoría:** El instituto designa un docente especialista para acompañar el desarrollo en los ciclos V y VI.
+
+2. 📝 **Modalidad B: Examen de Suficiencia Profesional:**
+   - **En qué consiste:** Evaluación integral de competencias teóricas y prácticas ante un jurado calificador docente.
+   - **Estructura:** Consta de una prueba de conocimientos de los 3 módulos formativos y una demostración práctica en laboratorio o taller.
+   - **Calificación:** Aprobación con nota mínima de **13** en escala vigesimal.`
+  },
+  {
+    id: 'faq-carnet-medio-pasaje-tramite',
+    titulo: 'Paso a paso para tramitar el Carné Universitario / Técnico MINEDU',
+    keywords: ['pasos carnet', 'como sacar carnet', 'tramite de carnet', 'foto para carnet', 'medio pasaje tramitar', 'donde pagar carnet'],
+    categorias: ['bienestar', 'tramites'],
+    locucion: "¡Hola! Para tramitar tu carné de medio pasaje oficial del Minedu, solo debes abonar la tasa de dieciocho soles en el Banco de la Nación, validar tu comprobante en la plataforma de pagos y entregar tu foto digital formal con fondo blanco en Secretaría.",
+    respuesta: `🚌 **Paso a Paso para Tramitar tu Carné de Educación Superior MINEDU:**
+
+1. 💳 **Pago en el Banco de la Nación:**
+   - Monto: **S/. 18.00** a la Cuenta Corriente N° **\`00-631-012948\`**.
+   - Sube tu voucher a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) eligiendo el concepto *"Carné de Medio Pasaje"*.
+2. 📸 **Especificaciones de la Fotografía:**
+   - Fotografía digital a color tamaño carnet (formato JPG o PNG).
+   - Fondo blanco liso, sin sombras, tomada de frente con rostro descubierto.
+   - Vestimenta formal o camisa/blusa oscura (no polos informales ni gorras/gafas).
+3. 🏢 **Registro en Secretaría Académica:**
+   - Envía tu archivo de foto indicando DNI, apellidos y carrera a Secretaría o cárgala en la convocatoria del portal institucional.
+4. 📬 **Entrega:**
+   - El MINEDU procesa el carné con chip de seguridad y la institución realiza la entrega física en campus para su uso inmediato.`
   }
 ];
 
@@ -1196,6 +1923,65 @@ const SIMULADOR_EXAMEN_HERCAR = [
     ],
     correcta: 1,
     explicacion: 'HACCP (Hazard Analysis and Critical Control Points) es el sistema preventivo internacional que garantiza la inocuidad y seguridad de alimentos hidrobiológicos.'
+  },
+  {
+    area: 'Cultura y Comercio Portuario (20%)',
+    pregunta: '¿Qué empresa opera y administra actualmente la concesión del Terminal Portuario de Paita?',
+    opciones: [
+      'ENAPU Perú',
+      'Terminales Portuarios Euroandinos (TPE)',
+      'APM Terminals',
+      'DP World'
+    ],
+    correcta: 1, // TPE
+    explicacion: 'Terminales Portuarios Euroandinos (TPE) es el concesionario oficial que administra y moderniza el Terminal Portuario de Paita desde 2009.'
+  },
+  {
+    area: 'Ciencias del Mar y Ecología (20%)',
+    pregunta: '¿Qué fenómeno oceanográfico enriquece con nutrientes y fitoplancton las aguas del mar de Paita, convirtiéndolo en uno de los más productivos del planeta?',
+    opciones: [
+      'El fenómeno de la Niña Modoki',
+      'El afloramiento costero de la Corriente Peruana (Humboldt)',
+      'La corriente cálida del Niño en verano',
+      'La marea roja tóxica'
+    ],
+    correcta: 1, // Afloramiento
+    explicacion: 'El afloramiento costero impulsado por la Corriente de Humboldt asciende aguas frías ricas en sales minerales y nutrientes, sustentando la biomasa de anchoveta, pota y peces.'
+  },
+  {
+    area: 'Razonamiento Matemático (30%)',
+    pregunta: 'Encuentra el número que continúa lógicamente la sucesión: 4, 9, 19, 39, ...',
+    opciones: ['59', '69', '79', '89'],
+    correcta: 2, // 79
+    explicacion: 'El patrón es multiplicar por 2 y sumar 1: 4*2+1 = 9; 9*2+1 = 19; 19*2+1 = 39; 39*2+1 = 79.'
+  },
+  {
+    area: 'Tecnología y Redes APSTI (20%)',
+    pregunta: 'En arquitectura de redes de datos, ¿cuál es el dispositivo encargado de interconectar diferentes subredes y encaminar paquetes mediante direcciones IP?',
+    opciones: ['Switch (Conmutador)', 'Router (Enrutador)', 'Hub (Concentrador)', 'Access Point'],
+    correcta: 1, // Router
+    explicacion: 'El router opera en la Capa 3 (Red) del modelo OSI y es el encargado de elegir la mejor ruta para enviar paquetes IP entre redes distintas.'
+  },
+  {
+    area: 'Comercio Exterior e Incoterms 2020 (20%)',
+    pregunta: 'En comercio internacional, ¿qué regla Incoterms 2020 establece que el exportador cumple su obligación cuando pone la mercancía a disposición del comprador a bordo del buque en el puerto de embarque designado?',
+    opciones: ['EXW (Ex Works)', 'FOB (Free on Board)', 'CIF (Cost, Insurance and Freight)', 'DDP (Delivered Duty Paid)'],
+    correcta: 1, // FOB
+    explicacion: 'Bajo FOB (Franco a Bordo), el vendedor carga la mercancía en el buque en el puerto acordado (ej. FOB Paita) y el comprador asume el flete marítimo y seguro.'
+  },
+  {
+    area: 'Tributación y Contabilidad (20%)',
+    pregunta: 'En el Perú, ¿cuál es la tasa vigente del Impuesto General a las Ventas (IGV) aplicable en las operaciones comerciales gravadas?',
+    opciones: ['15%', '16%', '18% (16% IGV + 2% IPM)', '19%'],
+    correcta: 2, // 18%
+    explicacion: 'La tasa total es del 18%, compuesta por 16% correspondiente al IGV y 2% al Impuesto de Promoción Municipal (IPM).'
+  },
+  {
+    area: 'Razonamiento Verbal - Conectores (30%)',
+    pregunta: 'Completa la oración: "El postulante repasó a conciencia todo el balotario del IESTP Hermanos Cárcamo; ________, obtuvo el puntaje más alto en el examen de admisión."',
+    opciones: ['sin embargo', 'por consiguiente', 'no obstante', 'a pesar de que'],
+    correcta: 1, // por consiguiente
+    explicacion: '"Por consiguiente" o "por lo tanto" es el conector consecutivo de causa-efecto adecuado para indicar el resultado favorable del estudio.'
   }
 ];
 
@@ -1327,12 +2113,21 @@ const GUIA_PRACTICAS_EFSRT = {
  */
 const TASAS_TUPA_COTIZADOR = [
   { id: 'tupa-matricula', nombre: 'Matrícula Regular Semestral', costo: 120, categoria: 'Academico', icon: 'bi-pencil-square', detalle: 'Incluye seguro estudiantil y registro en sistema.ieshercar.edu.pe' },
-  { id: 'tupa-carne', nombre: 'Carné de Educación Superior MINEDU (Medio Pasaje)', costo: 20, categoria: 'Bienestar', icon: 'bi-card-heading', detalle: 'Carné oficial con vigencia anual según Ley 26271' },
+  { id: 'tupa-matricula-ext', nombre: 'Matrícula Extemporánea', costo: 140, categoria: 'Academico', icon: 'bi-clock-history', detalle: 'Matrícula con recargo fuera de fecha oficial' },
+  { id: 'tupa-carne', nombre: 'Carné de Educación Superior MINEDU (Medio Pasaje)', costo: 18, categoria: 'Bienestar', icon: 'bi-card-heading', detalle: 'Carné oficial con vigencia anual según Ley 26271' },
   { id: 'tupa-cert-modular', nombre: 'Certificado Modular Progresivo (Por Módulo)', costo: 45, categoria: 'Certificaciones', icon: 'bi-award', detalle: 'Diploma oficial por culminar Módulo I, II o III' },
-  { id: 'tupa-constancia', nombre: 'Constancia de Estudios / Notas / Egresado', costo: 20, categoria: 'Documentos', icon: 'bi-file-earmark-text', detalle: 'Emisión en 2 a 3 días hábiles con firma y sello' },
+  { id: 'tupa-constancia-estudios', nombre: 'Constancia de Estudios / Notas / Egresado', costo: 20, categoria: 'Documentos', icon: 'bi-file-earmark-text', detalle: 'Emisión en 2 a 3 días hábiles con firma y sello' },
+  { id: 'tupa-cert-estudios-ciclo', nombre: 'Certificado Oficial de Estudios (Por Ciclo)', costo: 25, categoria: 'Documentos', icon: 'bi-file-earmark-ruled', detalle: 'Certificado oficial con asignaturas y calificaciones' },
+  { id: 'tupa-cert-estudios-comp', nombre: 'Certificado Oficial Completo (I al VI Ciclo)', costo: 60, categoria: 'Documentos', icon: 'bi-folder-check', detalle: 'Certificado de récord integral de los 6 semestres' },
   { id: 'tupa-admision-ordinario', nombre: 'Carpeta e Inscripción Examen Ordinario', costo: 150, categoria: 'Admision', icon: 'bi-person-check', detalle: 'Derecho a examen de 100 preguntas y balotario' },
-  { id: 'tupa-convalidacion', nombre: 'Convalidación de Unidad Didáctica (Por Curso)', costo: 30, categoria: 'Academico', icon: 'bi-arrow-left-right', detalle: 'Para traslados de universidades u otros institutos' },
-  { id: 'tupa-titulacion', nombre: 'Carpeta de Titulación Profesional Técnica', costo: 250, categoria: 'Titulacion', icon: 'bi-mortarboard', detalle: 'Sustentación de proyecto e inscripción oficial en MINEDU' }
+  { id: 'tupa-convalidacion', nombre: 'Convalidación de Unidad Didáctica (Por Curso)', costo: 15, categoria: 'Academico', icon: 'bi-arrow-left-right', detalle: 'Para traslados de universidades u otros institutos' },
+  { id: 'tupa-traslado-interno', nombre: 'Traslado Interno de Carrera Profesional', costo: 40, categoria: 'Academico', icon: 'bi-shuffle', detalle: 'Cambio de especialidad en el instituto' },
+  { id: 'tupa-traslado-externo', nombre: 'Traslado Externo Nacional', costo: 70, categoria: 'Academico', icon: 'bi-box-arrow-in-right', detalle: 'Provenientes de otra institución superior' },
+  { id: 'tupa-reserva-matricula', nombre: 'Reserva de Matrícula (Hasta 2 semestres)', costo: 30, categoria: 'Academico', icon: 'bi-pause-circle', detalle: 'Licencia temporal con vacante asegurada' },
+  { id: 'tupa-reincorporacion', nombre: 'Reincorporación de Estudios', costo: 35, categoria: 'Academico', icon: 'bi-arrow-clockwise', detalle: 'Retorno formal tras reserva de vacante' },
+  { id: 'tupa-bachiller-tecnico', nombre: 'Grado de Bachiller Técnico (Ley 30512)', costo: 120, categoria: 'Titulacion', icon: 'bi-mortarboard', detalle: 'Grado académico superior oficial MINEDU' },
+  { id: 'tupa-titulacion', nombre: 'Título Profesional Técnico a Nombre de la Nación', costo: 180, categoria: 'Titulacion', icon: 'bi-award-fill', detalle: 'Sustentación de proyecto e inscripción oficial en MINEDU' },
+  { id: 'tupa-duplicado-titulo', nombre: 'Duplicado de Diploma de Título Técnico', costo: 90, categoria: 'Titulacion', icon: 'bi-files', detalle: 'Por pérdida o deterioro previa denuncia' }
 ];
 
 /**
@@ -1341,10 +2136,13 @@ const TASAS_TUPA_COTIZADOR = [
 const CAMPUS_AMBIENTES_HERCAR = [
   { ambiente: 'Pabellón Administrativo', descripcion: 'Dirección General, Jefatura Académica, Secretaría General, Mesa de Partes y Ventanilla de Caja', icon: 'bi-building' },
   { ambiente: 'Centros de Cómputo APSTI (1, 2 y 3)', descripcion: 'Laboratorios equipados con computadoras Core i7, fibra óptica de alta velocidad y servidores de prueba', icon: 'bi-laptop' },
-  { ambiente: 'Planta Piloto y Laboratorio Pesquero (DPA)', descripcion: 'Módulos de acuicultura, equipos de análisis físico-químico del agua y taller de artes de pesca', icon: 'bi-water' },
+  { ambiente: 'Taller de Conectividad y Redes Cisco', descripcion: 'Racks con routers y switches Cisco, patch panels y herramientas para cableado estructurado', icon: 'bi-hdd-network' },
+  { ambiente: 'Planta Piloto Pesquera (DPA)', descripcion: 'Autoclaves verticales, selladoras de conservas, cámaras de congelado y mesas de fileteo en acero quirúrgico', icon: 'bi-box-seam' },
+  { ambiente: 'Laboratorio de Microbiología y Control de Calidad HACCP', descripcion: 'Incubadoras biológicas, equipos de medición físico-química y análisis de inocuidad marina', icon: 'bi-water' },
   { ambiente: 'Aulas Climatizadas de Negocios y Contabilidad', descripcion: 'Salas de proyección multimedia, simulación de despacho aduanero y software contable Concar/Siscont', icon: 'bi-calculator' },
   { ambiente: 'Centro de Recursos y Biblioteca Virtual Latina', descripcion: 'Espacios de lectura, computadoras de consulta y acceso a miles de libros digitales 24/7', icon: 'bi-book' },
   { ambiente: 'Tópico de Salud y Consejería', descripcion: 'Atención médica inmediata de primeros auxilios y afiliación activa gratuita al SIS', icon: 'bi-hospital' },
+  { ambiente: 'Auditorio Central Institucional "Hermanos Cárcamo"', descripcion: 'Sala magna para conferencias, ceremonias de graduación y seminarios de innovación', icon: 'bi-people' },
   { ambiente: 'Losa Polideportiva y Cafetín', descripcion: 'Espacios recreativos para fulbito, vóley, campeonatos intercarreras y descanso estudiantil', icon: 'bi-trophy' }
 ];
 

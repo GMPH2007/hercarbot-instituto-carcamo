@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/logo-hercar.png</image:loc>
+      <image:title>Logo Oficial HercarBot IA — IESTP Hermanos Cárcamo Paita</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/campus-hercar.jpg</image:loc>
+      <image:title>Campus Central IESTP Hermanos Cárcamo Paita</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/login.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/register.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
 </urlset>

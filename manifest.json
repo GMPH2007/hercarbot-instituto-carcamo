@@ -1,25 +1,64 @@
 {
   "name": "HercarBot IA — IESTP Hermanos Cárcamo",
   "short_name": "HercarBot",
-  "description": "Asistente Virtual Institucional Oficial del IESTP Hermanos Cárcamo de Paita (Piura)",
+  "description": "Asistente Virtual Institucional Oficial con Inteligencia Artificial del IESTP Hermanos Cárcamo de Paita (Piura)",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0a1f4d",
-  "theme_color": "#13357b",
+  "theme_color": "#0e2d6c",
   "orientation": "portrait-primary",
+  "categories": ["education", "productivity", "utilities"],
   "icons": [
     {
-      "src": "assets/img/logo-hercar.png",
+      "src": "favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/img/logo-hercar.png",
+      "src": "favicon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Admisión 2026",
+      "short_name": "Admisión",
+      "description": "Modalidades y requisitos de Admisión 2026",
+      "url": "./index.html?action=admision",
+      "icons": [{ "src": "favicon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Generar FUT Oficial",
+      "short_name": "Generar FUT",
+      "description": "Redactar y descargar Formulario Único de Trámite",
+      "url": "./index.html?action=fut",
+      "icons": [{ "src": "favicon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Portal Pagos Banco de la Nación",
+      "short_name": "Pagos",
+      "description": "Cuenta corriente oficial y subida de vouchers",
+      "url": "./index.html?action=pagos",
+      "icons": [{ "src": "favicon-96x96.png", "sizes": "96x96" }]
     }
   ]
 }

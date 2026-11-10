@@ -1,9 +1,44 @@
-# robots.txt para HercarBot IA — IESTP Hermanos Cárcamo de Paita
+# robots.txt para HercarBot IA — IESTP Hermanos Cárcamo de Paita, Piura, Perú
+# Dominio Oficial: https://gmph2007.github.io/hercarbot-instituto-carcamo/
+
 User-agent: *
 Allow: /
+Allow: /assets/
+Allow: /assets/img/
+Allow: /css/
+Allow: /js/
+Allow: /favicon.ico
+Allow: /favicon.png
+Allow: /favicon-*.png
+Allow: /apple-touch-icon.png
+Allow: /manifest.json
+Allow: /sitemap.xml
 
-# Bloquear archivos de sistema o de pruebas locales si hubiera
+# Bloquear panel administrativo privado
 Disallow: /admin.html
 
-# Ubicación del Sitemap oficial para Googlebot y buscadores
+# Googlebot e Indexación de Imágenes y Favicon Oficial
+User-agent: Googlebot
+Allow: /
+Allow: /favicon.ico
+Allow: /favicon.png
+Allow: /favicon-*.png
+Allow: /assets/img/logo-hercar.png
+Allow: /assets/img/campus-hercar.jpg
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /assets/img/
+Allow: /favicon.png
+Allow: /favicon-*.png
+Allow: /apple-touch-icon.png
+
+User-agent: Bingbot
+Allow: /
+Allow: /favicon.ico
+Allow: /favicon.png
+Allow: /assets/img/
+Crawl-delay: 1
+
+# Ubicación del Sitemap oficial para Google, Bing y buscadores
 Sitemap: https://gmph2007.github.io/hercarbot-instituto-carcamo/sitemap.xml

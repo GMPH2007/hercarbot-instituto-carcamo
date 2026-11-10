@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Acceso Docente y Administrativo — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  <meta name="description" content="Acceso oficial docente y administrativo a la plataforma HercarBot IA del IESTP Hermanos Cárcamo de Paita.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/login.html">
   
-  <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -18,240 +28,694 @@
       --primary-dark: #0a1f4d;
       --accent: #2563eb;
       --gold: #f59e0b;
-      --bg-dark: #081326;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
+
+    /* ------------------------------------------------------------------------
+       TEMA CLARO (Default institucional sincronizado con index.html)
+       ------------------------------------------------------------------------ */
+    body.light-theme {
+      background: radial-gradient(circle at 10% 15%, rgba(37, 99, 235, 0.08), transparent 40%),
+                  radial-gradient(circle at 90% 85%, rgba(14, 165, 233, 0.08), transparent 40%),
+                  linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f8fafc 100%);
+      color: #0f172a;
+    }
+    body.light-theme .auth-card {
+      background: rgba(255, 255, 255, 0.98);
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.9);
+      color: #0f172a;
+    }
+    body.light-theme .auth-title { color: #0f172a; }
+    body.light-theme .auth-subtitle { color: #475569; }
+    body.light-theme .form-label { color: #1e293b; font-weight: 700; }
+    body.light-theme .form-control {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    body.light-theme .form-control::placeholder {
+      color: #64748b;
+      opacity: 1;
+      font-weight: 500;
+    }
+    body.light-theme .form-control:focus {
+      background: #ffffff;
+      border-color: #2563eb;
+      color: #0f172a;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    body.light-theme .input-group-text {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-left: none;
+      color: #334155;
+    }
+    body.light-theme .form-check-label {
+      color: #1e293b !important;
+      font-weight: 600;
+    }
+    body.light-theme .auth-security-note {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+    body.light-theme .auth-theme-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+    body.light-theme .auth-theme-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    body.light-theme .auth-clean-alert {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+    body.light-theme .auth-links-border {
+      border-top: 1px solid #e2e8f0;
+    }
+    body.light-theme .auth-subtext {
+      color: #475569;
+    }
+
+    /* ------------------------------------------------------------------------
+       TEMA OSCURO (Sincronizado con index.html modo oscuro)
+       ------------------------------------------------------------------------ */
+    body.dark-theme {
+      background: radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.28), transparent 45%),
+                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.16), transparent 45%),
+                  linear-gradient(135deg, #060b16 0%, #0c1830 50%, #060d1d 100%);
+      color: #f8fafc;
+    }
+    body.dark-theme .auth-card {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+    }
+    body.dark-theme .auth-title { color: #ffffff; }
+    body.dark-theme .auth-subtitle { color: #cbd5e1; }
+    body.dark-theme .form-label { color: #f8fafc; font-weight: 600; }
+    body.dark-theme .form-control {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1.5px solid rgba(148, 163, 184, 0.45);
+      color: #ffffff;
+      font-weight: 500;
+    }
+    body.dark-theme .form-control::placeholder {
+      color: rgba(226, 232, 240, 0.75);
+      opacity: 1;
+      font-weight: 400;
+    }
+    body.dark-theme .form-control:focus {
+      background: rgba(30, 41, 59, 0.98);
+      border-color: #60a5fa;
+      color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35);
+    }
+    body.dark-theme .input-group-text {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1.5px solid rgba(148, 163, 184, 0.45);
+      border-left: none;
+      color: #e2e8f0;
+    }
+    body.dark-theme .form-check-label {
+      color: #f1f5f9 !important;
+      font-weight: 500;
+    }
+    body.dark-theme .auth-security-note {
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fde68a;
+    }
+    body.dark-theme .auth-theme-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fbbf24;
+    }
+    body.dark-theme .auth-theme-btn:hover {
+      background: rgba(51, 65, 85, 0.9);
+      color: #fef08a;
+    }
+    body.dark-theme .auth-clean-alert {
+      background: rgba(30, 58, 138, 0.25);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+    }
+    body.dark-theme .auth-links-border {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    body.dark-theme .auth-subtext {
+      color: #cbd5e1;
+    }
+
+    /* ------------------------------------------------------------------------
+       ESTRUCTURA GENERAL
+       ------------------------------------------------------------------------ */
     body {
       min-height: 100vh;
-      background: radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.25), transparent 40%),
-                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.15), transparent 40%),
-                  linear-gradient(135deg, #070e1e 0%, #0c1b36 50%, #071124 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px 16px;
-      color: #f1f5f9;
+      padding: 24px 16px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
+
     .auth-card {
       width: 100%;
-      max-width: 440px;
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
+      max-width: 460px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 26px;
       padding: 36px 30px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      animation: fadeIn 0.4s ease-out;
+      animation: fadeIn 0.35s ease-out;
+      position: relative;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    .auth-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .auth-theme-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
     .auth-logo-box {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 12px;
-      margin-bottom: 24px;
     }
+
     .auth-logo {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
     }
+
     .auth-title {
       font-family: 'Jost', sans-serif;
       font-weight: 700;
-      font-size: 1.35rem;
-      color: #ffffff;
+      font-size: 1.4rem;
       text-align: center;
       letter-spacing: -0.3px;
     }
+
     .auth-subtitle {
-      font-size: 0.82rem;
-      color: #94a3b8;
+      font-size: 0.85rem;
       text-align: center;
-      margin-top: 4px;
-      margin-bottom: 24px;
+      margin-top: 6px;
+      margin-bottom: 22px;
+      line-height: 1.45;
     }
+
     .form-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #cbd5e1;
+      font-size: 0.82rem;
       margin-bottom: 6px;
+      display: flex;
+      align-items: center;
     }
+
     .form-control {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      color: #ffffff;
       border-radius: 12px;
       padding: 11px 14px;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       transition: all 0.2s ease;
     }
-    .form-control:focus {
-      background: rgba(15, 23, 42, 0.9);
-      border-color: #3b82f6;
-      color: #ffffff;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-    }
+
     .input-group-text {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      border-left: none;
-      color: #94a3b8;
       border-radius: 0 12px 12px 0;
       cursor: pointer;
+      padding: 0 14px;
     }
+
     .btn-auth-primary {
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
       color: #ffffff;
       border: none;
-      padding: 12px;
+      padding: 13px;
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       border-radius: 12px;
       width: 100%;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 6px 20px rgba(29, 78, 216, 0.35);
       transition: all 0.25s ease;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
     .btn-auth-primary:hover {
-      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.5);
+      box-shadow: 0 8px 24px rgba(29, 78, 216, 0.48);
       color: #ffffff;
     }
-    .btn-demo-quick {
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px dashed rgba(245, 158, 11, 0.4);
-      color: #fbbf24;
-      font-size: 0.8rem;
-      font-weight: 600;
-      border-radius: 10px;
-      padding: 9px;
-      width: 100%;
-      cursor: pointer;
-      transition: all 0.2s ease;
+
+    .btn-auth-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
     }
-    .btn-demo-quick:hover {
-      background: rgba(245, 158, 11, 0.2);
-      color: #ffffff;
-    }
+
     .auth-alert {
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 0.82rem;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
       display: none;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
+      font-weight: 500;
     }
     .auth-alert.danger {
       background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
+      border: 1.5px solid #ef4444;
+      color: #b91c1c;
+    }
+    body.dark-theme .auth-alert.danger {
       color: #fca5a5;
     }
     .auth-alert.success {
       background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      border: 1.5px solid #10b981;
+      color: #047857;
+    }
+    body.dark-theme .auth-alert.success {
       color: #6ee7b7;
     }
+
+    .auth-security-note {
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .auth-links {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 22px;
       padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.82rem;
+      font-size: 0.84rem;
     }
+
     .auth-links a {
-      color: #60a5fa;
+      color: #2563eb;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
       transition: color 0.2s ease;
     }
+    body.dark-theme .auth-links a {
+      color: #60a5fa;
+    }
     .auth-links a:hover {
-      color: #93c5fd;
       text-decoration: underline;
     }
-  </style>
+
+    .auth-badge-sql {
+      font-size: 0.72rem;
+      letter-spacing: 0.3px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+  
+
+/* Widget Flotante HercarBot IA */
+.hercar-floating-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  background: linear-gradient(135deg, #0e2d6c 0%, #0369a1 100%);
+  color: #ffffff !important;
+  text-decoration: none !important;
+  padding: 8px 16px 8px 10px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 28px rgba(3, 105, 161, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+.hercar-floating-widget:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 35px rgba(3, 105, 161, 0.65);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff !important;
+}
+.hercar-widget-avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.hercar-widget-avatar img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.hercar-widget-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 11px;
+  height: 11px;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: widgetPulse 2s infinite;
+}
+@keyframes widgetPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.hercar-widget-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.hercar-widget-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+.hercar-widget-status {
+  font-size: 0.68rem;
+  color: #bae6fd;
+  font-weight: 500;
+}
+.hercar-widget-icon {
+  font-size: 1.15rem;
+  color: #facc15;
+}
+@media (max-width: 576px) {
+  .hercar-floating-widget {
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 12px 6px 8px;
+  }
+  .hercar-widget-status {
+    display: none;
+  }
+}
+
+</style>
 </head>
-<body>
+<body class="light-theme">
 
   <div class="auth-card">
-    <!-- Logotipo Institucional -->
-    <div class="auth-logo-box">
-      <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo IESTP Hermanos Cárcamo" class="auth-logo">
-      <div class="text-start">
-        <h5 class="mb-0 fw-bold text-white" style="font-size: 1.15rem;">HercarBot IA</h5>
-        <small class="text-warning fw-semibold" style="font-size: 0.72rem;"><i class="bi bi-shield-lock-fill me-1"></i>Acceso Docente y Administrativo</small>
+    <!-- Barra superior con Identidad y Selector de Tema Claro/Oscuro -->
+    <div class="auth-top-actions">
+      <div class="auth-logo-box">
+        <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo IESTP Hermanos Cárcamo" class="auth-logo">
+        <div class="text-start">
+          <h5 class="mb-0 fw-bold" style="font-size: 1.15rem;">HercarBot IA</h5>
+          <small class="text-muted d-block" style="font-size: 0.74rem;">Portal Institucional IESTP Cárcamo</small>
+        </div>
       </div>
+
+      <!-- Botón de Conmutación de Modo Claro / Oscuro sincronizado -->
+      <button type="button" id="btnThemeToggle" class="auth-theme-btn" title="Cambiar Tema (Claro / Oscuro)">
+        <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+      </button>
     </div>
 
     <h2 class="auth-title">Iniciar Sesión</h2>
-    <p class="auth-subtitle">Ingresa con tus credenciales de docente para gestionar consultas, métricas y comunicados oficiales.</p>
+    <p class="auth-subtitle">Ingresa con tus credenciales registradas en la base de datos relacional para acceder al Panel de Control.</p>
 
-    <!-- Alertas -->
+    
+
+    <!-- Alertas dinámicas -->
     <div id="authAlert" class="auth-alert"></div>
 
-    <!-- Formulario de Acceso -->
+    <!-- Formulario de Acceso Oficial -->
     <form id="loginForm" autocomplete="off">
       <div class="mb-3">
-        <label for="inputEmail" class="form-label"><i class="bi bi-person-fill text-primary me-1"></i> Correo Institucional / Usuario:</label>
-        <input type="text" id="inputEmail" class="form-control" placeholder="ejemplo: profesor@ieshercar.edu.pe" required autofocus>
+        <label for="inputEmail" class="form-label">
+          <i class="bi bi-person-badge-fill text-primary me-2"></i> Correo Institucional / Usuario:
+        </label>
+        <input type="text" id="inputEmail" class="form-control" placeholder="ej: usuario@ieshercar.edu.pe o admin" required autofocus>
       </div>
 
       <div class="mb-3">
-        <label for="inputPassword" class="form-label"><i class="bi bi-key-fill text-primary me-1"></i> Contraseña de Acceso:</label>
+        <label for="inputPassword" class="form-label">
+          <i class="bi bi-shield-lock-fill text-primary me-2"></i> Contraseña de Acceso:
+        </label>
         <div class="input-group">
-          <input type="password" id="inputPassword" class="form-control" placeholder="••••••••" required>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Ingresa tu contraseña" required>
           <span class="input-group-text" id="togglePasswordBtn" title="Mostrar/Ocultar contraseña">
             <i class="bi bi-eye-fill" id="eyeIcon"></i>
           </span>
+        </div>
+        <div id="loginCapsLockWarning" class="alert alert-warning py-1 px-2 small mt-2 mb-0 d-flex align-items-center gap-1" style="display: none; border-radius: 8px; font-size: 0.76rem;">
+          <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+          <span><strong>Bloq Mayús activado:</strong> La contraseña distingue mayúsculas de minúsculas.</span>
         </div>
       </div>
 
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="rememberMe" checked>
-          <label class="form-check-label text-muted" for="rememberMe" style="font-size: 0.78rem;">
+          <label class="form-check-label" for="rememberMe" style="font-size: 0.82rem;">
             Recordar sesión
           </label>
         </div>
-        <a href="register.html" class="small text-decoration-none" style="color: #60a5fa; font-size: 0.78rem;">¿Olvidaste clave?</a>
+        <a href="#" id="linkForgotPassword" class="small fw-semibold" style="font-size: 0.82rem;">
+          <i class="bi bi-question-circle me-1"></i>¿Olvidaste tu contraseña?
+        </a>
       </div>
 
-      <button type="submit" class="btn-auth-primary mb-3" id="btnLoginSubmit">
-        <i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Panel de Control
+      <button type="submit" class="btn-auth-primary mb-2" id="btnLoginSubmit">
+        <i class="bi bi-box-arrow-in-right me-2 fs-6"></i> Entrar al Panel de Control
       </button>
-
-      <!-- Botón Rápido Demo para el Profesor -->
-      <button type="button" class="btn-demo-quick mb-2" id="btnFillDemo">
-        <i class="bi bi-mortarboard-fill me-1"></i> <strong>Autocompletar Acceso Profesor (Demo)</strong>
-      </button>
+      <div class="text-center mb-3">
+        <span class="badge rounded-pill text-muted border px-3 py-1 font-monospace" style="font-size: 0.70rem; background: rgba(0,0,0,0.02);">
+          <i class="bi bi-shield-lock-fill text-success me-1"></i> Conexión Cifrada SSL &bull; HercarShield 2026
+        </span>
+      </div>
     </form>
 
-    <div class="auth-links">
-      <div class="mb-2">
-        <span class="text-muted">¿Nuevo docente o administrativo?</span>
-        <a href="register.html">Crear Cuenta aquí</a>
-      </div>
+            <div class="auth-links auth-links-border pt-3 text-center">
       <div>
-        <a href="index.html" class="text-white-50"><i class="bi bi-arrow-left me-1"></i>Volver al Asistente HercarBot</a>
+        <a href="index.html" class="auth-subtext small text-muted">
+          <i class="bi bi-arrow-left me-1"></i> Volver al Asistente HercarBot
+        </a>
       </div>
     </div>
   </div>
 
+  <!-- Modal Interactivo: Recuperar Contraseña Institucional -->
+  <div class="modal fade" id="modalRecovery" tabindex="-1" aria-labelledby="modalRecoveryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+        <div class="modal-header border-0 pb-0">
+          <div class="d-flex align-items-center gap-2">
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(37,99,235,0.15); display: flex; align-items: center; justify-content: center; color: #2563eb;">
+              <i class="bi bi-key-fill fs-5"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold" id="modalRecoveryLabel" style="font-size: 1.1rem;">Recuperar Contraseña</h5>
+              <small class="text-muted" style="font-size: 0.75rem;">Consulta en Base de Datos Relacional HercarSQL</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body pt-3">
+          <div id="recoveryAlert" class="auth-alert mb-3" style="display: none;"></div>
+
+          <!-- Paso 1: Solicitar Token de Seguridad -->
+          <div id="recoveryStep1">
+            <p class="small mb-3" style="line-height: 1.45;">
+              Ingresa el correo institucional o usuario registrado. El sistema consultará la tabla SQL de usuarios y generará un <strong>Código de Recuperación de 6 dígitos</strong>.
+            </p>
+            <div class="mb-3">
+              <label for="recoveryEmail" class="form-label">Correo Institucional o Usuario:</label>
+              <input type="text" id="recoveryEmail" class="form-control" placeholder="ej: usuario@ieshercar.edu.pe o admin">
+            </div>
+            <button type="button" class="btn-auth-primary" id="btnRequestRecoveryToken">
+              <i class="bi bi-shield-check me-2"></i> Generar Código de Seguridad
+            </button>
+          </div>
+
+          <!-- Paso 2: Validar Código y Establecer Nueva Contraseña -->
+          <div id="recoveryStep2" style="display: none;">
+            <div class="p-3 mb-3 rounded-3" style="background: rgba(37,99,235,0.08); border: 1.5px dashed rgba(37,99,235,0.4);">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="small fw-bold text-primary"><i class="bi bi-clock-history me-1"></i>Código de Seguridad:</span>
+                <span id="displayTokenBadge" class="badge bg-primary px-3 py-2 fs-6 fw-bold">------</span>
+              </div>
+              <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">Registrado en tabla <code>password_resets</code> con 15 minutos de vigencia.</small>
+            </div>
+
+            <div class="mb-2">
+              <label for="recoveryTokenInput" class="form-label">Código de 6 Dígitos:</label>
+              <input type="text" id="recoveryTokenInput" class="form-control" placeholder="6 dígitos" maxlength="6">
+            </div>
+
+            <div class="mb-2">
+              <label for="newPasswordInput" class="form-label">Nueva Contraseña:</label>
+              <div class="input-group">
+                <input type="password" id="newPasswordInput" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6">
+                <span class="input-group-text" id="toggleRecPwd1" style="cursor: pointer;" title="Mostrar/ocultar contraseña">
+                  <i class="bi bi-eye-fill"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="newPasswordConfirmInput" class="form-label">Confirmar Nueva Contraseña:</label>
+              <div class="input-group">
+                <input type="password" id="newPasswordConfirmInput" class="form-control" placeholder="Repite la contraseña" minlength="6">
+                <span class="input-group-text" id="toggleRecPwd2" style="cursor: pointer;" title="Mostrar/ocultar contraseña">
+                  <i class="bi bi-eye-fill"></i>
+                </span>
+              </div>
+            </div>
+
+            <button type="button" class="btn-auth-primary" id="btnConfirmPasswordReset">
+              <i class="bi bi-check2-circle me-2"></i> Actualizar Contraseña en SQL
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Motor de Base de Datos Relacional SQL Institucional -->
+  <script src="js/db-sql.js?v=20261107"></script>
+
   <script>
+    // ------------------------------------------------------------------------
+    // Sincronización Dinámica de Tema (Claro / Oscuro) con index.html
+    // ------------------------------------------------------------------------
+    const STORAGE_THEME_KEY = 'hercarbot_theme';
+
+    function initTheme() {
+      const saved = localStorage.getItem(STORAGE_THEME_KEY) || 'light';
+      applyTheme(saved);
+    }
+
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.classList.toggle('dark-theme', isDark);
+      document.body.classList.toggle('light-theme', !isDark);
+      document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+        icon.style.color = isDark ? '#fbbf24' : '#1e293b';
+      }
+      localStorage.setItem(STORAGE_THEME_KEY, theme);
+    }
+
+    const btnThemeToggle = document.getElementById('btnThemeToggle');
+    if (btnThemeToggle) {
+      btnThemeToggle.addEventListener('click', () => {
+        const isCurrentlyDark = document.body.classList.contains('dark-theme');
+        applyTheme(isCurrentlyDark ? 'light' : 'dark');
+      });
+    }
+
+    // Inicializar tema al cargar
+    initTheme();
+
+    // ------------------------------------------------------------------------
+    // Inicializar base de datos relacional SQL
+    async function checkDatabaseState() {
+      await HercarSQL.init();
+
+      // Parámetros de URL para avisos de seguridad y mensajes del sistema
+      const urlParams = new URLSearchParams(window.location.search);
+      const authState = urlParams.get('auth');
+      const loggedOutState = urlParams.get('logged_out');
+      const registeredUser = urlParams.get('registered') || sessionStorage.getItem('last_registered_email');
+
+      if (authState === 'required') {
+        showAlert('🔒 Acceso Restringido: Debes iniciar sesión con tu cuenta oficial para ingresar al Panel Administrativo.', 'danger');
+      } else if (authState === 'invalid') {
+        showAlert('⚠️ Sesión expirada o no autorizada. Por favor ingresa nuevamente tus credenciales.', 'danger');
+      } else if (loggedOutState === '1') {
+        showAlert('✅ Has cerrado sesión exitosamente. Tus credenciales han sido protegidas.', 'success');
+      } else if (registeredUser) {
+        document.getElementById('inputEmail').value = registeredUser;
+        showAlert('¡Cuenta creada exitosamente en la base de datos SQL! Ingresa tu contraseña para entrar al panel.', 'success');
+        sessionStorage.removeItem('last_registered_email');
+      }
+    }
+
     // Mostrar / ocultar contraseña
+    // Toggle password in recovery modal
+    function setupInputToggle(btnId, inputId) {
+      const btn = document.getElementById(btnId);
+      const inp = document.getElementById(inputId);
+      if (btn && inp) {
+        btn.addEventListener('click', () => {
+          const isPwd = inp.type === 'password';
+          inp.type = isPwd ? 'text' : 'password';
+          const icon = btn.querySelector('i');
+          if (icon) icon.className = isPwd ? 'bi bi-eye-slash-fill text-primary' : 'bi bi-eye-fill';
+        });
+      }
+    }
+    setupInputToggle('toggleRecPwd1', 'newPasswordInput');
+    setupInputToggle('toggleRecPwd2', 'newPasswordConfirmInput');
+
     const toggleBtn = document.getElementById('togglePasswordBtn');
     const pwdInput = document.getElementById('inputPassword');
     const eyeIcon = document.getElementById('eyeIcon');
+    const capsWarning = document.getElementById('loginCapsLockWarning');
+
     if (toggleBtn && pwdInput && eyeIcon) {
       toggleBtn.addEventListener('click', () => {
         const isPassword = pwdInput.type === 'password';
@@ -260,74 +724,194 @@
       });
     }
 
-    // Botón de autocompletado rápido para el profesor / evaluador
-    const btnFillDemo = document.getElementById('btnFillDemo');
-    if (btnFillDemo) {
-      btnFillDemo.addEventListener('click', () => {
-        document.getElementById('inputEmail').value = 'profesor@ieshercar.edu.pe';
-        document.getElementById('inputPassword').value = 'hercar2026';
-        showAlert('Datos de prueba cargados: profesor@ieshercar.edu.pe / hercar2026', 'success');
-      });
+    if (pwdInput && capsWarning) {
+      const checkCaps = (e) => {
+        if (e.getModifierState && e.getModifierState('CapsLock')) {
+          capsWarning.style.display = 'flex';
+        } else {
+          capsWarning.style.display = 'none';
+        }
+      };
+      pwdInput.addEventListener('keyup', checkCaps);
+      pwdInput.addEventListener('keydown', checkCaps);
     }
 
     function showAlert(msg, type = 'danger') {
       const alertBox = document.getElementById('authAlert');
+      if (!alertBox) return;
       alertBox.textContent = msg;
       alertBox.className = `auth-alert ${type}`;
       alertBox.style.display = 'block';
     }
 
-    // Procesar Inicio de Sesión
+    function showRecoveryAlert(msg, type = 'danger') {
+      const alertBox = document.getElementById('recoveryAlert');
+      if (!alertBox) return;
+      alertBox.textContent = msg;
+      alertBox.className = `auth-alert ${type}`;
+      alertBox.style.display = 'block';
+    }
+
+    // ------------------------------------------------------------------------
+    // Procesar Inicio de Sesión con Motor SQL (Autenticación SHA-256)
+    // ------------------------------------------------------------------------
     const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('inputEmail').value.trim().toLowerCase();
+      const login = document.getElementById('inputEmail').value.trim();
       const pwd = document.getElementById('inputPassword').value.trim();
 
-      // Cargar lista de usuarios registrados
-      let users = [];
+      const btnSubmit = document.getElementById('btnLoginSubmit');
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Verificando en Base de Datos SQL...';
+
       try {
-        users = JSON.parse(localStorage.getItem('hercar_admin_users')) || [];
-      } catch (err) {
-        users = [];
-      }
-
-      // Credenciales oficiales maestras por defecto
-      const defaultUsers = [
-        { email: 'profesor@ieshercar.edu.pe', pass: 'hercar2026', name: 'Profesor Titular IESTP Cárcamo', role: 'Docente Evaluador' },
-        { email: 'admin@ieshercar.edu.pe', pass: 'admin2026', name: 'Administrador General HercarBot', role: 'Administrador Institucional' },
-        { email: 'profesor', pass: 'hercar2026', name: 'Profesor Titular IESTP Cárcamo', role: 'Docente Evaluador' },
-        { email: 'admin', pass: 'admin2026', name: 'Administrador General HercarBot', role: 'Administrador Institucional' }
-      ];
-
-      const allUsers = [...defaultUsers, ...users];
-
-      const found = allUsers.find(u => 
-        (u.email.toLowerCase() === email || (u.username && u.username.toLowerCase() === email)) && 
-        (u.pass === pwd || u.password === pwd)
-      );
-
-      if (found) {
-        showAlert(`¡Bienvenido, ${found.name}! Redirigiendo al panel...`, 'success');
-        const sessionData = {
-          email: found.email,
-          name: found.name || 'Docente Autorizado',
-          role: found.role || 'Docente / Administrador',
-          loginTime: new Date().toISOString()
-        };
-
-        sessionStorage.setItem('hercar_admin_session', JSON.stringify(sessionData));
-        if (document.getElementById('rememberMe').checked) {
-          localStorage.setItem('hercar_admin_session', JSON.stringify(sessionData));
+        const res = await HercarSQL.authenticate(login, pwd);
+        if (res.success) {
+          showAlert(`¡Bienvenido, ${res.user.name}! Sesión autenticada en SQL. Entrando al Panel de Control...`, 'success');
+          sessionStorage.setItem('hercar_admin_session', JSON.stringify(res.user));
+          sessionStorage.setItem('hercar_current_user', JSON.stringify(res.user));
+          if (document.getElementById('rememberMe').checked) {
+            localStorage.setItem('hercar_admin_session', JSON.stringify(res.user));
+            localStorage.setItem('hercar_current_user', JSON.stringify(res.user));
+          }
+          setTimeout(() => {
+            window.location.href = 'admin.html';
+          }, 600);
+        } else {
+          showAlert(res.message, 'danger');
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="bi bi-box-arrow-in-right me-2 fs-6"></i> Entrar al Panel de Control';
         }
-
-        setTimeout(() => {
-          window.location.href = 'admin.html';
-        }, 800);
-      } else {
-        showAlert('Usuario o contraseña incorrectos. Verifica tus datos o usa el botón de acceso de prueba.', 'danger');
+      } catch (err) {
+        console.error('Error de login:', err);
+        showAlert('Error al conectar con la base de datos de usuarios.', 'danger');
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="bi bi-box-arrow-in-right me-2 fs-6"></i> Entrar al Panel de Control';
       }
     });
+
+    // ------------------------------------------------------------------------
+    // Flujo de Recuperación de Contraseña en SQL
+    // ------------------------------------------------------------------------
+    const linkForgot = document.getElementById('linkForgotPassword');
+    const modalRecoveryEl = document.getElementById('modalRecovery');
+    let recoveryModalInstance = null;
+    let targetRecoveryEmail = '';
+
+    if (linkForgot && modalRecoveryEl) {
+      linkForgot.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!recoveryModalInstance && window.bootstrap) {
+          recoveryModalInstance = new bootstrap.Modal(modalRecoveryEl);
+        }
+        document.getElementById('recoveryStep1').style.display = 'block';
+        document.getElementById('recoveryStep2').style.display = 'none';
+        document.getElementById('recoveryAlert').style.display = 'none';
+        const currentLogin = document.getElementById('inputEmail').value.trim();
+        if (currentLogin) {
+          document.getElementById('recoveryEmail').value = currentLogin;
+        }
+        if (recoveryModalInstance) recoveryModalInstance.show();
+      });
+    }
+
+    const btnRequestToken = document.getElementById('btnRequestRecoveryToken');
+    if (btnRequestToken) {
+      btnRequestToken.addEventListener('click', async () => {
+        const emailOrUser = document.getElementById('recoveryEmail').value.trim();
+        if (!emailOrUser) {
+          showRecoveryAlert('Por favor ingresa tu correo o usuario institucional.', 'danger');
+          return;
+        }
+
+        btnRequestToken.disabled = true;
+        btnRequestToken.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Consultando tabla users...';
+
+        try {
+          const res = await HercarSQL.requestPasswordReset(emailOrUser);
+          if (res.success) {
+            targetRecoveryEmail = res.email;
+            document.getElementById('displayTokenBadge').textContent = res.token;
+            document.getElementById('recoveryTokenInput').value = res.token;
+            document.getElementById('recoveryStep1').style.display = 'none';
+            document.getElementById('recoveryStep2').style.display = 'block';
+            showRecoveryAlert(`Código generado para ${res.email}. Ingresa tu nueva contraseña para actualizar en SQL.`, 'success');
+          } else {
+            showRecoveryAlert(res.message, 'danger');
+          }
+        } catch (e) {
+          showRecoveryAlert('Error al generar código de recuperación en base de datos.', 'danger');
+        } finally {
+          btnRequestToken.disabled = false;
+          btnRequestToken.innerHTML = '<i class="bi bi-shield-check me-2"></i> Generar Código de Seguridad';
+        }
+      });
+    }
+
+    const btnConfirmReset = document.getElementById('btnConfirmPasswordReset');
+    if (btnConfirmReset) {
+      btnConfirmReset.addEventListener('click', async () => {
+        const token = document.getElementById('recoveryTokenInput').value.trim();
+        const newPass = document.getElementById('newPasswordInput').value;
+        const confirmPass = document.getElementById('newPasswordConfirmInput').value;
+
+        if (!token || !newPass || !confirmPass) {
+          showRecoveryAlert('Completa todos los campos para actualizar tu contraseña.', 'danger');
+          return;
+        }
+
+        if (newPass !== confirmPass) {
+          showRecoveryAlert('Las nuevas contraseñas no coinciden. Por favor verifícalas.', 'danger');
+          return;
+        }
+
+        if (newPass.length < 6) {
+          showRecoveryAlert('La contraseña debe tener un mínimo de 6 caracteres.', 'danger');
+          return;
+        }
+
+        btnConfirmReset.disabled = true;
+        btnConfirmReset.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Actualizando registro SQL...';
+
+        try {
+          const res = await HercarSQL.confirmPasswordReset(targetRecoveryEmail, token, newPass);
+          if (res.success) {
+            showRecoveryAlert(res.message, 'success');
+            document.getElementById('inputEmail').value = targetRecoveryEmail;
+            document.getElementById('inputPassword').value = newPass;
+            setTimeout(() => {
+              if (recoveryModalInstance) recoveryModalInstance.hide();
+              showAlert('¡Contraseña actualizada con éxito en la base de datos SQL! Ahora presiona "Entrar al Panel de Control".', 'success');
+            }, 1200);
+          } else {
+            showRecoveryAlert(res.message, 'danger');
+          }
+        } catch (e) {
+          showRecoveryAlert('Error al actualizar la contraseña en la base de datos.', 'danger');
+        } finally {
+          btnConfirmReset.disabled = false;
+          btnConfirmReset.innerHTML = '<i class="bi bi-check2-circle me-2"></i> Actualizar Contraseña en SQL';
+        }
+      });
+    }
+
+    // Inicializar chequeo de base de datos
+    checkDatabaseState();
   </script>
+
+  <!-- Botón Flotante de Acceso Rápido a HercarBot IA -->
+  <a href="index.html" class="hercar-floating-widget shadow-lg" title="Abrir Asistente Virtual Oficial HercarBot IA">
+    <div class="hercar-widget-avatar">
+      <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="HercarBot IA">
+      <span class="hercar-widget-dot"></span>
+    </div>
+    <div class="hercar-widget-info">
+      <span class="hercar-widget-title">HercarBot IA</span>
+      <span class="hercar-widget-status">Asistente Oficial &bull; En Línea</span>
+    </div>
+    <i class="bi bi-chat-dots-fill hercar-widget-icon"></i>
+  </a>
+
 </body>
 </html>

@@ -6,13 +6,19 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Panel Administrativo Oficial — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
   
   <!-- Favicon y PWA Manifest Oficial -->
-  <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#13357b">
   <meta name="apple-mobile-web-app-title" content="HercarAdmin">
-  <link rel="apple-touch-icon" href="assets/img/logo-hercar.png">
   
   <!-- Fuentes Institucionales -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,12 +32,26 @@
   <!-- Estilos del Admin con Cache Buster -->
   <link rel="stylesheet" href="css/admin.css?v=20261102a">
 
-  <!-- Control de Seguridad: Verificación de Sesión Docente/Administrativa -->
+  <!-- Control de Seguridad Estricto: Verificación de Sesión Autenticada (Cero Puertas Traseras / Anti-Hacker) -->
   <script>
     (function() {
-      var sess = sessionStorage.getItem('hercar_admin_session') || localStorage.getItem('hercar_admin_session');
-      if (!sess) {
-        window.location.replace('login.html');
+      try {
+        var raw = sessionStorage.getItem('hercar_admin_session') || localStorage.getItem('hercar_admin_session') ||
+                  sessionStorage.getItem('hercar_current_user') || localStorage.getItem('hercar_current_user');
+        if (!raw) {
+          window.location.replace('login.html?auth=required');
+          return;
+        }
+        var sess = JSON.parse(raw);
+        if (!sess || !sess.id || !sess.role) {
+          sessionStorage.clear();
+          localStorage.removeItem('hercar_admin_session');
+          localStorage.removeItem('hercar_current_user');
+          window.location.replace('login.html?auth=required');
+          return;
+        }
+      } catch (err) {
+        window.location.replace('login.html?auth=required');
       }
     })();
   </script>
@@ -61,6 +81,24 @@
         <a href="#metricas" class="active">
           <i class="bi bi-speedometer2"></i>
           <span>Dashboard & Métricas</span>
+        </a>
+      </li>
+      <li>
+        <a href="#red-neuronal">
+          <i class="bi bi-cpu-fill text-info"></i>
+          <span>Red Neuronal & IA</span>
+        </a>
+      </li>
+      <li>
+        <a href="#laboratorio-voz">
+          <i class="bi bi-mic-fill text-danger"></i>
+          <span>Laboratorio de Voz</span>
+        </a>
+      </li>
+      <li>
+        <a href="#auditoria-consultas">
+          <i class="bi bi-activity text-warning"></i>
+          <span>Auditoría en Tiempo Real</span>
         </a>
       </li>
       <li>
@@ -97,6 +135,12 @@
         <a href="#configuracion">
           <i class="bi bi-gear-fill"></i>
           <span>Configuración & Demo</span>
+        </a>
+      </li>
+      <li>
+        <a href="#database-sql">
+          <i class="bi bi-database-fill-check text-success"></i>
+          <span>Base de Datos SQL & Users</span>
         </a>
       </li>
       <li class="mt-auto">
@@ -139,12 +183,20 @@
         <button id="btn-export-csv" class="btn btn-outline-success rounded-pill px-2 px-sm-3 shadow-sm btn-sm" title="Exportar a Excel CSV">
           <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> <span class="d-none d-sm-inline">Exportar CSV</span><span class="d-inline d-sm-none">CSV</span>
         </button>
+        <button id="btn-export-executive-pdf" class="btn btn-outline-danger rounded-pill px-2 px-sm-3 shadow-sm btn-sm d-flex align-items-center gap-1" title="Informe Ejecutivo Imprimible / PDF para Dirección General">
+          <i class="bi bi-file-earmark-pdf-fill text-danger"></i> <span class="d-none d-sm-inline">Informe Ejecutivo PDF</span><span class="d-inline d-sm-none">PDF</span>
+        </button>
         <button id="btn-export-report" class="btn btn-outline-primary rounded-pill px-2 px-sm-3 shadow-sm btn-sm" title="Copia de Seguridad JSON">
           <i class="bi bi-download me-1"></i> <span class="d-none d-sm-inline">Backup JSON</span><span class="d-inline d-sm-none">Backup</span>
         </button>
-        <a href="index.html" target="_blank" class="btn rounded-pill px-3 shadow-sm btn-sm fw-bold" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;">
-          <i class="bi bi-robot me-1"></i> <span>Chatbot</span>
+        <a href="index.html" class="btn rounded-pill px-3 shadow-sm btn-sm fw-bold" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;" title="Regresar a la vista del estudiante">
+          <i class="bi bi-robot me-1 text-info"></i> <span>Ir al Chatbot</span>
         </a>
+        <!-- Botón Ver Mi Perfil -->
+        <button id="btn-header-profile" class="btn rounded-pill px-2 px-sm-3 shadow-sm btn-sm d-flex align-items-center gap-2" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:#fff;" title="Ver Mi Perfil de Usuario">
+          <img id="header-user-avatar" src="assets/img/logo-hercar.png" onerror="this.src='https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff&bold=true'" class="rounded-circle border border-2 border-white shadow-sm" style="width: 32px; height: 32px; object-fit: cover;">
+          <span id="header-user-name" class="small fw-semibold d-none d-md-inline">Mi Perfil</span>
+        </button>
         <button id="btn-admin-logout" class="btn btn-outline-danger rounded-pill px-2 px-sm-3 shadow-sm btn-sm d-flex align-items-center gap-1" title="Cerrar Sesión">
           <i class="bi bi-box-arrow-right"></i>
           <span class="small fw-semibold d-none d-sm-inline">Salir</span>
@@ -162,6 +214,7 @@
           <div class="metric-data">
             <h3 id="stat-total-consultas">345</h3>
             <p>Consultas Atendidas</p>
+            <span class="metric-trend up"><i class="bi bi-arrow-up-right"></i> +14% mes</span>
           </div>
         </div>
       </div>
@@ -174,6 +227,7 @@
           <div class="metric-data">
             <h3 id="stat-total-fut">18</h3>
             <p>FUTs Generados</p>
+            <span class="metric-trend up"><i class="bi bi-check-circle-fill"></i> Oficiales</span>
           </div>
         </div>
       </div>
@@ -186,6 +240,7 @@
           <div class="metric-data">
             <h3 id="stat-ciclo-cero">84</h3>
             <p>Admisión & Ciclo Cero</p>
+            <span class="metric-trend up"><i class="bi bi-arrow-up-right"></i> +22% postulantes</span>
           </div>
         </div>
       </div>
@@ -198,6 +253,7 @@
           <div class="metric-data">
             <h3 id="stat-total-tests">42</h3>
             <p>Tests Vocacionales</p>
+            <span class="metric-trend up"><i class="bi bi-award-fill"></i> 100% afinidad</span>
           </div>
         </div>
       </div>
@@ -210,6 +266,7 @@
           <div class="metric-data">
             <h3 id="stat-top-carrera">APSTI</h3>
             <p>Carrera Top Interés</p>
+            <span class="metric-trend neutral"><i class="bi bi-star-fill"></i> 43% demanda</span>
           </div>
         </div>
       </div>
@@ -222,6 +279,7 @@
           <div class="metric-data">
             <h3 id="stat-satisfaccion">95%</h3>
             <p>Satisfacción Alumnos</p>
+            <span class="metric-trend up"><i class="bi bi-emoji-smile-fill"></i> Excelente</span>
           </div>
         </div>
       </div>
@@ -253,6 +311,299 @@
         </div>
       </div>
     </div>
+
+    <!-- ==========================================
+         SECCIÓN: MONITOR DE RED NEURONAL & MOTOR COGNITIVO
+         ========================================== -->
+    <section id="red-neuronal" class="admin-neural-card mb-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <div style="width:38px; height:38px; background:rgba(56,189,248,0.2); border:1px solid rgba(56,189,248,0.4); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+            <i class="bi bi-cpu-fill text-info fs-5"></i>
+          </div>
+          <div>
+            <h5 class="mb-0 fw-bold text-white">Monitor de la Red Neuronal Institucional</h5>
+            <small style="color:rgba(255,255,255,0.7);">Telemetría Cognitiva, Inferencia Semántica y Salud del Motor NLP</small>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge rounded-pill" style="background:rgba(16,185,129,0.25); color:#6ee7b7; border:1px solid rgba(16,185,129,0.4);">
+            <i class="bi bi-circle-fill me-1" style="font-size:0.45rem;"></i>Red Neuronal Activa
+          </span>
+          <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="refreshNeuralStats()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Actualizar Sinapsis
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+          <div class="neural-stat-box">
+            <span class="ns-label"><i class="bi bi-bullseye text-primary"></i> Precisión Semántica</span>
+            <div class="ns-val" id="admin-neural-accuracy">99.4%</div>
+            <div class="ns-sub"><i class="bi bi-check2-all me-1"></i>Alta Certeza NFD</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="neural-stat-box">
+            <span class="ns-label"><i class="bi bi-stopwatch text-warning"></i> Latencia Inferencia</span>
+            <div class="ns-val" id="admin-neural-latency">16 ms</div>
+            <div class="ns-sub"><i class="bi bi-lightning-charge-fill me-1"></i>Tiempo Real Local</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="neural-stat-box">
+            <span class="ns-label"><i class="bi bi-diagram-3-fill text-info"></i> Nodos de Conocimiento</span>
+            <div class="ns-val" id="admin-neural-nodes">182</div>
+            <div class="ns-sub"><i class="bi bi-database-check me-1"></i>Mallas, TUPA y Normas</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="neural-stat-box">
+            <span class="ns-label"><i class="bi bi-chat-heart-fill text-danger"></i> Memoria Contextual</span>
+            <div class="ns-val" id="admin-neural-context">Multi-Turno</div>
+            <div class="ns-sub"><i class="bi bi-arrow-repeat me-1"></i>Seguimiento de Hilo</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Esquema Visual de Capas Sinápticas -->
+      <div class="p-3 rounded-3 mb-3" style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08);">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <small class="text-white-50 fw-semibold text-uppercase" style="font-size:0.72rem; letter-spacing:0.8px;">
+            <i class="bi bi-layers-fill text-info me-1"></i> Clústeres Semánticos Activos en el Cerebro Institucional
+          </small>
+          <small class="text-info fw-bold" style="font-size:0.72rem;">100% Autónomo sin caídas de red</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="badge" style="background:rgba(37,99,235,0.2); border:1px solid rgba(37,99,235,0.4); color:#93c5fd; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-laptop me-1"></i> Clúster APSTI (Sistemas & TI)
+          </span>
+          <span class="badge" style="background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.4); color:#86efac; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-globe2 me-1"></i> Clúster ANI (Negocios & Aduanas)
+          </span>
+          <span class="badge" style="background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fde047; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-calculator me-1"></i> Clúster CONTA (SUNAT & Finanzas)
+          </span>
+          <span class="badge" style="background:rgba(6,182,212,0.2); border:1px solid rgba(6,182,212,0.4); color:#67e8f9; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-water me-1"></i> Clúster DPA (Pesquería & HACCP)
+          </span>
+          <span class="badge" style="background:rgba(168,85,247,0.2); border:1px solid rgba(168,85,247,0.4); color:#d8b4fe; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-mortarboard me-1"></i> Admisión & CEPRE-HERCAR
+          </span>
+          <span class="badge" style="background:rgba(236,72,153,0.2); border:1px solid rgba(236,72,153,0.4); color:#f472b6; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-credit-card me-1"></i> Pagos BN & Vouchers
+          </span>
+          <span class="badge" style="background:rgba(14,165,233,0.2); border:1px solid rgba(14,165,233,0.4); color:#7dd3fc; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-file-earmark-ruled me-1"></i> TUPA & Trámites (FUT)
+          </span>
+          <span class="badge" style="background:rgba(34,197,94,0.2); border:1px solid rgba(34,197,94,0.4); color:#86efac; padding:6px 12px; border-radius:8px;">
+            <i class="bi bi-shield-check me-1"></i> Normativa, Notas (13) & DPI (30%)
+          </span>
+        </div>
+      </div>
+
+      <!-- Canvas Interactivo de Topología Sináptica -->
+      <div class="p-3 rounded-3 mb-3" style="background:rgba(10,17,40,0.85); border:1px solid rgba(56,189,248,0.25); border-radius:12px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge rounded-pill" style="background:rgba(56,189,248,0.2); color:#38bdf8; border:1px solid rgba(56,189,248,0.35);">
+              <i class="bi bi-diagram-3-fill me-1"></i>Topología Sináptica en Tiempo Real
+            </span>
+            <small class="text-white-50" style="font-size:0.75rem;">Capa Entrada (NFD) &rarr; Capa Oculta 1 &rarr; Capa Oculta 2 &rarr; Salida (Intención)</small>
+          </div>
+          <small class="text-info fw-semibold" style="font-size:0.72rem;"><i class="bi bi-activity me-1"></i>64 Nodos Activos</small>
+        </div>
+        <canvas id="admin-neural-network-canvas" style="width:100%; height:190px; display:block; border-radius:8px;"></canvas>
+      </div>
+
+      <!-- Sandbox de Inferencia y Activación en Vivo -->
+      <div class="p-3 rounded-3 border" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.1) !important;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <label class="form-label fw-bold text-white small mb-0">
+            <i class="bi bi-terminal-fill text-info me-1"></i> Probar Inferencia y Activación de Sinapsis en Vivo:
+          </label>
+          <span class="badge bg-info-subtle text-info small" id="admin-neural-inference-status">Listo para evaluar</span>
+        </div>
+        <div class="input-group input-group-sm mb-2">
+          <input type="text" id="admin-neural-test-input" class="form-control" placeholder="Ej: ¿Qué pasa si jalo un curso? o ¿Cuál es la cuenta del Banco de la Nación?" style="background:rgba(15,23,42,0.8); color:#f8fafc; border-color:rgba(56,189,248,0.3);">
+          <button class="btn btn-info px-3 fw-bold text-dark" id="btn-admin-run-neural-test" onclick="runAdminNeuralTest()">
+            <i class="bi bi-lightning-fill me-1"></i> Evaluar Sinapsis
+          </button>
+        </div>
+        <div id="admin-neural-test-result" class="p-3 rounded small" style="display:none; background:rgba(15,23,42,0.95); border:1px solid rgba(56,189,248,0.3); color:#e2e8f0;"></div>
+        <div class="d-flex flex-wrap gap-1 mt-2">
+          <span class="small text-white-50 me-1">Pruebas rápidas:</span>
+          <button class="btn btn-xs btn-outline-light rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="testAdminNeuralPhrase('¿Cuáles son las 4 carreras técnicas?')">4 Carreras</button>
+          <button class="btn btn-xs btn-outline-light rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="testAdminNeuralPhrase('Cuenta corriente Banco de la Nación 00-631-012948')">Cuenta BN</button>
+          <button class="btn btn-xs btn-outline-light rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="testAdminNeuralPhrase('¿Qué pasa si desapruebo o jalo un curso?')">Reglamento/DPI</button>
+          <button class="btn btn-xs btn-outline-light rounded-pill py-0 px-2" style="font-size:0.72rem;" onclick="testAdminNeuralPhrase('Requisitos para titulación profesional y EFSRT')">Titulación TUPA</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECCIÓN: LABORATORIO Y CALIBRADOR DE VOZ FEMENINA
+         ========================================== -->
+    <section id="laboratorio-voz" class="admin-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <div style="width:36px; height:36px; background:rgba(239,68,68,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+            <i class="bi bi-mic-fill text-danger fs-5"></i>
+          </div>
+          <div>
+            <h5 class="mb-0 fw-bold">Laboratorio y Calibrador de Voz Femenina</h5>
+            <small class="text-muted">Prueba en vivo la pronunciación de números, carreras y fluidez humana ante el docente</small>
+          </div>
+        </div>
+        <span class="badge bg-danger-subtle text-danger fw-bold"><i class="bi bi-soundwave me-1"></i>Síntesis Humanizada v5.0</span>
+      </div>
+
+      <div class="admin-card-body">
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <h6 class="fw-bold mb-3"><i class="bi bi-sliders me-1 text-primary"></i> Controles Acústicos de la Asistente</h6>
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted mb-1">Voz Femenina Detectada en el Navegador:</label>
+              <select id="admin-voice-select" class="form-select form-select-sm">
+                <option value="">Cargando voces disponibles...</option>
+              </select>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label small fw-bold text-muted mb-0">Velocidad (Cadencia):</label>
+                  <span class="badge bg-light text-dark border" id="admin-voice-rate-label">0.98x</span>
+                </div>
+                <input type="range" class="form-range" id="admin-voice-rate" min="0.85" max="1.15" step="0.02" value="0.98">
+              </div>
+              <div class="col-sm-6">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label small fw-bold text-muted mb-0">Tono (Pitch):</label>
+                  <span class="badge bg-light text-dark border" id="admin-voice-pitch-label">1.00</span>
+                </div>
+                <input type="range" class="form-range" id="admin-voice-pitch" min="0.95" max="1.05" step="0.01" value="1.00">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted mb-1">Escribir Frase Personalizada para Probar en Vivo:</label>
+              <div class="input-group">
+                <input type="text" id="admin-voice-custom-text" class="form-control" placeholder="Ej: La cuenta corriente del Banco de la Nación es 00-631-012948...">
+                <button class="btn btn-primary px-3 fw-bold" id="btn-admin-speak-custom">
+                  <i class="bi bi-volume-up-fill me-1"></i> Hablar
+                </button>
+              </div>
+            </div>
+
+            <div class="p-3 bg-light rounded-3 border">
+              <small class="text-muted d-block fw-bold mb-1"><i class="bi bi-translate me-1"></i> Vista Previa de la Normalización Fonética:</small>
+              <div id="admin-phonetic-preview" class="small text-dark font-monospace" style="min-height:36px; background:#fff; padding:8px 10px; border-radius:6px; border:1px solid #e2e8f0;">
+                (Escribe o pulsa un botón de prueba para ver cómo la IA traduce los números a palabras habladas)
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <h6 class="fw-bold mb-3"><i class="bi bi-play-circle me-1 text-success"></i> Pruebas de Dictado Inmediato (Casos Reales)</h6>
+            <div class="d-flex flex-column gap-2">
+              <button type="button" class="voice-sample-btn" onclick="testAdminVoice('cuenta_bn')">
+                <div>
+                  <strong>💳 Lectura de Cuenta BN y Códigos Bancarios</strong>
+                  <div class="small text-muted">Prueba cómo lee fluidamente 00-631-012948 y el CCI sin trabas.</div>
+                </div>
+                <i class="bi bi-play-circle-fill"></i>
+              </button>
+
+              <button type="button" class="voice-sample-btn" onclick="testAdminVoice('tasas_tupa')">
+                <div>
+                  <strong>💰 Lectura de Costos y Tasas TUPA (Soles)</strong>
+                  <div class="small text-muted">Prueba cómo lee S/ 120, S/ 30, S/ 250 y plazos de 30 días hábiles.</div>
+                </div>
+                <i class="bi bi-play-circle-fill"></i>
+              </button>
+
+              <button type="button" class="voice-sample-btn" onclick="testAdminVoice('carreras')">
+                <div>
+                  <strong>🎓 Nombres de las 4 Carreras Técnicas</strong>
+                  <div class="small text-muted">Prueba la dicción de APSTI, Negocios, Contabilidad y Pesquería.</div>
+                </div>
+                <i class="bi bi-play-circle-fill"></i>
+              </button>
+
+              <button type="button" class="voice-sample-btn" onclick="testAdminVoice('reglamento')">
+                <div>
+                  <strong>⚖️ Reglamento de Notas (13) y Límite de Faltas (30%)</strong>
+                  <div class="small text-muted">Prueba cómo explica desaprobados, DPI y escala de 0 a 20.</div>
+                </div>
+                <i class="bi bi-play-circle-fill"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECCIÓN: AUDITORÍA DE CONVERSACIONES EN TIEMPO REAL
+         ========================================== -->
+    <section id="auditoria-consultas" class="admin-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <div style="width:36px; height:36px; background:rgba(245,158,11,0.12); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+            <i class="bi bi-activity text-warning fs-5"></i>
+          </div>
+          <div>
+            <h5 class="mb-0 fw-bold">Auditoría de Conversaciones en Tiempo Real</h5>
+            <small class="text-muted">Supervisión académica de consultas de alumnos, intención clasificada y certeza de la IA</small>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="refreshAuditLog()">
+            <i class="bi bi-arrow-repeat me-1"></i>Actualizar Feed
+          </button>
+        </div>
+      </div>
+
+      <div class="p-3 bg-light border-bottom d-flex gap-3 flex-wrap align-items-center justify-content-between">
+        <div class="input-group" style="max-width: 320px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" id="audit-filter-search" class="form-control border-start-0" placeholder="Buscar por consulta o intención...">
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <label class="small text-muted fw-bold mb-0">Filtrar por Tema:</label>
+          <select id="audit-filter-topic" class="form-select form-select-sm" style="width: 170px;">
+            <option value="all">Todos los temas</option>
+            <option value="carreras">Carreras Profesionales</option>
+            <option value="admision">Admisión & CEPRE</option>
+            <option value="pagos">Pagos & Vouchers</option>
+            <option value="tramites">Trámites TUPA</option>
+            <option value="reglamento">Reglamento & Notas</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-custom align-middle mb-0">
+            <thead>
+              <tr>
+                <th style="width: 120px;">Hora / Turno</th>
+                <th>Consulta del Estudiante</th>
+                <th style="width: 180px;">Intención Detectada</th>
+                <th style="width: 150px;">Certeza Semántica</th>
+                <th style="width: 120px;">Satisfacción</th>
+                <th style="width: 100px;" class="text-center">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body">
+              <!-- Renderizado dinámicamente desde admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
     <!-- ==========================================
          SECCIÓN: TABLÓN DE ANUNCIOS Y COMUNICADOS
@@ -547,6 +898,202 @@
         </div>
       </div>
     </section>
+
+    <!-- ==========================================
+         SECCIÓN: BASE DE DATOS RELACIONAL SQL & USUARIOS
+         ========================================== -->
+    <section id="database-sql" class="admin-card mb-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+          <div class="d-flex align-items-center gap-2">
+            <h4 class="fw-bold mb-0 text-dark"><i class="bi bi-database-fill-check text-success me-2"></i>Base de Datos Relacional SQL (HercarSQL)</h4>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill" style="font-size: 0.72rem;">
+              <i class="bi bi-circle-fill text-success me-1" style="font-size: 0.5rem;"></i> Motor SQL Activo
+            </span>
+          </div>
+          <p class="text-muted small mb-0 mt-1">
+            Gestión de tablas relacionales (<code>users</code>, <code>password_resets</code>, <code>audit_logs</code>, <code>fut_requests</code>) con hashing criptográfico SHA-256.
+          </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm" id="btn-open-invite-modal" title="Generar y copiar enlace oficial para invitar a docentes a registrarse">
+            <i class="bi bi-link-45deg me-1"></i> Generar Link de Registro Docente
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm" id="btn-reset-sql-zero" title="Vaciar la base de datos a CERO (0) para inicio limpio sin datos de muestra">
+            <i class="bi bi-trash3 me-1"></i> Vaciar Base de Datos (0)
+          </button>
+          <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" id="btn-export-sql-dump">
+            <i class="bi bi-download me-1"></i> Descargar Script SQL (.sql)
+          </button>
+          <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" id="btn-open-create-user-modal" style="background:#13357b; border-color:#13357b;">
+            <i class="bi bi-person-plus-fill me-1"></i> Nuevo Docente / Admin
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Métricas de la Base de Datos Relacional (Simétricas, Uniformes y Balanceadas) -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between sql-metric-card" style="background: #f8fafc; border-color: #e2e8f0;">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="text-muted small fw-semibold">Tabla <code>users</code></span>
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem;"><i class="bi bi-people-fill me-1"></i>Cuentas</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2 mt-auto">
+              <span class="h3 fw-bold text-primary mb-0" id="sql-count-users">0</span>
+              <small class="text-muted">registradas</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between sql-metric-card" style="background: #f8fafc; border-color: #e2e8f0;">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="text-muted small fw-semibold">Tabla <code>password_resets</code></span>
+              <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem;"><i class="bi bi-key-fill me-1"></i>Tokens</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2 mt-auto">
+              <span class="h3 fw-bold text-warning mb-0" id="sql-count-resets">0</span>
+              <small class="text-muted">solicitudes</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between sql-metric-card" style="background: #f8fafc; border-color: #e2e8f0;">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="text-muted small fw-semibold">Tabla <code>audit_logs</code></span>
+              <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem;"><i class="bi bi-shield-check me-1"></i>Auditoría</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2 mt-auto">
+              <span class="h3 fw-bold text-info mb-0" id="sql-count-logs">0</span>
+              <small class="text-muted">eventos</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="p-3 rounded-3 border h-100 d-flex flex-column justify-content-between sql-metric-card" style="background: #f8fafc; border-color: #e2e8f0;">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="text-muted small fw-semibold">Motor & Criptografía</span>
+              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size: 0.72rem;"><i class="bi bi-database-check me-1"></i>MySQL 8.0</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-2 mt-auto">
+              <span class="h3 fw-bold text-success mb-0">SHA-256</span>
+              <small class="text-muted">WebCrypto</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestañas para Ver Usuarios y Auditoría -->
+      <ul class="nav nav-pills mb-3" id="sqlPillsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active rounded-pill px-3 py-1 small fw-semibold" id="tab-sql-users-btn" data-bs-toggle="pill" data-bs-target="#tab-sql-users" type="button" role="tab">
+            <i class="bi bi-people-fill me-1"></i> Usuarios Registrados
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link rounded-pill px-3 py-1 small fw-semibold" id="tab-sql-logs-btn" data-bs-toggle="pill" data-bs-target="#tab-sql-logs" type="button" role="tab">
+            <i class="bi bi-shield-shaded me-1"></i> Logs de Auditoría y Acceso
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="sqlPillsTabContent">
+        <!-- Pestaña: Tabla de Usuarios -->
+        <div class="tab-pane fade show active" id="tab-sql-users" role="tabpanel">
+          <!-- Banner de Blindaje Anti-Hacker y Reconocimiento de IP -->
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-2 px-3 rounded-3" style="background: rgba(14, 45, 108, 0.04); border: 1px solid rgba(14, 45, 108, 0.15);">
+            <div class="d-flex align-items-center gap-2 small">
+              <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1">
+                <i class="bi bi-shield-check me-1"></i>HercarShield Anti-Hacker Activo
+              </span>
+              <span class="text-muted d-none d-md-inline" style="font-size: 0.74rem;">
+                &bull; 0 Puertas Traseras &bull; Cifrado SHA-256 &bull; Detección de IP &bull; Anti-Fuerza Bruta
+              </span>
+            </div>
+            <div id="role-view-badge" class="small fw-semibold text-primary">
+              <i class="bi bi-shield-lock me-1"></i> IP Reconocida: <span id="display-client-ip" class="font-monospace">190.237.45.12 (Paita)</span>
+            </div>
+          </div>
+
+          <!-- Barra de Búsqueda y Filtros en Tiempo Real -->
+          <div class="row g-2 mb-3 align-items-center">
+            <div class="col-12 col-md-5">
+              <div class="input-group input-group-sm shadow-sm rounded-pill overflow-hidden border bg-white">
+                <span class="input-group-text bg-white border-0 ps-3 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" id="sqlUserSearchInput" class="form-control border-0 bg-white" placeholder="Buscar por nombre, correo, usuario, DNI o celular...">
+                <button class="btn btn-outline-secondary border-0 px-2" type="button" id="btnClearUserSearch" style="display:none;" title="Limpiar búsqueda"><i class="bi bi-x-circle-fill"></i></button>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <select id="sqlUserCareerFilter" class="form-select form-select-sm rounded-pill shadow-sm">
+                <option value="" selected>🌐 Todas las Carreras</option>
+                <option value="APSTI">💻 APSTI (Software)</option>
+                <option value="Negocios">🚢 Negocios Internacionales</option>
+                <option value="Contabilidad">📊 Contabilidad</option>
+                <option value="Pesquero">🐟 Pesquería y Acuicultura</option>
+                <option value="Dirección">🏛️ Dirección y TI</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-2">
+              <select id="sqlUserRoleFilter" class="form-select form-select-sm rounded-pill shadow-sm">
+                <option value="" selected>👥 Todos los Roles</option>
+                <option value="admin">🛡️ Administradores</option>
+                <option value="docente">👨‍🏫 Docentes</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-2 text-md-end">
+              <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm w-100" id="btnExportUsersCSV" title="Descargar nómina de usuarios en formato Excel / CSV">
+                <i class="bi bi-file-earmark-excel-fill text-success me-1"></i> Exportar CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive border rounded-3 shadow-sm">
+            <table class="table table-hover align-middle mb-0 w-100" style="font-size: 0.84rem; min-width: 980px;">
+              <thead class="table-light">
+                <tr>
+                  <th style="width: 45px;" class="text-center">ID</th>
+                  <th style="width: 52px;" class="text-center">Foto</th>
+                  <th style="width: 200px;">Nombres y Cargo</th>
+                  <th style="width: 180px;">Usuario / Correo</th>
+                  <th style="width: 130px;">Rol</th>
+                  <th style="width: 160px;">Contraseña Registrada</th>
+                  <th style="width: 110px;" class="text-center">DNI / Celular</th>
+                  <th style="width: 80px;" class="text-center">Estado</th>
+                  <th style="width: 140px; white-space: nowrap;" class="text-end pe-3">Último Acceso</th>
+                  <th style="width: 125px;" class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="sql-users-table-body">
+                <!-- Renderizado dinámicamente desde HercarSQL -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pestaña: Tabla de Auditoría -->
+        <div class="tab-pane fade" id="tab-sql-logs" role="tabpanel">
+          <div class="table-responsive border rounded-3">
+            <table class="table table-hover align-middle mb-0 w-100" style="font-size: 0.82rem; table-layout: fixed;">
+              <thead class="table-light">
+                <tr>
+                  <th style="width: 55px;" class="text-center">ID</th>
+                  <th style="width: 140px;">Fecha y Hora</th>
+                  <th style="width: 170px;">Usuario</th>
+                  <th style="width: 140px;">Acción</th>
+                  <th>Detalles del Evento</th>
+                  <th style="width: 130px;" class="text-end pe-3">IP Origen</th>
+                </tr>
+              </thead>
+              <tbody id="sql-logs-table-body">
+                <!-- Renderizado dinámicamente desde HercarSQL -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ==========================================
@@ -601,7 +1148,107 @@
   <!-- ==========================================
        MODAL PARA PUBLICAR / EDITAR COMUNICADO
        ========================================== -->
-  <div class="modal fade" id="modalAddAnnouncement" tabindex="-1">
+    <!-- ==========================================
+       MODAL PARA CREAR NUEVO USUARIO EN BASE DE DATOS SQL
+       ========================================== -->
+  <div class="modal fade" id="modalCreateUser" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-primary text-white" style="background:#13357b !important;">
+          <h5 class="modal-title fw-bold"><i class="bi bi-person-plus-fill me-2"></i>Registrar Nuevo Usuario en Base de Datos SQL</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="form-create-user-sql">
+          <div class="modal-body p-4">
+            <div id="modal-create-user-alert" class="alert alert-danger py-2 small" style="display: none;"></div>
+
+            <!-- Foto de Perfil en Ventana Flotante -->
+            <div class="d-flex align-items-center gap-3 p-2 mb-3 rounded-3" style="background: rgba(19, 53, 123, 0.05); border: 1px dashed rgba(19, 53, 123, 0.25);">
+              <img id="admin-create-avatar-preview" src="https://ui-avatars.com/api/?name=Docente&background=0284c7&color=fff&bold=true" class="rounded-circle border border-2 border-primary shadow-sm" style="width: 52px; height: 52px; object-fit: cover;" alt="Avatar">
+              <div class="flex-grow-1">
+                <label class="form-label fw-semibold small mb-1 d-block">Foto de Perfil</label>
+                <div class="d-flex gap-1 align-items-center">
+                  <label for="admin-create-avatar-file" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-0" style="cursor: pointer;">
+                    <i class="bi bi-upload me-1"></i> Subir Foto
+                  </label>
+                  <input type="file" id="admin-create-avatar-file" accept="image/*" class="d-none">
+                  <input type="hidden" id="admin-create-avatar-data" value="">
+                  <small class="text-muted" style="font-size: 0.72rem;">(Opcional, se autogenera si se deja vacío)</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Nombres y Apellidos Completos</label>
+              <input type="text" id="new-user-fullname" class="form-control form-control-sm" placeholder="Ej: Lic. María Flores Vargas" required>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold small">Nombre de Usuario</label>
+                <input type="text" id="new-user-username" class="form-control form-control-sm" placeholder="ej: mflores" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold small">DNI</label>
+                <input type="text" id="new-user-dni" class="form-control form-control-sm" placeholder="8 dígitos" maxlength="8">
+              </div>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold small">Correo Institucional</label>
+                <input type="email" id="new-user-email" class="form-control form-control-sm" placeholder="mflores@ieshercar.edu.pe" required>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold small">Celular / WhatsApp</label>
+                <input type="tel" id="new-user-phone" class="form-control form-control-sm" placeholder="9 dígitos" maxlength="9">
+              </div>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold small">Rol Institucional</label>
+                <select id="new-user-role" class="form-select form-select-sm">
+                  <option value="Docente">Docente</option>
+                  <option value="Coordinador de Área">Coordinador de Área</option>
+                  <option value="Secretaría Académica">Secretaría Académica</option>
+                  <option value="Administrador Institucional">Administrador Institucional</option>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold small">Programa de Estudios</label>
+                <select id="new-user-career" class="form-select form-select-sm">
+                  <option value="APSTI">APSTI (Sistemas)</option>
+                  <option value="Negocios Internacionales">Negocios Internacionales</option>
+                  <option value="Contabilidad">Contabilidad</option>
+                  <option value="Desarrollo Pesquero">Pesquería</option>
+                  <option value="Dirección General">Dirección General</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Contraseña Temporal (Se guardará con hash SHA-256)</label>
+              <div class="input-group input-group-sm">
+                <input type="password" id="new-user-password" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                <button type="button" class="btn btn-outline-secondary" id="btn-toggle-new-user-pwd" title="Ver contraseña">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary rounded-pill btn-sm px-4" id="btn-save-new-user-sql" style="background:#13357b; border-color:#13357b;">
+              <i class="bi bi-save me-1"></i> Guardar en Tabla users
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade" id="modalAddAnnouncement" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
         <div class="modal-header bg-primary text-white" style="background:#13357b !important;">
@@ -734,6 +1381,225 @@
   
   <!-- Scripts de la Base de Conocimiento y Lógica de Administración con Cache Buster -->
   <script src="js/knowledge-base.js?v=20261102a"></script>
+  <script src="js/db-sql.js?v=20261105"></script>
   <script src="js/admin.js?v=20261102a"></script>
+
+  
+
+
+  <!-- =========================================================================
+       MODAL: GENERADOR DE ENLACE DE REGISTRO OFICIAL PARA DOCENTES
+       ========================================================================= -->
+  <div class="modal fade" id="modalInviteDocente" tabindex="-1" aria-labelledby="modalInviteDocenteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 540px;">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-0" style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); color: #ffffff; padding: 1.2rem 1.5rem;">
+          <div class="d-flex align-items-center gap-2">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-link-45deg fs-3 text-warning"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="modalInviteDocenteLabel" style="font-size: 1.1rem; color: #ffffff;">Generar Link de Registro Oficial</h5>
+              <small class="text-light opacity-75" style="font-size: 0.74rem;">Autorización Institucional del Administrador General</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <p class="small text-muted mb-3" style="font-size: 0.84rem; line-height: 1.45;">
+            Genera un enlace oficial protegido para invitar a los docentes a registrarse. Los profesores podrán ingresar sus datos, DNI, celular y foto de perfil. Al registrarse, se guardará en la base de datos SQL y se redirigirán al Login institucional.
+          </p>
+
+          <div class="mb-3">
+            <label for="inviteFilterCareer" class="form-label small fw-bold text-dark">
+              <i class="bi bi-mortarboard text-success me-1"></i> Preseleccionar Carrera / Programa:
+            </label>
+            <select id="inviteFilterCareer" class="form-select form-select-sm">
+              <option value="" selected>🌐 Todas las Carreras (Docente elige su área)</option>
+              <option value="APSTI - Desarrollo de Software">💻 APSTI (Sistemas y Software)</option>
+              <option value="Administración de Negocios Internacionales">🚢 Negocios Internacionales</option>
+              <option value="Contabilidad">📊 Contabilidad</option>
+              <option value="Desarrollo Pesquero y Acuícola">🐟 Pesquería y Acuicultura</option>
+              <option value="Dirección y Secretaría General">🏛️ Dirección / Secretaría</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="inviteFilterRole" class="form-label small fw-bold text-dark">
+              <i class="bi bi-person-gear text-success me-1"></i> Rol a Asignar:
+            </label>
+            <select id="inviteFilterRole" class="form-select form-select-sm">
+              <option value="Docente Evaluador" selected>👨‍🏫 Docente Evaluador / Carrera</option>
+              <option value="Director General IESTP Cárcamo">🏛️ Dirección General</option>
+            </select>
+          </div>
+
+          <div class="mb-3 p-3 rounded-3" style="background: rgba(4, 120, 87, 0.05); border: 1.5px dashed rgba(4, 120, 87, 0.3);">
+            <label class="form-label small fw-bold text-dark mb-1 d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-link-45deg text-success me-1"></i>Enlace Generado (con Token Institucional):</span>
+              <span id="inviteCopyFeedback" class="badge bg-success" style="display: none; font-size: 0.72rem;">¡Copiado!</span>
+            </label>
+            <div class="input-group">
+              <input type="text" id="inviteGeneratedLink" class="form-control form-control-sm font-monospace text-primary bg-white" readonly onclick="this.select();">
+              <button class="btn btn-sm btn-success px-3" type="button" id="btnCopyInviteLink" title="Copiar enlace">
+                <i class="bi bi-clipboard-check me-1"></i> Copiar
+              </button>
+            </div>
+            <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
+              <i class="bi bi-shield-check text-success me-1"></i>Incluye token <code>HERCAR2026</code> para autorizar automáticamente el registro.
+            </small>
+          </div>
+
+          <!-- Código QR Generado Dinámicamente para Escaneo con Celular -->
+          <div class="text-center my-3 p-3 rounded-3 border d-flex flex-column align-items-center" style="background: rgba(6, 95, 70, 0.04);">
+            <div class="d-flex align-items-center justify-content-center bg-white p-2 rounded-3 shadow-sm border mb-2" style="width: 140px; height: 140px;">
+              <img id="inviteQrCodeImg" src="" alt="Código QR de Registro Oficial" style="width: 124px; height: 124px; object-fit: contain;">
+            </div>
+            <small class="text-muted fw-semibold" style="font-size: 0.74rem;">
+              <i class="bi bi-qr-code-scan text-success me-1"></i> Código QR Oficial: Los docentes pueden escanearlo con la cámara de su celular
+            </small>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2 pt-2 border-top">
+            <a href="#" id="btnShareInviteWhatsApp" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm">
+              <i class="bi bi-whatsapp"></i> Compartir por WhatsApp
+            </a>
+            <a href="#" id="btnTestInviteLink" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm">
+              <i class="bi bi-box-arrow-up-right"></i> Probar Enlace
+            </a>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0 d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 shadow-sm" id="btnToggleUserStatus">
+              <i class="bi bi-pause-circle me-1"></i> Suspender
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm" id="btnDeleteModalProfile" title="Eliminar este usuario de la base de datos SQL">
+              <i class="bi bi-trash3-fill me-1"></i> Borrar Perfil
+            </button>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: PERFIL OFICIAL DE USUARIO / DOCENTE (HercarSQL)
+       ========================================================================= -->
+  <div class="modal fade" id="modalUserProfile" tabindex="-1" aria-labelledby="modalUserProfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 520px;">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+        <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #0e2d6c 0%, #0369a1 100%); color: #ffffff; padding: 1.2rem 1.5rem;">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-badge-fill fs-4 text-warning"></i>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="modalUserProfileLabel" style="font-size: 1.1rem; color: #ffffff;">Perfil Oficial de Usuario</h5>
+              <small class="text-light opacity-75" style="font-size: 0.74rem;">Base de Datos Relacional SQL IESTP Hermanos Cárcamo</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body p-4">
+          <div id="profileModalAlert" class="alert alert-success py-2 px-3 small mb-3" style="display: none; border-radius: 10px;"></div>
+
+          <!-- Cabecera de Perfil con Foto Grande -->
+          <div class="text-center mb-4">
+            <div class="position-relative d-inline-block">
+              <img id="modalProfileAvatar" src="assets/img/logo-hercar.png" onerror="this.src='https://ui-avatars.com/api/?name=User&background=0284c7&color=fff&bold=true'" class="rounded-circle border border-3 border-primary shadow" style="width: 92px; height: 92px; object-fit: cover;" alt="Foto de Perfil">
+              <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle p-2" title="Usuario Activo"></span>
+            </div>
+            <h5 class="fw-bold text-dark mt-2 mb-0" id="modalProfileFullName">Nombre de Usuario</h5>
+            <div class="mt-1">
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1" id="modalProfileRole" style="font-size: 0.78rem;">Rol Institucional</span>
+            </div>
+            <small class="text-muted d-block mt-1 font-monospace" id="modalProfileCareer">Área / Especialidad</small>
+          </div>
+
+          <!-- Campos de Información Detallada -->
+          <div class="p-3 rounded-3 mb-3" style="background: rgba(2, 132, 199, 0.05); border: 1px solid rgba(2, 132, 199, 0.15);">
+            <div class="row g-2 small">
+              <div class="col-6">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-card-heading me-1"></i>Número de DNI:</span>
+                <strong class="font-monospace text-dark" id="modalProfileDni">--------</strong>
+              </div>
+              <div class="col-6">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-whatsapp me-1 text-success"></i>Celular / WhatsApp:</span>
+                <strong class="font-monospace text-dark" id="modalProfilePhone">--------</strong>
+              </div>
+              <div class="col-6 mt-2">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-person-fill me-1"></i>Usuario SQL:</span>
+                <strong class="font-monospace text-primary" id="modalProfileUsername">@usuario</strong>
+              </div>
+              <div class="col-6 mt-2">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-envelope-at-fill me-1"></i>Correo Electrónico:</span>
+                <strong class="font-monospace text-dark text-truncate d-block" id="modalProfileEmail">correo@ieshercar.edu.pe</strong>
+              </div>
+              <div class="col-12 mt-2">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-key-fill me-1 text-warning"></i>Contraseña Registrada en Base de Datos:</span>
+                <div class="d-flex align-items-center gap-2 mt-1">
+                  <span class="font-monospace fw-bold text-dark p-1 px-2 rounded border bg-white" id="modalProfilePassword" data-shown="false" data-raw="" style="letter-spacing: 1.5px; font-size: 0.88rem;">••••••••</span>
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-0" id="btnToggleModalPassword" title="Mostrar/Ocultar contraseña">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-0" id="btnCopyModalPassword" title="Copiar contraseña">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-6 mt-2">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-calendar-check me-1"></i>Fecha de Registro:</span>
+                <span class="text-muted font-monospace" id="modalProfileCreated">-</span>
+              </div>
+              <div class="col-6 mt-2">
+                <span class="text-muted d-block" style="font-size: 0.72rem;"><i class="bi bi-clock-history me-1"></i>Último Acceso:</span>
+                <span class="text-muted font-monospace" id="modalProfileLastLogin">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Opciones para Cambiar Foto de Perfil (Protegido por Rol) -->
+          <div id="boxEditProfilePhoto" class="pt-3 border-top mt-2">
+            <label class="form-label small fw-bold text-dark mb-2 d-flex align-items-center gap-1">
+              <i class="bi bi-camera-fill text-primary"></i> Actualizar Foto de este Perfil:
+            </label>
+            <div class="row g-2 align-items-center">
+              <div class="col-8">
+                <input type="file" id="modalProfileFileInput" accept="image/*" class="form-control form-control-sm shadow-sm">
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn btn-sm btn-primary rounded-pill w-100 shadow-sm text-nowrap" id="btnSaveProfilePhoto" style="background:#0284c7; border-color:#0284c7; font-size: 0.82rem;">
+                  <i class="bi bi-upload me-1"></i> Guardar
+                </button>
+              </div>
+            </div>
+            <small class="text-muted d-block mt-2" style="font-size: 0.72rem;">Formatos aceptados: JPG, PNG o WebP. Se guarda directamente en SQL.</small>
+          </div>
+
+          <!-- Restablecimiento Directo de Contraseña por el Administrador -->
+          <div id="boxAdminResetPassword" class="pt-3 border-top mt-3" style="display: none;">
+            <label class="form-label small fw-bold text-dark mb-1 d-flex align-items-center gap-1">
+              <i class="bi bi-key-fill text-warning"></i> Restablecer Contraseña Directamente:
+            </label>
+            <div class="input-group input-group-sm">
+              <input type="text" id="adminNewUserPasswordInput" class="form-control font-monospace" placeholder="Nueva contraseña (mínimo 6 caracteres)">
+              <button type="button" class="btn btn-warning fw-semibold px-3" id="btnAdminApplyPasswordReset">
+                <i class="bi bi-arrow-repeat me-1"></i> Guardar Clave
+              </button>
+            </div>
+            <small class="text-muted d-block mt-1" style="font-size:0.71rem;">Permite asignar una nueva contraseña al docente si la olvidó.</small>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

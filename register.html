@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>Registro Docente y Administrativo — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  <title>Registro Institucional en Base de Datos SQL — HercarBot IA | IESTP "Hermanos Cárcamo" - Paita</title>
+  <meta name="description" content="Registro oficial docente y administrativo en la base de datos SQL del IESTP Hermanos Cárcamo de Paita con Clave Maestra.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/register.html">
   
-  <link rel="shortcut icon" href="https://ieshercar.edu.pe/public/assets/img/Logo&Fondo/Logo.png" type="image/x-icon">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Jost:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -18,281 +28,1197 @@
       --accent: #2563eb;
       --gold: #f59e0b;
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
+
+    /* ------------------------------------------------------------------------
+       TEMA CLARO (Sincronizado con index.html)
+       ------------------------------------------------------------------------ */
+    body.light-theme {
+      background: radial-gradient(circle at 85% 15%, rgba(37, 99, 235, 0.08), transparent 40%),
+                  radial-gradient(circle at 15% 85%, rgba(14, 165, 233, 0.08), transparent 40%),
+                  linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f8fafc 100%);
+      color: #0f172a;
+    }
+    body.light-theme .register-card {
+      background: rgba(255, 255, 255, 0.98);
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.9);
+      color: #0f172a;
+    }
+    body.light-theme .auth-title { color: #0f172a; }
+    body.light-theme .auth-subtitle { color: #475569; }
+    body.light-theme .form-label { color: #1e293b; font-weight: 700; }
+    body.light-theme .form-control, 
+    body.light-theme .form-select {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    body.light-theme .form-control::placeholder {
+      color: #64748b;
+      opacity: 1;
+      font-weight: 500;
+    }
+    body.light-theme .form-control:focus,
+    body.light-theme .form-select:focus {
+      background: #ffffff;
+      border-color: #2563eb;
+      color: #0f172a;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    body.light-theme .input-group-text {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-left: none;
+      color: #334155;
+    }
+    body.light-theme .form-select option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+    body.light-theme .stat-box {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+    }
+    body.light-theme .auth-theme-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+    body.light-theme .auth-theme-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    body.light-theme .initial-admin-alert {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      color: #1e40af;
+    }
+    body.light-theme .auth-links-border {
+      border-top: 1px solid #e2e8f0;
+    }
+    body.light-theme .auth-subtext {
+      color: #475569;
+    }
+
+    /* ------------------------------------------------------------------------
+       TEMA OSCURO (Sincronizado con index.html)
+       ------------------------------------------------------------------------ */
+    body.dark-theme {
+      background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.28), transparent 45%),
+                  radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.16), transparent 45%),
+                  linear-gradient(135deg, #060b16 0%, #0c1830 50%, #060d1d 100%);
+      color: #f8fafc;
+    }
+    body.dark-theme .register-card {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+    }
+    body.dark-theme .auth-title { color: #ffffff; }
+    body.dark-theme .auth-subtitle { color: #cbd5e1; }
+    body.dark-theme .form-label { color: #f8fafc; font-weight: 600; }
+    body.dark-theme .form-control,
+    body.dark-theme .form-select {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1.5px solid rgba(148, 163, 184, 0.45);
+      color: #ffffff;
+      font-weight: 500;
+    }
+    body.dark-theme .form-control::placeholder {
+      color: rgba(226, 232, 240, 0.75);
+      opacity: 1;
+      font-weight: 400;
+    }
+    body.dark-theme .form-control:focus,
+    body.dark-theme .form-select:focus {
+      background: rgba(30, 41, 59, 0.98);
+      border-color: #60a5fa;
+      color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.35);
+    }
+    body.dark-theme .input-group-text {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1.5px solid rgba(148, 163, 184, 0.45);
+      border-left: none;
+      color: #e2e8f0;
+    }
+    body.dark-theme .form-select option {
+      background: #0f172a;
+      color: #ffffff;
+    }
+    body.dark-theme .stat-box {
+      background: rgba(30, 41, 59, 0.65);
+      border: 1.5px solid rgba(255, 255, 255, 0.1);
+    }
+    body.dark-theme .auth-theme-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fbbf24;
+    }
+    body.dark-theme .auth-theme-btn:hover {
+      background: rgba(51, 65, 85, 0.9);
+      color: #fef08a;
+    }
+    body.dark-theme .initial-admin-alert {
+      background: rgba(30, 58, 138, 0.3);
+      border: 1.5px solid rgba(96, 165, 250, 0.45);
+      color: #bfdbfe;
+    }
+    body.dark-theme .auth-links-border {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    body.dark-theme .auth-subtext {
+      color: #cbd5e1;
+    }
+
+    /* ------------------------------------------------------------------------
+       ESTRUCTURA GENERAL
+       ------------------------------------------------------------------------ */
     body {
       min-height: 100vh;
-      background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.25), transparent 40%),
-                  radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.15), transparent 40%),
-                  linear-gradient(135deg, #070e1e 0%, #0c1b36 50%, #071124 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px 16px;
-      color: #f1f5f9;
+      transition: background 0.3s ease, color 0.3s ease;
     }
+
     .register-card {
       width: 100%;
-      max-width: 520px;
-      background: rgba(15, 23, 42, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      padding: 34px 28px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-      animation: fadeIn 0.4s ease-out;
+      max-width: 620px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 26px;
+      padding: 34px 30px;
+      animation: fadeIn 0.35s ease-out;
+      position: relative;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .auth-logo-box {
+
+    .auth-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .auth-theme-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
+
+    .auth-logo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .auth-logo {
       width: 48px;
       height: 48px;
       object-fit: contain;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
     }
+
     .auth-title {
       font-family: 'Jost', sans-serif;
       font-weight: 700;
       font-size: 1.35rem;
-      color: #ffffff;
       text-align: center;
+      letter-spacing: -0.3px;
     }
+
     .auth-subtitle {
-      font-size: 0.82rem;
-      color: #94a3b8;
+      font-size: 0.85rem;
       text-align: center;
       margin-top: 4px;
       margin-bottom: 20px;
+      line-height: 1.45;
     }
-    .form-label {
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: #cbd5e1;
-      margin-bottom: 4px;
+
+    /* ------------------------------------------------------------------------
+       MÉTRICAS "QUE TODO ESTÉ CONTADO"
+       ------------------------------------------------------------------------ */
+    .stat-dashboard {
+      margin-bottom: 20px;
     }
-    .form-control, .form-select {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      color: #ffffff;
-      border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 0.86rem;
+    .stat-box {
+      border-radius: 14px;
+      padding: 10px 8px;
+      text-align: center;
       transition: all 0.2s ease;
     }
-    .form-control:focus, .form-select:focus {
-      background: rgba(15, 23, 42, 0.9);
-      border-color: #3b82f6;
-      color: #ffffff;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    .stat-box .stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 2px;
     }
-    .form-select option {
-      background: #0f172a;
-      color: #ffffff;
+    .stat-box .stat-num {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1;
+      display: block;
+      font-family: 'Jost', sans-serif;
     }
+    .stat-box .stat-sub {
+      font-size: 0.65rem;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-control, .form-select {
+      border-radius: 11px;
+      padding: 9px 13px;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+    }
+
+    .input-group-text {
+      border-radius: 0 11px 11px 0;
+      cursor: pointer;
+      padding: 0 12px;
+    }
+
     .btn-auth-primary {
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
       color: #ffffff;
       border: none;
-      padding: 12px;
+      padding: 13px;
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       border-radius: 12px;
       width: 100%;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 6px 20px rgba(29, 78, 216, 0.35);
       transition: all 0.25s ease;
       cursor: pointer;
-      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
     }
+
     .btn-auth-primary:hover {
-      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.5);
+      box-shadow: 0 8px 24px rgba(29, 78, 216, 0.48);
+      color: #ffffff;
     }
+
+    .btn-auth-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .auth-alert {
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 0.82rem;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
       display: none;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
+      font-weight: 500;
     }
     .auth-alert.danger {
       background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
+      border: 1.5px solid #ef4444;
+      color: #b91c1c;
+    }
+    body.dark-theme .auth-alert.danger {
       color: #fca5a5;
     }
     .auth-alert.success {
       background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      border: 1.5px solid #10b981;
+      color: #047857;
+    }
+    body.dark-theme .auth-alert.success {
       color: #6ee7b7;
     }
+
+    .initial-admin-alert {
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+
     .auth-links {
       text-align: center;
-      margin-top: 18px;
+      margin-top: 20px;
       padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.82rem;
+      font-size: 0.84rem;
     }
+
     .auth-links a {
-      color: #60a5fa;
+      color: #2563eb;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
+    }
+    body.dark-theme .auth-links a {
+      color: #60a5fa;
     }
     .auth-links a:hover {
       text-decoration: underline;
     }
-  </style>
+
+    .badge-sql-mode {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+  
+
+/* Widget Flotante HercarBot IA */
+.hercar-floating-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  background: linear-gradient(135deg, #0e2d6c 0%, #0369a1 100%);
+  color: #ffffff !important;
+  text-decoration: none !important;
+  padding: 8px 16px 8px 10px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 28px rgba(3, 105, 161, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+.hercar-floating-widget:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 35px rgba(3, 105, 161, 0.65);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff !important;
+}
+.hercar-widget-avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+.hercar-widget-avatar img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+.hercar-widget-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 11px;
+  height: 11px;
+  background: #22c55e;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: widgetPulse 2s infinite;
+}
+@keyframes widgetPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.hercar-widget-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.hercar-widget-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+.hercar-widget-status {
+  font-size: 0.68rem;
+  color: #bae6fd;
+  font-weight: 500;
+}
+.hercar-widget-icon {
+  font-size: 1.15rem;
+  color: #facc15;
+}
+@media (max-width: 576px) {
+  .hercar-floating-widget {
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 12px 6px 8px;
+  }
+  .hercar-widget-status {
+    display: none;
+  }
+}
+
+</style>
 </head>
-<body>
+<body class="light-theme">
 
   <div class="register-card">
-    <div class="auth-logo-box">
-      <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo IESTP Hermanos Cárcamo" class="auth-logo">
-      <div class="text-start">
-        <h5 class="mb-0 fw-bold text-white" style="font-size: 1.15rem;">HercarBot IA</h5>
-        <small class="text-warning fw-semibold" style="font-size: 0.72rem;"><i class="bi bi-person-badge-fill me-1"></i>Portal de Registro Docente</small>
+    <!-- Barra Superior -->
+    <div class="auth-top-actions">
+      <div class="auth-logo-box">
+        <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo IESTP Hermanos Cárcamo" class="auth-logo">
+        <div class="text-start">
+          <h5 class="mb-0 fw-bold" style="font-size: 1.1rem;">HercarBot IA</h5>
+          <small class="text-warning fw-semibold" style="font-size: 0.72rem;">
+            <i class="bi bi-shield-check me-1"></i>Portal de Registro de Profesores y Docentes
+          </small>
+        </div>
+      </div>
+
+      <!-- Botón de Conmutación de Modo Claro / Oscuro -->
+      <button type="button" id="btnThemeToggle" class="auth-theme-btn" title="Cambiar Tema (Claro / Oscuro)">
+        <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+      </button>
+    </div>
+
+    <h2 class="auth-title" id="pageMainTitle">Registro Oficial de Profesores y Docentes</h2>
+    <p class="auth-subtitle">Crea tu cuenta oficial como docente del IESTP Hermanos Cárcamo para acceder al panel directamente en el motor relacional HercarSQL.</p>
+
+    <!-- Indicador de Seguridad Institucional Limpio y Compacto -->
+    <div class="d-flex justify-content-between align-items-center mb-3 p-2 px-3 rounded-pill border" style="background: rgba(37, 99, 235, 0.06); border-color: rgba(37, 99, 235, 0.18) !important;">
+      <span class="small text-muted" style="font-size: 0.76rem;">
+        <i class="bi bi-shield-check text-primary me-1"></i> Base de Datos Relacional SQL
+      </span>
+      <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size: 0.70rem;">
+        <i class="bi bi-check-circle-fill me-1"></i> Motor SQL Activo
+      </span>
+    </div>
+
+    <!-- BANNER DINÁMICO CUANDO ES EL PRIMER REGISTRO (DESDE CERO) -->
+    <div id="firstAdminBanner" class="initial-admin-alert" style="display: none;">
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <i class="bi bi-star-fill text-warning fs-5"></i>
+        <strong style="font-size: 0.88rem;">Primer Registro del Sistema: Super-Administrador Institucional</strong>
+      </div>
+      <p class="small mb-0" style="line-height: 1.4;">
+        La base de datos está limpia desde <strong>CERO (0)</strong>. Esta cuenta se convertirá en el <strong>Administrador General</strong> con acceso maestro y autorización total sobre el panel.
+      </p>
+    </div>
+
+    <!-- Alertas Dinámicas -->
+    <!-- Banner Dinámico de Invitación Oficial Autorizada por el Administrador -->
+    <div id="inviteBanner" class="alert alert-success py-2 px-3 small d-flex align-items-center gap-2 mb-3 shadow-sm" style="display: none; border-radius: 12px; background: #ecfdf5; border: 1.5px solid #10b981; color: #065f46;">
+      <i class="bi bi-patch-check-fill fs-4 text-success flex-shrink-0"></i>
+      <div>
+        <strong style="font-size: 0.86rem;"><i class="bi bi-shield-check me-1"></i>Enlace Oficial de Registro Institucional</strong>
+        <div style="font-size: 0.74rem;">Acceso autorizado por el Administrador General para el cuerpo docente del IESTP Hermanos Cárcamo.</div>
       </div>
     </div>
 
-    <h2 class="auth-title">Crear Cuenta Docente</h2>
-    <p class="auth-subtitle">Regístrate como docente o personal administrativo del IESTP Hermanos Cárcamo para gestionar el panel.</p>
+    <div id="registerAlert" class="auth-alert mb-3" style="display: none;"></div>
 
-    <div id="registerAlert" class="auth-alert"></div>
-
+    <!-- Formulario Oficial de Registro -->
     <form id="registerForm" autocomplete="off">
+      <!-- Selector de Foto de Perfil Ordenado y Elegante con Ventana Flotante -->
+      <div class="text-center mb-3 p-2 rounded-3" style="background: rgba(2, 132, 199, 0.04); border: 1px dashed rgba(2, 132, 199, 0.25);">
+        <div class="position-relative d-inline-block">
+          <img id="avatarPreview" src="https://ui-avatars.com/api/?name=Docente&background=0284c7&color=fff&bold=true" class="rounded-circle border border-3 border-primary shadow-sm" style="width: 74px; height: 74px; object-fit: cover;" alt="Foto de Perfil">
+          <button type="button" class="btn btn-primary position-absolute bottom-0 end-0 rounded-circle p-0 d-flex align-items-center justify-content-center shadow" id="btnTriggerAvatarModal" style="width: 26px; height: 26px; border: 2px solid #ffffff;" title="Elegir o subir foto de perfil">
+            <i class="bi bi-camera-fill" style="font-size: 0.72rem;"></i>
+          </button>
+        </div>
+        <div class="mt-1">
+          <button type="button" class="btn btn-sm btn-link text-decoration-none fw-bold p-0 text-primary" id="btnOpenAvatarModalLink" style="font-size: 0.82rem;">
+            <i class="bi bi-image me-1"></i> Elegir o Subir Foto de Perfil (Ventana Flotante)
+          </button>
+          <input type="hidden" id="regAvatarData" value="">
+        </div>
+      </div>
       <div class="row g-2 mb-2">
         <div class="col-sm-7">
-          <label for="regName" class="form-label">Nombres y Apellidos Completos:</label>
-          <input type="text" id="regName" class="form-control" placeholder="Ej: Lic. Carlos Mendoza Flores" required>
+          <label for="regName" class="form-label">
+            <i class="bi bi-person-fill text-primary me-1"></i> Nombres y Apellidos Completos:
+          </label>
+          <input type="text" id="regName" class="form-control" placeholder="Ej: Nombres y Apellidos Completos" required autofocus>
         </div>
         <div class="col-sm-5">
-          <label for="regDni" class="form-label">Número de DNI:</label>
+          <label for="regDni" class="form-label">
+            <i class="bi bi-card-heading text-primary me-1"></i> DNI (8 dígitos):
+          </label>
           <input type="text" id="regDni" class="form-control" placeholder="8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
+          <div id="dniStatusBadge" class="mt-1" style="font-size:0.72rem; display:none;"></div>
         </div>
       </div>
 
-      <div class="mb-2">
-        <label for="regEmail" class="form-label">Correo Institucional / Contacto:</label>
-        <input type="email" id="regEmail" class="form-control" placeholder="profesor@ieshercar.edu.pe" required>
+      <div class="row g-2 mb-2">
+        <div class="col-sm-7">
+          <label for="regEmail" class="form-label">
+            <i class="bi bi-envelope-at-fill text-primary me-1"></i> Correo Institucional / Contacto:
+          </label>
+          <input type="email" id="regEmail" class="form-control" placeholder="ejemplo: docente@ieshercar.edu.pe" required>
+        </div>
+        <div class="col-sm-5">
+          <label for="regPhone" class="form-label">
+            <i class="bi bi-whatsapp text-success me-1"></i> Celular / WhatsApp:
+          </label>
+          <input type="tel" id="regPhone" class="form-control" placeholder="9 dígitos (ej: 968184783)" maxlength="9" pattern="[0-9]{9}" required>
+          <div id="phoneStatusBadge" class="mt-1" style="font-size:0.72rem; display:none;"></div>
+        </div>
       </div>
 
       <div class="row g-2 mb-2">
         <div class="col-sm-6">
-          <label for="regCareer" class="form-label">Programa / Área:</label>
+          <label for="regUsername" class="form-label">
+            <i class="bi bi-person-badge text-primary me-1"></i> Usuario SQL:
+          </label>
+          <input type="text" id="regUsername" class="form-control" placeholder="ej: usuario_docente" required>
+        </div>
+        <div class="col-sm-6">
+          <label for="regCareer" class="form-label">
+            <i class="bi bi-mortarboard text-primary me-1"></i> Programa / Área:
+          </label>
           <select id="regCareer" class="form-select" required>
-            <option value="APSTI - Desarrollo de Software">💻 APSTI (Sistemas y TI)</option>
+            <option value="APSTI - Desarrollo de Software">💻 APSTI (Sistemas y Software)</option>
             <option value="Administración de Negocios Internacionales">🚢 Negocios Internacionales</option>
             <option value="Contabilidad">📊 Contabilidad</option>
             <option value="Desarrollo Pesquero y Acuícola">🐟 Pesquería y Acuicultura</option>
             <option value="Dirección y Secretaría General">🏛️ Dirección / Secretaría</option>
           </select>
         </div>
-        <div class="col-sm-6">
-          <label for="regToken" class="form-label">Código de Verificación:</label>
-          <input type="text" id="regToken" class="form-control" value="HERCAR2026" required title="Código de autorización del instituto">
-        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="regRole" class="form-label">
+          <i class="bi bi-person-gear text-primary me-1"></i> Rol Institucional:
+        </label>
+        <select id="regRole" class="form-select" required>
+          <option value="Docente Evaluador" selected>👨‍🏫 Docente Evaluador / Carrera</option>
+          <option value="Administrador Institucional">🛡️ Administrador de TI / Sistema</option>
+          <option value="Director General IESTP Cárcamo">🏛️ Dirección General</option>
+        </select>
+      </div>
+
+      <!-- Clave Maestra de Autorización (Automática si es primer usuario) -->
+      <div class="mb-2" id="boxMasterKey">
+        <label for="regToken" class="form-label">
+          <i class="bi bi-key-fill text-warning me-1"></i> Clave Maestra de Autorización Administrativa:
+        </label>
+        <input type="text" id="regToken" class="form-control" placeholder="Ingresa la Clave Maestra entregada por Dirección (HERCAR2026)" required>
+        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;" id="tokenHint">
+          <i class="bi bi-info-circle me-1"></i> Código de seguridad para autorizar la creación de cuentas en SQL (por defecto: <code>HERCAR2026</code>).
+        </small>
       </div>
 
       <div class="row g-2 mb-3">
         <div class="col-sm-6">
-          <label for="regPassword" class="form-label">Contraseña:</label>
-          <input type="password" id="regPassword" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6" required>
+          <label for="regPassword" class="form-label">
+            <i class="bi bi-shield-lock-fill text-primary me-1"></i> Contraseña:
+          </label>
+          <div class="input-group">
+            <input type="password" id="regPassword" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6" required>
+            <span class="input-group-text" id="toggleRegPwd1">
+              <i class="bi bi-eye-fill"></i>
+            </span>
+          </div>
+          <div id="regCapsLockWarning" class="alert alert-warning py-1 px-2 small mt-2 mb-0 d-flex align-items-center gap-1" style="display: none; border-radius: 8px; font-size: 0.74rem;">
+            <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+            <span>Bloq Mayús activado</span>
+          </div>
+          <div class="mt-2">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <small class="text-muted" style="font-size: 0.72rem;">Nivel de seguridad:</small>
+              <small id="pwdStrengthLabel" class="fw-bold text-muted" style="font-size: 0.72rem;">Mínimo 6 car.</small>
+            </div>
+            <div class="progress" style="height: 4px; border-radius: 2px;">
+              <div id="pwdStrengthBar" class="progress-bar bg-danger" role="progressbar" style="width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+          </div>
         </div>
         <div class="col-sm-6">
-          <label for="regPasswordConfirm" class="form-label">Confirmar Contraseña:</label>
-          <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Repite contraseña" minlength="6" required>
+          <label for="regPasswordConfirm" class="form-label">
+            <i class="bi bi-shield-check text-primary me-1"></i> Confirmar Contraseña:
+          </label>
+          <div class="input-group">
+            <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Repite la contraseña" minlength="6" required>
+            <span class="input-group-text" id="toggleRegPwd2">
+              <i class="bi bi-eye-fill"></i>
+            </span>
+          </div>
         </div>
       </div>
 
       <button type="submit" class="btn-auth-primary" id="btnRegisterSubmit">
-        <i class="bi bi-check-circle-fill me-1"></i> Registrar y Activar Cuenta
+        <i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar y Guardar en Base de Datos SQL
       </button>
     </form>
 
-    <div class="auth-links">
-      <div class="mb-2">
-        <span class="text-muted">¿Ya tienes cuenta de docente?</span>
-        <a href="login.html">Iniciar Sesión aquí</a>
+    <!-- Opciones de Reinicio y Enlaces -->
+    <div class="auth-links auth-links-border">
+      <div class="mb-2 auth-subtext">
+        <span>¿Ya tienes tu cuenta registrada en SQL?</span>
+        <a href="login.html" class="fw-bold ms-1">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión aquí
+        </a>
       </div>
-      <div>
-        <a href="index.html" class="text-white-50"><i class="bi bi-arrow-left me-1"></i>Volver al Asistente HercarBot</a>
+
+      <div class="mt-3 pt-2 text-center border-top">
+        <a href="index.html" class="auth-subtext small">
+          <i class="bi bi-arrow-left me-1"></i> Volver al Asistente HercarBot
+        </a>
       </div>
     </div>
   </div>
 
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Motor de Base de Datos Relacional SQL Institucional -->
+  <script src="js/db-sql.js?v=20261107"></script>
+
   <script>
+    // ------------------------------------------------------------------------
+    // Sincronización Dinámica de Tema (Claro / Oscuro) con index.html
+    // ------------------------------------------------------------------------
+    const STORAGE_THEME_KEY = 'hercarbot_theme';
+
+    function initTheme() {
+      const saved = localStorage.getItem(STORAGE_THEME_KEY) || 'light';
+      applyTheme(saved);
+    }
+
+    function applyTheme(theme) {
+      const isDark = theme === 'dark';
+      document.body.classList.toggle('dark-theme', isDark);
+      document.body.classList.toggle('light-theme', !isDark);
+      document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+
+      const icon = document.getElementById('themeIcon');
+      if (icon) {
+        icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+        icon.style.color = isDark ? '#fbbf24' : '#1e293b';
+      }
+      localStorage.setItem(STORAGE_THEME_KEY, theme);
+    }
+
+    const btnThemeToggle = document.getElementById('btnThemeToggle');
+    if (btnThemeToggle) {
+      btnThemeToggle.addEventListener('click', () => {
+        const isCurrentlyDark = document.body.classList.contains('dark-theme');
+        applyTheme(isCurrentlyDark ? 'light' : 'dark');
+      });
+    }
+
+    initTheme();
+
+    // ------------------------------------------------------------------------
+    // Contadores en Tiempo Real ("que todo esté contado")
+    // ------------------------------------------------------------------------
+    let isCleanInitialState = false;
+
+    async function refreshCountersAndState() {
+      await HercarSQL.init();
+      const stats = HercarSQL.getStats();
+
+      document.getElementById('cntTotalUsers').textContent = stats.totalUsers;
+      document.getElementById('cntAdmins').textContent = stats.adminsCount;
+      document.getElementById('cntTeachers').textContent = stats.teachersCount;
+      document.getElementById('cntAuditLogs').textContent = stats.totalLogs;
+
+      isCleanInitialState = (stats.totalUsers === 0);
+
+      // Parámetros de enlace de invitación oficial generado por el Administrador
+      const urlParams = new URLSearchParams(window.location.search);
+      const inviteToken = urlParams.get('invite') || urlParams.get('token');
+      const inviteCareer = urlParams.get('career');
+      const inviteRole = urlParams.get('role');
+
+      const inviteBanner = document.getElementById('inviteBanner');
+      if (inviteToken && inviteBanner) {
+        inviteBanner.style.display = 'flex';
+      }
+      if (inviteCareer) {
+        const carEl = document.getElementById('regCareer');
+        if (carEl) {
+          for (let opt of carEl.options) {
+            if (opt.value.toLowerCase().includes(inviteCareer.toLowerCase())) {
+              carEl.value = opt.value;
+              break;
+            }
+          }
+        }
+      }
+      if (inviteRole) {
+        const rolEl = document.getElementById('regRole');
+        if (rolEl) {
+          for (let opt of rolEl.options) {
+            if (opt.value.toLowerCase().includes(inviteRole.toLowerCase())) {
+              rolEl.value = opt.value;
+              break;
+            }
+          }
+        }
+      }
+
+      const banner = document.getElementById('firstAdminBanner');
+      const boxMasterKey = document.getElementById('boxMasterKey');
+      const tokenInput = document.getElementById('regToken');
+      const tokenHint = document.getElementById('tokenHint');
+      const roleSelect = document.getElementById('regRole');
+      const title = document.getElementById('pageMainTitle');
+
+      if (isCleanInitialState) {
+        if (banner) banner.style.display = 'block';
+        if (title) title.textContent = 'Registro del Super-Administrador';
+        if (roleSelect) {
+          roleSelect.value = 'Administrador Institucional';
+        }
+        if (tokenInput) {
+          tokenInput.value = 'DESBLOQUEADO (Primer Registro Maestro)';
+          tokenInput.disabled = true;
+          tokenInput.required = false;
+        }
+        if (tokenHint) {
+          tokenHint.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-unlock-fill me-1"></i> Acceso maestro habilitado para el primer registro inicial.</span>';
+        }
+      } else {
+        if (banner) banner.style.display = 'none';
+        if (title) title.textContent = 'Registro Oficial de Profesores y Docentes';
+        if (tokenInput) {
+          tokenInput.disabled = false;
+          tokenInput.required = true;
+          if (inviteToken) {
+            tokenInput.value = inviteToken.toUpperCase();
+            if (boxMasterKey) {
+              boxMasterKey.style.display = 'none'; // Auto-autorizado por el link oficial
+            }
+          } else if (tokenInput.value.includes('DESBLOQUEADO')) {
+            tokenInput.value = 'HERCAR2026';
+          }
+        }
+        if (tokenHint) {
+          tokenHint.innerHTML = '<i class="bi bi-info-circle me-1"></i> Código de seguridad para autorizar la creación de cuentas en SQL (por defecto: <code>HERCAR2026</code>).';
+        }
+      }
+    }
+
+    // Sugerir usuario a partir del correo
+    const emailInput = document.getElementById('regEmail');
+    const userInput = document.getElementById('regUsername');
+    if (emailInput && userInput) {
+      emailInput.addEventListener('input', () => {
+        if (!userInput.dataset.manual) {
+          const val = emailInput.value.trim().toLowerCase();
+          if (val.includes('@')) {
+            userInput.value = val.split('@')[0].replace(/[^a-z0-9_]/g, '');
+          }
+        }
+      });
+      userInput.addEventListener('input', () => {
+        userInput.dataset.manual = 'true';
+      });
+    }
+
+    // Toggle de contraseñas
+    function setupPasswordToggle(btnId, inputId) {
+      const btn = document.getElementById(btnId);
+      const inp = document.getElementById(inputId);
+      if (btn && inp) {
+        btn.addEventListener('click', () => {
+          const isPassword = inp.type === 'password';
+          inp.type = isPassword ? 'text' : 'password';
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.className = isPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
+          }
+        });
+      }
+    }
+    setupPasswordToggle('toggleRegPwd1', 'regPassword');
+    setupPasswordToggle('toggleRegPwd2', 'regPasswordConfirm');
+
     function showAlert(msg, type = 'danger') {
       const alertBox = document.getElementById('registerAlert');
+      if (!alertBox) return;
       alertBox.textContent = msg;
       alertBox.className = `auth-alert ${type}`;
       alertBox.style.display = 'block';
     }
 
-    const regForm = document.getElementById('registerForm');
-    regForm.addEventListener('submit', (e) => {
+    // ------------------------------------------------------------------------
+    // Procesar Registro en SQL
+    // ------------------------------------------------------------------------
+    
+    // =========================================================================
+    // VENTANA FLOTANTE (MODAL): SELECCIONAR FOTO DE PERFIL
+    // =========================================================================
+    const modalAvatarPickerEl = document.getElementById('modalAvatarPicker');
+    let avatarPickerModalInstance = null;
+    let tempSelectedAvatar = '';
+
+    function getAvatarPickerModal() {
+      if (!avatarPickerModalInstance && window.bootstrap && modalAvatarPickerEl) {
+        avatarPickerModalInstance = new bootstrap.Modal(modalAvatarPickerEl);
+      }
+      return avatarPickerModalInstance;
+    }
+
+    const btnTrigger = document.getElementById('btnTriggerAvatarModal');
+    const btnLink = document.getElementById('btnOpenAvatarModalLink');
+    const mainAvatarImg = document.getElementById('avatarPreview');
+    const modalAvatarImg = document.getElementById('modalAvatarPreview');
+    const hiddenAvatarInput = document.getElementById('regAvatarData');
+    const modalFileInput = document.getElementById('modalFileInput');
+
+    function openAvatarModal() {
+      tempSelectedAvatar = hiddenAvatarInput.value || mainAvatarImg.src;
+      modalAvatarImg.src = tempSelectedAvatar;
+      const modal = getAvatarPickerModal();
+      if (modal) modal.show();
+    }
+
+    if (btnTrigger) btnTrigger.addEventListener('click', openAvatarModal);
+    if (btnLink) btnLink.addEventListener('click', (e) => { e.preventDefault(); openAvatarModal(); });
+
+    // Clic en avatares predeterminados dentro de la ventana flotante
+    document.querySelectorAll('.btn-modal-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.dataset.src;
+        if (src) {
+          tempSelectedAvatar = src;
+          modalAvatarImg.src = src;
+          document.querySelectorAll('.btn-modal-preset').forEach(b => b.classList.remove('btn-primary', 'text-white'));
+          btn.classList.add('btn-primary', 'text-white');
+        }
+      });
+    });
+
+    // Subir archivo desde dispositivo en la ventana flotante
+    if (modalFileInput) {
+      modalFileInput.addEventListener('change', () => {
+        if (modalFileInput.files && modalFileInput.files[0]) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            tempSelectedAvatar = e.target.result;
+            modalAvatarImg.src = e.target.result;
+          };
+          reader.readAsDataURL(modalFileInput.files[0]);
+        }
+      });
+    }
+
+    // Botón Confirmar en la ventana flotante
+    const btnApply = document.getElementById('btnApplyModalAvatar');
+    if (btnApply) {
+      btnApply.addEventListener('click', () => {
+        if (tempSelectedAvatar) {
+          mainAvatarImg.src = tempSelectedAvatar;
+          hiddenAvatarInput.value = tempSelectedAvatar;
+        }
+        const modal = getAvatarPickerModal();
+        if (modal) modal.hide();
+      });
+    }
+
+    // Actualizar iniciales de avatar en vivo si el usuario escribe su nombre y no ha subido foto
+    const regNameInput = document.getElementById('regName');
+    if (regNameInput) {
+      regNameInput.addEventListener('input', () => {
+        if (!hiddenAvatarInput.value) {
+          const val = regNameInput.value.trim() || 'Docente';
+          const autoUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(val)}&background=0284c7&color=fff&bold=true`;
+          mainAvatarImg.src = autoUrl;
+          modalAvatarImg.src = autoUrl;
+        }
+      });
+    }
+
+const regForm = document.getElementById('registerForm');
+    regForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const name = document.getElementById('regName').value.trim();
       const dni = document.getElementById('regDni').value.trim();
+      const phone = document.getElementById('regPhone') ? document.getElementById('regPhone').value.trim() : '';
       const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const username = document.getElementById('regUsername').value.trim().toLowerCase();
       const career = document.getElementById('regCareer').value;
-      const token = document.getElementById('regToken').value.trim().toUpperCase();
+      const role = document.getElementById('regRole').value;
       const pass = document.getElementById('regPassword').value;
       const passConfirm = document.getElementById('regPasswordConfirm').value;
+      const token = isCleanInitialState ? 'HERCAR2026' : document.getElementById('regToken').value.trim().toUpperCase();
 
       if (pass !== passConfirm) {
         showAlert('Las contraseñas no coinciden. Por favor verifícalas.', 'danger');
         return;
       }
 
-      if (token !== 'HERCAR2026' && token !== 'CARCAMO2026') {
-        showAlert('Código de autorización incorrecto. Solicítalo a Secretaría General o usa: HERCAR2026', 'danger');
+      if (pass.length < 6) {
+        showAlert('La contraseña debe tener un mínimo de 6 caracteres.', 'danger');
         return;
       }
 
-      let users = [];
+      if (dni.length !== 8 || !/^[0-9]{8}$/.test(dni)) {
+        showAlert('El número de DNI debe contener exactamente 8 dígitos numéricos.', 'danger');
+        return;
+      }
+
+      if (phone && (!/^[0-9]{9}$/.test(phone))) {
+        showAlert('El número de Celular / WhatsApp debe contener 9 dígitos numéricos (ej: 968184783).', 'danger');
+        return;
+      }
+
+      const btnSubmit = document.getElementById('btnRegisterSubmit');
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Registrando en tabla SQL users con hash SHA-256...';
+
       try {
-        users = JSON.parse(localStorage.getItem('hercar_admin_users')) || [];
+        const res = await HercarSQL.registerUser({
+          username: username || email.split('@')[0],
+          email: email,
+          phone: phone,
+          avatar: regAvatarData.value || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0284c7&color=fff&bold=true`,
+          password: pass,
+          fullName: name,
+          dni: dni,
+          career: career,
+          role: role,
+          masterKey: token
+        });
+
+        if (res.success) {
+          showAlert(`¡Cuenta registrada exitosamente en la base de datos SQL (${res.user.role})! Redirigiendo al Login...`, 'success');
+          sessionStorage.setItem('last_registered_email', email);
+          refreshCountersAndState();
+          setTimeout(() => {
+            window.location.href = `login.html?registered=${encodeURIComponent(email)}`;
+          }, 1100);
+        } else {
+          showAlert(res.message, 'danger');
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar y Guardar en Base de Datos SQL';
+        }
       } catch (err) {
-        users = [];
+        console.error(err);
+        showAlert('Error al procesar la inserción en la base de datos SQL.', 'danger');
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="bi bi-check-circle-fill me-2 fs-6"></i> Registrar y Guardar en Base de Datos SQL';
       }
-
-      if (users.some(u => u.email === email)) {
-        showAlert('Este correo ya está registrado en el sistema. Puedes iniciar sesión directamente.', 'danger');
-        return;
-      }
-
-      const newUser = {
-        name,
-        dni,
-        email,
-        career,
-        pass,
-        role: `Docente (${career})`,
-        createdAt: new Date().toISOString()
-      };
-
-      users.push(newUser);
-      localStorage.setItem('hercar_admin_users', JSON.stringify(users));
-
-      showAlert('¡Cuenta creada exitosamente! Redirigiendo al formulario de inicio de sesión...', 'success');
-
-      setTimeout(() => {
-        window.location.href = 'login.html';
-      }, 1200);
     });
+
+    // ------------------------------------------------------------------------
+    // Validación Interactiva en Vivo (DNI, Celular, Fortaleza de Contraseña y Bloq Mayús)
+    // ------------------------------------------------------------------------
+    const dniInput = document.getElementById('regDni');
+    const dniBadge = document.getElementById('dniStatusBadge');
+    if (dniInput && dniBadge) {
+      dniInput.addEventListener('input', () => {
+        dniInput.value = dniInput.value.replace(/[^0-9]/g, '');
+        if (dniInput.value.length === 8) {
+          dniBadge.style.display = 'block';
+          dniBadge.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> DNI institucional válido (8 dígitos)</span>';
+        } else if (dniInput.value.length > 0) {
+          dniBadge.style.display = 'block';
+          dniBadge.innerHTML = `<span class="text-muted"><i class="bi bi-info-circle me-1"></i> Faltan ${8 - dniInput.value.length} dígito(s)</span>`;
+        } else {
+          dniBadge.style.display = 'none';
+        }
+      });
+    }
+
+    const phoneInput = document.getElementById('regPhone');
+    const phoneBadge = document.getElementById('phoneStatusBadge');
+    if (phoneInput && phoneBadge) {
+      phoneInput.addEventListener('input', () => {
+        phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
+        if (phoneInput.value.length === 9) {
+          phoneBadge.style.display = 'block';
+          phoneBadge.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-whatsapp me-1"></i> Celular / WhatsApp válido (Perú +51)</span>';
+        } else if (phoneInput.value.length > 0) {
+          phoneBadge.style.display = 'block';
+          phoneBadge.innerHTML = `<span class="text-muted"><i class="bi bi-info-circle me-1"></i> Faltan ${9 - phoneInput.value.length} dígito(s)</span>`;
+        } else {
+          phoneBadge.style.display = 'none';
+        }
+      });
+    }
+
+    const pwdRegInput = document.getElementById('regPassword');
+    const strBar = document.getElementById('pwdStrengthBar');
+    const strLabel = document.getElementById('pwdStrengthLabel');
+    const regCapsWarn = document.getElementById('regCapsLockWarning');
+
+    if (pwdRegInput) {
+      const checkRegCaps = (e) => {
+        if (regCapsWarn && e.getModifierState && e.getModifierState('CapsLock')) {
+          regCapsWarn.style.display = 'flex';
+        } else if (regCapsWarn) {
+          regCapsWarn.style.display = 'none';
+        }
+      };
+      pwdRegInput.addEventListener('keyup', checkRegCaps);
+      pwdRegInput.addEventListener('keydown', checkRegCaps);
+
+      pwdRegInput.addEventListener('input', () => {
+        const val = pwdRegInput.value;
+        if (!strBar || !strLabel) return;
+        if (val.length === 0) {
+          strBar.style.width = '0%';
+          strBar.className = 'progress-bar bg-danger';
+          strLabel.textContent = 'Mínimo 6 car.';
+          strLabel.className = 'fw-bold text-muted';
+        } else if (val.length < 6) {
+          strBar.style.width = '25%';
+          strBar.className = 'progress-bar bg-danger';
+          strLabel.textContent = 'Débil (< 6 car.)';
+          strLabel.className = 'fw-bold text-danger';
+        } else if (val.length < 8 || !/[0-9]/.test(val) || !/[A-Za-z]/.test(val)) {
+          strBar.style.width = '60%';
+          strBar.className = 'progress-bar bg-warning';
+          strLabel.textContent = 'Media (Aceptable)';
+          strLabel.className = 'fw-bold text-warning';
+        } else {
+          strBar.style.width = '100%';
+          strBar.className = 'progress-bar bg-success';
+          strLabel.textContent = 'Fuerte y Segura';
+          strLabel.className = 'fw-bold text-success';
+        }
+      });
+    }
+
+    // ------------------------------------------------------------------------
+    // Inicializar contadores y estados
+    refreshCountersAndState();
   </script>
+
+  <!-- Botón Flotante de Acceso Rápido a HercarBot IA -->
+  <a href="index.html" class="hercar-floating-widget shadow-lg" title="Abrir Asistente Virtual Oficial HercarBot IA">
+    <div class="hercar-widget-avatar">
+      <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="HercarBot IA">
+      <span class="hercar-widget-dot"></span>
+    </div>
+    <div class="hercar-widget-info">
+      <span class="hercar-widget-title">HercarBot IA</span>
+      <span class="hercar-widget-status">Asistente Oficial &bull; En Línea</span>
+    </div>
+    <i class="bi bi-chat-dots-fill hercar-widget-icon"></i>
+  </a>
+
+
+  <!-- =========================================================================
+       VENTANA FLOTANTE (MODAL): ELECCIÓN Y SUBIDA DE FOTO DE PERFIL
+       ========================================================================= -->
+  <div class="modal fade" id="modalAvatarPicker" tabindex="-1" aria-labelledby="modalAvatarPickerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 22px; overflow: hidden;">
+        <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, #0e2d6c 0%, #0369a1 100%); color: #ffffff; padding: 1.1rem 1.4rem;">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-bounding-box fs-5 text-warning"></i>
+            <div>
+              <h5 class="modal-title fw-bold mb-0" id="modalAvatarPickerLabel" style="font-size: 1.05rem; color: #ffffff;">Foto de Perfil Institucional</h5>
+              <small class="text-light opacity-75" style="font-size: 0.72rem;">Selecciona un avatar oficial o sube tu propia foto</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body p-4 text-center">
+          <!-- Vista previa de foto en la ventana flotante -->
+          <div class="mb-3">
+            <img id="modalAvatarPreview" src="https://ui-avatars.com/api/?name=Docente&background=0284c7&color=fff&bold=true" class="rounded-circle border border-3 border-primary shadow" style="width: 86px; height: 86px; object-fit: cover;" alt="Vista Previa">
+            <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Vista previa de cómo se verá tu cuenta en el sistema</small>
+          </div>
+
+          <!-- Pestañas para elegir: Subir Imagen o Avatares -->
+          <ul class="nav nav-pills justify-content-center mb-3" id="pillsAvatarTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active rounded-pill px-3 py-1 small fw-semibold" id="tab-preset-avatars-btn" data-bs-toggle="pill" data-bs-target="#tab-preset-avatars" type="button" role="tab">
+                <i class="bi bi-emoji-smile me-1"></i> Avatares Oficiales
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link rounded-pill px-3 py-1 small fw-semibold" id="tab-upload-photo-btn" data-bs-toggle="pill" data-bs-target="#tab-upload-photo" type="button" role="tab">
+                <i class="bi bi-upload me-1"></i> Subir Mi Foto
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="pillsAvatarTabContent">
+            <!-- Pestaña 1: Avatares Oficiales -->
+            <div class="tab-pane fade show active" id="tab-preset-avatars" role="tabpanel">
+              <p class="small text-muted mb-2" style="font-size: 0.78rem;">Haz clic sobre cualquiera de los avatares para seleccionarlo:</p>
+              <div class="d-flex flex-wrap justify-content-center gap-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 small btn-modal-preset" data-src="https://ui-avatars.com/api/?name=Docente+Var%C3%B3n&background=0284c7&color=fff&bold=true">
+                  👨‍🏫 Docente Varón
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 small btn-modal-preset" data-src="https://ui-avatars.com/api/?name=Docente+Mujer&background=e11d48&color=fff&bold=true">
+                  👩‍🏫 Docente Mujer
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 small btn-modal-preset" data-src="https://ui-avatars.com/api/?name=Ingeniero+TI&background=0f2d6c&color=fff&bold=true">
+                  🧑‍💻 Ingeniero TI
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 small btn-modal-preset" data-src="https://ui-avatars.com/api/?name=Director+IESTP&background=d97706&color=fff&bold=true">
+                  👨‍💼 Dirección
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 small btn-modal-preset" data-src="https://ui-avatars.com/api/?name=Secretar%C3%ADa+Acad%C3%A9mica&background=7c3aed&color=fff&bold=true">
+                  👩‍💼 Secretaría
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 small btn-modal-preset" data-src="https://ui-avatars.com/api/?name=Investigador+Carcamo&background=059669&color=fff&bold=true">
+                  🎓 Investigador
+                </button>
+              </div>
+            </div>
+
+            <!-- Pestaña 2: Subir Foto Propia -->
+            <div class="tab-pane fade" id="tab-upload-photo" role="tabpanel">
+              <div class="p-3 border rounded-3 text-center" style="background: rgba(2, 132, 199, 0.03); border-style: dashed !important;">
+                <i class="bi bi-cloud-arrow-up fs-2 text-primary d-block mb-1"></i>
+                <label for="modalFileInput" class="btn btn-sm btn-primary rounded-pill px-3 mb-2" style="cursor: pointer;">
+                  <i class="bi bi-folder2-open me-1"></i> Buscar Foto en mi Dispositivo
+                </label>
+                <input type="file" id="modalFileInput" accept="image/*" class="d-none">
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Formatos aceptados: JPG, PNG o WebP (Máx 2 MB).</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0 d-flex justify-content-between">
+          <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-sm btn-primary rounded-pill px-4" id="btnApplyModalAvatar" style="background: #13357b; border-color: #13357b;">
+            <i class="bi bi-check2 me-1"></i> Usar esta Foto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

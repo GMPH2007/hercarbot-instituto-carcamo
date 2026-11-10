@@ -484,7 +484,7 @@
     </div>
 
     <h2 class="auth-title">Iniciar Sesión</h2>
-    <p class="auth-subtitle">Ingresa con tus credenciales registradas en la base de datos relacional para acceder al Panel de Control.</p>
+    <p class="auth-subtitle">Ingresa con tu correo institucional y contraseña.</p>
 
     
 
@@ -510,10 +510,7 @@
             <i class="bi bi-eye-fill" id="eyeIcon"></i>
           </span>
         </div>
-        <div id="loginCapsLockWarning" class="alert alert-warning py-1 px-2 small mt-2 mb-0 d-flex align-items-center gap-1" style="display: none; border-radius: 8px; font-size: 0.76rem;">
-          <i class="bi bi-exclamation-triangle-fill text-warning"></i>
-          <span><strong>Bloq Mayús activado:</strong> La contraseña distingue mayúsculas de minúsculas.</span>
-        </div>
+
       </div>
 
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -531,18 +528,7 @@
       <button type="submit" class="btn-auth-primary mb-2" id="btnLoginSubmit">
         <i class="bi bi-box-arrow-in-right me-2 fs-6"></i> Entrar al Panel de Control
       </button>
-      <div class="text-center mb-3">
-        <span class="badge rounded-pill text-muted border px-3 py-1 font-monospace" style="font-size: 0.70rem; background: rgba(0,0,0,0.02);">
-          <i class="bi bi-shield-lock-fill text-success me-1"></i> Conexión Cifrada SSL &bull; HercarShield 2026
-        </span>
-      </div>
 
-      <!-- Aviso de Registro Privado Exclusivo -->
-      <div class="p-2 mb-3 rounded-3 text-center" style="background: rgba(15, 51, 128, 0.04); border: 1px dashed rgba(15, 51, 128, 0.2);">
-        <small class="text-muted d-block" style="font-size: 0.75rem; line-height: 1.35;">
-          <i class="bi bi-lock-fill text-primary me-1"></i> <strong>Acceso Restringido:</strong> El registro de nuevos docentes es privado y únicamente accesible mediante Enlace de Invitación emitido por Dirección General.
-        </small>
-      </div>
     </form>
 
             <div class="auth-links auth-links-border pt-3 text-center">
@@ -565,7 +551,7 @@
             </div>
             <div>
               <h5 class="modal-title fw-bold" id="modalRecoveryLabel" style="font-size: 1.1rem;">Recuperar Contraseña</h5>
-              <small class="text-muted" style="font-size: 0.75rem;">Consulta en Base de Datos Relacional HercarSQL</small>
+              <small class="text-muted" style="font-size: 0.75rem;">Sistema Institucional HercarBot</small>
             </div>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -721,7 +707,6 @@
     const toggleBtn = document.getElementById('togglePasswordBtn');
     const pwdInput = document.getElementById('inputPassword');
     const eyeIcon = document.getElementById('eyeIcon');
-    const capsWarning = document.getElementById('loginCapsLockWarning');
 
     if (toggleBtn && pwdInput && eyeIcon) {
       toggleBtn.addEventListener('click', () => {
@@ -729,18 +714,6 @@
         pwdInput.type = isPassword ? 'text' : 'password';
         eyeIcon.className = isPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
       });
-    }
-
-    if (pwdInput && capsWarning) {
-      const checkCaps = (e) => {
-        if (e.getModifierState && e.getModifierState('CapsLock')) {
-          capsWarning.style.display = 'flex';
-        } else {
-          capsWarning.style.display = 'none';
-        }
-      };
-      pwdInput.addEventListener('keyup', checkCaps);
-      pwdInput.addEventListener('keydown', checkCaps);
     }
 
     function showAlert(msg, type = 'danger') {

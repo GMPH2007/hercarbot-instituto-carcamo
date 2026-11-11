@@ -148,44 +148,42 @@ function convertAllNumbersToSpokenSpanish(text) {
   if (!text) return '';
   let str = text.toString();
 
-  // 1. Cuentas bancarias oficiales del Banco de la Nación y teléfonos institucionales
+  // 1. Cuentas bancarias específicas y teléfonos institucionales (con cadencia y pausas de respiración)
   str = str
-    .replace(/00-638-002361/g, 'cero cero, seis tres ocho, cero cero dos, tres seis uno')
-    .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero dos cinco, siete tres seis')
+    .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero doce, nueve cuatro ocho')
+    .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero doce, nueve cuatro ocho, cincuenta y dos')
+    .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero veinticinco, siete tres seis')
     .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
-    .replace(/\(073\)\s*251013|073-251013|073251013/g, 'cero siete tres, veinticinco, diez, trece')
-    .replace(/969\s*100\s*257|969100257/g, 'nueve seis nueve, cien, dos cincuenta y siete');
+    .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
+    .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
+    .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
 
   // 2. Horarios con formato am/pm
   str = str
-    .replace(/8:00\s*(?:a\.?\s*m\.?|am)\b/gi, 'ocho de la mañana')
-    .replace(/8:30\s*(?:a\.?\s*m\.?|am)\b/gi, 'ocho y media de la mañana')
-    .replace(/1:00\s*(?:p\.?\s*m\.?|pm)\b/gi, 'una de la tarde')
-    .replace(/1:15\s*(?:p\.?\s*m\.?|pm)\b/gi, 'una y quince de la tarde')
-    .replace(/12:00\s*(?:p\.?\s*m\.?|pm|m\.?)\b/gi, 'doce del mediodía')
-    .replace(/2:00\s*(?:p\.?\s*m\.?|pm)\b/gi, 'dos de la tarde')
-    .replace(/3:00\s*(?:p\.?\s*m\.?|pm)\b/gi, 'tres de la tarde')
-    .replace(/4:30\s*(?:p\.?\s*m\.?|pm)\b/gi, 'cuatro y media de la tarde')
-    .replace(/7:40\s*(?:p\.?\s*m\.?|pm)\b/gi, 'siete y cuarenta de la noche');
+    .replace(/8:00\s*(?:a\.?m\.?|am)\b/gi, 'ocho de la mañana')
+    .replace(/8:30\s*(?:a\.?m\.?|am)\b/gi, 'ocho y media de la mañana')
+    .replace(/1:15\s*(?:p\.?m\.?|pm)\b/gi, 'una y quince de la tarde')
+    .replace(/12:00\s*(?:p\.?m\.?|pm|m\.?)\b/gi, 'doce del mediodía')
+    .replace(/3:00\s*(?:p\.?m\.?|pm)\b/gi, 'tres de la tarde')
+    .replace(/7:40\s*(?:p\.?m\.?|pm)\b/gi, 'siete y cuarenta de la noche');
 
-  // 3. Monedas en soles peruanos (con soporte para miles con coma y céntimos)
+  // 3. Monedas en soles peruanos
   str = str
-    .replace(/S\/\.?\s*(\d{1,3}),(\d{3})(?:\.00)?/gi, (match, miles, resto) => `${spanishNumberToWords(miles + resto)} soles`)
-    .replace(/S\/\.?\s*(\d+)\.(\d{2})\b/gi, (match, ent, dec) => {
-      const e = parseInt(ent, 10);
-      const d = parseInt(dec, 10);
-      const eWord = e === 1 ? 'un sol' : `${spanishNumberToWords(e)} soles`;
-      return d === 0 ? eWord : `${eWord} con ${spanishNumberToWords(d)} céntimos`;
-    })
-    .replace(/S\/\.?\s*(\d+)\b/gi, (match, n) => parseInt(n, 10) === 1 ? 'un sol' : `${spanishNumberToWords(n)} soles`);
+    .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
+    .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
+    .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
+    .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
+    .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
+    .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
+    .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
+    .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
+    .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
+    .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
+    .replace(/S\/\.?\s*5(?:\.00)?/gi, 'cinco soles')
+    .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, (match, n) => `${spanishNumberToWords(n)} soles`);
 
-  // 4. Frases académicas cuantitativas y formatos comunes (A4, A2, B1, porcentajes)
+  // 4. Frases académicas cuantitativas exactas (evita lectura robótica de números aislados)
   str = str
-    .replace(/\bA\/?4\b/gi, 'A cuatro')
-    .replace(/\bNivel\s+A2\b/gi, 'Nivel A dos')
-    .replace(/\bNivel\s+B1\b/gi, 'Nivel B uno')
-    .replace(/\bA2\b/g, 'A dos')
-    .replace(/\bB1\b/g, 'B uno')
     .replace(/\b820\s*horas\b/gi, 'ochocientas veinte horas')
     .replace(/\b120\s*créditos\b/gi, 'ciento veinte créditos')
     .replace(/\b3\s*años\b/gi, 'tres años')
@@ -205,10 +203,8 @@ function convertAllNumbersToSpokenSpanish(text) {
 
   // 5. El número '1' contextualizado en español (evita decir 'uno año' o 'uno carrera')
   str = str
-    .replace(/\b(?:0?1)\s+(año|ciclo|semestre|crédito|mes|día|intento|módulo|pago|trámite|examen|sobre|folder)\b/gi, 'un $1')
-    .replace(/\b(?:0?1)\s+(carrera|semana|hora|cuota|vacante|asignatura|unidad|modalidad|copia)\b/gi, 'una $1')
-    .replace(/\b02\s+/g, 'dos ')
-    .replace(/\b03\s+/g, 'tres ');
+    .replace(/\b1\s+(año|ciclo|semestre|crédito|mes|día|intento|módulo|pago|trámite|examen)\b/gi, 'un $1')
+    .replace(/\b1\s+(carrera|semana|hora|cuota|vacante|asignatura|unidad|modalidad)\b/gi, 'una $1');
 
   // 6. Escalas de calificación y rangos vigesimales
   str = str
@@ -256,25 +252,15 @@ function convertAllNumbersToSpokenSpanish(text) {
 
   // 10. Años comunes
   str = str
-    .replace(/\b2028\b/g, 'dos mil veintiocho')
-    .replace(/\b2027\b/g, 'dos mil veintisiete')
     .replace(/\b2026\b/g, 'dos mil veintiséis')
     .replace(/\b2025\b/g, 'dos mil veinticinco')
     .replace(/\b2024\b/g, 'dos mil veinticuatro')
-    .replace(/\b2023\b/g, 'dos mil veintitrés')
-    .replace(/\b2022\b/g, 'dos mil veintidós')
-    .replace(/\b2021\b/g, 'dos mil veintiuno')
-    .replace(/\b2008\b/g, 'dos mil ocho')
-    .replace(/\b1987\b/g, 'mil novecientos ochenta y siete');
+    .replace(/\b2023\b/g, 'dos mil veintitrés');
 
-  // 11. Abreviaturas de número y cuenta
-  str = str
-    .replace(/\bCta\.?\s*Cte\b\.?/gi, 'cuenta corriente')
-    .replace(/\bCta\.?\s*Bco\.?\s*Naci[oó]n\b/gi, 'cuenta del Banco de la Nación')
-    .replace(/\bCta\b\.?\s+(?=\d|cero|Banco|BN|TUPA|Productivas|Ingl)/gi, 'cuenta ')
-    .replace(/\bN\.?[°º]\s*|\bNro\b\.?\s*/gi, 'número ');
+  // 11. Abreviaturas de número
+  str = str.replace(/N[°º]|Nro\./gi, 'número');
 
-  // 12. Cualquier otro número cardinal aislado entre 0 y 99999
+  // 12. Cualquier otro número cardinal aislado entre 0 y 9999
   str = str.replace(/\b(\d{1,5})\b/g, (match, num) => {
     return spanishNumberToWords(num);
   });
@@ -290,7 +276,6 @@ class HercarBotApp {
     this.storageConversations = 'hercarbot_conversations';
     this.storageActiveChatId = 'hercarbot_active_chat_id';
     this.storageTheme = 'hercarbot_theme';
-    this.storageUserPrefs = 'hercarbot_user_prefs';
 
     this.isMuted = false;
     this.isRecording = false;
@@ -319,7 +304,6 @@ class HercarBotApp {
     this.initStats();
     this.initDom();
     this.initTheme();
-    this.initCustomizationStudio();
     this.initEvents();
     this.initSpeech();
     this.initVoiceSynthesis();
@@ -329,7 +313,6 @@ class HercarBotApp {
     this.initCommandPalette();
     this.initTour();
     this.initPwaServiceWorker();
-    this.handleInitialUrlParams();
   }
 
   normalizeText(str) {
@@ -353,18 +336,11 @@ class HercarBotApp {
     this.updateThemeButtonIcon();
   }
 
-  toggleTheme(forceMode = null) {
-    const isDark = forceMode === 'dark'
-      ? (document.body.classList.add('dark-theme'), true)
-      : forceMode === 'light'
-        ? (document.body.classList.remove('dark-theme'), false)
-        : document.body.classList.toggle('dark-theme');
+  toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-theme');
     localStorage.setItem(this.storageTheme, isDark ? 'dark' : 'light');
     this.updateThemeButtonIcon();
-    this.syncCustomStudioButtons();
-    if (!forceMode) {
-      this.showToast(isDark ? 'Modo Oscuro activado' : 'Modo Claro activado', 'info', isDark ? 'bi-moon-stars-fill' : 'bi-sun-fill');
-    }
+    this.showToast(isDark ? 'Modo Oscuro activado' : 'Modo Claro activado', 'info', isDark ? 'bi-moon-stars-fill' : 'bi-sun-fill');
   }
 
   updateThemeButtonIcon() {
@@ -374,182 +350,6 @@ class HercarBotApp {
       ? '<i class="bi bi-sun-fill text-warning"></i>' 
       : '<i class="bi bi-moon-stars-fill" style="color:#60a5fa;"></i>';
     this.btnThemeToggle.title = isDark ? 'Cambiar a Tema Claro' : 'Cambiar a Modo Oscuro';
-  }
-
-  /* ==========================================================================
-     ESTUDIO DE PERSONALIZACIÓN PRO & DEEP LINKS PWA
-     ========================================================================== */
-
-  getUserPrefs() {
-    const defaults = {
-      palette: 'hercar',
-      avatar: 'avatar-ia',
-      fontScale: 'normal',
-      density: 'comfortable',
-      userProfile: 'general'
-    };
-    try {
-      const raw = localStorage.getItem(this.storageUserPrefs);
-      return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
-    } catch {
-      return defaults;
-    }
-  }
-
-  saveUserPrefs(prefs) {
-    try {
-      localStorage.setItem(this.storageUserPrefs, JSON.stringify(prefs));
-    } catch {}
-  }
-
-  getBotAvatarUrl() {
-    const prefs = this.getUserPrefs();
-    return prefs.avatar === 'escudo' ? 'assets/img/logo-hercar.png' : 'assets/img/hercarbot-avatar.jpg';
-  }
-
-  applyUserPrefs() {
-    const prefs = this.getUserPrefs();
-    document.body.dataset.hercarPalette = prefs.palette || 'hercar';
-    document.body.dataset.hercarFont = prefs.fontScale || 'normal';
-    document.body.dataset.hercarDensity = prefs.density || 'comfortable';
-    document.body.dataset.hercarProfile = prefs.userProfile || 'general';
-
-    const avatarSrc = this.getBotAvatarUrl();
-    const launcherImg = document.getElementById('launcher-avatar-img');
-    if (launcherImg) launcherImg.src = avatarSrc;
-    document.querySelectorAll('.bot-avatar-badge img').forEach(img => {
-      img.src = avatarSrc;
-      img.style.objectFit = prefs.avatar === 'escudo' ? 'contain' : 'cover';
-    });
-    this.syncCustomStudioButtons();
-  }
-
-  syncCustomStudioButtons() {
-    const prefs = this.getUserPrefs();
-    const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-    document.querySelectorAll('[data-pref-palette]').forEach(el => el.classList.toggle('active', el.dataset.prefPalette === prefs.palette));
-    document.querySelectorAll('[data-pref-profile]').forEach(el => el.classList.toggle('active', el.dataset.prefProfile === prefs.userProfile));
-    document.querySelectorAll('[data-pref-avatar]').forEach(el => el.classList.toggle('active', el.dataset.prefAvatar === prefs.avatar));
-    document.querySelectorAll('[data-pref-font]').forEach(el => el.classList.toggle('active', el.dataset.prefFont === prefs.fontScale));
-    document.querySelectorAll('[data-pref-density]').forEach(el => el.classList.toggle('active', el.dataset.prefDensity === prefs.density));
-    document.querySelectorAll('[data-pref-theme]').forEach(el => el.classList.toggle('active', el.dataset.prefTheme === currentTheme));
-  }
-
-  initCustomizationStudio() {
-    this.applyUserPrefs();
-    const modal = document.getElementById('modalCustomStudio');
-    if (modal) {
-      modal.addEventListener('show.bs.modal', () => this.syncCustomStudioButtons());
-    }
-
-    document.querySelectorAll('[data-pref-palette]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prefs = this.getUserPrefs();
-        prefs.palette = btn.dataset.prefPalette;
-        this.saveUserPrefs(prefs);
-        this.applyUserPrefs();
-        this.showToast('Paleta visual actualizada', 'success', 'bi-palette-fill');
-      });
-    });
-
-    document.querySelectorAll('[data-pref-profile]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prefs = this.getUserPrefs();
-        prefs.userProfile = btn.dataset.prefProfile;
-        this.saveUserPrefs(prefs);
-        this.applyUserPrefs();
-        if (this.messagesContainer && this.messagesContainer.querySelector('.bot-welcome-hero')) {
-          this.renderWelcome();
-        }
-        this.showToast('Perfil de bienvenida personalizado', 'info', 'bi-person-check-fill');
-      });
-    });
-
-    document.querySelectorAll('[data-pref-avatar]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prefs = this.getUserPrefs();
-        prefs.avatar = btn.dataset.prefAvatar;
-        this.saveUserPrefs(prefs);
-        this.applyUserPrefs();
-        this.showToast('Avatar de HercarBot actualizado', 'success', 'bi-robot');
-      });
-    });
-
-    document.querySelectorAll('[data-pref-theme]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.toggleTheme(btn.dataset.prefTheme);
-      });
-    });
-
-    document.querySelectorAll('[data-pref-font]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prefs = this.getUserPrefs();
-        prefs.fontScale = btn.dataset.prefFont;
-        this.saveUserPrefs(prefs);
-        this.applyUserPrefs();
-        this.showToast('Tamaño de texto actualizado', 'info', 'bi-type');
-      });
-    });
-
-    document.querySelectorAll('[data-pref-density]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const prefs = this.getUserPrefs();
-        prefs.density = btn.dataset.prefDensity;
-        this.saveUserPrefs(prefs);
-        this.applyUserPrefs();
-        this.showToast('Espaciado de tarjetas actualizado', 'info', 'bi-layout-text-window');
-      });
-    });
-
-    const resetBtn = document.getElementById('btn-reset-custom-studio');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        localStorage.removeItem(this.storageUserPrefs);
-        this.toggleTheme('light');
-        this.applyUserPrefs();
-        if (this.messagesContainer && this.messagesContainer.querySelector('.bot-welcome-hero')) {
-          this.renderWelcome();
-        }
-        this.showToast('Personalización restablecida a valores oficiales', 'success', 'bi-arrow-counterclockwise');
-      });
-    }
-  }
-
-  handleInitialUrlParams() {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const action = (params.get('action') || '').toLowerCase();
-      const carreraParam = (params.get('carrera') || '').toLowerCase();
-      const queryParam = (params.get('q') || '').trim();
-
-      if (!action && !carreraParam && !queryParam) return;
-
-      setTimeout(() => {
-        if (queryParam) {
-          this.handleUserSubmit(queryParam);
-          return;
-        }
-        if (carreraParam) {
-          this.triggerAction('ver_carrera_detalle', carreraParam);
-          return;
-        }
-        const actionMap = {
-          admision: () => this.triggerAction('ver_admision_completa'),
-          fut: () => this.triggerAction('abrir_generador_fut'),
-          pagos: () => this.triggerAction('ver_numero_cuenta_bn'),
-          ingles: () => this.triggerAction('ver_curso_ingles'),
-          suficiencia: () => this.triggerAction('ver_examen_suficiencia'),
-          titulo: () => this.triggerAction('ver_tramite_titulo'),
-          tupa: () => this.triggerAction('ver_buscador_tupa'),
-          carreras: () => this.triggerAction('ver_todas_carreras'),
-          personalizar: () => {
-            const btn = document.getElementById('btn-customize-studio');
-            if (btn) btn.click();
-          }
-        };
-        if (actionMap[action]) actionMap[action]();
-      }, 220);
-    } catch {}
   }
 
   initStats() {
@@ -669,13 +469,13 @@ class HercarBotApp {
 
     if (this.btnTestVoiceNumbers) {
       this.btnTestVoiceNumbers.addEventListener('click', () => {
-        this.speak('En el Instituto Superior Hermanos Cárcamo NO se paga por Págalo punto pe ni en agentes. Todos los pagos son únicamente en ventanilla del Banco de la Nación: la cuenta 00-638-002361 es para matrícula ordinaria de S/ 250.00 y trámites TUPA; y la cuenta 00-638-025736 es para el curso de inglés de S/ 400.00, donde debes sacar dos copias a tu voucher y entregarlos en Tesorería.');
+        this.speak('La Cuenta Corriente Oficial del Banco de la Nación para matrícula y trámites es 00-631-012948, y la tasa de matrícula es de ciento veinte soles.');
       });
     }
 
     if (this.btnTestVoiceCarreras) {
       this.btnTestVoiceCarreras.addEventListener('click', () => {
-        this.speak('En el Instituto Superior Hermanos Cárcamo de Paita ofrecemos cuatro carreras técnicas profesionales: Arquitectura de Plataformas y Servicios de Tecnologías de la Información, que en el año 2027 pasará a denominarse Computación e Informática; Administración de Negocios Internacionales; Contabilidad; y Desarrollo Pesquero y Acuícola.');
+        this.speak('En el Instituto Superior Hermanos Cárcamo de Paita puedes estudiar cuatro carreras técnicas públicas: Computación y Desarrollo de Sistemas, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.');
       });
     }
 
@@ -837,43 +637,6 @@ class HercarBotApp {
         const chatId = btnDeleteChat.getAttribute('data-delete-chat');
         this.deleteConversation(chatId);
       }
-
-      const chkItem = e.target.closest('.hercar-checklist-item[data-check-store]');
-      if (chkItem) {
-        const storeKey = chkItem.getAttribute('data-check-store');
-        const idx = parseInt(chkItem.getAttribute('data-check-idx'), 10);
-        this.toggleRequirementChecklist(storeKey, idx, chkItem);
-      }
-
-      const resetChk = e.target.closest('[data-reset-checklist]');
-      if (resetChk) {
-        const storeKey = resetChk.getAttribute('data-reset-checklist');
-        localStorage.removeItem(storeKey);
-        if (storeKey === 'hercarbot_checklist_suficiencia') this.renderExamenSuficiencia();
-        else if (storeKey === 'hercarbot_checklist_titulo') this.renderTramiteTitulo();
-        this.showToast('Lista de requisitos reiniciada', 'info', 'bi-arrow-counterclockwise');
-      }
-
-      const tupaFilterBtn = e.target.closest('[data-tupa-filter]');
-      if (tupaFilterBtn) {
-        const wrap = tupaFilterBtn.closest('.tupa-browser-card');
-        if (wrap) {
-          wrap.querySelectorAll('[data-tupa-filter]').forEach(b => b.classList.remove('active', 'btn-primary'));
-          tupaFilterBtn.classList.add('active', 'btn-primary');
-          wrap.dataset.activeFilter = tupaFilterBtn.getAttribute('data-tupa-filter');
-          const searchEl = wrap.querySelector('.tupa-live-search');
-          this.updateTupaSearchResults(wrap, searchEl ? searchEl.value : '', wrap.dataset.activeFilter);
-        }
-      }
-    });
-
-    document.addEventListener('input', (e) => {
-      if (e.target && e.target.classList.contains('tupa-live-search')) {
-        const wrap = e.target.closest('.tupa-browser-card');
-        if (wrap) {
-          this.updateTupaSearchResults(wrap, e.target.value, wrap.dataset.activeFilter || 'all');
-        }
-      }
     });
   }
 
@@ -910,7 +673,7 @@ class HercarBotApp {
     this.currentAttachedImage = null;
     if (this.fileInput) this.fileInput.value = '';
     if (this.previewBar) this.previewBar.style.display = 'none';
-    if (this.previewImg) this.previewImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    if (this.previewImg) this.previewImg.src = '';
   }
 
   /* ==========================================================================
@@ -924,25 +687,26 @@ class HercarBotApp {
 
     const PREDEFINED_SUGGESTIONS = [
       { text: '¿Cuáles son las 4 carreras que ofrece el instituto?', prompt: '¿Cuáles son las 4 carreras que ofrece el instituto?', cat: 'carrera', icon: 'bi-mortarboard-fill', label: 'Carreras' },
-      { text: 'APSTI (en 2027 Computación e Informática): Perfil, cursos y campo laboral', prompt: '¿Cómo es la carrera de APSTI y cuál es su cambio en 2027 a Computación e Informática?', cat: 'carrera', icon: 'bi-laptop', label: 'APSTI / 2027' },
+      { text: 'APSTI: Perfil, cursos de software y campo laboral', prompt: '¿Cómo es la carrera de APSTI y cuál es su campo laboral?', cat: 'carrera', icon: 'bi-laptop', label: 'APSTI' },
       { text: 'Negocios Internacionales (ANI): Comercio exterior y aduanas', prompt: '¿De qué trata la carrera de Administración de Negocios Internacionales?', cat: 'carrera', icon: 'bi-ship', label: 'ANI' },
-      { text: 'Contabilidad: Finanzas, tributación SUNAT y gestión empresarial', prompt: '¿Cuál es el perfil y campo de trabajo en Contabilidad?', cat: 'carrera', icon: 'bi-calculator-fill', label: 'Contabilidad' },
-      { text: 'Desarrollo Pesquero y Acuícola (DPA): Recursos marinos y plantas HACCP', prompt: '¿Qué se aprende en Desarrollo Pesquero y Acuícola en Paita?', cat: 'carrera', icon: 'bi-water', label: 'DPA' },
+      { text: 'Contabilidad: Finanzas, tributación y gestión empresarial', prompt: '¿Cuál es el perfil y campo de trabajo en Contabilidad?', cat: 'carrera', icon: 'bi-calculator-fill', label: 'Contabilidad' },
+      { text: 'Desarrollo Pesquero y Acuícola (DPA): Recursos y plantas', prompt: '¿Qué se aprende en Desarrollo Pesquero y Acuícola en Paita?', cat: 'carrera', icon: 'bi-water', label: 'DPA' },
       { text: 'Requisitos y modalidades del Proceso de Admisión 2026', prompt: '¿Cuáles son los requisitos para postular en la admisión 2026?', cat: 'admision', icon: 'bi-file-earmark-person-fill', label: 'Admisión' },
-      { text: '¿El instituto cobra mensualidad o es educación pública?', prompt: '¿Cuánto cuesta la mensualidad o pensión en el instituto?', cat: 'admision', icon: 'bi-cash-coin', label: 'Sin Mensualidad' },
+      { text: '¿El instituto es 100% gratuito o se paga pensión mensual?', prompt: '¿El instituto es 100% gratuito o se paga pensión mensual?', cat: 'admision', icon: 'bi-cash-coin', label: 'Gratuidad' },
       { text: 'Simulador del Examen de Admisión Oficial', prompt: 'Quiero practicar el simulador de admisión', cat: 'admision', icon: 'bi-pencil-square', label: 'Simulador' },
-      { text: 'Test Vocacional Inteligente', prompt: 'Quiero hacer el test vocacional', cat: 'general', icon: 'bi-compass-fill', label: 'Test Vocacional' },
-      { text: 'Guía de Matrícula paso a paso (S/ 250 en Cta. BN 00-638-002361)', prompt: '¿Cómo es el proceso de matrícula paso a paso en el instituto?', cat: 'tramites', icon: 'bi-ui-checks', label: 'Matrícula' },
-      { text: 'Pago en ventanilla del Banco de la Nación y registro en pagos.ieshercar.edu.pe', prompt: '¿Cómo realizo el pago en el Banco de la Nación y cómo registro mi voucher?', cat: 'pagos', icon: 'bi-bank', label: 'Pagos BN' },
-      { text: 'Las 2 Cuentas Oficiales Banco de la Nación (00-638-002361 y 00-638-025736)', prompt: '¿Cuál es el número de cuenta bancaria para pagar?', cat: 'pagos', icon: 'bi-bank2', label: 'Cuentas BN' },
-      { text: '¿Se puede pagar por Págalo.pe, Yape o agentes? (NO permitido)', prompt: '¿Se puede pagar por Págalo.pe, Yape o agentes?', cat: 'pagos', icon: 'bi-exclamation-triangle-fill', label: 'Regla Pagos' },
-      { text: 'Curso de Inglés (S/ 400 en Cta. BN 00-638-025736 + 2 copias voucher en Tesorería)', prompt: '¿Cuál es la cuenta y requisitos para pagar el curso de inglés?', cat: 'tramites', icon: 'bi-translate', label: 'Inglés' },
-      { text: 'Requisitos Examen de Suficiencia Profesional (S/ 200 en Cta. 00-638-002361)', prompt: '¿Cuáles son los requisitos para solicitar el Examen de Suficiencia Profesional?', cat: 'tramites', icon: 'bi-journal-check', label: 'Suficiencia' },
-      { text: 'Requisitos Trámite de Título Profesional (Folder A/4 + Sobre Manila A4)', prompt: '¿Cuáles son los requisitos para el trámite de Título Profesional?', cat: 'tramites', icon: 'bi-award-fill', label: 'Título' },
-      { text: 'Requisitos para tramitar Certificado Modular Progresivo (S/ 25)', prompt: '¿Cómo tramito mi Certificado Modular y cuánto cuesta?', cat: 'tramites', icon: 'bi-award', label: 'Certificados' },
+      { text: 'Test Vocacional Inteligente (24 preguntas orientadoras)', prompt: 'Quiero hacer el test vocacional', cat: 'general', icon: 'bi-compass-fill', label: 'Test Vocacional' },
+      { text: 'Guía de Matrícula paso a paso (Dónde voy y qué hago)', prompt: '¿Cómo es el proceso de matrícula paso a paso en el instituto?', cat: 'tramites', icon: 'bi-ui-checks', label: 'Matrícula' },
+      { text: 'Pago en el Banco de la Nación y registro de comprobante', prompt: '¿Cómo realizo el pago en el Banco de la Nación y cómo registro mi voucher?', cat: 'pagos', icon: 'bi-bank', label: 'Pagos BN' },
+      { text: 'Número de Cuenta Bancaria Oficial del Banco de la Nación (00-631-012948)', prompt: '¿Cuál es el número de cuenta bancaria para pagar?', cat: 'pagos', icon: 'bi-bank2', label: 'Cuenta BN' },
+      { text: 'Curso de Inglés obligatorio para titularse (MINEDU Nivel A2)', prompt: '¿El curso de inglés es obligatorio para titularme según el Minedu?', cat: 'tramites', icon: 'bi-translate', label: 'Inglés' },
+      { text: 'Requisitos para tramitar Certificado Modular Progresivo', prompt: '¿Cómo tramito mi Certificado Modular y cuánto demora?', cat: 'tramites', icon: 'bi-award-fill', label: 'Certificados' },
       { text: 'Bolsa de trabajo y convenios para prácticas en el Puerto de Paita', prompt: '¿Cómo funciona la bolsa de trabajo y convenios para prácticas?', cat: 'general', icon: 'bi-briefcase-fill', label: 'Bolsa Trabajo' },
-      { text: 'Ubicación del campus en Paita, docentes y horarios', prompt: '¿Dónde queda el campus institucional y cuál es el horario?', cat: 'general', icon: 'bi-geo-alt-fill', label: 'Ubicación' },
-      { text: 'Cotizador y buscador de tasas TUPA 2026 (R.D. N° 020-2026)', prompt: 'Cotizador de trámites TUPA', cat: 'pagos', icon: 'bi-receipt', label: 'Cotizador TUPA' },
+      { text: 'Ubicación del campus en Paita y turnos de estudio', prompt: '¿Dónde queda el campus institucional y cuál es el horario?', cat: 'general', icon: 'bi-geo-alt-fill', label: 'Ubicación' },
+      { text: 'Convenios con Beca 18 y Beca Pronabec', prompt: '¿Puedo estudiar con Beca 18 o Beca Continuidad en HERCAR?', cat: 'admision', icon: 'bi-star-fill', label: 'Becas' },
+      { text: 'Calculadora de Inasistencias y límite de DPI (Regla del 30%)', prompt: 'Calculadora de faltas e inasistencias DPI', cat: 'academico', icon: 'bi-calculator-fill', label: 'Calculadora DPI' },
+      { text: 'Calculadora de notas y subsanación (Promedio EC 70% + EF 30%)', prompt: 'Calculadora de notas y promedio final', cat: 'academico', icon: 'bi-calculator', label: 'Notas' },
+      { text: 'Cotizador y simulador de tasas y pagos TUPA', prompt: 'Cotizador de trámites TUPA', cat: 'pagos', icon: 'bi-receipt', label: 'Cotizador' },
+      { text: 'Métodos de pago digitales: Págalo.pe, App BN, Yape y transferencias CCI', prompt: '¿Cómo pagar por Págalo.pe o transferencia bancaria?', cat: 'pagos', icon: 'bi-phone', label: 'Pagos Digitales' },
       { text: 'Mapa del campus y croquis de pabellones en Paita', prompt: 'Mapa del campus y ambientes del instituto', cat: 'general', icon: 'bi-map', label: 'Campus' },
       { text: 'Calendario Académico 2026: Inicio de clases y cronograma oficial', prompt: 'Calendario académico 2026 y fechas clave', cat: 'academico', icon: 'bi-calendar-event', label: 'Calendario' },
       { text: 'Comparativa de las 4 carreras técnicas: Perfiles y demanda', prompt: 'Comparar las 4 carreras del instituto', cat: 'carrera', icon: 'bi-columns-gap', label: 'Comparador' },
@@ -1189,8 +953,8 @@ class HercarBotApp {
     const btnCopyBn = document.getElementById('btnCopyBnFut');
     if (btnCopyBn) {
       btnCopyBn.addEventListener('click', () => {
-        navigator.clipboard?.writeText('00-638-002361').then(() => {
-          this.showToast('Cuenta Banco de la Nación TUPA copiada: 00-638-002361 (Solo ventanilla BN)', 'success', 'bi-clipboard-check');
+        navigator.clipboard?.writeText('00-631-012948').then(() => {
+          this.showToast('Cuenta Banco de la Nación copiada: 00-631-012948', 'success', 'bi-clipboard-check');
         });
       });
     }
@@ -1266,17 +1030,17 @@ class HercarBotApp {
       },
       'constancia_practicas': {
         sumilla: 'SOLICITO ACREDITACIÓN Y CONSTANCIA DE HORAS DE PRÁCTICAS EFSRT',
-        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE PROGRAMA DE ESTUDIOS',
-        costo: 'S/ 15.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
+        costo: 'S/ 25.00 (Tasa TUPA BN)',
         plazo: '3 a 5 días hábiles',
         wrap: null,
-        draft: () => `Que, habiendo culminado satisfactoriamente mis Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) y habiendo presentado el Plan de Trabajo, Hoja de Evaluación del Empleador e Informe Final visado, solicito se me otorgue la Constancia de Acreditación de Prácticas Preprofesionales correspondiente.`,
+        draft: () => `Que, habiendo culminado satisfactoriamente mis prácticas preprofesionales (EFSRT) y habiendo presentado el Plan de Trabajo, Hoja de Evaluación del Empleador e Informe Final visado, solicito se me otorgue la Constancia de Acreditación de Prácticas Preprofesionales correspondiente.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: true, medicos: false }
       },
       'cert_modular': {
         sumilla: 'SOLICITO CERTIFICADO MODULAR PROGRESIVO OFICIAL',
-        autoridad: 'SECRETARÍA ACADÉMICA DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 25.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 45.00 (Tasa TUPA BN)',
         plazo: '5 a 7 días hábiles',
         wrap: 'futModuloWrap',
         draft: (d) => `Que, habiendo culminado y aprobado la totalidad de unidades didácticas y horas de prácticas preprofesionales (EFSRT) correspondientes al ${d.modulo || 'Módulo Formativo I'} del plan de estudios de mi programa, solicito la expedición de mi CERTIFICADO MODULAR PROGRESIVO con valor oficial MINEDU.`,
@@ -1284,89 +1048,80 @@ class HercarBotApp {
       },
       'cert_modular_convenio': {
         sumilla: 'SOLICITO CERTIFICADO MODULAR CONVALIDANDO PRÁCTICAS POR CONVENIO',
-        autoridad: 'SECRETARÍA ACADÉMICA DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 25.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 45.00 (Tasa TUPA BN)',
         plazo: '5 a 7 días hábiles',
         wrap: 'futModuloWrap',
         draft: (d) => `Que, habiendo aprobado los créditos curriculares y validado las horas de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) ejecutadas en el marco del Convenio de Cooperación Interinstitucional, solicito se sirva expedir mi CERTIFICADO MODULAR PROGRESIVO correspondiente al ${d.modulo || 'Módulo Formativo I'} con reconocimiento oficial.`,
         reqs: { dni: true, voucher: true, fotos: true, notas: false, practicas: true, medicos: false }
       },
       'cert_estudios_completo': {
-        sumilla: 'SOLICITO CERTIFICADO OFICIAL DE ESTUDIOS COMPLETO (I AL VI PERIODO)',
-        autoridad: 'SECRETARÍA ACADÉMICA DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 240.00 los 6 periodos / S/ 40.00 por periodo (Cta. Cte. BN 00-638-002361)',
+        sumilla: 'SOLICITO CERTIFICADO OFICIAL DE ESTUDIOS COMPLETO (I AL VI CICLO)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 60.00 (Tasa TUPA BN)',
         plazo: '3 a 5 días hábiles',
         wrap: null,
-        draft: () => `Que, para fines laborales, titulación y prosecución de estudios superiores, solicito se me expida mi CERTIFICADO OFICIAL DE ESTUDIOS correspondiente a la totalidad de periodos académicos cursados en el instituto, para lo cual adjunto los requisitos del TUPA 2026.`,
+        draft: () => `Que, para fines laborales y de prosecución de estudios superiores, solicito se me expida mi CERTIFICADO OFICIAL DE ESTUDIOS correspondiente a la totalidad de semestres académicos cursados en el instituto, para lo cual adjunto los requisitos del TUPA.`,
         reqs: { dni: true, voucher: true, fotos: true, notas: true, practicas: false, medicos: false }
       },
-      'examen_suficiencia': {
-        sumilla: 'SOLICITO PROGRAMAR EXAMEN DE SUFICIENCIA PROFESIONAL',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO (VÍA COORDINADOR DE PROGRAMA)',
-        costo: 'S/ 200.00 (2da opción S/ 100.00) - Cta. Cte. BN 00-638-002361',
-        plazo: 'Según cronograma de Coordinación de Programa de Estudios',
-        wrap: null,
-        draft: () => `Que, habiendo culminado satisfactoriamente mi plan de estudios, contando con los tres (03) certificados modulares, constancia de no adeudar, curso de inglés básico (y actualización si egresé el 2021 o antes), solicito se sirva programar mi EXAMEN DE SUFICIENCIA PROFESIONAL cumpliendo con todos los requisitos en expediente debidamente foliado.`,
-        reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: true, medicos: false }
-      },
       'titulacion_profesional': {
-        sumilla: 'SOLICITO OBTENCIÓN DE TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 100.00 Derecho + S/ 60.00 Formato/Caligrafiado (Cta. Cte. BN 00-638-002361)',
-        plazo: 'Según calendario de titulación y registro MINEDU',
+        sumilla: 'SOLICITO EXPEDICIÓN DE TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 180.00 (Tasa TUPA BN)',
+        plazo: '30 a 45 días hábiles (Registro MINEDU)',
         wrap: null,
-        draft: () => `Que, habiendo cumplido los requisitos académicos y reglamentarios (Certificado de Secundaria con QR, Certificado Superior original, Partida de Nacimiento actualizada, DNI a color legalizado por Notario, 2 fotos pasaporte reveladas fondo blanco, copia a color de Inglés Básico y boletas selladas por Tesorería), solicito la OBTENCIÓN DE MI TÍTULO PROFESIONAL TÉCNICO en expediente foliado en folder A/4 con sobre manila A4.`,
+        draft: () => `Que, habiendo culminado satisfactoriamente los 120 créditos curriculares, los 3 certificados modulares oficiales, el curso de inglés institucional y habiendo aprobado el proceso de sustentación de Proyecto / Examen de Suficiencia, solicito la expedición de mi TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN e inscripción en el Registro Nacional de Títulos del MINEDU.`,
         reqs: { dni: true, voucher: true, fotos: true, notas: true, practicas: true, medicos: false }
       },
       'constancia_egresado': {
         sumilla: 'SOLICITO CONSTANCIA OFICIAL DE EGRESADO',
-        autoridad: 'SECRETARÍA ACADÉMICA DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 15.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 20.00 (Tasa TUPA BN)',
         plazo: '2 a 3 días hábiles',
         wrap: null,
-        draft: () => `Que, habiendo culminado satisfactoriamente los seis periodos académicos del plan curricular de mi programa de estudios, solicito se me extienda mi CONSTANCIA DE EGRESADO para los trámites laborales y de titulación pertinentes.`,
+        draft: () => `Que, habiendo culminado satisfactoriamente los seis semestres académicos del plan curricular de mi carrera, solicito se me extienda mi CONSTANCIA DE EGRESADO para los trámites laborales y profesionales pertinentes.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'duplicado_titulo': {
         sumilla: 'SOLICITO DUPLICADO DE DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 200.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 90.00 (Tasa TUPA BN)',
         plazo: '15 a 20 días hábiles',
         wrap: null,
-        draft: () => `Que, habiéndose extraviado/deteriorado mi diploma original y habiendo realizado la denuncia policial y publicación correspondiente según TUPA 2026, solicito la expedición del DUPLICADO DE MI DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO.`,
+        draft: () => `Que, habiéndose extraviado/deteriorado mi diploma original y habiendo realizado la denuncia policial y publicación correspondiente, solicito la expedición del DUPLICADO DE MI DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO.`,
         reqs: { dni: true, voucher: true, fotos: true, notas: false, practicas: false, medicos: false }
       },
       'matricula_extemporanea': {
         sumilla: 'SOLICITO AUTORIZACIÓN PARA MATRÍCULA EXTEMPORÁNEA',
         autoridad: 'DIRECCIÓN GENERAL / JEFATURA DE UNIDAD ACADÉMICA',
-        costo: 'S/ 250.00 Matrícula + recargo extemporáneo TUPA (Cta. Cte. BN 00-638-002361)',
+        costo: 'S/ 140.00 (Tasa regular + recargo BN)',
         plazo: '2 días hábiles',
         wrap: null,
-        draft: () => `Que, habiendo vencido el plazo regular de matrícula por motivos debidamente justificados y encontrándome habilitado académicamente, solicito se autorice mi matrícula extemporánea en el periodo lectivo en curso.`,
+        draft: () => `Que, habiendo vencido el plazo regular de matrícula por motivos de fuerza mayor debidamente justificados y encontrándome habilitado académicamente, solicito se autorice mi matrícula extemporánea en el periodo lectivo en curso.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'reserva_matricula': {
-        sumilla: 'SOLICITO RESERVA DE MATRÍCULA / LICENCIA DE ESTUDIOS',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 60.00 Ingresantes / S/ 100.00 Licencia 2do-6to (Cta. Cte. BN 00-638-002361)',
+        sumilla: 'SOLICITO RESERVA DE MATRÍCULA SEMESTRAL',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 30.00 (Tasa TUPA BN)',
         plazo: '2 a 3 días hábiles',
         wrap: null,
-        draft: () => `Que, por razones estrictamente personales y debidamente sustentadas que me impiden continuar mis estudios en el presente periodo académico, solicito la RESERVA DE MATRÍCULA o LICENCIA DE ESTUDIOS asegurando mi reincorporación respectiva según el Reglamento Institucional.`,
+        draft: () => `Que, por razones estrictamente personales y de fuerza mayor que me impiden continuar mis estudios en el presente semestre académico, solicito la RESERVA DE MI MATRÍCULA asegurando mi vacante para el reingreso respectivo según el Reglamento Institucional.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'reingreso_estudios': {
-        sumilla: 'SOLICITO REINCORPORACIÓN DE ESTUDIOS',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 65.00 (Cta. Cte. BN 00-638-002361)',
+        sumilla: 'SOLICITO REINGRESO / REINCORPORACIÓN DE ESTUDIOS',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 35.00 (Tasa TUPA BN)',
         plazo: '2 a 3 días hábiles',
         wrap: null,
-        draft: () => `Que, habiendo culminado el periodo de reserva o licencia de estudios concedido, solicito mi REINCORPORACIÓN al periodo académico correspondiente en mi programa de estudios.`,
+        draft: () => `Que, habiendo culminado el periodo de reserva de matrícula concedido, solicito mi REINGRESO Y REINCORPORACIÓN al semestre académico correspondiente en mi carrera profesional.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'convalidacion_cursos': {
         sumilla: 'SOLICITO CONVALIDACIÓN DE UNIDADES DIDÁCTICAS',
-        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE PROGRAMA',
-        costo: 'S/ 30.00 por Unidad Didáctica (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
+        costo: 'S/ 20.00 por unidad (BN)',
         plazo: '5 a 7 días hábiles',
         wrap: 'futConvalidacionWrap',
         draft: (d) => `Que, habiendo cursado estudios superiores en "${d.convalInst || 'otra institución de educación superior'}", solicito la CONVALIDACIÓN DE UNIDADES DIDÁCTICAS afines a mi plan de estudios actual, para lo cual adjunto mis certificados y sílabos oficiales visados.`,
@@ -1374,25 +1129,25 @@ class HercarBotApp {
       },
       'traslado_interno': {
         sumilla: 'SOLICITO TRASLADO INTERNO DE PROGRAMA DE ESTUDIOS',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 80.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 50.00 (Tasa TUPA BN)',
         plazo: '3 a 5 días hábiles',
         wrap: null,
         draft: () => `Que, de acuerdo al reglamento institucional y existiendo vacantes disponibles, solicito mi TRASLADO INTERNO de programa de estudios, comprometiéndome a cursar las unidades didácticas complementarias requeridas.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: false, medicos: false }
       },
       'subsanacion_recuperacion': {
-        sumilla: 'SOLICITO EVALUACIÓN DE RECUPERACIÓN / REPITENCIA O EXTRAORDINARIA',
+        sumilla: 'SOLICITO EXAMEN DE SUBSANACIÓN / RECUPERACIÓN EXTRAORDINARIO',
         autoridad: 'JEFATURA DE UNIDAD ACADÉMICA',
-        costo: 'S/ 35.00 Recuperación / S/ 200-300 Extraordinaria (Cta. Cte. BN 00-638-002361)',
+        costo: 'S/ 25.00 por curso (BN)',
         plazo: '2 días hábiles',
         wrap: null,
-        draft: () => `Que, teniendo pendiente una unidad didáctica del periodo correspondiente y cumpliendo los requisitos del TUPA 2026, solicito se me autorice rendir la EVALUACIÓN DE RECUPERACIÓN O EXTRAORDINARIA respectiva.`,
+        draft: () => `Que, teniendo pendiente una unidad didáctica desaprobada del semestre anterior y cumpliendo los requisitos reglamentarios, solicito se me autorice rendir la EVALUACIÓN EXTRAORDINARIA DE SUBSANACIÓN correspondiente.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: false, medicos: false }
       },
       'retiro_semestre': {
         sumilla: 'SOLICITO RETIRO TEMPORAL DE SEMESTRE ACADÉMICO',
-        autoridad: 'DIRECCIÓN GENERAL DEL IESTP HERMANOS CÁRCAMO',
+        autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
         costo: 'Gratuito',
         plazo: '2 días hábiles',
         wrap: null,
@@ -1401,26 +1156,26 @@ class HercarBotApp {
       },
       'constancia_matricula': {
         sumilla: 'SOLICITO CONSTANCIA DE MATRÍCULA / ESTUDIOS OFICIAL',
-        autoridad: 'SECRETARÍA ACADÉMICA DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'S/ 15.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 15.00 (Tasa TUPA BN)',
         plazo: '24 a 48 horas hábiles',
         wrap: null,
-        draft: () => `Que, requiriendo acreditar mi condición de estudiante regular matriculado en el presente periodo lectivo para trámites institucionales, laborales o de seguro, solicito la expedición de mi CONSTANCIA DE MATRÍCULA / ESTUDIOS oficial.`,
+        draft: () => `Que, requiriendo acreditar mi condición de estudiante regular matriculado en el presente periodo lectivo para trámites de seguro/beneficio familiar/laboral, solicito la expedición de mi CONSTANCIA DE MATRÍCULA Y ESTUDIOS oficial.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'constancia_no_adeudo': {
         sumilla: 'SOLICITO CONSTANCIA GENERAL DE NO ADEUDAR A LA INSTITUCIÓN',
-        autoridad: 'DIRECCIÓN GENERAL / SECRETARÍA ACADÉMICA',
-        costo: 'S/ 15.00 (Cta. Cte. BN 00-638-002361)',
+        autoridad: 'DIRECCIÓN GENERAL / SECRETARÍA GENERAL',
+        costo: 'S/ 15.00 (Tasa TUPA BN)',
         plazo: '24 horas hábiles',
         wrap: null,
-        draft: () => `Que, para efectos de Examen de Suficiencia Profesional o trámite de titulación, y no teniendo bienes, libros ni obligaciones pendientes con el instituto, solicito se me otorgue la CONSTANCIA DE NO ADEUDAR.`,
+        draft: () => `Que, para efectos de trámites de titulación/egreso y no teniendo bienes, libros ni obligaciones económicas pendientes con el instituto, solicito se me otorgue la CONSTANCIA DE NO ADEUDAR.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'carne_estudiantil': {
-        sumilla: 'SOLICITO EMISIÓN / DUPLICADO DE CARNÉ DE ESTUDIANTE',
-        autoridad: 'SECRETARÍA ACADÉMICA DEL IESTP HERMANOS CÁRCAMO',
-        costo: 'Tasa vigente MINEDU (Cta. Cte. BN 00-638-002361)',
+        sumilla: 'SOLICITO DUPLICADO / EMISIÓN DE CARNÉ DE ESTUDIANTE (MEDIO PASAJE)',
+        autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
+        costo: 'S/ 20.00 (Tasa oficial MINEDU)',
         plazo: 'Según remesa MINEDU',
         wrap: null,
         draft: () => `Que, habiendo cancelado los derechos respectivos, solicito se tramite ante el MINEDU la expedición/duplicado de mi CARNÉ OFICIAL DE ESTUDIANTE para el ejercicio del derecho de medio pasaje y acreditación académica.`,
@@ -1672,7 +1427,7 @@ class HercarBotApp {
     const isChecked = (id) => !!document.getElementById(id)?.checked;
     const reqList = [];
     if (isChecked('futAdjDni')) reqList.push('Copia legible de DNI vigente del solicitante');
-    if (isChecked('futAdjVoucher')) reqList.push(`Voucher y boleta electrónica BN (${cfg.costo}) - Solo ventanilla Banco de la Nación (TUPA Cta. Cte. Nº 00-638-002361)`);
+    if (isChecked('futAdjVoucher')) reqList.push(`Comprobante de depósito en Banco de la Nación (${cfg.costo}) - Cta. Cte. Nº 00-631-012948`);
     if (isChecked('futAdjFotos')) reqList.push('Fotografías tamaño carné / pasaporte en fondo blanco');
     if (isChecked('futAdjNotas')) reqList.push('Récord académico / Certificado de notas oficial');
     if (isChecked('futAdjPracticas')) reqList.push('Aceptación / Constancia de prácticas preprofesionales EFSRT');
@@ -2206,7 +1961,7 @@ class HercarBotApp {
         </tr>
         <tr>
           <td style="font-weight: bold; color: #065f46;">TASA TUPA:</td>
-          <td colspan="3" style="font-weight: bold; color: #047857;">${data.costo} &bull; Solo Ventanilla Banco de la Nación (Cta. Cte. Nº 00-638-002361 — NO Págalo.pe)</td>
+          <td colspan="3" style="font-weight: bold; color: #047857;">${data.costo} &bull; Banco de la Nación (Cta. Cte. Nº 00-631-012948)</td>
         </tr>
       </table>
     </div>
@@ -2794,12 +2549,12 @@ class HercarBotApp {
                              (name.includes('sabina') && !name.includes('natural') && !name.includes('online'));
 
     // 3. Voces Neuronales / Naturales Femeninas en la Nube (Calidad humana ultra-alta y dulce)
-    // Microsoft Camila Online (Natural) — Acento peruano cálido y claro (es-PE)
-    if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 30500;
     // Microsoft Dalia Online (Natural) — Reconocida por su timbre dulce, joven, latino, 100% humano
     if (name.includes('dalia') && (name.includes('natural') || name.includes('online'))) return 30000;
     // Microsoft Sabina Online (Natural) — Cordial, femenina, suave
     if (name.includes('sabina') && (name.includes('natural') || name.includes('online'))) return 28000;
+    // Microsoft Camila Online (Natural) — Acento peruano / latinoamericano
+    if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 27500;
     // Microsoft Jimena Online (Natural) — Entonación melódica y cordial
     if ((name.includes('jimena') || name.includes('ximena')) && (name.includes('natural') || name.includes('online'))) return 27000;
     // Microsoft Paulina Online (Natural)
@@ -3299,20 +3054,15 @@ class HercarBotApp {
     let confidence = 98.4;
     let category = 'general';
 
-    if (norm.includes('ingles') || norm.includes('025736') || norm.includes('00-638-025736')) {
-      detectedIntent = 'Curso de Inglés & Actividades Productivas BN';
-      matchedEntity = 'Banco de la Nación Cta. 00-638-025736 (S/ 400 + 2 copias a Tesorería)';
+    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-631-012948')) {
+      detectedIntent = 'Gestión de Pagos & Tesorería';
+      matchedEntity = 'Banco de la Nación (Cta: 00-631-012948)';
       confidence = 99.8;
       category = 'pagos';
-    } else if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('pagalo') || norm.includes('00-638-002361')) {
-      detectedIntent = 'Gestión de Pagos Ventanilla BN (NO Págalo.pe)';
-      matchedEntity = 'Banco de la Nación (TUPA: 00-638-002361 | Inglés: 00-638-025736)';
-      confidence = 99.8;
-      category = 'pagos';
-    } else if (norm.includes('carrera') || norm.includes('apsti') || norm.includes('computacion') || norm.includes('informatica') || norm.includes('2027') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes')) {
-      detectedIntent = 'Consulta Curricular - APSTI (2027: Computación e Informática)';
-      matchedEntity = 'Arquitectura de Plataformas y Servicios TI (2027: Computación e Informática)';
-      confidence = 99.7;
+    } else if (norm.includes('carrera') || norm.includes('apsti') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes')) {
+      detectedIntent = 'Consulta Curricular - APSTI';
+      matchedEntity = 'Programa de Arquitectura de Plataformas y TI';
+      confidence = 99.6;
       category = 'carreras';
     } else if (norm.includes('ani') || norm.includes('negocios') || norm.includes('aduanas') || norm.includes('comercio')) {
       detectedIntent = 'Consulta Curricular - Negocios Internacionales';
@@ -3329,11 +3079,6 @@ class HercarBotApp {
       matchedEntity = 'Programa de Desarrollo Pesquero y Acuícola';
       confidence = 99.7;
       category = 'carreras';
-    } else if (norm.includes('suficiencia') || norm.includes('titulo') || norm.includes('titulacion')) {
-      detectedIntent = 'Titulación & Examen de Suficiencia Profesional';
-      matchedEntity = 'Expediente Foliado & Cta. Cte. BN 00-638-002361 (S/ 200 / S/ 60 + S/ 100)';
-      confidence = 99.6;
-      category = 'tramites';
     } else if (norm.includes('jalar') || norm.includes('desaprobar') || norm.includes('dpi') || norm.includes('inasistencia') || norm.includes('nota minima')) {
       detectedIntent = 'Reglamento de Evaluación & Recuperación';
       matchedEntity = 'Reglamento Académico (Nota Mínima 13 / Límite DPI 30%)';
@@ -3396,18 +3141,14 @@ class HercarBotApp {
     let matchedEntity = 'IESTP Hermanos Cárcamo';
     let confidence = 98.6;
 
-    if (norm.includes('ingles') || norm.includes('025736') || norm.includes('00-638-025736')) {
-      detectedIntent = 'Curso de Inglés & Actividades Productivas BN';
-      matchedEntity = 'Cta. BN 00-638-025736 (S/ 400 + 2 copias del voucher en Tesorería)';
+    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-631-012948') || norm.includes('pagos') || norm.includes('matricula pago')) {
+      detectedIntent = 'Gestión de Pagos & Tesorería BN';
+      matchedEntity = 'Banco de la Nación (Cta Cte: 00-631-012948)';
       confidence = 99.8;
-    } else if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('pagalo') || norm.includes('00-638-002361') || norm.includes('pagos') || norm.includes('matricula pago')) {
-      detectedIntent = 'Gestión de Pagos Ventanilla BN (NO Págalo.pe)';
-      matchedEntity = 'Banco de la Nación (TUPA: 00-638-002361 | Inglés: 00-638-025736)';
-      confidence = 99.8;
-    } else if (norm.includes('apsti') || norm.includes('computacion') || norm.includes('informatica') || norm.includes('2027') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes') || norm.includes('programacion')) {
-      detectedIntent = 'Consulta Curricular - APSTI (2027: Computación e Informática)';
-      matchedEntity = 'Arquitectura de Plataformas y TI (2027 será Computación e Informática)';
-      confidence = 99.7;
+    } else if (norm.includes('apsti') || norm.includes('computacion') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes') || norm.includes('programacion')) {
+      detectedIntent = 'Consulta Curricular - APSTI';
+      matchedEntity = 'Programa de Arquitectura de Plataformas y TI';
+      confidence = 99.6;
     } else if (norm.includes('ani') || norm.includes('negocios') || norm.includes('aduanas') || norm.includes('comercio') || norm.includes('puerto')) {
       detectedIntent = 'Consulta Curricular - Negocios Internacionales';
       matchedEntity = 'Programa de Administración de Negocios Internacionales';
@@ -3420,10 +3161,6 @@ class HercarBotApp {
       detectedIntent = 'Consulta Curricular - Pesquería y Acuicultura';
       matchedEntity = 'Programa de Desarrollo Pesquero y Acuícola';
       confidence = 99.7;
-    } else if (norm.includes('suficiencia') || norm.includes('titulo') || norm.includes('titulacion')) {
-      detectedIntent = 'Titulación & Examen de Suficiencia Profesional';
-      matchedEntity = 'Requisitos Oficiales + BN Cta. Cte. 00-638-002361';
-      confidence = 99.6;
     } else if (norm.includes('nota') || norm.includes('promedio') || norm.includes('jalar') || norm.includes('desaprobar') || norm.includes('dpi') || norm.includes('recuperacion') || norm.includes('subsanacion')) {
       detectedIntent = 'Reglamento de Calificaciones & Evaluación MINEDU';
       matchedEntity = 'Directiva Académica (Nota Mínima 13 / 70% EC + 30% EF)';
@@ -3517,12 +3254,12 @@ class HercarBotApp {
       },
       {
         id: 'cmd-apsti',
-        title: 'Carrera: APSTI (2027: Computación e Informática)',
-        desc: 'Arquitectura de Plataformas y Servicios TI (en 2027 pasará a Computación e Informática) • 3 años',
+        title: 'Carrera Técnica: APSTI (Sistemas y Redes)',
+        desc: 'Arquitectura de Plataformas y Servicios TI • 3 años • 120 créditos',
         category: 'Carreras Profesionales',
         icon: 'bi-laptop',
         color: '#2563eb',
-        tags: 'computacion informatica 2027 software programacion desarrollo redes servidores base de datos apsti',
+        tags: 'computacion software programacion desarrollo redes servidores base de datos apsti',
         action: () => this.triggerAction('ver_malla_carrera', 'apsti')
       },
       {
@@ -3597,43 +3334,13 @@ class HercarBotApp {
       },
       {
         id: 'cmd-banco-nacion',
-        title: 'Cuentas Banco de la Nación (Solo Ventanilla)',
-        desc: 'TUPA: 00-638-002361 | Inglés/Productivas: 00-638-025736 • NO Págalo.pe ni Agentes',
+        title: 'Cuenta Oficial Banco de la Nación & Pagos',
+        desc: 'Cta Cte N° 00-631-012948 • Subir voucher a pagos.ieshercar.edu.pe',
         category: 'Pagos & Matrícula',
-        icon: 'bi-bank',
+        icon: 'bi-credit-card-2-front-fill',
         color: '#16a34a',
-        tags: 'banco de la nacion cuenta corriente pagar matricula voucher tasa pagos 00-638-002361 00-638-025736 pagalo',
-        action: () => this.triggerAction('ver_numero_cuenta_bn')
-      },
-      {
-        id: 'cmd-curso-ingles',
-        title: 'Curso de Inglés Básico (Cuenta 00-638-025736)',
-        desc: 'S/ 400.00 en Cta. BN 00-638-025736 • Entregar 2 copias del voucher en Tesorería',
-        category: 'Pagos & Matrícula',
-        icon: 'bi-translate',
-        color: '#2563eb',
-        tags: 'ingles basico 00-638-025736 dos copias tesoreria titulacion certificado 400',
-        action: () => this.triggerAction('ver_curso_ingles')
-      },
-      {
-        id: 'cmd-examen-suficiencia',
-        title: 'Requisitos: Examen de Suficiencia Profesional',
-        desc: 'Expediente foliado (7 requisitos) + S/ 200.00 en Cta. Cte. BN 00-638-002361',
-        category: 'Trámites Académicos',
-        icon: 'bi-patch-check-fill',
-        color: '#0d9488',
-        tags: 'suficiencia profesional examen egresados 200 soles requisitos coordinador',
-        action: () => this.triggerAction('ver_examen_suficiencia')
-      },
-      {
-        id: 'cmd-tramite-titulo',
-        title: 'Requisitos: Trámite de Título Profesional',
-        desc: 'Folder A/4 + Sobre Manila (10 requisitos) • S/ 60 + S/ 100 en Cta. Cte. 00-638-002361',
-        category: 'Trámites Académicos',
-        icon: 'bi-mortarboard-fill',
-        color: '#1e3a8a',
-        tags: 'titulo profesional caligrafiado formato derecho fotos dni legalizado partida manila',
-        action: () => this.triggerAction('ver_tramite_titulo')
+        tags: 'banco de la nacion cuenta corriente pagar matricula voucher tasa pagos 00-631-012948',
+        action: () => this.triggerAction('ver_guia_pagos')
       },
       {
         id: 'cmd-fut-solicitud',
@@ -3648,32 +3355,12 @@ class HercarBotApp {
       {
         id: 'cmd-cotizador-tupa',
         title: 'Cotizador Interactivo de Tasas TUPA',
-        desc: 'Calcula el monto total desglosado por cuenta BN (00-638-002361 y 00-638-025736)',
+        desc: 'Calcula el monto total para matrículas, carnés, certificados y títulos',
         category: 'Trámites Académicos',
         icon: 'bi-receipt-cutoff',
         color: '#ea580c',
         tags: 'tupa tasas costos precios tramite certificado modular titulacion carne',
         action: () => this.triggerAction('ver_cotizador_tupa')
-      },
-      {
-        id: 'cmd-buscador-tupa',
-        title: 'Buscador Oficial TUPA 2026 (66 Conceptos)',
-        desc: 'Busca en vivo entre los 43 trámites TUPA y 23 ítems productivos (R.D. 020-2026)',
-        category: 'Trámites Académicos',
-        icon: 'bi-search',
-        color: '#0284c7',
-        tags: 'tarifario completo tupa 2026 buscador 66 items toga birrete certificado tercio revalidacion',
-        action: () => this.triggerAction('ver_buscador_tupa')
-      },
-      {
-        id: 'cmd-personalizacion',
-        title: 'Estudio de Personalización Pro (Temas, Avatar, Perfil)',
-        desc: 'Cambia colores institucionales, avatar 3D, tamaño de texto y perfil de usuario',
-        category: 'Configuración & Sistema',
-        icon: 'bi-palette-fill',
-        color: '#ec4899',
-        tags: 'personalizar customizacion tema paleta color avatar fuente accesibilidad perfil',
-        action: () => this.triggerAction('abrir_personalizacion')
       },
       {
         id: 'cmd-calendario',
@@ -3941,15 +3628,10 @@ class HercarBotApp {
       const carrera = CARRERAS_COMPLETAS.find(c => c.id === this.context.lastCareer);
       if (carrera) {
         if (isDuration) {
-          const apstiNote = carrera.id === 'apsti'
-            ? `<div class="alert alert-info py-2 px-3 small mb-3"><i class="bi bi-stars me-1"></i><strong>Proyección 2027:</strong> El programa APSTI cambiará su denominación a <strong>Computación e Informática</strong> manteniendo los 3 años y 6 semestres.</div>`
-            : '';
-          const apstiSpoken = carrera.id === 'apsti' ? ' Cabe destacar que en el año dos mil veintisiete este programa pasará a denominarse Computación e Informática.' : '';
           const html = `
             <div class="faq-card-custom" style="border-left: 4px solid ${carrera.color} !important;">
               <h5 class="faq-custom-title text-primary"><i class="bi bi-clock-history me-2"></i>Duración Oficial: ${carrera.nombre} (${carrera.codigo})</h5>
-              <p>La carrera técnica de <strong>${carrera.nombre}</strong> tiene una duración total de <strong>${carrera.duracion}</strong>, organizados en <strong>6 periodos académicos</strong> (120 créditos curriculares y experiencias formativas EFSRT).</p>
-              ${apstiNote}
+              <p>La carrera técnica de <strong>${carrera.nombre}</strong> tiene una duración total de <strong>${carrera.duracion}</strong>, organizados en <strong>6 semestres académicos</strong> (120 créditos curriculares y 820 horas de prácticas preprofesionales EFSRT).</p>
               <p class="small text-muted mb-3"><i class="bi bi-award-fill text-warning me-1"></i>Al egresar y aprobar tus módulos obtienes el <strong>Título Profesional Técnico a Nombre de la Nación</strong> otorgado por el MINEDU.</p>
               <div class="interactive-button-grid">
                 <button class="interactive-btn" data-chat-action="ver_malla_carrera" data-chat-val="${carrera.id}"><i class="bi bi-book-half text-primary"></i> Ver Cursos por Ciclo</button>
@@ -3957,7 +3639,7 @@ class HercarBotApp {
               </div>
             </div>
           `;
-          this.appendBotMessage(html, `La carrera técnica de ${carrera.nombre} dura tres años, repartidos en seis periodos académicos con ciento veinte créditos y prácticas preprofesionales.${apstiSpoken}`);
+          this.appendBotMessage(html, `La carrera técnica de ${carrera.nombre} dura tres años, repartidos en seis semestres académicos con ciento veinte créditos y prácticas preprofesionales.`);
           return true;
         }
 
@@ -3965,16 +3647,15 @@ class HercarBotApp {
           const html = `
             <div class="faq-card-custom" style="border-left: 4px solid #10b981 !important;">
               <h5 class="faq-custom-title text-success"><i class="bi bi-cash-coin me-2"></i>Costo de la Carrera: ${carrera.nombre}</h5>
-              <p>¡En el <strong>IESTP "Hermanos Cárcamo"</strong> (instituto público del Estado) <strong>NO se pagan mensualidades ni pensiones de enseñanza</strong>!</p>
-              <p>Únicamente se abona la tasa TUPA de <strong>Matrícula Ordinaria: S/ 250.00 por semestre</strong>, pagada <strong>exclusivamente en ventanilla del Banco de la Nación</strong> (Cuenta Corriente <strong>N° 00-638-002361</strong>, indicando DNI y nombre del estudiante).</p>
-              <div class="alert alert-danger py-2 px-3 small mb-3"><i class="bi bi-exclamation-octagon-fill me-1"></i><strong>Prohibido:</strong> NO se acepta Págalo.pe, agentes MultiRed ni Yape/Plin. Tras pagar, registra tu voucher en <strong>pagos.ieshercar.edu.pe</strong>.</div>
+              <p>¡En el <strong>IESTP "Hermanos Cárcamo"</strong> la educación es <strong>100% pública y gratuita</strong>! No se pagan pensiones ni mensualidades.</p>
+              <p>Únicamente se abona la tasa de matrícula institucional semestral de <strong>S/ 120.00</strong> en el <strong>Banco de la Nación</strong> (Cuenta Corriente Oficial N° 00-631-012948), la cual cubre carné de medio pasaje y Seguro Integral de Salud (SIS).</p>
               <div class="interactive-button-grid mt-3">
-                <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-warning"></i> Ver Cuentas BN Oficiales</button>
+                <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Ver Cuenta Banco de la Nación</button>
                 <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-mortarboard-fill text-primary"></i> Modalidades de Admisión</button>
               </div>
             </div>
           `;
-          this.appendBotMessage(html, `En ${carrera.nombre} no se pagan mensualidades porque el instituto es público. Solo abonas la matrícula semestral de doscientos cincuenta soles, pagando únicamente en ventanilla del Banco de la Nación a la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno. Recuerda que no se acepta Págalo punto pe ni agentes.`);
+          this.appendBotMessage(html, `¡No se pagan mensualidades ni pensiones! La carrera de ${carrera.nombre} es pública y gratuita. Solo abonas la matrícula semestral de ciento veinte soles en el Banco de la Nación.`);
           return true;
         }
 
@@ -4032,7 +3713,7 @@ class HercarBotApp {
               <p>El costo según el TUPA oficial es de <strong>${tramite.costo}</strong>.</p>
               <p class="small text-muted"><strong>Plazo de entrega:</strong> ${tramite.plazo} &bull; <strong>Canal:</strong> ${tramite.responsable}</p>
               <div class="interactive-button-grid mt-3">
-                <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
+                <button class="interactive-btn" data-chat-action="ver_tramite_detalle" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
                 <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuenta Banco de la Nación</button>
               </div>
             </div>
@@ -4153,13 +3834,6 @@ class HercarBotApp {
     if (!text) return '';
     let p = text.toString();
 
-    // -1. Eliminar siglas redundantes entre paréntesis para no leer dos veces el nombre de carrera o institución
-    p = p
-      .replace(/\s*\(\s*(?:APSTI|ANI|CONTA|DPA|BN|SIS|MINEDU|SUNAT|FUT|TUPA|EFSRT|DPI|CCI|CEPRE|IESTP|IES|R\.D\.|R\.M\.)\s*\)/gi, '')
-      .replace(/\bieshercar@ieshercar\.edu\.pe\b/gi, 'correo oficial y e s hercar arroba y e s hercar punto edu punto pe')
-      .replace(/\bPágalo\.pe\b/gi, 'Págalo punto pe')
-      .replace(/\bPagalo\.pe\b/gi, 'Págalo punto pe');
-
     // 0. Convertidor Fonético Universal de Números (Cuentas, montos, escalas 0-20, porcentajes, años)
     p = convertAllNumbersToSpokenSpanish(p);
 
@@ -4194,21 +3868,20 @@ class HercarBotApp {
       .replace(/\bSIS\b/gi, 'Seguro Integral de Salud')
       .replace(/\bBN\b/gi, 'Banco de la Nación')
       .replace(/\bCCI\b/gi, 'código interbancario')
-      .replace(/\bDPI\b/gi, 'desaprobado por inasistencias')
+      .replace(/\bDPI\b/gi, 'límite de faltas por inasistencia')
       .replace(/\bEFSRT\b/gi, 'prácticas preprofesionales')
       .replace(/\bDNI\b/gi, 'D N I')
       .replace(/\bPDF\b/gi, 'archivo P D F')
       .replace(/\bWhatsApp\b/gi, 'WhatsApp')
       .replace(/\bchatbot\b/gi, 'asistente virtual')
       .replace(/\bIA\b/gi, 'inteligencia artificial')
-      .replace(/\bAPSTI\b/gi, 'Arquitectura de Plataformas y Servicios de Tecnologías de la Información')
+      .replace(/\bAPSTI\b/gi, 'Computación y Desarrollo de Sistemas')
       .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
       .replace(/\bCONTA\b/gi, 'Contabilidad')
       .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
-      .replace(/\bsistema\.ieshercar\.edu\.pe\/registro-tramite\/?/gi, 'mesa de partes virtual del Instituto Superior Hermanos Cárcamo')
-      .replace(/\bpagos\.ieshercar\.edu\.pe\b/gi, 'portal de pagos de Hermanos Cárcamo')
-      .replace(/\bsistema\.ieshercar\.edu\.pe\b/gi, 'sistema académico de Hermanos Cárcamo')
-      .replace(/\baula\.ieshercar\.edu\.pe\b/gi, 'aula virtual de Hermanos Cárcamo')
+      .replace(/\bpagos\.ieshercar\.edu\.pe\b/gi, 'portal de pagos del Instituto Superior Hermanos Cárcamo')
+      .replace(/\bsistema\.ieshercar\.edu\.pe\b/gi, 'sistema académico del Instituto Superior Hermanos Cárcamo')
+      .replace(/\baula\.ieshercar\.edu\.pe\b/gi, 'aula virtual del Instituto Superior Hermanos Cárcamo')
       .replace(/\bieshercar\.edu\.pe\b/gi, 'portal oficial del Instituto Superior Hermanos Cárcamo')
       .replace(/aprox\.\s*/gi, 'aproximadamente ')
       .replace(/\b100%\s*gratuita\b/gi, 'pública y sin mensualidades')
@@ -4317,8 +3990,6 @@ class HercarBotApp {
     const currentSentence = queue.shift();
     const utterance = new SpeechSynthesisUtterance(currentSentence);
     this.currentUtterance = utterance;
-    if (!this._activeUtterances) this._activeUtterances = [];
-    this._activeUtterances.push(utterance);
 
     const bestFemale = this.getBestFemaleVoice();
     if (bestFemale) {
@@ -4330,21 +4001,19 @@ class HercarBotApp {
 
     if (this.selectedVoice) {
       utterance.voice = this.selectedVoice;
-      utterance.lang = this.selectedVoice.lang || 'es-PE';
+      utterance.lang = this.selectedVoice.lang || 'es-MX';
     } else {
-      utterance.lang = 'es-PE';
+      utterance.lang = 'es-MX';
     }
 
     // Calibración acústica ultra-humana:
     // PITCH = 1.0 EXACTO. No alterar pitch para evitar el modulador metálico del navegador.
+    // La voz natural neural conserva su timbre femenino dulce y armónicos de grabación en estudio.
     utterance.pitch = 1.0;
     utterance.rate = this.voiceRate || 0.98;
     utterance.volume = 1.0;
 
     utterance.onend = () => {
-      if (this._activeUtterances) {
-        this._activeUtterances = this._activeUtterances.filter(u => u !== utterance);
-      }
       if (!this.isSpeaking) return;
       if (queue.length > 0) {
         // Pausa de respiración natural de 85ms entre frases
@@ -4357,9 +4026,6 @@ class HercarBotApp {
     };
 
     utterance.onerror = () => {
-      if (this._activeUtterances) {
-        this._activeUtterances = this._activeUtterances.filter(u => u !== utterance);
-      }
       this.stopSpeaking();
     };
 
@@ -4380,7 +4046,6 @@ class HercarBotApp {
     }
     this.isSpeaking = false;
     this.currentUtterance = null;
-    this._activeUtterances = [];
     if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
     if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
     document.querySelectorAll('.bot-avatar-badge, .msg-bubble-bot, .btn-speak-msg').forEach(el => el.classList.remove('speaking'));
@@ -4407,35 +4072,14 @@ class HercarBotApp {
     if (!this.messagesContainer) return;
     this.messagesContainer.innerHTML = '';
 
-    const prefs = this.getUserPrefs();
-    const profileMap = {
-      postulante: {
-        badge: '🎯 Modo Postulante Admisión 2026',
-        sub: 'Descubre nuestras 4 carreras públicas (incluyendo APSTI → 2027 Computación e Informática), modalidades de ingreso, Academia Pre Tecno y tasas de inscripción:'
-      },
-      estudiante: {
-        badge: '📚 Modo Estudiante Regular HERCAR',
-        sub: 'Accede rápido a matrícula paso a paso (S/ 250 en BN 00-638-002361), calculadoras de notas/DPI, calendario 2026-II y buscador completo TUPA:'
-      },
-      egresado: {
-        badge: '🎓 Modo Egresado y Titulación',
-        sub: 'Organiza tu expediente con checklists interactivos para el Examen de Suficiencia (S/ 200), Trámite de Título (S/ 60 + S/ 100) y Curso de Inglés (00-638-025736):'
-      },
-      general: {
-        badge: 'Información oficial del Instituto Superior Hermanos Cárcamo · Paita 2026',
-        sub: 'Soy tu asesora virtual del <strong>Instituto Superior Hermanos Cárcamo</strong> de Paita. Selecciona uno de los temas principales, personaliza tu entorno o escribe tu duda:'
-      }
-    };
-    const pCfg = profileMap[prefs.userProfile] || profileMap.general;
-
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
         <div class="welcome-badge">
-          <i class="bi bi-patch-check-fill text-primary"></i> ${pCfg.badge}
+          <i class="bi bi-patch-check-fill text-primary"></i> Información oficial del Instituto Superior Hermanos Cárcamo · Paita 2026
         </div>
         <h1 class="welcome-title">¡Hola! ¿En qué te puedo ayudar hoy? 👋</h1>
         <p class="welcome-subtitle">
-          ${pCfg.sub}
+          Soy tu asesora virtual del <strong>Instituto Superior Hermanos Cárcamo</strong> de Paita. Selecciona uno de los temas principales o escribe tu duda en el chat:
         </p>
 
         <!-- Banner Visual Institucional del Campus Real -->
@@ -4448,13 +4092,13 @@ class HercarBotApp {
                   <i class="bi bi-geo-alt-fill text-danger me-1"></i> Campus Central Paita Alta
                 </div>
                 <div class="campus-banner-addr">
-                  Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque · Paita, Piura
+                  Av. Miguel Grau Mz. A Lt. 01 – Urb. El Parque · Paita, Piura
                 </div>
               </div>
               <div class="campus-banner-tags">
                 <span class="campus-badge"><i class="bi bi-telephone-fill me-1"></i> (073) 251013</span>
                 <span class="campus-badge"><i class="bi bi-clock-fill me-1"></i> Lun-Vie 8am-3pm</span>
-                <span class="campus-badge bg-gold"><i class="bi bi-bank me-1"></i> Solo Ventanilla BN</span>
+                <span class="campus-badge bg-gold"><i class="bi bi-mortarboard-fill me-1"></i> 100% Gratuito</span>
               </div>
             </div>
           </div>
@@ -4469,7 +4113,7 @@ class HercarBotApp {
             </div>
             <div>
               <strong>4 Carreras Profesionales</strong>
-              <small>APSTI (2027: Computación e Informática), ANI, Contabilidad y Pesquería</small>
+              <small>APSTI, Negocios, Contabilidad y Pesquería con mallas completas</small>
             </div>
           </div>
 
@@ -4518,8 +4162,8 @@ class HercarBotApp {
               <i class="bi bi-credit-card-2-front-fill"></i>
             </div>
             <div>
-              <strong>Matrícula S/ 250 Paso a Paso</strong>
-              <small>Pago solo en ventanilla BN, boleta en pagos.ieshercar.edu.pe y 3 copias</small>
+              <strong>Matrícula Paso a Paso</strong>
+              <small>¿Qué pago? ¿Dónde voy? ¿Cómo registro mi voucher en el BN?</small>
             </div>
           </div>
 
@@ -4528,18 +4172,18 @@ class HercarBotApp {
               <i class="bi bi-receipt-cutoff"></i>
             </div>
             <div>
-              <strong>Cotizador TUPA 2026</strong>
-              <small>Tasas oficiales exactas según Cta. 00-638-002361 o 00-638-025736</small>
+              <strong>Cotizador de Pagos TUPA</strong>
+              <small>Calcula el monto exacto de certificados, carné y trámites</small>
             </div>
           </div>
 
-          <div class="feature-pill" data-chat-action="ver_numero_cuenta_bn" style="border-top: 3px solid #059669;">
+          <div class="feature-pill" data-chat-action="ver_metodos_pago_digitales" style="border-top: 3px solid #059669;">
             <div class="feature-pill-icon-box" style="background: rgba(5,150,105,0.12); color: #059669;">
-              <i class="bi bi-bank"></i>
+              <i class="bi bi-phone-fill"></i>
             </div>
             <div>
-              <strong>2 Cuentas BN (Solo Ventanilla)</strong>
-              <small>TUPA: 00-638-002361 · Inglés: 00-638-025736 (NO Págalo.pe)</small>
+              <strong>Pagos Digitales & Págalo.pe</strong>
+              <small>Paga sin colas desde tu celular con App BN, Yape o Págalo.pe</small>
             </div>
           </div>
 
@@ -4553,23 +4197,23 @@ class HercarBotApp {
             </div>
           </div>
 
-          <div class="feature-pill" data-chat-action="ver_examen_suficiencia" style="border-top: 3px solid #dc2626;">
+          <div class="feature-pill" data-chat-action="ver_calculadora_dpi" style="border-top: 3px solid #dc2626;">
             <div class="feature-pill-icon-box" style="background: rgba(220,38,38,0.12); color: #dc2626;">
-              <i class="bi bi-patch-check-fill"></i>
+              <i class="bi bi-alarm-fill"></i>
             </div>
             <div>
-              <strong>Examen de Suficiencia (S/ 200)</strong>
-              <small>Los 7 requisitos oficiales y expediente foliado para egresados</small>
+              <strong>Calculadora DPI (Faltas 30%)</strong>
+              <small>Calcula tus inasistencias máximas para no desaprobar tu curso</small>
             </div>
           </div>
 
-          <div class="feature-pill" data-chat-action="ver_tramite_titulo" style="border-top: 3px solid #8b5cf6;">
+          <div class="feature-pill" data-chat-action="ver_titulacion_efsrt" style="border-top: 3px solid #8b5cf6;">
             <div class="feature-pill-icon-box" style="background: rgba(139,92,246,0.12); color: #8b5cf6;">
               <i class="bi bi-award-fill"></i>
             </div>
             <div>
-              <strong>Trámite de Título Profesional</strong>
-              <small>Los 10 requisitos en folder A/4 + sobre manila (S/ 60 + S/ 100 BN)</small>
+              <strong>Titulación & Prácticas EFSRT</strong>
+              <small>820 horas de prácticas, carta de presentación y título MINEDU</small>
             </div>
           </div>
 
@@ -4579,7 +4223,7 @@ class HercarBotApp {
             </div>
             <div>
               <strong>Calendario & Campus 2026</strong>
-              <small>Cronograma 2026-II, docentes y croquis de pabellones</small>
+              <small>Cronograma de clases, fechas clave y croquis de pabellones</small>
             </div>
           </div>
 
@@ -4589,20 +4233,19 @@ class HercarBotApp {
         <div class="suggested-prompts-section">
           <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Preguntas Frecuentes y Herramientas Rápidas:</span>
           <div class="prompts-chips-wrapper">
-            <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación y se puede usar Págalo.pe?">🏦 Cuentas BN (NO Págalo.pe)</button>
-            <button class="prompt-chip" data-prompt="¿Cómo pago el Curso de Inglés Básico y en qué cuenta?">🇬🇧 Inglés (Cta. 00-638-025736)</button>
-            <button class="prompt-chip" data-prompt="¿Cuáles son los requisitos del Examen de Suficiencia Profesional?">📋 Requisitos Suficiencia</button>
-            <button class="prompt-chip" data-prompt="¿Cuáles son los requisitos para el Trámite de Título Profesional?">🎓 Requisitos Título</button>
-            <button class="prompt-chip" data-prompt="¿Qué carrera reemplaza a APSTI en el año 2027?">💻 APSTI → Computación 2027</button>
-            <button class="prompt-chip" data-prompt="¿Cuánto cuesta la matrícula y qué hago después de pagar?">💰 Matrícula S/ 250 Paso a Paso</button>
-            <button class="prompt-chip" data-prompt="Cotizador de trámites TUPA 2026">🧮 Cotizador TUPA 2026</button>
-            <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final">📊 Calculadora de Notas</button>
-            <button class="prompt-chip" data-prompt="Calculadora de faltas e inasistencias DPI">⏱️ Límite de Faltas DPI</button>
-            <button class="prompt-chip" data-prompt="Comparar las 4 carreras del instituto">⚖️ Comparar 4 Carreras</button>
-            <button class="prompt-chip" data-prompt="Calendario académico 2026 y fechas clave">📅 Calendario 2026-II</button>
-            <button class="prompt-chip" data-prompt="¿Cómo justificar inasistencias por salud o trabajo?">📝 Justificar Faltas</button>
-            <button class="prompt-chip" data-prompt="Buscador completo de tarifas TUPA 2026">🔎 Tarifario TUPA (66 ítems)</button>
-            <button class="prompt-chip" data-chat-action="abrir_personalizacion">🎨 Personalizar Entorno</button>
+            <button class="prompt-chip" data-prompt="¿Cuál es el número de cuenta bancaria para pagar?">🏦 Número de Cuenta BN</button>
+            <button class="prompt-chip" data-prompt="¿Cuánto cuesta la matrícula y qué hago después de pagar?">💰 ¿Qué pago y dónde voy?</button>
+            <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final">📊 Calculadora de Notas (70/30)</button>
+            <button class="prompt-chip" data-prompt="Cotizador de trámites TUPA">🧮 Cotizador TUPA</button>
+            <button class="prompt-chip" data-prompt="¿Cómo pagar por Págalo.pe o transferencia bancaria?">📱 Págalo.pe / App BN</button>
+            <button class="prompt-chip" data-prompt="Calculadora de faltas e inasistencias DPI">⏱️ ¿Cuántas faltas puedo tener?</button>
+            <button class="prompt-chip" data-prompt="Comparar las 4 carreras del instituto">⚖️ Comparar 4 carreras</button>
+            <button class="prompt-chip" data-prompt="¿Cuánto gana un egresado técnico en Paita?">💼 Sueldos en Paita</button>
+            <button class="prompt-chip" data-prompt="¿Cómo hago mis prácticas preprofesionales EFSRT?">🏢 Prácticas EFSRT (820 hrs)</button>
+            <button class="prompt-chip" data-prompt="Calendario académico 2026 y fechas clave">📅 Calendario Académico 2026</button>
+            <button class="prompt-chip" data-prompt="Mapa del campus y ambientes del instituto">🗺️ Croquis de Ambientes</button>
+            <button class="prompt-chip" data-prompt="¿Cómo justificar inasistencias por salud o trabajo?">📝 Justificar faltas</button>
+            <button class="prompt-chip" data-prompt="¿Cómo recupero mi clave del sistema o aula virtual?">🔑 Olvidé mi contraseña</button>
           </div>
         </div>
       </div>
@@ -4732,11 +4375,9 @@ class HercarBotApp {
       `;
     }
 
-    const avatarSrc = this.getBotAvatarUrl();
-    const avatarFit = this.getUserPrefs().avatar === 'escudo' ? 'contain' : 'cover';
     msgEl.innerHTML = `
-      <div class="bot-avatar-badge" style="background: #fff; padding: 2px; overflow: hidden; border: 2px solid var(--line-2);">
-        <img src="${avatarSrc}" alt="HERCAR" style="width:100%; height:100%; object-fit:${avatarFit}; border-radius:50%;" onerror="this.src='assets/img/logo-hercar.png'; this.onerror=function(){this.parentElement.innerHTML='<i class=\\'bi bi-mortarboard-fill\\' style=\\'color:#0f3380;font-size:1rem;\\'></i>'}">
+      <div class="bot-avatar-badge" style="background: #fff; padding: 3px; overflow: hidden; border: 2px solid #e2e8f0;">
+        <img src="assets/img/logo-hercar.png" alt="HERCAR" style="width:100%; height:100%; object-fit:contain; border-radius:8px;" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'; this.onerror=function(){this.parentElement.innerHTML='<i class=\\'bi bi-mortarboard-fill\\' style=\\'color:#0f3380;font-size:1rem;\\'></i>'}">
       </div>
       <div class="msg-bubble-bot"${spokenSummary ? ` data-spoken-text="${this.escapeHtml(spokenSummary)}"` : ''}>
         ${thoughtHtml}
@@ -4856,10 +4497,9 @@ class HercarBotApp {
 ━━━━━━━━━━━━━━━━━━
 ${text}
 ━━━━━━━━━━━━━━━━━━
-📌 *Cuentas Banco de la Nación (Solo Ventanilla, NO Págalo.pe):*
-• TUPA General / Matrícula: 00-638-002361
-• Curso de Inglés / Productivas: 00-638-025736
-📍 *Campus Central:* Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita
+📌 *Cuenta Banco de la Nación:* 00-631-012948
+💳 *Código CCI:* 018-631-000631012948-52
+📍 *Campus Central:* Av. Miguel Grau Mz. A Lt. 01, Paita Alta
 🌐 *Portal Web Oficial:* https://ieshercar.edu.pe/`;
 
       const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
@@ -5069,10 +4709,8 @@ ${text}
       return;
     }
 
-    // 3. Consulta sobre Gratuidad / Pensiones / Mensualidad (sin capturar consultas de trámites/tasas TUPA o matrícula)
-    const mentionsSpecificFee = norm.includes('matricula') || norm.includes('certificado') || norm.includes('constancia') || norm.includes('ingles') || norm.includes('titulo') || norm.includes('suficiencia') || norm.includes('tupa') || norm.includes('examen') || norm.includes('duplicado') || norm.includes('carne') || norm.includes('traslado') || norm.includes('convalidacion') || norm.includes('pre tecno') || norm.includes('academia');
-    const asksTuitionFree = !mentionsSpecificFee && (norm.includes('mensualidad') || norm.includes('pension') || norm.includes('gratis') || norm.includes('gratuito') || norm.includes('publico') || norm.includes('costo de mensualidad') || norm.includes('cuanto cuesta estudiar') || norm.includes('cuanto se paga por estudiar') || norm === 'cuanto cuesta');
-    if (asksTuitionFree) {
+    // 3. Consulta sobre Gratuidad / Pensiones / Mensualidad
+    if (norm.includes('mensualidad') || norm.includes('pension') || norm.includes('cuanto cuesta') || norm.includes('gratis') || norm.includes('gratuito') || norm.includes('publico') || norm.includes('cuanto se paga') || norm.includes('costo de mensualidad')) {
       const faqGratis = BASE_PREGUNTAS_RESPUESTAS.find(f => f.id === 'faq-gratuidad');
       if (faqGratis) {
         this.appendBotMessage(`
@@ -5081,12 +4719,12 @@ ${text}
             <div class="faq-custom-body">${this.formatMarkdown(faqGratis.respuesta)}</div>
             <div class="interactive-button-grid mt-3">
               <button class="interactive-btn" data-chat-action="ver_todas_carreras"><i class="bi bi-mortarboard text-primary"></i> Ver 4 Carreras Públicas</button>
-              <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-success"></i> Cuentas Banco de la Nación</button>
+              <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-person-check text-success"></i> ¿Cómo Inscribirme?</button>
             </div>
           </div>
-        `, faqGratis.locucion || "En el Instituto Superior Hermanos Cárcamo no se pagan pensiones ni mensualidades porque somos una institución pública del Estado. Únicamente se abona la tasa de matrícula semestral de doscientos cincuenta soles en ventanilla del Banco de la Nación a la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno.", [
+        `, faqGratis.locucion || "¡Hola! Te cuento con mucho gusto que en el Instituto Hermanos Cárcamo estudiar es público y no se pagan pensiones ni mensualidades. Únicamente abonas la tasa administrativa de matrícula por semestre en el Banco de la Nación, que incluye tu carné y seguro de salud. ¡En tu pantalla te dejé todos los detalles!", [
           { label: "📋 Requisitos para postular", prompt: "¿Cuáles son los requisitos de admisión?" },
-          { label: "🏦 ¿Cómo pagar en el Banco de la Nación?", prompt: "¿Cuál es el número de cuenta bancaria para pagar?" }
+          { label: "🏦 ¿Cómo pagar la matrícula?", prompt: "¿Cómo se hace el pago en el Banco de la Nación?" }
         ]);
         this.logQuery('admision');
         return;
@@ -5184,22 +4822,8 @@ ${text}
       return;
     }
 
-    // 9.3.1 Requisitos Oficiales del Examen de Suficiencia Profesional
-    if (norm.includes('suficiencia profesional') || norm.includes('examen de suficiencia') || norm.includes('certificado de actualizacion') || (norm.includes('suficiencia') && (norm.includes('requisito') || norm.includes('pagar') || norm.includes('costo') || norm.includes('200') || norm.includes('solicitar') || norm.includes('expediente')))) {
-      this.renderExamenSuficiencia();
-      this.logQuery('titulacion');
-      return;
-    }
-
-    // 9.3.2 Requisitos Oficiales del Trámite de Título Profesional Técnico
-    if (norm.includes('tramite de titulo') || norm.includes('requisitos titulo') || norm.includes('requisitos de titulo') || norm.includes('requisitos del titulo') || norm.includes('requisitos para el titulo') || norm.includes('tramite titulo') || norm.includes('caligrafiado') || norm.includes('formato de titulo') || norm.includes('derecho de titulo') || norm.includes('ficha de actividades') || norm.includes('sobre manila') || norm.includes('folder a4') || norm.includes('folder a/4') || norm.includes('dni legalizado')) {
-      this.renderTramiteTitulo();
-      this.logQuery('titulacion');
-      return;
-    }
-
-    // 9.3 Ruta de Titulación Profesional y Prácticas EFSRT
-    if (norm.includes('efsrt') || norm.includes('practicas preprofesionales') || norm.includes('horas de practicas') || norm.includes('cuantas horas de practica') || norm.includes('carta de presentacion') || norm.includes('informe de practicas') || norm.includes('como me titulo') || norm.includes('requisitos para titularme') || norm.includes('modalidades de titulacion') || norm.includes('trabajo de aplicacion') || norm.includes('tesis') || norm.includes('plan de negocios')) {
+    // 9.3 Ruta de Titulación Profesional y Prácticas EFSRT (820 Horas)
+    if (norm.includes('efsrt') || norm.includes('practicas preprofesionales') || norm.includes('horas de practicas') || norm.includes('cuantas horas de practica') || norm.includes('carta de presentacion') || norm.includes('informe de practicas') || norm.includes('como me titulo') || norm.includes('requisitos para titularme') || norm.includes('modalidades de titulacion') || norm.includes('tesis') || norm.includes('plan de negocios') || norm.includes('examen de suficiencia')) {
       this.renderGuiaTitulacionEfsrt();
       this.logQuery('titulacion');
       return;
@@ -5227,7 +4851,7 @@ ${text}
       const cNomCorto = carrera.nombreCorto ? this.normalizeText(carrera.nombreCorto) : '';
 
       const matchesCareer = norm.includes(cId) || norm.includes(cCode) || norm.includes(cNom) || (cNomCorto && norm.includes(cNomCorto)) ||
-        (cId === 'apsti' && (norm.includes('sistemas') || norm.includes('software') || norm.includes('programacion') || norm.includes('computacion') || norm.includes('redes') || norm.includes('ti') || norm.includes('informatica') || norm.includes('2027') || norm.includes('desarrollo web') || norm.includes('ciberseguridad'))) ||
+        (cId === 'apsti' && (norm.includes('sistemas') || norm.includes('software') || norm.includes('programacion') || norm.includes('computacion') || norm.includes('redes') || norm.includes('ti') || norm.includes('informatica') || norm.includes('desarrollo web') || norm.includes('ciberseguridad'))) ||
         (cId === 'ani' && (norm.includes('aduanas') || norm.includes('comercio exterior') || norm.includes('negocios internacionales') || norm.includes('exportacion') || norm.includes('importacion') || norm.includes('logistica portuaria') || norm.includes('tpe'))) ||
         (cId === 'conta' && (norm.includes('contabilidad') || norm.includes('contador') || norm.includes('tributacion') || norm.includes('sunat') || norm.includes('finanzas') || norm.includes('impuestos') || norm.includes('sire') || norm.includes('costos'))) ||
         (cId === 'dpa' && (norm.includes('pesca') || norm.includes('pesquero') || norm.includes('pesqueria') || norm.includes('acuicola') || norm.includes('acuicultura') || norm.includes('mar') || norm.includes('mariscos') || norm.includes('pota') || norm.includes('haccp')));
@@ -5264,49 +4888,29 @@ ${text}
       return;
     }
 
-    // 14.3 Curso de Inglés Básico, Academia Pre Tecno / Productivas (Cta. BN 00-638-025736) — PRIORIDAD sobre cuenta genérica
-    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles basico') || norm.includes('ingles tecnico') || norm.includes('00-638-025736') || norm.includes('025736') || norm.includes('pago ingles') || norm.includes('voucher ingles') || norm.includes('tania herrera') || norm.includes('omar garcia') || norm.includes('revalidacion')) {
-      this.renderCursoIngles();
-      this.logQuery('ingles');
-      return;
-    }
-
-    // 14.4 Reglas de Pago (PROHIBIDO Págalo.pe, Agentes, Yape, Plin, CCI — SOLO Ventanilla BN)
-    if (norm.includes('pagalo') || norm.includes('yape') || norm.includes('plin') || norm.includes('interbancari') || norm.includes('transferencia') || norm.includes('cci') || norm.includes('agente') || norm.includes('multired') || norm.includes('sin ir al banco') || norm.includes('pagar por internet') || norm.includes('pago digital') || norm.includes('pago virtual') || norm.includes('app bn') || norm.includes('aplicativo bn')) {
-      this.renderMetodosPagoDigitales();
-      this.logQuery('pagos');
-      return;
-    }
-
-    // 14.5 Número de Cuenta Bancaria Oficial para Pagos (Las 2 Cuentas del Banco de la Nación)
-    if (norm.includes('numero de cuenta') || norm.includes('num de cuenta') || norm.includes('nro de cuenta') || norm.includes('pasa la cuenta') || norm.includes('pasar la cuenta') || norm.includes('pasas la cuenta') || norm.includes('pasa el numero') || norm.includes('dame la cuenta') || norm.includes('a que cuenta') || norm.includes('cuenta para pagar') || norm.includes('cuenta bancaria') || (norm.includes('cuenta') && (norm.includes('banco') || norm.includes('nacion') || norm.includes('depositar') || norm.includes('corriente') || norm.includes('pagar') || norm.includes('deposito'))) || norm.includes('cual es la cuenta') || norm.includes('datos bancarios') || norm.includes('datos de la cuenta') || norm.includes('00-638-002361') || norm.includes('002361')) {
+    // 14.4 Número de Cuenta Bancaria Oficial para Pagos (Banco de la Nación / CCI)
+    if (norm.includes('numero de cuenta') || norm.includes('num de cuenta') || norm.includes('nro de cuenta') || norm.includes('pasa la cuenta') || norm.includes('pasar la cuenta') || norm.includes('pasas la cuenta') || norm.includes('pasa el numero') || norm.includes('dame la cuenta') || norm.includes('a que cuenta') || norm.includes('cuenta para pagar') || norm.includes('cuenta bancaria') || (norm.includes('cuenta') && (norm.includes('banco') || norm.includes('nacion') || norm.includes('depositar') || norm.includes('transferir') || norm.includes('corriente') || norm.includes('pagar') || norm.includes('deposito'))) || norm.includes('cual es la cuenta') || norm.includes('datos bancarios') || norm.includes('datos de la cuenta') || norm.includes('cci del banco') || norm.includes('codigo interbancario')) {
       this.renderNumeroCuentaBancaria();
       this.logQuery('pagos');
       return;
     }
 
-    // 14.6 Matrícula y Pagos Paso a Paso ("¿Qué pago, dónde voy, qué hago?")
-    if (norm.includes('paso a paso') || norm.includes('que pago') || norm.includes('donde voy') || norm.includes('que hago') || norm.includes('despues de pagar') || norm.includes('ya pague') || norm.includes('donde llevo') || (norm.includes('como') && norm.includes('matricul')) || (norm.includes('pago') && norm.includes('matricul')) || norm.includes('donde pagar') || norm.includes('donde registro') || norm.includes('que hago con el voucher') || norm.includes('2 copias') || norm.includes('3 copias')) {
+    // 14.5 Matrícula y Pagos Paso a Paso ("La Gente Preguntona": ¿Qué pago, dónde voy, qué hago?)
+    if (norm.includes('paso a paso') || norm.includes('que pago') || norm.includes('donde voy') || norm.includes('que hago') || norm.includes('despues de pagar') || norm.includes('ya pague') || norm.includes('donde llevo') || (norm.includes('como') && norm.includes('matricul')) || (norm.includes('pago') && norm.includes('matricul')) || norm.includes('donde pagar') || norm.includes('donde registro') || norm.includes('que hago con el voucher')) {
       this.renderMatriculaPasoAPaso();
       this.logQuery('pagos');
       return;
     }
 
-    // 14.7A Buscador Completo Oficial TUPA 2026 (43 procedimientos 00-638-002361 + 23 productivas 00-638-025736)
-    if (norm.includes('tarifario') || norm.includes('buscador tupa') || norm.includes('tupa completo') || norm.includes('66 items') || norm.includes('lista de costos') || norm.includes('todos los pagos') || norm.includes('toga') || norm.includes('birrete') || norm.includes('medalla') || norm.includes('brindis') || norm.includes('porta titulo') || norm.includes('pre tecno') || norm.includes('tercio superior') || norm.includes('transferencia por error') || norm.includes('alquiler de auditorio')) {
-      const kw = (norm.includes('toga') || norm.includes('birrete')) ? 'Toga'
-        : norm.includes('pre tecno') ? 'Pre Tecno'
-        : norm.includes('tercio superior') ? 'Tercio'
-        : norm.includes('medalla') ? 'Medalla'
-        : norm.includes('transferencia por error') ? 'error de cuenta'
-        : norm.includes('auditorio') ? 'Auditorio' : '';
-      this.renderBuscadorTupaCompleto(kw);
+    // 14.6 Métodos de Pago Digitales (Págalo.pe, App BN, Yape, Plin y Transferencia CCI)
+    if (norm.includes('pagalo') || norm.includes('yape') || norm.includes('plin') || norm.includes('interbancari') || norm.includes('transferencia') || norm.includes('cci') || norm.includes('agente multired') || norm.includes('sin ir al banco') || norm.includes('pagar por internet') || norm.includes('pago digital') || norm.includes('pago virtual') || norm.includes('app bn') || norm.includes('aplicativo bn')) {
+      this.renderMetodosPagoDigitales();
       this.logQuery('pagos');
       return;
     }
 
-    // 14.7B Cotizador y Simulador de Pagos TUPA 2026
-    if (norm.includes('cotizador') || norm.includes('cotizar') || norm.includes('calcular pago') || norm.includes('tasas tupa') || norm.includes('tupa') || norm.includes('cuanto voy a pagar') || norm.includes('costo de tramites') || norm.includes('simulador de pagos') || norm.includes('sumar pagos') || (norm.includes('cuanto cuesta') && (norm.includes('certificado') || norm.includes('constancia') || norm.includes('traslado') || norm.includes('convalidacion') || norm.includes('duplicado') || norm.includes('reincorporacion') || norm.includes('reserva') || norm.includes('licencia') || norm.includes('recuperacion')))) {
+    // 14.7 Cotizador y Simulador de Pagos TUPA
+    if (norm.includes('cotizador') || norm.includes('cotizar') || norm.includes('calcular pago') || norm.includes('tasas tupa') || norm.includes('cuanto voy a pagar en total') || norm.includes('costo de tramites') || norm.includes('simulador de pagos') || norm.includes('sumar pagos')) {
       this.renderCotizadorTupa();
       this.logQuery('pagos');
       return;
@@ -5316,6 +4920,13 @@ ${text}
     if (norm.includes('pago') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('banco') || norm.includes('cuenta') || norm.includes('subir voucher') || norm.includes('tesoreria') || norm.includes('deposito') || norm.includes('pagos ieshercar')) {
       this.renderGuiaPagos();
       this.logQuery('pagos');
+      return;
+    }
+
+    // 16. Curso de Inglés, Requisito de Titulación y Pagos Específicos (00-638-025736)
+    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles tecnico') || norm.includes('suficiencia') || norm.includes('00-638-025736') || norm.includes('025736') || norm.includes('pago ingles') || norm.includes('voucher ingles') || norm.includes('tania herrera') || norm.includes('omar garcia') || norm.includes('deuda ingles')) {
+      this.renderCursoIngles();
+      this.logQuery('ingles');
       return;
     }
 
@@ -5463,46 +5074,42 @@ ${text}
   async queryGemini(prompt, apiKey) {
     if (!apiKey) return null;
     const cleanKey = apiKey.trim().replace(/^["']|["']$/g, '');
-    const preferredModel = localStorage.getItem('hercarbot_gemini_model') || 'gemini-2.5-flash';
+    const preferredModel = localStorage.getItem('hercarbot_gemini_model') || 'gemini-2.0-flash';
     const models = [
       preferredModel,
-      'gemini-2.5-flash',
       'gemini-2.0-flash',
-      'gemini-1.5-flash'
+      'gemini-1.5-flash',
+      'gemini-1.5-flash-8b',
+      'gemini-2.5-flash',
+      'gemini-pro'
     ].filter((v, i, a) => v && v !== 'auto' && a.indexOf(v) === i);
 
     const systemPrompt = `
-      Eres HercarBot IA, la asesora virtual oficial del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita (Piura, Perú), fundado el 27 de abril de 1987 (R.M. N.° 232-87-ED, 39 años de trayectoria institucional).
+      Eres HercarBot IA, el asistente virtual oficial del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita (Piura, Perú), fundado en 1987 (R.M. N.° 232-87-ED, más de 38 años de trayectoria institucional).
       
-      DATOS INSTITUCIONALES OFICIALES (TUPA 2026 Y PORTAL ieshercar.edu.pe):
+      DATOS INSTITUCIONALES OFICIALES:
       - Director General: Econ. Adolfo Zeta Pazo
-      - Jefe de Unidad Académica: Lic. Juan García Reto
-      - Jefe de Unidad Administrativa: CPC Edson Maza Gonzales
-      - Ubicación: Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita, Piura.
-      - Teléfono: (073) 251013 | WhatsApp: 969 100 257 | Correo: ieshercar@ieshercar.edu.pe
+      - Jefe Unidad Académica: Lic. Juan García Reto
+      - Jefe Unidad Administrativa: CPC Edson Maza
+      - Ubicación: Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita Alta, Piura.
       - Horario de Atención: Lunes a Viernes de 8:00 a.m. a 3:00 p.m.
-      - 4 Programas de Estudios Públicos (NO se pagan mensualidades ni pensiones; 3 años / 6 periodos académicos / 120 créditos):
-        1. APSTI: Arquitectura de Plataformas y Servicios de Tecnologías de la Información (NOTA IMPORTANTE: en el año 2027 este programa cambiará su denominación a "Computación e Informática").
-        2. ANI: Administración de Negocios Internacionales (logística portuaria de Paita y aduanas).
-        3. Contabilidad: Tributación SUNAT, SIRE, finanzas y costos empresariales.
-        4. DPA: Desarrollo Pesquero y Acuícola (plantas de congelado, acuicultura, control de calidad SANIPES/HACCP).
+      - 4 Carreras Profesionales Técnicas 100% Gratuitas (3 años / 6 semestres / 120 créditos):
+        1. APSTI: Arquitectura de Plataformas y Servicios de Tecnologías de la Información
+        2. ANI: Administración de Negocios Internacionales (logística portuaria de Paita)
+        3. Contabilidad: Tributación SUNAT, finanzas y costos empresariales
+        4. DPA: Desarrollo Pesquero y Acuícola (plantas de congelado Tierra Colorada, conchas de abanico, SANIPES)
       - Portales Oficiales:
-        * Portal institucional: https://ieshercar.edu.pe/
-        * Pagos y Boleta Electrónica: https://pagos.ieshercar.edu.pe/
+        * Pagos y Vouchers: https://pagos.ieshercar.edu.pe/
         * Sistema Académico / Matrícula: https://sistema.ieshercar.edu.pe/acceso
         * Aula Virtual: https://aula.ieshercar.edu.pe/
-        * Trámites y Mesa de Partes Virtual: https://sistema.ieshercar.edu.pe/registro-tramite/
-      - REGLA ESTRICTA DE PAGOS (MUY IMPORTANTE):
-        * TODOS los pagos se realizan ÚNICAMENTE de forma presencial en VENTANILLA del Banco de la Nación, indicando el DNI y nombres completos del estudiante.
-        * ESTÁ PROHIBIDO pagar por Págalo.pe, Agentes MultiRed, Yape, Plin o transferencias interbancarias.
-        * EXISTEN DOS CUENTAS OFICIALES EN EL BANCO DE LA NACIÓN:
-          1) Cuenta Corriente TUPA N.° 00-638-002361 (Unidad Administrativa / Tesorería): Matrícula Ordinaria S/ 250.00, Examen de Admisión S/ 200.00, Examen de Suficiencia Profesional S/ 200.00 (2da opción S/ 100.00), Formato/Caligrafiado de Título S/ 60.00, Derecho de Título S/ 100.00, Certificado Modular S/ 25.00, Certificado de Estudios S/ 240.00 (6 periodos) o S/ 40.00 por periodo, Constancias S/ 15.00, Recuperación U.D. S/ 35.00, Convalidación U.D. S/ 30.00, Traslado Interno S/ 80.00, Duplicado de Título S/ 200.00. Tras pagar, registrar el voucher en https://pagos.ieshercar.edu.pe/ y llevar voucher + copias a Tesorería (Matrícula: original + 3 copias de boleta a Tesorería y 1 sellada a Secretaría Académica; Título/Suficiencia: original + 1 copia sellada).
-          2) Cuenta N.° 00-638-025736 (Actividades Productivas y Empresariales): Curso de Inglés Básico para Titulación S/ 400.00 (Duplicado S/ 50.00), Academia Pre Tecno Hercar S/ 400.00, Ciclo de Actualización S/ 400.00, alquiler de Toga y Birrete S/ 50.00. Para pagos en la cuenta 00-638-025736 debes sacar 2 copias a tu voucher y entregarlos en Tesorería en la oficina del instituto.
+        * Trámites y Mesa de Partes: https://ieshercar.edu.pe/registro-tramite/
+      - Matrícula y Pagos: Cuenta corriente oficial del Banco de la Nación N.° 00-631-012948. Tras pagar, el alumno sube el voucher nítido a pagos.ieshercar.edu.pe o lo presenta en Tesorería.
+      - Requisito de Inglés: Para obtener el Título Profesional Técnico a Nombre de la Nación, es obligatorio acreditar el nivel Básico A2 de inglés (Ley N.° 30512 del MINEDU).
       
       INSTRUCCIONES DE RESPUESTA:
-      - Responde siempre en español, de forma clara, precisa y profesional.
-      - Nunca menciones cuentas antiguas ni digas que se puede usar Págalo.pe.
-      - Usa títulos y viñetas organizadas cuando sea útil.
+      - Responde siempre en español, de forma amable, precisa, organizada y empática.
+      - Si la pregunta es sobre el instituto, brinda datos oficiales específicos.
+      - Usa párrafos claros, títulos y viñetas cuando sea conveniente.
     `;
 
     for (const model of models) {
@@ -5538,29 +5145,27 @@ ${text}
   async queryGeminiWithImage(prompt, attachedImage, apiKey) {
     if (!apiKey || !attachedImage || !attachedImage.base64) return null;
     const cleanKey = apiKey.trim().replace(/^["']|["']$/g, '');
-    const preferredModel = localStorage.getItem('hercarbot_gemini_model') || 'gemini-2.5-flash';
+    const preferredModel = localStorage.getItem('hercarbot_gemini_model') || 'gemini-2.0-flash';
     const models = [
       preferredModel,
-      'gemini-2.5-flash',
       'gemini-2.0-flash',
-      'gemini-1.5-flash'
+      'gemini-1.5-flash',
+      'gemini-2.5-flash'
     ].filter((v, i, a) => v && v !== 'auto' && a.indexOf(v) === i);
 
     const base64Clean = attachedImage.base64.replace(/^data:image\/[a-zA-Z0-9.+]+;base64,/, '');
     const mime = attachedImage.type || 'image/jpeg';
 
     const systemPrompt = `
-      Eres HercarBot IA, la asesora inteligente oficial del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita (Piura, Perú).
+      Eres HercarBot IA, el asistente inteligente oficial del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita (Piura, Perú).
       El estudiante te ha compartido una imagen o comprobante bancario.
       TU MISIÓN:
       1. Si es un comprobante de pago o voucher del Banco de la Nación:
-         - Verifica a cuál de las DOS cuentas oficiales corresponde:
-           * Cuenta Corriente TUPA N.° 00-638-002361 (Matrícula S/ 250.00, Admisión S/ 200.00, Suficiencia S/ 200.00, Título S/ 60.00 + S/ 100.00, Certificados, Constancias). Indícale registrar el voucher en https://pagos.ieshercar.edu.pe/ para generar su boleta electrónica y llevar sus copias a Tesorería.
-           * Cuenta Productivas / Inglés N.° 00-638-025736 (Curso de Inglés S/ 400.00, Academia Pre Tecno S/ 400.00, Ciclo de Actualización S/ 400.00). Indícale sacar 2 copias a su voucher y entregarlos en Tesorería en la oficina del instituto.
-         - Recuérdale que los pagos SOLO se hacen en ventanilla del Banco de la Nación (nunca por Págalo.pe ni agentes).
-         - Revisa si el DNI, nombre, monto, fecha y número de operación son visibles.
+         - Identifica si es para el IESTP Hermanos Cárcamo (Cuenta: 00-631-012948, RUC: 20484258810).
+         - Revisa monto, fecha y número de operación.
+         - Indícale al estudiante que debe registrarlo en https://pagos.ieshercar.edu.pe/ para que Tesorería lo valide.
       2. Si es un certificado de estudios, DNI o documento:
-         - Oriéntalo sobre el trámite institucional en https://sistema.ieshercar.edu.pe/registro-tramite/.
+         - Oriéntalo con amabilidad sobre el trámite institucional que le corresponde en https://ieshercar.edu.pe/registro-tramite/.
       3. Responde siempre con formato limpio en español, destacando datos y próximos pasos.
     `;
 
@@ -5620,42 +5225,42 @@ ${text}
         <div class="row g-2 mb-3">
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-primary d-block mb-1"><i class="bi bi-bank me-1"></i> 1. Banco y las 2 Cuentas Oficiales</strong>
-              <span>Únicamente <strong>ventanilla del Banco de la Nación</strong>:<br>• TUPA General: <strong>00-638-002361</strong><br>• Inglés / CEPRE: <strong>00-638-025736</strong><br><em class="text-danger">(Prohibido Págalo.pe, Agentes y Yape)</em></span>
+              <strong class="text-primary d-block mb-1"><i class="bi bi-bank me-1"></i> 1. Banco y Cuenta Corriente</strong>
+              <span>Banco de la Nación del Perú.<br>Cta. Cte.: <strong>00-631-012948</strong><br>Titular: IESTP Hermanos Cárcamo.</span>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-success d-block mb-1"><i class="bi bi-cash-stack me-1"></i> 2. Tasas TUPA 2026 Frecuentes</strong>
-              <span>• Matrícula Ordinaria: <strong>S/ 250.00</strong> (002361)<br>• Admisión / Suficiencia: <strong>S/ 200.00</strong> (002361)<br>• Inglés Básico: <strong>S/ 400.00</strong> (025736)</span>
+              <strong class="text-success d-block mb-1"><i class="bi bi-cash-stack me-1"></i> 2. Tasas Oficiales Válidas</strong>
+              <span>• Matrícula Regular: <strong>S/ 180.00</strong><br>• Examen Ordinario: <strong>S/ 150.00</strong><br>• Certificado Modular: <strong>S/ 50.00</strong></span>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-warning d-block mb-1"><i class="bi bi-person-vcard me-1"></i> 3. Datos en el Voucher</strong>
-              <span>El voucher debe mostrar nítidos tu <strong>DNI, nombres completos</strong>, cuenta destino, monto, fecha y número de operación.</span>
+              <strong class="text-warning d-block mb-1"><i class="bi bi-calendar-check me-1"></i> 3. Número de Operación y Fecha</strong>
+              <span>El número de secuencia u operación bancaria (6 a 8 dígitos) y la fecha deben ser completamente nítidos.</span>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-danger d-block mb-1"><i class="bi bi-folder-check me-1"></i> 4. Paso Posterior en Tesorería</strong>
-              <span><strong>TUPA (002361):</strong> registra en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> y lleva voucher + copias.<br><strong>Inglés (025736):</strong> saca <strong>2 copias al voucher</strong> y entrégalas en Tesorería.</span>
+              <strong class="text-danger d-block mb-1"><i class="bi bi-cloud-arrow-up-fill me-1"></i> 4. Registro Obligatorio</strong>
+              <span>Debes ingresar a <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> y subir la foto nítida con tu DNI.</span>
             </div>
           </div>
         </div>
 
         <div class="alert alert-info py-2 px-3 small mb-3">
-          <i class="bi bi-building-check me-1"></i> <strong>Atención Presencial en Tesorería:</strong> Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita (Lunes a Viernes de 8:00 a.m. a 3:00 p.m.).
+          <i class="bi bi-clock-history me-1"></i> <strong>Aprobación:</strong> Tesorería valida los vouchers en un plazo máximo de 24 a 48 horas hábiles. Una vez aprobado, podrás ratificar tu matrícula o retirar tu certificado.
         </div>
 
         <div class="interactive-button-grid">
-          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none"><i class="bi bi-box-arrow-up-right text-primary"></i> Portal pagos.ieshercar.edu.pe</a>
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-success"></i> Ver las 2 Cuentas BN</button>
-          <button class="interactive-btn" data-chat-action="ver_matricula_paso_a_paso"><i class="bi bi-ui-checks text-warning"></i> Pasos de Matrícula</button>
+          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none"><i class="bi bi-box-arrow-up-right text-primary"></i> Subir a pagos.ieshercar.edu.pe</a>
+          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Ver Video Tutorial</button>
+          <button class="interactive-btn" data-chat-action="ver_matricula_paso_a_paso"><i class="bi bi-ui-checks text-success"></i> Pasos de Matrícula</button>
         </div>
       </div>
     `;
-    this.appendBotMessage(html, "He revisado tu comprobante adjunto. Verifica que el pago se haya hecho presencialmente en ventanilla del Banco de la Nación a la cuenta correcta: cero cero, seis tres ocho, cero cero dos tres seis uno para tasas TUPA, o cero cero, seis tres ocho, cero dos cinco siete tres seis para el Curso de Inglés.");
+    this.appendBotMessage(html, "¡He revisado tu imagen adjunta! Aquí tienes las indicaciones y requisitos clave para que Tesorería valide tu comprobante sin ningún inconveniente.");
   }
 
   /* ==========================================================================
@@ -5665,148 +5270,119 @@ ${text}
   renderMatriculaPasoAPaso() {
     const html = `
       <div class="faq-card-custom" style="border-top: 4px solid #0f3380;">
-        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-primary px-3 py-1"><i class="bi bi-card-checklist me-1"></i>Guía Oficial Matrícula 2026</span>
-          <span class="badge bg-danger text-white"><i class="bi bi-bank me-1"></i>Solo Ventanilla BN (NO Págalo.pe)</span>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-primary px-3 py-1"><i class="bi bi-card-checklist me-1"></i>Guía Oficial</span>
+          <span class="badge bg-light text-dark border">Periodo 2026</span>
         </div>
         <h4 class="fw-bold mb-1 text-dark">Paso a Paso de Matrícula y Pagos en el IESTP Hermanos Cárcamo</h4>
-        <p class="small text-muted mb-3">Procedimiento oficial vigente según TUPA 2026 y portal institucional <strong>ieshercar.edu.pe</strong>:</p>
+        <p class="small text-muted mb-3">La respuesta completa a: <em>¿Qué pago, cuánto es, a dónde voy y qué hago con el voucher?</em></p>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
           <div class="d-flex align-items-center gap-2 mb-2 text-primary fw-bold">
             <span class="badge bg-primary rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">1</span>
             <span>¿QUÉ SE PAGA Y CUÁNTO ES?</span>
           </div>
-          <p class="mb-1 text-dark"><strong>¡Educación Pública sin Mensualidades!</strong> En el IESTP Hermanos Cárcamo NO se pagan pensiones mensuales.</p>
-          <p class="mb-0 text-muted">Solo se abona la tasa TUPA de <strong>Matrícula Ordinaria: S/ 250.00 por semestre</strong> (TUPA 2026 R.D. N° 020-2026). Para el Curso de Inglés o Productivas rige la cuenta N° <code>00-638-025736</code>.</p>
+          <p class="mb-1 text-dark"><strong>¡Educación Pública sin Mensualidades!</strong> En el IESTP Hermanos Cárcamo no se pagan pensiones de enseñanza ni mensualidades.</p>
+          <p class="mb-0 text-muted">Solo se abona la tasa administrativa por <strong>Derecho de Matrícula Semestral</strong> (aprox. <strong>S/. 120.00</strong> por semestre según TUPA, que incluye carné de medio pasaje y seguro estudiantil SIS).</p>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
-          <div class="d-flex align-items-center gap-2 mb-2 fw-bold" style="color:#d97706 !important;">
+          <div class="d-flex align-items-center gap-2 mb-2 text-warning fw-bold" style="color:#d97706 !important;">
             <span class="badge bg-warning text-dark rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">2</span>
-            <span>¿DÓNDE PAGO? (EXCLUSIVO EN VENTANILLA DEL BANCO DE LA NACIÓN)</span>
+            <span>¿DÓNDE PAGO? (BANCO DE LA NACIÓN)</span>
           </div>
-          <p class="mb-1"><strong>Cuenta Corriente TUPA Oficial:</strong> <code class="fs-6 px-2 py-1 bg-white border rounded">00-638-002361</code>
-            <button type="button" class="btn btn-xs btn-outline-primary rounded-pill ms-1 px-2 py-0" onclick="hercarBotApp.copyData('00-638-002361', 'Cuenta Corriente BN TUPA')"><i class="bi bi-clipboard"></i> Copiar</button>
-          </p>
-          <div class="p-2 rounded mt-2" style="background:#fef2f2; border-left:3px solid #dc2626; color:#991b1b;">
-            <strong><i class="bi bi-exclamation-octagon-fill me-1"></i>Regla Obligatoria:</strong> Paga <strong>únicamente de forma presencial en ventanilla</strong> del Banco de la Nación indicando tu <strong>DNI y nombre completo</strong>. <strong>NO</strong> se acepta Págalo.pe, Agentes MultiRed, Yape, Plin ni transferencias interbancarias.
-          </div>
+          <p class="mb-1"><strong>Cuenta Corriente Oficial:</strong> <code class="fs-6 px-2 py-1 bg-white border rounded">00-631-012948</code></p>
+          <p class="mb-0 text-muted">A nombre de: <em>IESTP Hermanos Cárcamo</em>. Puedes pagar en cualquier agencia del Banco de la Nación, Agente MultiRed o en línea por la plataforma <strong>Págalo.pe</strong>.</p>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
           <div class="d-flex align-items-center gap-2 mb-2 text-danger fw-bold">
             <span class="badge bg-danger rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">3</span>
-            <span>REGISTRA TU VOUCHER EN pagos.ieshercar.edu.pe</span>
+            <span>¿QUÉ HAGO INMEDIATAMENTE DESPUÉS DE PAGAR?</span>
           </div>
-          <p class="mb-0 text-muted">Conserva el voucher original emitido en ventanilla BN (nítido, con tu DNI y operación legible), ingresa a <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a>, registra tu pago y descarga/imprime tu <strong>Boleta Electrónica</strong>.</p>
+          <p class="mb-0 text-muted">Conserva el voucher original en físico (¡no lo botes ni lo ensucies!). Tómale una <strong>foto nítida y legible</strong> con tu celular donde se aprecie claramente el <strong>N° de Operación, Fecha, Hora e Importe</strong> depositado.</p>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
           <div class="d-flex align-items-center gap-2 mb-2 text-success fw-bold">
             <span class="badge bg-success rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">4</span>
-            <span>ENTREGA EN TESORERÍA Y SECRETARÍA ACADÉMICA</span>
+            <span>¿A DÓNDE VOY O DÓNDE LO REGISTRO?</span>
           </div>
-          <ul class="mb-0 ps-3 text-muted">
-            <li>Acércate presencialmente a la oficina de <strong>Tesorería</strong> en el campus (<em>Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita</em>; Lun-Vie 8:00 a.m. a 3:00 p.m.) con el <strong>voucher original + 3 copias de tu boleta electrónica</strong> para que Tesorería los selle y firme.</li>
-            <li>Luego entrega <strong>1 copia sellada y firmada</strong> en <strong>Secretaría Académica</strong> para completar tu ficha de matrícula.</li>
-            <li class="text-primary"><em>Nota:</em> Si pagas el <strong>Curso de Inglés</strong> en la cuenta <code>00-638-025736</code>, debes sacar <strong>2 copias a tu voucher</strong> y entregarlos en Tesorería.</li>
+          <p class="mb-2 text-muted">Tienes dos opciones:</p>
+          <ul class="mb-2 ps-3 text-muted">
+            <li><strong>Virtual (Recomendado):</strong> Entra a <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a>, selecciona "Matrícula", digita tu DNI, los datos del voucher y adjunta la foto.</li>
+            <li><strong>Presencial:</strong> Acércate a la <strong>Oficina de Tesorería / Secretaría</strong> del campus en <em>Av. Víctor Raúl Haya de la Torre s/n, Paita Alta</em> (Lunes a Viernes de 8:00 a.m. a 1:00 p.m.).</li>
           </ul>
         </div>
 
+        <div class="p-3 bg-white rounded-3 border small mb-3">
+          <div class="d-flex align-items-center gap-2 mb-2 text-info fw-bold">
+            <span class="badge bg-info text-dark rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">5</span>
+            <span>¿CÓMO SÉ QUE YA ESTOY MATRICULADO?</span>
+          </div>
+          <p class="mb-0 text-muted">En 24 a 48 horas hábiles, Secretaría Académica valida el comprobante, emite tu <strong>Ficha de Matrícula Oficial</strong> y habilita tus credenciales para el <a href="https://sistema.ieshercar.edu.pe/acceso" target="_blank">Sistema Académico</a> y el <a href="https://aula.ieshercar.edu.pe/" target="_blank">Aula Virtual</a>.</p>
+        </div>
+
         <div class="interactive-button-grid">
-          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn" style="text-decoration:none;"><i class="bi bi-box-arrow-up-right text-warning"></i> Portal pagos.ieshercar.edu.pe</a>
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-primary"></i> Ver las 2 Cuentas BN</button>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles"><i class="bi bi-translate text-success"></i> Inglés (Cta. 00-638-025736)</button>
+          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn" style="text-decoration:none;"><i class="bi bi-box-arrow-up-right text-warning"></i> Ir a pagos.ieshercar.edu.pe</a>
+          <button class="interactive-btn" data-chat-action="ver_curso_ingles"><i class="bi bi-translate text-primary"></i> Curso de Inglés (Titulación)</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-danger"></i> Dónde queda el Instituto</button>
         </div>
       </div>
     `;
-    this.appendBotMessage(html, "Para la matrícula ordinaria debes abonar doscientos cincuenta soles únicamente en ventanilla del Banco de la Nación a la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno, indicando tu D N I y nombre completo. Recuerda que no se acepta Págalo punto pe ni agentes. Después registras el voucher en el portal de pagos para sacar tu boleta electrónica y llevas el original más tres copias a Tesorería.", [
-      { label: "🏦 Ver las 2 cuentas BN", prompt: "¿Cuáles son los números de cuenta del Banco de la Nación?" },
-      { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico?" },
+    this.appendBotMessage(html, "¡Hola! Con gusto te explico los pasos de matrícula. Recuerda que al ser educación pública no pagas mensualidades, solo la tasa semestral en el Banco de la Nación y registras tu voucher en el portal oficial.", [
+      { label: "🧾 ¿Qué hago con el voucher?", prompt: "¿Qué hago después de pagar en el Banco de la Nación?" },
+      { label: "🌐 Curso de Inglés", prompt: "¿Cómo es el curso de inglés para titularme?" },
       { label: "📍 Ubicación y Horarios", prompt: "¿Dónde queda el instituto y cuál es el horario?" }
     ]);
   }
 
   renderAutoridades() {
-    const plana = (typeof PLANA_DOCENTE_OFICIAL !== 'undefined') ? PLANA_DOCENTE_OFICIAL : null;
-    const stats = (typeof ESTADISTICAS_OFICIALES_HERCAR !== 'undefined') ? ESTADISTICAS_OFICIALES_HERCAR : null;
-    const renderGroup = (title, color, list) => (!list || list.length === 0) ? '' : `
-      <div class="col-sm-6">
-        <div class="p-2 bg-light rounded border h-100" style="font-size: 0.78rem;">
-          <strong class="d-block mb-1" style="color:${color};">${title} (${list.length})</strong>
-          <ul class="mb-0 ps-3 text-muted">
-            ${list.map(d => `<li>${d}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-    `;
-
-    const totalDocentes = plana
-      ? ((plana.apsti?.length || 0) + (plana.ani?.length || 0) + (plana.conta?.length || 0) + (plana.dpa?.length || 0))
-      : 20;
-
-    const docentesBlock = plana ? `
-      <div class="p-3 bg-white rounded-3 border small mb-3">
-        <h6 class="fw-bold text-dark mb-2"><i class="bi bi-people-fill text-primary me-1"></i> Plana Docente Oficial (${totalDocentes} Docentes):</h6>
-        <div class="row g-2">
-          ${renderGroup('APSTI (2027: Computación e Informática)', '#2563eb', plana.apsti)}
-          ${renderGroup('Administración de Negocios Int. (ANI)', '#0891b2', plana.ani)}
-          ${renderGroup('Contabilidad', '#d97706', plana.conta)}
-          ${renderGroup('Desarrollo Pesquero y Acuícola', '#059669', plana.dpa)}
-        </div>
-      </div>
-    ` : '';
-
-    const statsBlock = stats ? `
-      <div class="p-2 px-3 bg-light rounded-3 border small mb-3 d-flex flex-wrap gap-3 align-items-center justify-content-between">
-        <span><i class="bi bi-bar-chart-fill text-primary me-1"></i><strong>Cifras Oficiales 2026:</strong> Ingresantes: ${stats.ingresantes2026?.total || 164} · <strong>Matriculados: ${stats.matriculados2026?.total || 437}</strong> · Egresados 2025: ${stats.egresados2025?.total || 116}</span>
-        <span class="badge bg-success-subtle text-success">${stats.titulados2026?.total || 87} titulados (2026)</span>
-      </div>
-    ` : '';
-
     const html = `
       <div class="faq-card-custom" style="border-top: 4px solid #0e2d6c;">
-        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-primary px-3 py-1"><i class="bi bi-shield-check me-1"></i>Plana Directiva y Docente</span>
-          <span class="badge bg-light text-dark border">Portal Oficial ieshercar.edu.pe</span>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-primary px-3 py-1"><i class="bi bi-shield-check me-1"></i>Plana Directiva</span>
+          <span class="badge bg-light text-dark border">Paita, Piura</span>
         </div>
-        <h4 class="fw-bold mb-2 text-dark">Autoridades y Plana Docente — IESTP Hermanos Cárcamo</h4>
-        <p class="small text-muted mb-3">Equipo directivo, jefaturas administrativas y docentes responsables de los 4 programas de estudios:</p>
+        <h4 class="fw-bold mb-2 text-dark">Autoridades Institucionales — IESTP Hermanos Cárcamo</h4>
+        <p class="small text-muted mb-3">Equipo directivo, académico y de coordinación responsable de la formación profesional tecnológica:</p>
 
         <div class="row g-2 mb-3">
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
               <h6 class="fw-bold text-primary mb-1"><i class="bi bi-person-badge-fill me-1"></i> Dirección General</h6>
-              <p class="fw-bold text-dark mb-1">Econ. Adolfo Zeta Pazo</p>
-              <p class="mb-0 text-muted">Representación legal y liderazgo institucional del IESTP ante MINEDU y DREP Piura.</p>
+              <p class="mb-0 text-muted">Gestión integral, representación legal y liderazgo institucional del IESTP ante el MINEDU y DREP Piura.</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
               <h6 class="fw-bold text-success mb-1"><i class="bi bi-mortarboard-fill me-1"></i> Unidad Académica</h6>
-              <p class="fw-bold text-dark mb-1">Lic. Juan García Reto</p>
-              <p class="mb-0 text-muted">Planificación académica, horarios, exámenes de suficiencia y prácticas EFSRT.</p>
+              <p class="mb-0 text-muted">Planificación académica, supervisión curricular, horarios, prácticas EFSRT y convalidaciones.</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <h6 class="fw-bold text-warning mb-1"><i class="bi bi-bank2 me-1"></i> Unidad Administrativa & Tesorería</h6>
-              <p class="fw-bold text-dark mb-1">CPC Edson Maza Gonzales</p>
-              <p class="mb-0 text-muted">Gestión administrativa, Tesorería (Srta. Tania Herrera Cruz) y control de tasas TUPA BN.</p>
+              <h6 class="fw-bold text-warning mb-1"><i class="bi bi-card-text me-1"></i> Secretaría General</h6>
+              <p class="mb-0 text-muted">Matrículas oficiales, emisión de certificados modulares, actas de notas y trámite de titulación.</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <h6 class="fw-bold text-info mb-1"><i class="bi bi-diagram-3-fill me-1"></i> Coordinación de Programas & Idiomas</h6>
-              <p class="fw-bold text-dark mb-1">Lic. Omar García Reto (Coordinación Inglés / Académica)</p>
-              <p class="mb-0 text-muted">Gestión de expedientes de Suficiencia Profesional con el Coordinador de cada Programa.</p>
+              <h6 class="fw-bold text-info mb-1"><i class="bi bi-bank2 me-1"></i> Tesorería y Caja</h6>
+              <p class="mb-0 text-muted">Recepción y validación de depósitos del Banco de la Nación en pagos.ieshercar.edu.pe.</p>
             </div>
           </div>
         </div>
 
-        ${docentesBlock}
-        ${statsBlock}
+        <div class="p-3 bg-white rounded-3 border small mb-3">
+          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-diagram-3-fill text-primary me-1"></i> Coordinaciones de Carrera:</h6>
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            <span class="badge bg-primary-subtle text-primary p-2"><i class="bi bi-laptop me-1"></i> Coord. APSTI (Software & Redes)</span>
+            <span class="badge bg-success-subtle text-success p-2"><i class="bi bi-globe me-1"></i> Coord. Negocios (ANI)</span>
+            <span class="badge bg-purple-subtle text-purple p-2" style="background:#f3e8ff; color:#7e22ce;"><i class="bi bi-calculator me-1"></i> Coord. Contabilidad</span>
+            <span class="badge bg-info-subtle text-info p-2"><i class="bi bi-water me-1"></i> Coord. Pesquería (DPA)</span>
+          </div>
+        </div>
 
         <div class="interactive-button-grid">
           <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt"></i> Horarios de Atención</button>
@@ -5814,10 +5390,10 @@ ${text}
         </div>
       </div>
     `;
-    this.appendBotMessage(html, "El Instituto Superior Hermanos Cárcamo está dirigido por el economista Adolfo Zeta Pazo como Director General, el licenciado Juan García Reto en la Unidad Académica y el contador público Edson Maza Gonzales en la Unidad Administrativa, junto a nuestra plana de veinte docentes oficiales en las cuatro especialidades.", [
+    this.appendBotMessage(html, "¡Hola! Te cuento que nuestra institución está liderada por la Dirección General junto a la Unidad Académica y Secretaría General. ¡En tu pantalla puedes conocer a todo nuestro equipo directivo!", [
       { label: "📍 Horarios y Ubicación", prompt: "¿Dónde queda el instituto y cuál es el horario de atención?" },
-      { label: "💻 APSTI → Computación 2027", prompt: "¿Qué carrera reemplaza a APSTI en el año 2027?" },
-      { label: "📋 Examen de Suficiencia", prompt: "¿Cuáles son los requisitos del Examen de Suficiencia Profesional?" }
+      { label: "💻 Carrera APSTI", prompt: "¿Qué cursos se llevan en APSTI?" },
+      { label: "📜 Trámites y Certificados", prompt: "¿Cómo tramito mi Certificado Modular?" }
     ]);
   }
 
@@ -5832,21 +5408,21 @@ ${text}
         <p class="small text-muted mb-3"><em>"Formando Profesionales y Construyendo Oportunidades"</em></p>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
-          <h6 class="fw-bold text-primary mb-1"><i class="bi bi-flag-fill me-1"></i> Fundación y Reseña Histórica (R.M. N° 232-87-ED):</h6>
-          <p class="mb-0">Creado el <strong>27 de abril de 1987</strong> por R.M. N° 232-87-ED (revalidado por R.D. N° 077-2006-ED), el instituto cuenta con más de <strong>39 años</strong> formando técnicos de excelencia en Paita y rinde homenaje a los hermanos Cárcamo, símbolos de valor patriótico y vocación marítima paiteña.</p>
+          <h6 class="fw-bold text-primary mb-1"><i class="bi bi-flag-fill me-1"></i> Origen del Nombre:</h6>
+          <p class="mb-0">El instituto rinde homenaje a los ilustres hermanos marinos y próceres paiteños de la familia Cárcamo, símbolos de valor patriótico, tradición heroica y vocación marítima de la provincia de Paita.</p>
         </div>
 
         <div class="row g-2 mb-3">
           <div class="col-sm-6">
             <div class="p-3 bg-white rounded-3 border small h-100">
-              <h6 class="fw-bold text-success mb-1"><i class="bi bi-bullseye me-1"></i> Misión Institucional</h6>
-              <p class="mb-0 text-muted">Formar profesionales técnicos competentes, éticos e innovadores con sólidos valores ciudadanos, comprometidos con el desarrollo económico, tecnológico y sostenible de Paita, Piura y el país.</p>
+              <h6 class="fw-bold text-success mb-1"><i class="bi bi-bullseye me-1"></i> Misión</h6>
+              <p class="mb-0 text-muted">Formar profesionales técnicos líderes, éticos e innovadores, preparados para impulsar el desarrollo pesquero, portuario, contable y tecnológico de Paita y el Perú.</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-white rounded-3 border small h-100">
-              <h6 class="fw-bold text-primary mb-1"><i class="bi bi-eye-fill me-1"></i> Visión al 2032</h6>
-              <p class="mb-0 text-muted">Al año 2032 ser un instituto superior tecnológico público licenciado, acreditado y referente en la macro región norte por su excelencia educativa, investigación aplicada y vínculo con el sector productivo.</p>
+              <h6 class="fw-bold text-primary mb-1"><i class="bi bi-eye-fill me-1"></i> Visión</h6>
+              <p class="mb-0 text-muted">Ser la institución de educación superior tecnológica pública líder del norte peruano, acreditada por su calidad educativa y alta tasa de inserción laboral.</p>
             </div>
           </div>
         </div>
@@ -5887,7 +5463,7 @@ ${text}
             <div class="p-3 bg-light rounded-3 border small h-100">
               <h6 class="fw-bold text-success mb-1"><i class="bi bi-sun-fill text-warning me-1"></i> Turno Diurno (Mañana)</h6>
               <p class="mb-1"><strong>Horario:</strong> 8:00 a.m. a 1:15 p.m.</p>
-              <p class="mb-0 text-muted">Lunes a Viernes para estudiantes regulares de APSTI (2027: Computación e Informática), Negocios Internacionales, Contabilidad y Desarrollo Pesquero.</p>
+              <p class="mb-0 text-muted">Lunes a Viernes para estudiantes regulares de APSTI, Negocios Internacionales, Contabilidad y Pesquería.</p>
             </div>
           </div>
           <div class="col-sm-6">
@@ -5969,14 +5545,14 @@ ${text}
           <ol class="mb-0 ps-3">
             <li>Certificado oficial de estudios visado por la DRE / UGEL o universidad de origen.</li>
             <li>Sílabos oficiales visados de los cursos a convalidar (mínimo 75% de coincidencia de contenidos).</li>
-            <li>FUT dirigido al Director General solicitando convalidación (TUPA 2026: <strong>S/ 30.00</strong> por Unidad Didáctica | Convalidación EFSRT: <strong>S/ 150.00</strong>).</li>
-            <li>Voucher de pago en ventanilla del Banco de la Nación Cta. Cte. <code>00-638-002361</code> registrado en <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a>.</li>
+            <li>FUT dirigido al Director General solicitando convalidación.</li>
+            <li>Voucher de pago por derecho de convalidación registrado en pagos.ieshercar.edu.pe.</li>
           </ol>
         </div>
 
         <div class="p-3 bg-white rounded-3 border small mb-3">
-          <h6 class="fw-bold text-success mb-1"><i class="bi bi-shuffle me-1"></i> Traslados TUPA 2026:</h6>
-          <p class="mb-0 text-muted"><strong>Traslado Interno:</strong> S/ 80.00 (cambio entre las 4 carreras, ej. de Contabilidad a APSTI / Computación e Informática). <strong>Traslado Externo:</strong> S/ 80.00 de IEST Público o S/ 200.00 de Privado/Universidad. Todo pago es únicamente en ventanilla BN Cta. Cte. <code>00-638-002361</code>.</p>
+          <h6 class="fw-bold text-success mb-1"><i class="bi bi-shuffle me-1"></i> Traslado Interno:</h6>
+          <p class="mb-0 text-muted">Permite cambiarte entre las carreras del IESTP Hermanos Cárcamo (ej. de Contabilidad a APSTI). Se solicita antes del inicio del ciclo académico y está sujeto a vacantes disponibles.</p>
         </div>
 
         <div class="interactive-button-grid">
@@ -6224,7 +5800,7 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, "Aquí tienes la comparativa oficial de nuestras cuatro carreras técnicas: Arquitectura de Plataformas y Servicios de Tecnologías de la Información (que en dos mil veintisiete pasará a Computación e Informática), Administración de Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola.", [
+    this.appendBotMessage(html, "Aquí tienes la comparativa completa de las 4 carreras técnicas del instituto con perfiles, salarios y campo laboral en Paita.", [
       { label: "🧠 Test Vocacional", prompt: "Quiero hacer el test vocacional" },
       { label: "📋 Requisitos para postular", prompt: "¿Cuáles son los requisitos de admisión?" }
     ]);
@@ -6301,14 +5877,11 @@ ${text}
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_examen_suficiencia">
-            <i class="bi bi-patch-check-fill text-danger"></i> Requisitos Examen Suficiencia (S/ 200)
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_tramite_titulo">
-            <i class="bi bi-mortarboard-fill text-primary"></i> 10 Requisitos Título Profesional
-          </button>
           <button class="interactive-btn" data-chat-action="ver_curso_ingles">
-            <i class="bi bi-translate text-success"></i> Inglés (Cta. 00-638-025736)
+            <i class="bi bi-translate text-primary"></i> Guía del Curso de Inglés
+          </button>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion">
+            <i class="bi bi-file-earmark-check text-success"></i> Trámite TUPA Titulación
           </button>
           <button class="interactive-btn" data-chat-action="ver_bolsa_trabajo">
             <i class="bi bi-building text-warning"></i> Empresas Aliadas en Paita
@@ -6317,10 +5890,9 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, "Aquí tienes la guía completa de titulación y prácticas preprofesionales requerida por el Ministerio de Educación. En pantalla puedes abrir directamente los siete requisitos del Examen de Suficiencia Profesional y los diez requisitos del Trámite de Título.", [
-      { label: "📋 Examen de Suficiencia", prompt: "¿Cuáles son los requisitos del Examen de Suficiencia Profesional?" },
-      { label: "🎓 Trámite de Título", prompt: "¿Cuáles son los requisitos para el Trámite de Título Profesional?" },
-      { label: "🇬🇧 Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
+    this.appendBotMessage(html, "Aquí tienes la guía completa de titulación y prácticas preprofesionales EFSRT requeridas por el MINEDU.", [
+      { label: "🌐 Curso de Inglés", prompt: "¿Cómo es el curso de inglés para titularme?" },
+      { label: "🏢 Empresas con convenio", prompt: "¿Dónde puedo hacer mis prácticas en Paita?" }
     ]);
   }
 
@@ -6345,7 +5917,7 @@ ${text}
             <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
               <div class="d-flex align-items-center gap-2 mb-1">
                 <i class="bi bi-laptop-fill text-primary fs-5"></i>
-                <h6 class="fw-bold text-dark mb-0">APSTI <span class="badge bg-info text-dark" style="font-size:0.65rem;">2027: Computación e Informática</span></h6>
+                <h6 class="fw-bold text-dark mb-0">APSTI (Sistemas & TI)</h6>
               </div>
               <span class="badge bg-primary-subtle text-primary mb-2">S/. 2,200 a S/. 4,500+</span>
               <p class="small text-muted mb-1"><strong>Puestos:</strong> Administrador de redes, soporte técnico, desarrollador web, analista cloud y ciberseguridad.</p>
@@ -6532,8 +6104,8 @@ ${text}
         <div class="p-3 bg-white rounded-3 border small mb-3">
           <h6 class="fw-bold text-dark mb-1"><i class="bi bi-send-check-fill text-success me-1"></i> Canales de Presentación:</h6>
           <ol class="mb-0 ps-3 text-muted">
-            <li><strong>Presencial:</strong> Presenta el Formulario Único de Trámite (FUT) con los documentos adjuntos en la Secretaría Académica (Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita) de 8:00 a.m. a 3:00 p.m.</li>
-            <li><strong>Virtual:</strong> Regístralo a través de la <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank">Mesa de Partes Virtual</a> seleccionando <em>"Justificación de Inasistencias"</em>.</li>
+            <li><strong>Presencial:</strong> Presenta el Formulario Único de Trámite (FUT) con los documentos adjuntos en la Secretaría Académica (campus Paita Alta) de 8:00 a.m. a 1:00 p.m.</li>
+            <li><strong>Virtual:</strong> Regístralo a través de la <a href="https://ieshercar.edu.pe/registro-tramite/" target="_blank">Mesa de Partes Virtual</a> seleccionando el trámite *"Justificación de Inasistencias"*.</li>
           </ol>
         </div>
 
@@ -6541,7 +6113,7 @@ ${text}
           <button class="interactive-btn" data-chat-action="ver_calculadora_dpi">
             <i class="bi bi-calculator text-danger"></i> Abrir Calculadora de DPI
           </button>
-          <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank" class="interactive-btn text-decoration-none">
+          <a href="https://ieshercar.edu.pe/registro-tramite/" target="_blank" class="interactive-btn text-decoration-none">
             <i class="bi bi-box-arrow-up-right text-primary"></i> Mesa de Partes Virtual
           </a>
           <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion">
@@ -6692,29 +6264,17 @@ ${text}
   }
 
   /**
-   * Cotizador Interactivo de Tasas y Trámites TUPA 2026
-   * Desglosa automáticamente entre las 2 cuentas oficiales del Banco de la Nación
+   * Cotizador Interactivo de Tasas y Trámites TUPA
+   * Permite calcular el total a abonar en el Banco de la Nación
    */
-  renderCotizadorTupa(selectedIds = ['tupa-matricula']) {
+  renderCotizadorTupa(selectedIds = ['tupa-matricula', 'tupa-carne']) {
     const catalogo = (typeof TASAS_TUPA_COTIZADOR !== 'undefined') ? TASAS_TUPA_COTIZADOR : [];
     const ids = Array.isArray(selectedIds) ? selectedIds : [selectedIds];
 
     let total = 0;
-    let totalTupa002361 = 0;
-    let totalIngles025736 = 0;
-
     const itemsHtml = catalogo.map(t => {
       const isSelected = ids.includes(t.id);
-      const cta = t.cuentaBN || (t.id && t.id.includes('ingles') ? '00-638-025736' : '00-638-002361');
-      if (isSelected) {
-        total += t.costo;
-        if (cta === '00-638-025736') totalIngles025736 += t.costo;
-        else totalTupa002361 += t.costo;
-      }
-
-      const ctaBadge = cta === '00-638-025736'
-        ? '<span class="badge bg-info-subtle text-dark border ms-1" style="font-size:0.65rem;">Cta. 00-638-025736</span>'
-        : '<span class="badge bg-warning-subtle text-dark border ms-1" style="font-size:0.65rem;">Cta. 00-638-002361</span>';
+      if (isSelected) total += t.costo;
 
       return `
         <div class="p-2 px-3 rounded-2 border mb-2 d-flex align-items-center justify-content-between gap-2 transition-all" 
@@ -6724,12 +6284,12 @@ ${text}
           <div class="d-flex align-items-center gap-2">
             <input type="checkbox" class="form-check-input mt-0" ${isSelected ? 'checked' : ''} style="cursor: pointer; pointer-events: none;">
             <div>
-              <strong class="d-block text-dark small" style="font-size: 0.82rem;">${t.nombre} ${ctaBadge}</strong>
+              <strong class="d-block text-dark small" style="font-size: 0.82rem;">${t.nombre}</strong>
               <small class="text-muted" style="font-size: 0.72rem;">${t.detalle}</small>
             </div>
           </div>
           <span class="badge ${isSelected ? 'bg-primary' : 'bg-light text-dark border'} fw-bold" style="font-size: 0.78rem;">
-            S/ ${t.costo}.00
+            S/. ${t.costo}.00
           </span>
         </div>
       `;
@@ -6738,47 +6298,44 @@ ${text}
     const html = `
       <div class="faq-card-custom" style="border-top: 4px solid #f59e0b;">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-warning text-dark px-3 py-1"><i class="bi bi-receipt me-1"></i>Cotizador Oficial TUPA 2026</span>
-          <span class="badge bg-danger text-white">Solo Ventanilla Banco de la Nación</span>
+          <span class="badge bg-warning text-dark px-3 py-1"><i class="bi bi-receipt me-1"></i>Cotizador Oficial TUPA</span>
+          <span class="badge bg-light text-dark border">Banco de la Nación</span>
         </div>
-        <h4 class="fw-bold mb-1 text-dark">Cotizador de Trámites y Tasas TUPA 2026</h4>
-        <p class="small text-muted mb-3">Marca los conceptos que necesitas para calcular el monto exacto por cada una de las 2 cuentas oficiales:</p>
+        <h4 class="fw-bold mb-1 text-dark">Cotizador de Trámites y Tasas Académicas</h4>
+        <p class="small text-muted mb-3">Selecciona los trámites que necesitas realizar para calcular el monto exacto a depositar en el Banco de la Nación:</p>
 
         <!-- Lista seleccionable -->
-        <div class="mb-3" style="max-height: 360px; overflow-y: auto; padding-right: 4px;">
+        <div class="mb-3">
           ${itemsHtml}
         </div>
 
-        <!-- Total Calculado por Cuenta -->
-        <div class="p-3 rounded-3 border mb-3" style="background: linear-gradient(135deg, #0e2d6c, #1646b0); color: #ffffff;">
-          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-            <div>
-              <span class="small d-block text-white-50">Total Combinado Seleccionado:</span>
-              <h3 class="fw-bold mb-0 text-white">S/ ${total}.00</h3>
-            </div>
-            <div class="text-end small">
-              <div class="badge bg-warning text-dark fw-bold px-2 py-1 mb-1 d-block">TUPA (00-638-002361): S/ ${totalTupa002361}.00</div>
-              <div class="badge bg-info text-dark fw-bold px-2 py-1 d-block">Inglés/Prod. (00-638-025736): S/ ${totalIngles025736}.00</div>
-            </div>
+        <!-- Total Calculado -->
+        <div class="p-3 rounded-3 border mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: linear-gradient(135deg, #0e2d6c, #1646b0); color: #ffffff;">
+          <div>
+            <span class="small d-block text-white-50">Total Calculado a Depositar:</span>
+            <h3 class="fw-bold mb-0 text-white">S/. ${total}.00</h3>
           </div>
-          <small class="text-warning d-block"><i class="bi bi-exclamation-triangle-fill me-1"></i>Paga cada concepto por separado en su cuenta exacta (si depositas por error en otra cuenta, la transferencia TUPA cuesta S/ 15.00).</small>
+          <div class="text-end">
+            <span class="badge bg-warning text-dark fw-bold px-3 py-2"><i class="bi bi-bank me-1"></i> Cta. Cte. 00-631-012948</span>
+          </div>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
-          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-bank me-1 text-primary"></i> Reglas Oficiales de Pago en Ventanilla BN:</h6>
+          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-credit-card me-1 text-primary"></i> Datos para tu Pago:</h6>
           <ul class="mb-0 ps-3 text-muted">
-            <li><strong>Canal Único:</strong> Presencial en <strong>ventanilla del Banco de la Nación</strong> indicando tu DNI y nombre completo. <strong>NO</strong> se acepta Págalo.pe, Agentes MultiRed ni Yape/Plin.</li>
-            <li><strong>Cta. Cte. <code>00-638-002361</code> (TUPA):</strong> Registra el voucher en <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a> para emitir boleta electrónica y lleva tus copias a Tesorería.</li>
-            <li><strong>Cta. <code>00-638-025736</code> (Inglés / CEPRE / Actualización):</strong> Saca <strong>2 copias a tu voucher</strong> y entrégalos en Tesorería en la oficina del instituto.</li>
+            <li><strong>Banco de la Nación:</strong> Cuenta Corriente N° <code>00-631-012948</code>.</li>
+            <li><strong>Código de Cuenta Interbancario (CCI):</strong> <code>018-631-000631012948-52</code> (Desde cualquier banco o Págalo.pe).</li>
+            <li><strong>Titular Oficial:</strong> IESTP Hermanos Cárcamo.</li>
+            <li><strong>Registro de Comprobante:</strong> Una vez realizado el pago, sube la foto a <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a> con tu DNI.</li>
           </ul>
         </div>
 
         <div class="interactive-button-grid">
           <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
-            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Portal pagos.ieshercar.edu.pe
+            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Subir a pagos.ieshercar.edu.pe
           </a>
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn">
-            <i class="bi bi-bank text-success"></i> Copiar las 2 Cuentas BN
+          <button class="interactive-btn" data-chat-action="ver_metodos_pago_digitales">
+            <i class="bi bi-phone-fill text-success"></i> Ver Pagos con Págalo.pe / App
           </button>
           <button class="interactive-btn" data-chat-action="ver_tramites_tupa">
             <i class="bi bi-file-earmark-text text-warning"></i> Requisitos de Trámites
@@ -6787,9 +6344,9 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, `El total calculado es de ${total} soles: ${totalTupa002361} soles para la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno; y ${totalIngles025736} soles para la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda pagar únicamente en ventanilla del Banco de la Nación.`, [
-      { label: "🏦 Ver las 2 Cuentas BN", prompt: "¿Cuáles son los números de cuenta del Banco de la Nación?" },
-      { label: "🚫 ¿Se acepta Págalo.pe?", prompt: "¿Se puede pagar por Págalo.pe, Yape o agentes?" }
+    this.appendBotMessage(html, `El total calculado para los trámites seleccionados es de S/. ${total}.00 a depositar en la Cuenta Corriente 00-631-012948 del Banco de la Nación.`, [
+      { label: "💳 ¿Cómo registrar voucher?", prompt: "¿Cómo registro mi voucher en el portal de pagos?" },
+      { label: "📱 Pagos con Págalo.pe", prompt: "¿Cómo pagar con Págalo.pe o transferencia bancaria?" }
     ]);
   }
 
@@ -6881,17 +6438,13 @@ ${text}
         </div>
 
         <div class="p-3 bg-white rounded-3 border mb-3 shadow-sm">
-          <h6 class="fw-bold text-success mb-2"><i class="bi bi-book-half me-1"></i> Semestre Académico 2026-II (Oficial ieshercar.edu.pe)</h6>
+          <h6 class="fw-bold text-success mb-2"><i class="bi bi-book-half me-1"></i> Semestre Académico 2026-II</h6>
           <ul class="small text-muted ps-3 mb-0" style="line-height: 1.6;">
-            <li><strong>Proceso de Matrícula Regular:</strong> 17 al 21 de Agosto de 2026 (Tasa S/ 250.00 en ventanilla BN <code>00-638-002361</code>).</li>
-            <li><strong>Inicio de Clases 2026-II:</strong> <span class="badge bg-success">24 de Agosto de 2026</span>.</li>
-            <li><strong>Evaluación de Recuperación:</strong> 14 al 18 de Diciembre de 2026.</li>
-            <li><strong>Culminación de Clases:</strong> 24 de Diciembre de 2026.</li>
-            <li><strong>Entrega de Boletas de Notas:</strong> 28 al 30 de Diciembre de 2026.</li>
+            <li><strong>Proceso de Matrícula:</strong> Primera quincena de Agosto de 2026.</li>
+            <li><strong>Inicio de Clases:</strong> Mediados de Agosto de 2026.</li>
+            <li><strong>Semana Técnica de la Educación Tecnológica:</strong> Septiembre 2026 (Exposición de prototipos).</li>
+            <li><strong>Clausura y Graduación Oficial:</strong> Diciembre de 2026.</li>
           </ul>
-        </div>
-        <div class="alert alert-info py-2 px-3 small mb-3">
-          <i class="bi bi-stars me-1"></i> <strong>Proyección Curricular 2027:</strong> A partir del año académico 2027, el programa <strong>APSTI</strong> pasará a denominarse <strong>Computación e Informática</strong>.
         </div>
 
         <div class="interactive-button-grid">
@@ -6915,112 +6468,131 @@ ${text}
   }
 
   /**
-   * Regla Estricta de Pagos Oficiales (PROHIBIDO Págalo.pe, Agentes, Yape y CCI — Solo Ventanilla BN)
+   * Guía de Métodos de Pago Digitales (Págalo.pe, App BN, CCI y Agentes)
    */
   renderMetodosPagoDigitales() {
     const html = `
-      <div class="faq-card-custom" style="border-top: 4px solid #dc2626;">
+      <div class="faq-card-custom" style="border-top: 4px solid #10b981;">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-danger px-3 py-1"><i class="bi bi-exclamation-octagon-fill me-1"></i>Aviso Oficial Tesorería</span>
-          <span class="badge bg-light text-dark border">Exclusivo Ventanilla BN</span>
+          <span class="badge bg-success px-3 py-1"><i class="bi bi-wallet2 me-1"></i>Canales Digitales</span>
+          <span class="badge bg-light text-dark border">Sin Hacer Colas</span>
         </div>
-        <h4 class="fw-bold mb-1 text-dark">¡IMPORTANTE! NO se acepta Págalo.pe, Agentes ni Yape</h4>
-        <p class="small text-muted mb-3">Por disposición administrativa del IESTP "Hermanos Cárcamo" (TUPA 2026), los pagos institucionales siguen esta norma obligatoria:</p>
+        <h4 class="fw-bold mb-1 text-dark">Cómo Pagar por Canales Digitales y Agentes</h4>
+        <p class="small text-muted mb-3">Evita colas en la agencia bancaria utilizando las opciones digitales oficiales:</p>
 
-        <div class="p-3 rounded-3 border mb-3 small" style="background: #fef2f2; border-color: #fecaca !important; color: #991b1b;">
-          <h6 class="fw-bold mb-2"><i class="bi bi-x-circle-fill me-1"></i> Canales NO AUTORIZADOS (Evita rechazos o demoras):</h6>
-          <ul class="mb-0 ps-3">
-            <li><strong>NO pagar por Págalo.pe</strong> (ni web ni aplicativo).</li>
-            <li><strong>NO pagar en Agentes MultiRed</strong> o bodegas.</li>
-            <li><strong>NO usar Yape, Plin, App BN ni transferencias interbancarias (CCI)</strong>.</li>
-          </ul>
-        </div>
-
-        <div class="p-3 rounded-3 border mb-3 small" style="background: #f0fdf4; border-color: #bbf7d0 !important; color: #166534;">
-          <h6 class="fw-bold mb-2"><i class="bi bi-check-circle-fill me-1"></i> ÚNICO CANAL VÁLIDO: Ventanilla del Banco de la Nación</h6>
-          <p class="mb-2">Acércate presencialmente a cualquier ventanilla del <strong>Banco de la Nación</strong>, indica tu <strong>DNI y nombres completos</strong> y deposita en la cuenta exacta según tu trámite:</p>
-          <div class="row g-2">
-            <div class="col-sm-6">
-              <div class="p-2 bg-white rounded border">
-                <strong class="text-primary d-block">Cta. Cte. 00-638-002361</strong>
-                <span class="text-muted" style="font-size:0.75rem;">Matrícula S/ 250, Admisión S/ 200, Suficiencia S/ 200, Título S/ 60 + S/ 100, Certificados, Constancias.<br>→ Registrar en <strong>pagos.ieshercar.edu.pe</strong></span>
+        <div class="row g-2 mb-3">
+          <div class="col-sm-6">
+            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-globe2 text-primary fs-5"></i>
+                <h6 class="fw-bold text-dark mb-0">1. Págalo.pe (Web y App)</h6>
               </div>
+              <p class="small text-muted mb-2">Paga con cualquier tarjeta de débito o crédito Visa o Mastercard sin costo adicional.</p>
+              <a href="https://pagalo.pe/" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3" style="font-size: 0.76rem;">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Págalo.pe
+              </a>
             </div>
-            <div class="col-sm-6">
-              <div class="p-2 bg-white rounded border">
-                <strong class="text-success d-block">Cta. 00-638-025736</strong>
-                <span class="text-muted" style="font-size:0.75rem;">Curso de Inglés S/ 400, Pre Tecno S/ 400, Ciclo Actualización S/ 400, Toga S/ 50.<br>→ <strong>Sacar 2 copias al voucher</strong> y entregar en Tesorería.</span>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-bank text-success fs-5"></i>
+                <h6 class="fw-bold text-dark mb-0">2. Transferencia Interbancaria (CCI)</h6>
               </div>
+              <p class="small text-muted mb-1">Transfiere desde tu banca móvil BCP, BBVA, Interbank o Yape (opción a otros bancos):</p>
+              <code class="d-block p-1 bg-light rounded text-primary fw-bold" style="font-size: 0.78rem;">018-631-000631012948-52</code>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-shop text-warning fs-5"></i>
+                <h6 class="fw-bold text-dark mb-0">3. Agentes MultiRed en Paita</h6>
+              </div>
+              <p class="small text-muted mb-0">Deposita en bodegas o farmacias con agente en Paita Alta o Baja a la Cuenta Corriente: <strong>00-631-012948</strong>.</p>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-camera-fill text-info fs-5"></i>
+                <h6 class="fw-bold text-dark mb-0">4. Registro Obligatorio</h6>
+              </div>
+              <p class="small text-muted mb-0">Guarda la captura o foto del voucher e ingrésala en <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a> para que Caja valide.</p>
             </div>
           </div>
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn">
-            <i class="bi bi-bank text-primary"></i> Copiar Cuentas BN Oficiales
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles">
-            <i class="bi bi-translate text-success"></i> Pago de Inglés (00-638-025736)
-          </button>
           <button class="interactive-btn" data-chat-action="ver_cotizador_tupa">
-            <i class="bi bi-calculator text-warning"></i> Cotizador TUPA 2026
+            <i class="bi bi-calculator text-warning"></i> Abrir Cotizador de Tasas TUPA
+          </button>
+          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
+            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Subir a pagos.ieshercar.edu.pe
+          </a>
+          <button class="interactive-btn" data-chat-action="ver_guia_pagos">
+            <i class="bi bi-credit-card text-success"></i> Ver Video Tutorial de Pagos
           </button>
         </div>
       </div>
     `;
 
-    this.appendBotMessage(html, "Atención muy importante: en el Instituto Superior Hermanos Cárcamo no se acepta Págalo punto pe, ni agentes MultiRed, ni Yape, ni transferencias interbancarias. Todos los pagos se realizan únicamente en ventanilla presencial del Banco de la Nación, indicando tu D N I y nombre completo, ya sea a la cuenta cero cero, seis tres ocho, cero cero dos tres seis uno para trámites del Tupa, o a la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis para el curso de inglés.", [
-      { label: "🏦 Ver las 2 Cuentas BN", prompt: "¿Cuáles son los números de cuenta del Banco de la Nación?" },
-      { label: "🇬🇧 Pago de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
+    this.appendBotMessage(html, "Puedes realizar tus abonos cómodamente sin colas a través de Págalo.pe, transferencias interbancarias por CCI o agentes MultiRed.", [
+      { label: "🏦 Cotizador de tasas", prompt: "¿Cuánto cuesta el trámite o matrícula?" },
+      { label: "💳 Registrar comprobante", prompt: "¿Cómo registrar el voucher en el portal?" }
     ]);
   }
 
   /**
-   * Tarjeta Oficial de las 2 Cuentas Bancarias del IESTP Hermanos Cárcamo (TUPA 2026)
+   * Tarjeta Oficial de Cuentas Bancarias del IESTP Hermanos Cárcamo
+   * Muestra la Cuenta Corriente del Banco de la Nación y CCI para copiar con 1 clic
    */
   renderNumeroCuentaBancaria() {
     const html = `
       <div class="faq-card-custom" style="border-top: 4px solid #f59e0b;">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
           <span class="badge bg-warning text-dark px-3 py-1 fw-bold"><i class="bi bi-bank me-1"></i>Banco de la Nación</span>
-          <span class="badge bg-danger text-white"><i class="bi bi-exclamation-octagon-fill me-1"></i>Solo Ventanilla BN (NO Págalo.pe)</span>
+          <span class="badge bg-success text-white"><i class="bi bi-shield-check me-1"></i>Cuenta Oficial de Recaudación</span>
         </div>
-        <h4 class="fw-bold mb-1 text-dark">Las 2 Cuentas Oficiales del Banco de la Nación</h4>
+        <h4 class="fw-bold mb-1 text-dark">Número de Cuenta Oficial para Pagos</h4>
         <p class="small text-muted mb-3">
-          El <strong>IESTP "Hermanos Cárcamo"</strong> maneja <strong>dos cuentas específicas</strong> en el Banco de la Nación según el concepto que vas a pagar (R.D. N° 020-2026):
+          Aquí tienes los datos bancarios oficiales del <strong>IESTP "Hermanos Cárcamo" de Paita</strong> para abonar matrícula, carné de medio pasaje, certificados modulares o trámites TUPA:
         </p>
 
-        <!-- Tarjeta Premium de las 2 Cuentas -->
+        <!-- Tarjeta Premium de Cuentas y Códigos -->
         <div class="p-3 rounded-3 mb-3 border shadow-sm" style="background: linear-gradient(135deg, #091a3e 0%, #163e8c 100%); color: #ffffff;">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
             <div class="d-flex align-items-center gap-2">
-              <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="Logo" style="width: 28px; height: 28px; background: #fff; border-radius: 6px; padding: 2px;">
-              <span class="small text-white-50 fw-semibold">Banco de la Nación — Pago Presencial en Ventanilla</span>
+              <img src="https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png" alt="Logo" style="width: 28px; height: 28px; background: #fff; border-radius: 6px; padding: 2px;">
+              <span class="small text-white-50 fw-semibold">Banco de la Nación del Perú</span>
             </div>
-            <span class="badge bg-warning text-dark fw-bold">Indicar DNI + Nombre</span>
+            <span class="badge bg-warning text-dark fw-bold">Cuenta Corriente</span>
           </div>
 
-          <!-- CUENTA 1: TUPA GENERAL -->
-          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);">
+          <!-- Cuenta Corriente BN -->
+          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);">
             <div>
-              <span class="small d-block text-white-50" style="font-size: 0.74rem;">1. Cuenta Corriente TUPA General (Matrícula S/ 250, Admisión S/ 200, Suficiencia S/ 200, Títulos S/ 60 + S/ 100, Certificados, Constancias):</span>
-              <span class="fs-4 fw-bold font-monospace text-warning d-block" style="letter-spacing: 1px;">00-638-002361</span>
+              <span class="small d-block text-white-50" style="font-size: 0.74rem;">Número de Cuenta Corriente (BN):</span>
+              <span class="fs-4 fw-bold font-monospace text-warning d-block" style="letter-spacing: 1px;">00-631-012948</span>
             </div>
             <button class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3 py-1 shadow-sm" 
-                    onclick="hercarBotApp.copyData('00-638-002361', 'Cuenta Corriente BN TUPA')">
-              <i class="bi bi-clipboard-check me-1"></i> Copiar 00-638-002361
+                    onclick="hercarBotApp.copyData('00-631-012948', 'Cuenta Corriente BN')">
+              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta
             </button>
           </div>
 
-          <!-- CUENTA 2: INGLES Y ACTIVIDADES PRODUCTIVAS -->
-          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(16,185,129,0.2); border: 1px solid rgba(110,231,183,0.4);">
+          <!-- CCI Interbancario -->
+          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);">
             <div>
-              <span class="small d-block text-white-50" style="font-size: 0.74rem;">2. Cuenta Curso de Inglés & Productivas (Inglés Básico S/ 400, Academia Pre Tecno S/ 400, Ciclo de Actualización S/ 400, Toga S/ 50):</span>
-              <span class="fs-4 fw-bold font-monospace text-info d-block" style="letter-spacing: 1px;">00-638-025736</span>
+              <span class="small d-block text-white-50" style="font-size: 0.74rem;">Código de Cuenta Interbancario (CCI - Otros Bancos / Yape / Págalo.pe):</span>
+              <span class="fs-5 fw-bold font-monospace text-white d-block" style="letter-spacing: 0.5px;">018-631-000631012948-52</span>
             </div>
-            <button class="btn btn-sm btn-info text-dark fw-bold rounded-pill px-3 py-1 shadow-sm" 
-                    onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta BN Inglés / Productivas')">
-              <i class="bi bi-clipboard-check me-1"></i> Copiar 00-638-025736
+            <button class="btn btn-sm btn-outline-light fw-bold rounded-pill px-3 py-1" 
+                    onclick="hercarBotApp.copyData('018-631-000631012948-52', 'Código CCI')">
+              <i class="bi bi-clipboard me-1"></i> Copiar CCI
             </button>
           </div>
 
@@ -7029,35 +6601,42 @@ ${text}
           </div>
         </div>
 
-        <!-- Prohibición + Qué hacer después -->
-        <div class="p-3 rounded-3 border small mb-3" style="background: #fef2f2; border-color: #fecaca !important; color: #991b1b;">
-          <strong><i class="bi bi-x-octagon-fill me-1"></i> Canal Único Obligatorio:</strong> Paga únicamente en <strong>ventanilla del Banco de la Nación</strong> indicando el DNI y nombre del estudiante. <strong>NO uses Págalo.pe, Agentes MultiRed, Yape ni transferencias CCI.</strong> Si depositas por error en otra cuenta, deberás tramitar transferencia por TUPA (S/ 15.00).
-        </div>
-
-        <div class="row g-2 mb-3 small">
-          <div class="col-sm-6">
-            <div class="p-2 bg-light rounded border h-100">
-              <strong class="text-primary d-block">Después de pagar en 00-638-002361:</strong>
-              <span class="text-muted">Registra tu voucher en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> para emitir tu boleta electrónica y lleva tus copias a Tesorería.</span>
+        <!-- Canales de Pago Disponibles -->
+        <div class="p-3 bg-light rounded-3 border small mb-3">
+          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-wallet2 text-primary me-1"></i> ¿Cómo y dónde puedes pagar con este número de cuenta?</h6>
+          <div class="row g-2">
+            <div class="col-sm-6">
+              <div class="p-2 bg-white rounded border h-100">
+                <strong class="text-primary d-block small"><i class="bi bi-shop me-1"></i>1. Agencias BN y Agentes MultiRed</strong>
+                <span class="text-muted" style="font-size: 0.76rem;">Dicta en cualquier ventanilla o agente la Cta. Cte. <strong>00-631-012948</strong> y tu DNI. Puedes pagar en cualquier parte de Paita o del Perú.</span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="p-2 bg-white rounded border h-100">
+                <strong class="text-success d-block small"><i class="bi bi-phone me-1"></i>2. Canales Digitales y Transferencias</strong>
+                <span class="text-muted" style="font-size: 0.76rem;">Paga en <strong>Págalo.pe</strong>, App BN o haz transferencia interbancaria desde BCP, BBVA o Interbank con el CCI <strong>018-631-000631012948-52</strong>.</span>
+              </div>
             </div>
           </div>
-          <div class="col-sm-6">
-            <div class="p-2 bg-light rounded border h-100">
-              <strong class="text-success d-block">Después de pagar en 00-638-025736:</strong>
-              <span class="text-muted"><strong>Saca 2 copias a tu voucher</strong> y entrégalos directamente en Tesorería, en la oficina del instituto.</span>
-            </div>
+        </div>
+
+        <!-- Alerta de Registro de Voucher -->
+        <div class="p-3 rounded-3 border mb-3 small d-flex align-items-center gap-2" style="background: #fffbeb; border-color: #fde68a !important; color: #92400e;">
+          <i class="bi bi-exclamation-triangle-fill fs-4 flex-shrink-0 text-warning"></i>
+          <div>
+            <strong>¡Paso obligatorio tras pagar!</strong> Conserva tu voucher o captura de transferencia y regístralo con tu número de DNI en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold text-decoration-underline" style="color: #92400e;">pagos.ieshercar.edu.pe</a> para que Secretaría valide tu pago.
           </div>
         </div>
 
         <div class="interactive-button-grid">
           <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
-            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Portal pagos.ieshercar.edu.pe
+            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Registrar Voucher en el Portal
           </a>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles">
-            <i class="bi bi-translate text-success"></i> Detalles Curso de Inglés
-          </button>
           <button class="interactive-btn" data-chat-action="ver_cotizador_tupa">
-            <i class="bi bi-calculator text-warning"></i> Cotizador TUPA 2026
+            <i class="bi bi-calculator text-warning"></i> Cotizador de Trámites TUPA
+          </button>
+          <button class="interactive-btn" data-chat-action="ver_metodos_pago_digitales">
+            <i class="bi bi-phone-fill text-success"></i> Ver Pagos por Págalo.pe / App
           </button>
           <button class="interactive-btn" data-chat-action="ver_matricula_paso_a_paso">
             <i class="bi bi-ui-checks text-info"></i> Pasos de Matrícula
@@ -7066,9 +6645,9 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, "El Instituto Hermanos Cárcamo utiliza dos cuentas en el Banco de la Nación, donde todo pago se realiza únicamente de forma presencial en ventanilla y sin usar Págalo punto pe ni agentes. Primero, la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno es para matrícula ordinaria de doscientos cincuenta soles, examen de admisión, examen de suficiencia y trámites del Tupa. Segundo, la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis es para el curso de inglés de cuatrocientos soles y actividades productivas, donde debes sacar dos copias a tu voucher y entregarlos en Tesorería.", [
-      { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" },
-      { label: "🧮 Cotizador TUPA 2026", prompt: "Cotizador de trámites TUPA 2026" }
+    this.appendBotMessage(html, "¡Claro que sí! Nuestra cuenta corriente oficial en el Banco de la Nación es cero cero, seis tres uno, cero uno dos nueve cuatro ocho. Si vas a transferir desde tu celular por Yape u otro banco, puedes usar el código interbancario que tienes en la tarjeta para copiarlo con un toque.", [
+      { label: "💳 Subir comprobante", prompt: "¿Cómo registro mi voucher en el portal de pagos?" },
+      { label: "🧮 ¿Cuánto pagar?", prompt: "Cotizador de trámites TUPA" }
     ]);
   }
 
@@ -7148,10 +6727,10 @@ ${text}
         <!-- Bloque Destacado de Pago Oficial del Curso de Inglés -->
         <div class="p-3 rounded-3 mb-3" style="background: linear-gradient(135deg, #0a1f4d 0%, #0f3380 100%); color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-            <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="bi bi-bank me-1"></i> Banco de la Nación (Solo Ventanilla)</span>
-            <span class="badge bg-info text-dark fw-bold">Costo TUPA: S/ 400.00 (Duplicado S/ 50.00)</span>
+            <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="bi bi-bank me-1"></i> Banco de la Nación</span>
+            <small class="text-white-50">Cuenta Específica del Curso de Inglés</small>
           </div>
-          <p class="small text-white-50 mb-1">Número de Cuenta Oficial para Curso de Inglés / Actividades Productivas:</p>
+          <p class="small text-white-50 mb-1">Número de Cuenta para Pago de Inglés:</p>
           <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-2 rounded mb-2" style="background: rgba(255,255,255,0.1);">
             <code class="fs-5 fw-bold text-warning font-monospace" style="letter-spacing: 1px;">00-638-025736</code>
             <button type="button" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3" 
@@ -7160,11 +6739,11 @@ ${text}
             </button>
           </div>
           <div class="p-2 rounded small" style="background: rgba(239, 68, 68, 0.2); border-left: 3px solid #f87171;">
-            <strong class="text-warning d-block mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Indicaciones Obligatorias de Pago y Tesorería:</strong>
+            <strong class="text-warning d-block mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Indicaciones Obligatorias de Tesorería:</strong>
             <ul class="mb-0 ps-3 text-white" style="font-size: 0.82rem; line-height: 1.45;">
-              <li>El pago se realiza únicamente en ventanilla del <strong>Banco de la Nación</strong> en la cuenta <strong>N° 00-638-025736</strong> (<strong>NO</strong> Págalo.pe, <strong>NO</strong> agentes).</li>
-              <li>Debes <strong>sacar 2 copias a tu voucher</strong> y entregarlos en <strong>Tesorería</strong>, en la oficina del instituto (Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque).</li>
-              <li>Para <strong>Revalidación de idioma extranjero nivel B1</strong> (alumnos externos) rige la tasa de <strong>S/ 150.00</strong> en la cuenta TUPA <code>00-638-002361</code>.</li>
+              <li>El pago se realiza en el Banco de la Nación en la cuenta Nº <strong>00-638-025736</strong>.</li>
+              <li>Debes <strong>sacar 2 copias legibles a tu voucher</strong> original.</li>
+              <li>Entregar el voucher original y las <strong>2 copias en Tesorería</strong>, en la oficina del instituto.</li>
             </ul>
           </div>
         </div>
@@ -7197,334 +6776,19 @@ ${text}
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_tramite_titulo"><i class="bi bi-mortarboard text-primary"></i> 10 Requisitos de Título</button>
-          <button class="interactive-btn" data-chat-action="ver_examen_suficiencia"><i class="bi bi-patch-check text-danger"></i> Requisitos Examen Suficiencia</button>
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-warning"></i> Ver las 2 Cuentas BN</button>
-          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-success"></i> Horario de Tesorería</button>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion"><i class="bi bi-mortarboard text-primary"></i> Requisitos de Titulación</button>
+          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Guía General de Pagos BN</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-danger"></i> Horario de Tesorería</button>
         </div>
       </div>
     `;
 
     const inglesChips = [
-      { label: 'Requisitos Examen Suficiencia', prompt: '¿Cuáles son los requisitos del Examen de Suficiencia Profesional?' },
-      { label: 'Requisitos Trámite de Título', prompt: '¿Cuáles son los requisitos para el Trámite de Título Profesional?' },
-      { label: 'Cuentas Banco de la Nación', prompt: '¿Cuáles son los números de cuenta del Banco de la Nación?' }
+      { label: 'Requisitos de Titulación', prompt: '¿Cuáles son los requisitos para titularse profesionalmente?' },
+      { label: 'Horarios de Tesorería', prompt: '¿Dónde queda y cuál es el horario de atención de Tesorería?' },
+      { label: 'Cuenta General Matrícula', prompt: '¿Cuál es el número de cuenta bancaria para matrícula regular?' }
     ];
-    this.appendBotMessage(html, "Para el Curso de Inglés Básico para Titulación, el costo es cuatrocientos soles y el pago se realiza únicamente en ventanilla del Banco de la Nación en la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda sacar dos copias a tu voucher y entregarlos en Tesorería en la oficina del instituto.", inglesChips);
-  }
-
-  /**
-   * Requisitos Oficiales para Solicitar Examen de Suficiencia Profesional (Infografía Oficial)
-   */
-  renderExamenSuficiencia() {
-    const info = (typeof REQUISITOS_SUFICIENCIA_PROFESIONAL !== 'undefined') ? REQUISITOS_SUFICIENCIA_PROFESIONAL : null;
-    const reqs = info ? info.requisitos : [
-      '1. Solicitud dirigida al Director General pidiendo programar el Examen de Suficiencia Profesional cumpliendo con todos los requisitos.',
-      '2. Copia a color de la Constancia de No Adeudar (S/ 15.00 en Cta. Cte. BN 00-638-002361).',
-      '3. Copia a color de DNI vigente.',
-      '4. Copia a color de ambos lados de los tres (03) Certificados Modulares.',
-      '5. Copia a color de ambos lados del Certificado de Actualización según carrera profesional (solo para egresados del 2021 hacia atrás).',
-      '6. Copia a color de ambos lados del certificado del Curso de Inglés Básico.',
-      '7. Boleta electrónica de pago y copia sellada por el área de Tesorería por derecho de Examen de Suficiencia (S/ 200.00 soles).'
-    ];
-
-    const storeKey = 'hercarbot_checklist_suficiencia';
-    let checked = [];
-    try { checked = JSON.parse(localStorage.getItem(storeKey)) || []; } catch {}
-    const total = reqs.length;
-    const done = checked.filter(i => i >= 0 && i < total).length;
-    const pct = Math.round((done / total) * 100);
-
-    const reqHtml = reqs.map((r, idx) => {
-      const isDone = checked.includes(idx);
-      const labelTxt = r.replace(/^\d+\.\s*/, '');
-      return `
-        <div class="hercar-checklist-item ${isDone ? 'checked' : ''}" data-check-store="${storeKey}" data-check-idx="${idx}" role="checkbox" aria-checked="${isDone}" tabindex="0">
-          <input type="checkbox" class="form-check-input mt-1 flex-shrink-0" ${isDone ? 'checked' : ''} style="pointer-events:none;">
-          <span class="checklist-text"><strong>${idx + 1}.</strong> ${labelTxt}</span>
-        </div>
-      `;
-    }).join('');
-
-    const html = `
-      <div class="faq-card-custom" style="border-top: 4px solid #dc2626;">
-        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-danger px-3 py-1"><i class="bi bi-patch-check-fill me-1"></i>Infografía Oficial IESTP HERCAR</span>
-          <span class="badge bg-warning text-dark fw-bold">Derecho: S/ 200.00 (2da opción S/ 100.00)</span>
-        </div>
-        <h4 class="fw-bold mb-1 text-dark">Requisitos para Solicitar Examen de Suficiencia Profesional</h4>
-        <p class="small text-muted mb-2">Presenta tu expediente <strong>debidamente foliado</strong> con los <strong>7 requisitos oficiales</strong> (haz clic para marcar tu avance):</p>
-
-        <div class="mb-3">
-          <div class="d-flex justify-content-between align-items-center small mb-1">
-            <span class="fw-bold text-primary checklist-progress-label" data-progress-for="${storeKey}"><i class="bi bi-check2-all me-1"></i>${done} de ${total} requisitos listos (${pct}%)</span>
-            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none text-muted" data-reset-checklist="${storeKey}" style="font-size:0.74rem;">Reiniciar</button>
-          </div>
-          <div class="progress" style="height: 7px;">
-            <div class="progress-bar bg-success checklist-progress-bar" data-progress-bar="${storeKey}" style="width: ${pct}%;"></div>
-          </div>
-        </div>
-
-        <div class="small mb-3">
-          ${reqHtml}
-        </div>
-
-        <div class="row g-2 mb-3 small">
-          <div class="col-sm-6">
-            <div class="p-3 rounded-3 border h-100" style="background: #fffbeb; border-color: #fde68a !important; color: #92400e;">
-              <strong class="d-block mb-1"><i class="bi bi-bank me-1"></i>NOTA IMPORTANTE DE PAGO:</strong>
-              <span>Los pagos se harán <strong>únicamente en ventanilla del Banco de la Nación</strong> en la Cta. Cte. N° <code class="fw-bold text-dark">00-638-002361</code> (S/ 200.00 • <strong>NO</strong> Págalo.pe ni agentes).</span>
-              <button type="button" class="btn btn-xs btn-warning text-dark fw-bold rounded-pill mt-2 px-2 py-0" onclick="hercarBotApp.copyData('00-638-002361', 'Cta. Cte. BN Suficiencia')"><i class="bi bi-clipboard"></i> Copiar 00-638-002361</button>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="p-3 rounded-3 border h-100" style="background: #fef2f2; border-color: #fecaca !important; color: #991b1b;">
-              <strong class="d-block mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>OJO — GESTIÓN CON COORDINADOR:</strong>
-              <span>En cuanto a los requisitos y la gestión para el Examen de Suficiencia Profesional, <strong>se realiza con el Coordinador de su Programa de Estudios</strong>.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="alert alert-info py-2 px-3 small mb-3">
-          <i class="bi bi-info-circle-fill me-1"></i> <strong>Nota egresados 2021 o anteriores:</strong> El Ciclo de Actualización (cuando corresponde según tu año de egreso) tiene costo de S/ 400.00 y se abona en la cuenta Productivas <code>00-638-025736</code>.
-        </div>
-
-        <div class="interactive-button-grid">
-          <button class="interactive-btn text-primary fw-bold" data-chat-action="abrir_generador_fut" data-chat-val="examen_suficiencia">
-            <i class="bi bi-file-earmark-text-fill text-primary"></i> Generar FUT Suficiencia
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_tramite_titulo">
-            <i class="bi bi-mortarboard-fill text-success"></i> Ver Requisitos de Título (10 pasos)
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles">
-            <i class="bi bi-translate text-warning"></i> Inglés (Cta. 00-638-025736)
-          </button>
-        </div>
-      </div>
-    `;
-
-    this.appendBotMessage(html, "Para solicitar el Examen de Suficiencia Profesional debes presentar tu expediente debidamente foliado ante el Coordinador de tu Programa de Estudios con siete requisitos: solicitud al Director General, copia a color de Constancia de No Adeudar, copia a color del D N I, copia a color de ambos lados de los tres certificados modulares, copia de actualización solo para egresados del dos mil veintiuno hacia atrás, copia a color del curso de Inglés Básico, y boleta electrónica más copia sellada por Tesorería de doscientos soles pagados en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero dos tres seis uno.", [
-      { label: "🎓 Requisitos de Título Profesional", prompt: "¿Cuáles son los requisitos para el Trámite de Título Profesional?" },
-      { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
-    ]);
-  }
-
-  /**
-   * Requisitos Oficiales para Trámite de Título Profesional Técnico (Infografía Oficial)
-   */
-  renderTramiteTitulo() {
-    const info = (typeof REQUISITOS_TITULO_PROFESIONAL !== 'undefined') ? REQUISITOS_TITULO_PROFESIONAL : null;
-    const reqs = info ? info.requisitos : [
-      '1. Solicitud dirigida al Director General solicitando obtención de Título Profesional.',
-      '2. Original de Certificado de Estudios de Educación Secundaria debidamente firmado por el Director de la I.E. y con código virtual de verificación y código QR.',
-      '3. Original de Certificado de Estudios de Educación Superior (I al VI periodo — S/ 240.00 en Cta. Cte. 00-638-002361).',
-      '4. Original de Partida de Nacimiento actualizada.',
-      '5. DNI Legalizado: Copia a color de DNI legalizada por Notario (totalmente nítida en nombre completo, fecha de nacimiento y número de DNI).',
-      '6. Fotografías: Dos (02) fotografías tamaño pasaporte en fondo blanco, reveladas (no impresas), con vestimenta formal y sin accesorios.',
-      '7. Inglés Básico: Copia a color de Certificado de Inglés Básico.',
-      '8. Pago por Formato y Caligrafiado de Título: Boleta electrónica original y 1 copia sellada por Tesorería — Monto: S/ 60.00.',
-      '9. Pago por Derecho de Título Profesional: Boleta electrónica original y 1 copia sellada por Tesorería — Monto: S/ 100.00.',
-      '10. Ficha de Actividades: Copia de Ficha de Actividades (solo para egresados del Sistema Tradicional del 2008 hacia abajo) — Derecho: S/ 12.00.'
-    ];
-
-    const storeKey = 'hercarbot_checklist_titulo';
-    let checked = [];
-    try { checked = JSON.parse(localStorage.getItem(storeKey)) || []; } catch {}
-    const total = reqs.length;
-    const done = checked.filter(i => i >= 0 && i < total).length;
-    const pct = Math.round((done / total) * 100);
-
-    const reqHtml = reqs.map((r, idx) => {
-      const isDone = checked.includes(idx);
-      const itemHtml = (typeof r === 'string')
-        ? r.replace(/^\d+\.\s*/, '')
-        : `<strong>${r.titulo}:</strong> ${r.detalle}`;
-      return `
-        <div class="hercar-checklist-item ${isDone ? 'checked' : ''}" data-check-store="${storeKey}" data-check-idx="${idx}" role="checkbox" aria-checked="${isDone}" tabindex="0">
-          <input type="checkbox" class="form-check-input mt-1 flex-shrink-0" ${isDone ? 'checked' : ''} style="pointer-events:none;">
-          <span class="checklist-text"><strong>${idx + 1}.</strong> ${itemHtml}</span>
-        </div>
-      `;
-    }).join('');
-
-    const html = `
-      <div class="faq-card-custom" style="border-top: 4px solid #1e3a8a;">
-        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-primary px-3 py-1"><i class="bi bi-mortarboard-fill me-1"></i>Infografía Oficial Título</span>
-          <span class="badge bg-warning text-dark fw-bold">Formato S/ 60 + Título S/ 100</span>
-        </div>
-        <h4 class="fw-bold mb-1 text-dark">Requisitos para Trámite de Título Profesional</h4>
-        <div class="p-2 px-3 bg-light rounded border small mb-2">
-          <strong><i class="bi bi-folder-fill text-warning me-1"></i> Presentación del Expediente:</strong> La documentación deberá presentarse <strong>debidamente foliada</strong>, en <strong>folder A/4</strong> y acompañada de un <strong>sobre manila A4</strong>.
-        </div>
-
-        <div class="mb-3">
-          <div class="d-flex justify-content-between align-items-center small mb-1">
-            <span class="fw-bold text-primary checklist-progress-label" data-progress-for="${storeKey}"><i class="bi bi-check2-all me-1"></i>${done} de ${total} requisitos listos (${pct}%)</span>
-            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none text-muted" data-reset-checklist="${storeKey}" style="font-size:0.74rem;">Reiniciar</button>
-          </div>
-          <div class="progress" style="height: 7px;">
-            <div class="progress-bar bg-success checklist-progress-bar" data-progress-bar="${storeKey}" style="width: ${pct}%;"></div>
-          </div>
-        </div>
-
-        <div class="small mb-3">
-          ${reqHtml}
-        </div>
-
-        <div class="p-3 rounded-3 border small mb-3" style="background: #fef2f2; border-color: #fecaca !important; color: #991b1b;">
-          <strong class="d-block mb-1"><i class="bi bi-bank me-1"></i>NOTA IMPORTANTE DE PAGO (SOLO VENTANILLA BN):</strong>
-          <span>Los pagos se harán <strong>únicamente en ventanilla del Banco de la Nación</strong> en la Cuenta Corriente N° <code class="fw-bold text-dark">00-638-002361</code> (Formato y Caligrafiado S/ 60.00 + Derecho de Título S/ 100.00; solo Tradicional ≤ 2008 suma Ficha S/ 12.00). Registra tu voucher en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> para llevar original y 1 copia sellada por Tesorería. <strong>NO se acepta Págalo.pe ni agentes.</strong></span>
-          <div class="mt-2">
-            <button type="button" class="btn btn-xs btn-warning text-dark fw-bold rounded-pill px-2 py-0" onclick="hercarBotApp.copyData('00-638-002361', 'Cta. Cte. BN Titulación')"><i class="bi bi-clipboard"></i> Copiar 00-638-002361</button>
-          </div>
-        </div>
-
-        <div class="interactive-button-grid">
-          <button class="interactive-btn text-primary fw-bold" data-chat-action="abrir_generador_fut" data-chat-val="titulacion_profesional">
-            <i class="bi bi-file-earmark-text-fill text-primary"></i> Generar FUT de Título
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_examen_suficiencia">
-            <i class="bi bi-patch-check text-danger"></i> Requisitos Examen Suficiencia
-          </button>
-          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
-            <i class="bi bi-cloud-arrow-up-fill text-success"></i> Portal pagos.ieshercar.edu.pe
-          </a>
-        </div>
-      </div>
-    `;
-
-    this.appendBotMessage(html, "Para el trámite de Título Profesional debes presentar el expediente debidamente foliado en folder A cuatro acompañado de un sobre manila A cuatro con los diez requisitos oficiales: solicitud al Director General, certificado original de secundaria con código QR, certificado original de educación superior, partida de nacimiento actualizada, copia a color de D N I legalizada por notario, dos fotos pasaporte reveladas fondo blanco vestimenta formal sin accesorios, copia a color de Inglés Básico, y boletas selladas por Tesorería de sesenta soles por formato y caligrafiado más cien soles por derecho de título pagados en el Banco de la Nación cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno.", [
-      { label: "📋 Requisitos Examen Suficiencia", prompt: "¿Cuáles son los requisitos del Examen de Suficiencia Profesional?" },
-      { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
-    ]);
-  }
-
-  toggleRequirementChecklist(storeKey, idx, el) {
-    let checked = [];
-    try { checked = JSON.parse(localStorage.getItem(storeKey)) || []; } catch {}
-    if (checked.includes(idx)) {
-      checked = checked.filter(i => i !== idx);
-    } else {
-      checked.push(idx);
-    }
-    localStorage.setItem(storeKey, JSON.stringify(checked));
-
-    const isDone = checked.includes(idx);
-    el.classList.toggle('checked', isDone);
-    el.setAttribute('aria-checked', String(isDone));
-    const cb = el.querySelector('input[type="checkbox"]');
-    if (cb) cb.checked = isDone;
-
-    const total = storeKey === 'hercarbot_checklist_titulo' ? 10 : 7;
-    const done = checked.filter(i => i >= 0 && i < total).length;
-    const pct = Math.round((done / total) * 100);
-    const parent = el.closest('.faq-card-custom');
-    if (parent) {
-      const label = parent.querySelector(`.checklist-progress-label[data-progress-for="${storeKey}"]`);
-      const bar = parent.querySelector(`.checklist-progress-bar[data-progress-bar="${storeKey}"]`);
-      if (label) label.innerHTML = `<i class="bi bi-check2-all me-1"></i>${done} de ${total} requisitos listos (${pct}%)`;
-      if (bar) bar.style.width = `${pct}%`;
-    }
-  }
-
-  /**
-   * Buscador Completo Interactivo de las 66 Tasas Oficiales TUPA 2026 (R.D. N° 020-2026)
-   */
-  renderBuscadorTupaCompleto(initialQuery = '', initialFilter = 'all') {
-    const tupa = (typeof TUPA_2026_COMPLETO !== 'undefined') ? TUPA_2026_COMPLETO : null;
-    const listGeneral = tupa?.procedimientosCuentaGeneral || [];
-    const listProd = tupa?.actividadesProductivasCuentaIngles || [];
-    const totalAll = listGeneral.length + listProd.length;
-
-    const html = `
-      <div class="faq-card-custom tupa-browser-card" data-active-filter="${this.escapeHtml(initialFilter)}" style="border-top: 4px solid #0284c7;">
-        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-primary px-3 py-1"><i class="bi bi-search me-1"></i>Buscador TUPA 2026 (${totalAll} conceptos)</span>
-          <span class="badge bg-danger text-white">Solo Ventanilla Banco de la Nación</span>
-        </div>
-        <h4 class="fw-bold mb-1 text-dark">Tarifario Completo Oficial R.D. N° 020-2026</h4>
-        <p class="small text-muted mb-2">Busca cualquier trámite o servicio oficial para ver su costo exacto y en qué cuenta del Banco de la Nación se deposita:</p>
-
-        <div class="input-group input-group-sm mb-2">
-          <span class="input-group-text"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control tupa-live-search" value="${this.escapeHtml(initialQuery)}" placeholder="Buscar: matrícula, certificado, suficiencia, inglés, tercio, toga, traslado..." aria-label="Buscar trámite o tarifa en el TUPA 2026">
-        </div>
-
-        <div class="d-flex flex-wrap gap-1 mb-3">
-          <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 ${initialFilter === 'all' ? 'active btn-primary text-white' : ''}" data-tupa-filter="all">Todos (${totalAll})</button>
-          <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 ${initialFilter === '002361' ? 'active btn-primary text-white' : ''}" data-tupa-filter="002361">TUPA 00-638-002361 (${listGeneral.length})</button>
-          <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 ${initialFilter === '025736' ? 'active btn-primary text-white' : ''}" data-tupa-filter="025736">Inglés / Prod. 00-638-025736 (${listProd.length})</button>
-        </div>
-
-        <div class="tupa-search-table-wrap mb-3">
-          <table class="table table-sm table-hover mb-0 small align-middle">
-            <thead class="table-light sticky-top">
-              <tr>
-                <th>Concepto / Procedimiento TUPA 2026</th>
-                <th class="text-end">Tasa</th>
-                <th class="text-center">Cuenta BN</th>
-              </tr>
-            </thead>
-            <tbody class="tupa-results-tbody"></tbody>
-          </table>
-        </div>
-
-        <div class="alert alert-info py-2 px-3 small mb-3">
-          <strong><i class="bi bi-bank me-1"></i> Recuerda:</strong> Paga solo en <strong>ventanilla BN</strong> (NO Págalo.pe ni agentes). En <code>00-638-002361</code> registra en <strong>pagos.ieshercar.edu.pe</strong>; en <code>00-638-025736</code> saca <strong>2 copias al voucher</strong> y entrégalos en Tesorería.
-        </div>
-
-        <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-primary"></i> Copiar las 2 Cuentas BN</button>
-          <button class="interactive-btn" data-chat-action="ver_cotizador_tupa"><i class="bi bi-calculator text-warning"></i> Sumar Varios Trámites</button>
-        </div>
-      </div>
-    `;
-
-    this.appendBotMessage(html, `En pantalla tienes el buscador oficial del Tupa dos mil veintiséis con los sesenta y seis conceptos oficiales divididos entre la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno y la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis.`, [
-      { label: "🧮 Sumar trámites en Cotizador", prompt: "Cotizador de trámites TUPA 2026" },
-      { label: "🇬🇧 Pago del Curso de Inglés", prompt: "¿Cómo pago el Curso de Inglés Básico y en qué cuenta?" }
-    ]);
-
-    const cards = this.messagesContainer.querySelectorAll('.tupa-browser-card');
-    const latestCard = cards[cards.length - 1];
-    if (latestCard) {
-      this.updateTupaSearchResults(latestCard, initialQuery, initialFilter);
-    }
-  }
-
-  updateTupaSearchResults(container, query = '', filter = 'all') {
-    const tbody = container.querySelector('.tupa-results-tbody');
-    if (!tbody || typeof TUPA_2026_COMPLETO === 'undefined') return;
-    const allItems = [
-      ...(TUPA_2026_COMPLETO.procedimientosCuentaGeneral || []),
-      ...(TUPA_2026_COMPLETO.actividadesProductivasCuentaIngles || [])
-    ];
-    const qNorm = this.normalizeText(query);
-    const filtered = allItems.filter(it => {
-      if (filter === '002361' && it.cuenta !== '00-638-002361') return false;
-      if (filter === '025736' && it.cuenta !== '00-638-025736') return false;
-      if (!qNorm) return true;
-      return this.normalizeText(it.concepto + ' ' + it.cuenta + ' ' + it.costo).includes(qNorm);
-    });
-
-    if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-3">No se encontraron procedimientos para esa búsqueda.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = filtered.map(it => {
-      const isProd = it.cuenta === '00-638-025736';
-      return `
-        <tr>
-          <td>${this.escapeHtml(it.concepto)}</td>
-          <td class="text-end fw-bold text-nowrap">S/ ${Number(it.costo).toFixed(2)}</td>
-          <td class="text-center text-nowrap">
-            <span class="badge ${isProd ? 'bg-info text-dark' : 'bg-warning text-dark'} font-monospace">${it.cuenta}</span>
-          </td>
-        </tr>
-      `;
-    }).join('');
+    this.appendBotMessage(html, "¡Hola! Te cuento que para el curso de inglés de titulación, el pago se realiza en el Banco de la Nación a la cuenta específica cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda sacar dos copias a tu voucher y entregarlos físicamente en Tesorería del instituto para que no haya retrasos en la entrega de tu certificado. ¡En tu pantalla tienes el número de cuenta y las indicaciones oficiales!", inglesChips);
   }
 
   renderCarreraCompleta(carrera) {
@@ -7539,26 +6803,6 @@ ${text}
       </div>
     `).join('');
 
-    const modulosWebHtml = (carrera.modulosWebOficial && carrera.modulosWebOficial.length)
-      ? `<div class="p-3 bg-light rounded-3 border small mb-3">
-           <h6 class="fw-bold text-primary mb-1"><i class="bi bi-patch-check-fill me-1"></i> Módulos Técnico-Profesionales Oficiales (ieshercar.edu.pe):</h6>
-           <ul class="mb-0 ps-3 text-muted">${carrera.modulosWebOficial.map(mw => `<li>${mw}</li>`).join('')}</ul>
-         </div>`
-      : '';
-
-    const docentesHtml = (carrera.docentes && carrera.docentes.length)
-      ? `<div class="p-2 px-3 bg-white rounded-3 border small mb-3">
-           <strong class="text-dark d-block mb-1"><i class="bi bi-people-fill text-primary me-1"></i> Plana Docente del Programa:</strong>
-           <div class="d-flex flex-wrap gap-1">${carrera.docentes.map(d => `<span class="badge bg-light text-dark border">${d}</span>`).join('')}</div>
-         </div>`
-      : '';
-
-    const banner2027Html = (carrera.id === 'apsti' || carrera.actualizacion2027)
-      ? `<div class="alert alert-info py-2 px-3 small mb-3 border-info">
-           <i class="bi bi-stars text-primary me-1"></i> <strong>Actualización Curricular 2027:</strong> ${carrera.actualizacion2027 || 'En el año 2027 la carrera de APSTI pasará a denominarse oficialmente Computación e Informática.'}
-         </div>`
-      : '';
-
     const campoHtml = carrera.campoLaboral.map(c => `<li><i class="bi bi-check-circle-fill text-success me-2"></i>${c}</li>`).join('');
 
     const html = `
@@ -7567,25 +6811,21 @@ ${text}
           <img src="${carrera.imagen || 'assets/img/campus-hercar.jpg'}" alt="${carrera.nombre}" onerror="this.src='assets/img/campus-hercar.jpg'" />
           <div class="cover-overlay">
             <span class="badge" style="background: ${carrera.color}; color: #fff; font-size: 0.85rem; font-weight: 700;">${carrera.codigo}</span>
-            ${carrera.id === 'apsti' ? '<span class="badge bg-warning text-dark fw-bold">2027: Computación e Informática</span>' : ''}
             <span class="badge bg-dark bg-opacity-75 text-light border border-light border-opacity-25"><i class="bi bi-clock me-1"></i>${carrera.duracion}</span>
           </div>
         </div>
         <h4 class="fw-bold mb-2">${carrera.nombre}</h4>
         <p class="carrera-titulo-sub small">${carrera.titulo}</p>
-        ${banner2027Html}
         
         <div class="carrera-desc-box mb-3">
           <p class="mb-0">${carrera.perfilEgreso}</p>
         </div>
 
-        ${modulosWebHtml}
         <h6 class="fw-bold text-primary mb-2"><i class="bi bi-diagram-3-fill me-1"></i> Certificaciones Modulares Progresivas:</h6>
         <div class="modulos-list-wrapper mb-3">
           ${modulosHtml}
         </div>
 
-        ${docentesHtml}
         <h6 class="fw-bold text-primary mb-2"><i class="bi bi-building-check me-1"></i> Oportunidades Laborales en Paita y Piura:</h6>
         <ul class="campo-laboral-ul mb-3">${campoHtml}</ul>
 
@@ -7606,11 +6846,10 @@ ${text}
     const careerChips = [
       { label: `Malla de ${carrera.codigo}`, prompt: `¿Qué materias o cursos se llevan en ${carrera.codigo}?` },
       { label: 'Requisitos de Admisión', prompt: '¿Cuáles son los requisitos para postular en la admisión 2026?' },
-      { label: '¿Cómo pagar la matrícula?', prompt: '¿Cuánto cuesta la matrícula y en qué cuenta del Banco de la Nación se paga?' },
+      { label: '¿El instituto es gratuito?', prompt: '¿El instituto es 100% gratuito o se paga pensión mensual?' },
       { label: 'Test Vocacional', prompt: 'Quiero hacer el test vocacional' }
     ];
-    const extra2027Spoken = (carrera.id === 'apsti') ? ' Importante: a partir del año dos mil veintisiete, este programa de estudios pasará a llamarse Computación e Informática.' : '';
-    this.appendBotMessage(html, `Te presento la carrera técnica oficial de ${carrera.nombre}.${extra2027Spoken} Aquí puedes revisar sus módulos formativos, plana docente y oportunidades laborales en Paita.`, careerChips);
+    this.appendBotMessage(html, `Te presento la carrera técnica de ${carrera.nombre}. Aquí puedes revisar su perfil formativo, módulos y oportunidades laborales en Paita.`, careerChips);
   }
 
   renderMallaCurricular(carrera) {
@@ -7635,12 +6874,11 @@ ${text}
 
     const html = `
       <div class="malla-container-card">
-        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+        <div class="d-flex align-items-center gap-2 mb-2">
           <span class="badge" style="background: ${carrera.color}; color: #fff;">${carrera.codigo}</span>
-          ${carrera.id === 'apsti' ? '<span class="badge bg-info text-dark">2027: Computación e Informática</span>' : ''}
           <h5 class="fw-bold mb-0">Plan de Estudios & Malla Curricular</h5>
         </div>
-        <p class="text-muted small">Estructura curricular completa de los 6 periodos académicos de <strong>${carrera.nombre}</strong>:</p>
+        <p class="text-muted small">Estructura curricular completa de los 6 semestres académicos de <strong>${carrera.nombre}</strong>:</p>
 
         <div class="malla-grid-content">
           ${semestresHtml}
@@ -7673,7 +6911,6 @@ ${text}
         <div class="carrera-item-content">
           <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
             <span class="badge" style="background: ${c.color || '#0284c7'}; color: #fff; font-size: 0.72rem; padding: 3px 8px;">${c.codigo}</span>
-            ${c.id === 'apsti' ? '<span class="badge bg-info text-dark" style="font-size: 0.7rem;">2027: Computación e Informática</span>' : ''}
             <h6 class="mb-0 fw-bold carrera-item-title">${c.nombre}</h6>
           </div>
           <p class="carrera-item-desc mb-0 small text-muted">${c.perfilEgreso}</p>
@@ -7684,11 +6921,8 @@ ${text}
 
     const html = `
       <div class="carreras-catalog-card">
-        <h5 class="fw-bold mb-2"><i class="bi bi-mortarboard-fill text-primary me-2"></i>Los 4 Programas de Estudios del IESTP Hermanos Cárcamo</h5>
-        <p class="text-muted small mb-2">El instituto ofrece 4 Carreras Profesionales Técnicas de 3 años de duración (educación pública sin mensualidades, con título a nombre de la nación y certificación modular):</p>
-        <div class="alert alert-info py-2 px-3 small mb-3">
-          <i class="bi bi-stars me-1"></i> <strong>Nota 2027:</strong> La carrera de <strong>Arquitectura de Plataformas y Servicios de TI (APSTI)</strong> pasará a denominarse <strong>Computación e Informática</strong> en el año 2027.
-        </div>
+        <h5 class="fw-bold mb-2"><i class="bi bi-mortarboard-fill text-primary me-2"></i>Programas de Estudio del IESTP Hermanos Cárcamo</h5>
+        <p class="text-muted small mb-3">El instituto ofrece 4 Carreras Profesionales Técnicas de 3 años de duración (educación pública sin mensualidades, con título a nombre de la nación y certificación modular):</p>
         <div class="carreras-catalog-list">${listCards}</div>
         <div class="interactive-button-grid mt-3">
           <button class="interactive-btn" data-chat-action="iniciar_test_vocacional"><i class="bi bi-compass text-danger"></i> ¿No sabes cuál elegir? Hacer Test Vocacional</button>
@@ -7698,13 +6932,13 @@ ${text}
     `;
 
     const allCareerChips = [
-      { label: 'APSTI / Computación 2027', prompt: '¿Cómo es la carrera de APSTI y por qué en 2027 será Computación e Informática?' },
+      { label: 'APSTI (Computación)', prompt: '¿Cómo es la carrera de APSTI y cuál es su campo laboral?' },
       { label: 'Negocios Internacionales', prompt: '¿De qué trata la carrera de Administración de Negocios Internacionales?' },
       { label: 'Contabilidad', prompt: '¿Cuál es el perfil y campo de trabajo en Contabilidad?' },
       { label: 'Desarrollo Pesquero', prompt: '¿Qué se aprende en Desarrollo Pesquero y Acuícola en Paita?' },
       { label: 'Test Vocacional', prompt: 'Quiero hacer el test vocacional' }
     ];
-    this.appendBotMessage(html, "En el Instituto Superior Hermanos Cárcamo ofrecemos exactamente cuatro programas de estudios técnicos de tres años: primero, Arquitectura de Plataformas y Servicios de Tecnologías de la Información, que en el año dos mil veintisiete pasará a llamarse Computación e Informática; segundo, Administración de Negocios Internacionales; tercero, Contabilidad; y cuarto, Desarrollo Pesquero y Acuícola. Al ser educación pública, no pagas mensualidades, únicamente la matrícula semestral de doscientos cincuenta soles pagada en ventanilla del Banco de la Nación.", allCareerChips);
+    this.appendBotMessage(html, "¡Hola! En el Instituto Cárcamo contamos con cuatro carreras técnicas de tres años: Desarrollo de Sistemas y Software, Administración de Negocios Internacionales, Contabilidad, y Pesquería. Al ser educación pública, no pagas mensualidades, solo la matrícula administrativa de cada semestre.", allCareerChips);
   }
 
   renderAdmisionInfo(query = '') {
@@ -7738,7 +6972,7 @@ ${text}
         'Copia simple de DNI vigente del postulante',
         'Partida de Nacimiento original o copia',
         '2 Fotografías a color tamaño carnet fondo blanco recientes',
-        'Voucher de pago en ventanilla del Banco de la Nación (Derecho de Examen S/ 200.00 en Cta. Cte. 00-638-002361; Academia Pre Tecno S/ 400.00 en Cta. 00-638-025736) — NO Págalo.pe ni agentes',
+        'Voucher de pago del Banco de la Nación validado en pagos.ieshercar.edu.pe',
         'Ficha de Inscripción debidamente llenada'
       ]
     };
@@ -7820,13 +7054,15 @@ ${text}
     this.context.lastTopic = 'pagos';
     this.context.lastTurnTime = Date.now();
 
-    const cuentaBN = '00-638-002361';
-    const cuentaInglesBN = '00-638-025736';
+    const cuentaBN = '00-631-012948';
     const pasos = [
-      `Paso 1: Realiza el depósito ÚNICAMENTE de forma presencial en ventanilla del Banco de la Nación indicando tu DNI y nombre completo (NO Págalo.pe, NO Agentes MultiRed, NO Yape).`,
-      `Paso 2 (Cuenta TUPA ${cuentaBN}): Úsala para Matrícula Ordinaria (S/ 250.00), Admisión (S/ 200.00), Examen de Suficiencia (S/ 200.00), Formato/Derecho de Título (S/ 60.00 + S/ 100.00), Certificados y Constancias. Luego registra el voucher en https://pagos.ieshercar.edu.pe/ para generar tu boleta electrónica y lleva el original y tus copias a Tesorería.`,
-      `Paso 3 (Cuenta Productivas ${cuentaInglesBN}): Úsala para Curso de Inglés Básico (S/ 400.00), Academia Pre Tecno Hercar (S/ 400.00), Ciclo de Actualización (S/ 400.00) o Toga (S/ 50.00). Saca 2 copias a tu voucher y entrégalos en Tesorería, en la oficina del instituto.`,
-      'Paso 4: Verifica siempre el número de cuenta antes de pagar para evitar pagar la tasa de transferencia por error de cuenta (S/ 15.00).'
+      'Paso 1: Realiza el depósito en el Banco de la Nación a la Cuenta Corriente N° 00-631-012948 (Titular: IESTP Hermanos Cárcamo).',
+      'Paso 2: Asegúrate de que el voucher contenga tu DNI, fecha, hora y número de operación de forma nítida.',
+      'Paso 3: Ingresa desde tu celular o PC a https://pagos.ieshercar.edu.pe/',
+      'Paso 4: Digita tu número de DNI para ingresar.',
+      'Paso 5: Selecciona tu carrera (APSTI, ANI, CONTA o DPA) y el concepto pagado (Matrícula, Admisión, Certificado).',
+      'Paso 6: Digita el número de operación y sube la foto clara del comprobante.',
+      'Paso 7: Guarda y espera la validación de Caja (24 a 48 horas hábiles).'
     ];
 
     const pasosHtml = pasos.map(p => `
@@ -7838,16 +7074,15 @@ ${text}
 
     const html = `
       <div class="pagos-guide-card">
-        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-credit-card-2-front-fill me-2"></i>Guía Oficial de Pagos — Ventanilla BN</h5>
-          <span class="badge bg-danger text-white"><i class="bi bi-bank me-1"></i>NO Págalo.pe / NO Agentes</span>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-credit-card-2-front-fill me-2"></i>Sistema de Registro de Pagos</h5>
+          <span class="badge bg-warning text-dark"><i class="bi bi-bank me-1"></i>Banco de la Nación</span>
         </div>
-        <p class="small text-muted mb-3">Sigue este procedimiento oficial para que Tesorería valide tus pagos sin observaciones:</p>
+        <p class="small text-muted mb-3">Sigue estos pasos para que Tesorería valide tu comprobante sin inconvenientes:</p>
 
         <div class="alert alert-light border small mb-3">
-          <strong>1) Cta. Cte. TUPA General:</strong> <code class="fs-6 fw-bold text-primary">${cuentaBN}</code> (Matrícula S/ 250, Admisión S/ 200, Suficiencia S/ 200, Títulos)<br>
-          <strong>2) Cta. Inglés / Productivas:</strong> <code class="fs-6 fw-bold text-success">${cuentaInglesBN}</code> (Curso de Inglés S/ 400 + <strong>2 copias del voucher en Tesorería</strong>)<br>
-          <strong>Titular:</strong> IESTP Hermanos Cárcamo - Paita &bull; <strong>Modalidad:</strong> Solo ventanilla Banco de la Nación
+          <strong>Cuenta Corriente Banco de la Nación:</strong> <code class="fs-6">${cuentaBN}</code><br>
+          <strong>Titular:</strong> IESTP Hermanos Cárcamo - Paita
         </div>
 
         <div class="pagos-steps-wrapper mb-3">
@@ -7864,41 +7099,18 @@ ${text}
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank text-primary"></i> Copiar Cuentas BN</button>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles"><i class="bi bi-translate text-success"></i> Pago de Inglés (025736)</button>
-          <button class="interactive-btn" data-chat-action="ver_cotizador_tupa"><i class="bi bi-calculator text-warning"></i> Cotizador TUPA 2026</button>
-          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-headset"></i> Horario Tesorería</button>
+          <button class="interactive-btn" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-text"></i> Ver Tasas de Trámites</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-headset"></i> Ayuda con Caja</button>
         </div>
       </div>
     `;
 
     const pagosChips = [
-      { label: 'Matrícula S/ 250 paso a paso', prompt: '¿Cómo es el proceso de matrícula paso a paso en el instituto?' },
-      { label: 'Inglés (00-638-025736)', prompt: '¿Cómo pago el Curso de Inglés Básico y en qué cuenta?' },
-      { label: '¿Se puede usar Págalo.pe?', prompt: '¿Se puede pagar por Págalo.pe, Yape o agentes?' }
+      { label: 'Matrícula paso a paso', prompt: '¿Cómo es el proceso de matrícula paso a paso en el instituto?' },
+      { label: 'Certificados modulares TUPA', prompt: '¿Cómo tramito mi Certificado Modular y cuánto demora?' },
+      { label: 'Requisitos de Admisión', prompt: '¿Cuáles son los requisitos para postular en la admisión 2026?' }
     ];
-    this.appendBotMessage(html, "Todos los pagos en el Instituto Superior Hermanos Cárcamo se hacen únicamente en ventanilla presencial del Banco de la Nación, indicando tu D N I y nombre completo; no se acepta Págalo punto pe ni agentes. Para matrícula de doscientos cincuenta soles, suficiencia, títulos y Tupa usa la cuenta corriente cero cero, seis tres ocho, cero cero dos tres seis uno. Para el curso de inglés de cuatrocientos soles usa la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis y recuerda sacar dos copias a tu voucher y entregarlos en Tesorería.", pagosChips);
-  }
-
-  mapTramiteIdToFutKey(tramiteId) {
-    const map = {
-      'tramite-matricula': 'solicitud_libre',
-      'tramite-examen-suficiencia': 'examen_suficiencia',
-      'tramite-titulacion': 'titulacion_profesional',
-      'tramite-titulo-profesional': 'titulacion_profesional',
-      'tramite-certificado-modular': 'cert_modular',
-      'tramite-certificado-estudios': 'cert_estudios_completo',
-      'tramite-constancias': 'constancia_matricula',
-      'tramite-constancia-estudios': 'constancia_matricula',
-      'tramite-convalidacion': 'convalidacion_cursos',
-      'tramite-traslados': 'traslado_interno',
-      'tramite-carne': 'carne_estudiantil',
-      'tramite-ingles-basico': 'solicitud_libre',
-      'tramite-reserva-licencia-reincorporacion': 'reserva_matricula',
-      'tramite-evaluacion-extraordinaria': 'subsanacion_recuperacion',
-      'tramite-duplicados': 'duplicado_titulo'
-    };
-    return map[tramiteId] || 'solicitud_libre';
+    this.appendBotMessage(html, "¡Hola! Con mucho gusto te oriento: puedes abonar en cualquier agencia o agente del Banco de la Nación, o transferir por código interbancario. Luego subes la foto de tu comprobante a nuestro portal de pagos para que Caja lo valide. ¡En tu pantalla tienes el paso a paso!", pagosChips);
   }
 
   renderTramiteDetalle(tramite) {
@@ -7982,9 +7194,9 @@ ${text}
         <img src="assets/img/campus-hercar.jpg" alt="Fachada Campus IESTP Hermanos Cárcamo - Paita" class="campus-contact-photo" />
 
         <div class="p-3 bg-light rounded-3 border mb-3">
-          <h6 class="fw-bold mb-1"><i class="bi bi-building me-2 text-primary"></i>Ubicación Oficial en Paita:</h6>
-          <p class="mb-1 small">Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita, Piura.</p>
-          <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Atención en Tesorería y Secretaría Académica: Lunes a Viernes de 8:00 a.m. a 3:00 p.m.</small>
+          <h6 class="fw-bold mb-1"><i class="bi bi-building me-2 text-primary"></i>Ubicación en Paita:</h6>
+          <p class="mb-1 small">Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Parte Alta, Paita, Piura.</p>
+          <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Frente a la Av. Miguel Grau / Urb. El Parque</small>
         </div>
 
         <div class="row g-2 mb-3">
@@ -8774,7 +7986,6 @@ ${text}
         this.logQuery('tramites');
         break;
       case 'ver_tramite_especifico':
-      case 'ver_tramite_detalle':
         const tramite = GUIA_TRAMITES_TUPA.find(t => t.id === val);
         if (tramite) {
           this.renderTramiteDetalle(tramite);
@@ -8887,7 +8098,7 @@ ${text}
       case 'toggle_cotizador_tupa':
         // Toggle item selection
         if (!this._selectedCotizador) {
-          this._selectedCotizador = ['tupa-matricula'];
+          this._selectedCotizador = ['tupa-matricula', 'tupa-carne'];
         }
         if (this._selectedCotizador.includes(val)) {
           this._selectedCotizador = this._selectedCotizador.filter(id => id !== val);
@@ -8913,30 +8124,14 @@ ${text}
         this.renderNumeroCuentaBancaria();
         this.logQuery('pagos');
         break;
-      case 'ver_examen_suficiencia':
-        this.renderExamenSuficiencia();
-        this.logQuery('titulacion');
-        break;
-      case 'ver_tramite_titulo':
-        this.renderTramiteTitulo();
-        this.logQuery('titulacion');
-        break;
-      case 'ver_buscador_tupa':
-        this.renderBuscadorTupaCompleto();
-        this.logQuery('pagos');
-        break;
-      case 'abrir_personalizacion':
-        const btnCustom = document.getElementById('btn-customize-studio');
-        if (btnCustom) btnCustom.click();
-        break;
       case 'copiar_cuenta_bn':
-        this.copyData('00-638-002361', 'Cuenta Corriente BN (TUPA)');
+        this.copyData('00-631-012948', 'Cuenta Corriente BN');
         break;
       case 'copiar_cuenta_ingles_bn':
-        this.copyData('00-638-025736', 'Cuenta BN Inglés / Productivas');
+        this.copyData('00-638-025736', 'Cuenta Curso de Inglés BN');
         break;
       case 'copiar_cci_bn':
-        this.showToast('Solo se aceptan depósitos en ventanilla del Banco de la Nación (Ctas. 00-638-002361 y 00-638-025736). No uses CCI ni Págalo.pe.', 'warning', 'bi-exclamation-triangle-fill');
+        this.copyData('018-631-000631012948-52', 'Código Interbancario (CCI)');
         break;
     }
   }

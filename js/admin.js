@@ -410,7 +410,7 @@ function renderCharts(stats) {
     careersChart = new Chart(ctxCarreras, {
       type: 'doughnut',
       data: {
-        labels: ['APSTI (2027: Comp. e Inf.)', 'ANI (Negocios)', 'Contabilidad', 'DPA (Pesquería)'],
+        labels: ['APSTI (TI)', 'ANI (Negocios)', 'Contabilidad', 'DPA (Pesquería)'],
         datasets: [{
           data: [cData.apsti, cData.ani, cData.conta, cData.dpa],
           backgroundColor: ['#0d6efd', '#198754', '#6f42c1', '#0dcaf0'],
@@ -2204,7 +2204,7 @@ function generateExecutivePdfReport() {
     </tr>
     <tr>
       <td class="memo-label">CON COPIA:</td>
-      <td><strong>Lic. Juan García Reto</strong> — Jefatura de Unidad Académica</td>
+      <td><strong>Lic. Carlos Ramos Chunga</strong> — Jefatura de Unidad Académica</td>
     </tr>
     <tr>
       <td class="memo-label">DE:</td>
@@ -2287,7 +2287,7 @@ function generateExecutivePdfReport() {
   <div class="technical-box">
     <strong>Operaciones de Tesorería Verificadas:</strong>
     <ul>
-      <li>Cuentas Oficiales en Ventanilla del Banco de la Nación (NO Págalo.pe): <strong>N° 00-638-002361</strong> (TUPA / Matrícula S/ 250.00 / Admisión S/ 200.00 / Suficiencia S/ 200.00) y <strong>N° 00-638-025736</strong> (Curso de Inglés S/ 400.00 + 2 copias del voucher en Tesorería).</li>
+      <li>Cuenta Corriente Oficial del Banco de la Nación: <strong>N° 00-631-012948</strong> para abono de tasas institucionales y matrícula (S/ 120.00).</li>
       <li>Mesa de Partes Virtual: Generador interactivo de <strong>Formato Único de Trámite (FUT)</strong> con registro persistente de solicitudes modulares.</li>
       <li>Portal de Comprobantes: Redireccionamiento y validación guiada en <code>pagos.ieshercar.edu.pe</code>.</li>
     </ul>
@@ -2324,7 +2324,7 @@ function generateExecutivePdfReport() {
       <span class="signature-role">Director General<br>IESTP "Hermanos Cárcamo"</span>
     </div>
     <div class="signature-item">
-      <span class="signature-name">Lic. Juan García Reto</span>
+      <span class="signature-name">Lic. Carlos Ramos Chunga</span>
       <span class="signature-role">Jefe de Unidad Académica<br>IESTP "Hermanos Cárcamo"</span>
     </div>
     <div class="signature-item">
@@ -2621,21 +2621,16 @@ function runAdminNeuralTest() {
   let confidence = 98.4;
   let entity = 'IESTP Hermanos Cárcamo';
 
-  if (normalized.includes('carrera') || normalized.includes('estudio') || normalized.includes('apsti') || normalized.includes('computacion') || normalized.includes('informatica') || normalized.includes('2027') || normalized.includes('ani') || normalized.includes('conta') || normalized.includes('dpa') || normalized.includes('pesqu')) {
+  if (normalized.includes('carrera') || normalized.includes('estudio') || normalized.includes('apsti') || normalized.includes('ani') || normalized.includes('conta') || normalized.includes('dpa') || normalized.includes('pesqu')) {
     intent = 'Programas de Estudio & Mallas Curriculares';
     category = 'Carreras Profesionales';
     confidence = 99.6;
-    entity = '4 Carreras (APSTI 2027: Computación e Informática, ANI, Conta, DPA)';
-  } else if (normalized.includes('ingles') || normalized.includes('025736') || normalized.includes('00-638-025736')) {
-    intent = 'Curso de Inglés & Actividades Productivas BN';
+    entity = '4 Carreras Técnicas (120 Créditos / 3 Años)';
+  } else if (normalized.includes('cuenta') || normalized.includes('banco') || normalized.includes('pago') || normalized.includes('voucher') || normalized.includes('bn') || normalized.includes('00-631')) {
+    intent = 'Cuenta Corriente BN & Procedimiento de Pagos';
     category = 'Tesorería & Pagos';
     confidence = 99.8;
-    entity = 'Banco de la Nación (Cta: 00-638-025736 • 2 copias en Tesorería)';
-  } else if (normalized.includes('cuenta') || normalized.includes('banco') || normalized.includes('pago') || normalized.includes('voucher') || normalized.includes('pagalo') || normalized.includes('bn') || normalized.includes('00-638')) {
-    intent = 'Cuentas BN Ventanilla & Regla NO Págalo.pe';
-    category = 'Tesorería & Pagos';
-    confidence = 99.8;
-    entity = 'Banco de la Nación (TUPA: 00-638-002361 | Inglés: 00-638-025736)';
+    entity = 'Banco de la Nación (Cta: 00-631-012948)';
   } else if (normalized.includes('jalo') || normalized.includes('desaprueb') || normalized.includes('dpi') || normalized.includes('nota') || normalized.includes('recupera') || normalized.includes('13')) {
     intent = 'Reglamento Académico, Nota Mínima (13) & Inasistencias (30% DPI)';
     category = 'Normativa Académica';
@@ -2761,16 +2756,13 @@ function convertAllNumbersToSpokenSpanishAdmin(text) {
 
   // 1. Cuentas bancarias oficiales y telefonos
   str = str
-    .replace(/00-638-002361/g, 'cero cero, seis tres ocho, cero cero dos tres seis uno')
-    .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero dos cinco siete tres seis')
-    .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, dos cinco uno cero trece')
-    .replace(/969\s*100\s*257|969100257/g, 'nueve seis nueve, cien, dos cinco siete')
-    .replace(/\bCta\.?\s*Cte\b\.?/gi, 'cuenta corriente')
-    .replace(/\bCta\b\.?\s+(?=\d|cero|Banco|BN|TUPA|Productivas|Ingl)/gi, 'cuenta ')
-    .replace(/\bN\.?[°º]\s*|\bNro\b\.?\s*/gi, 'número ')
-    .replace(/\bA\/4\b/gi, 'tamaño A cuatro')
-    .replace(/\b2027\b/g, 'dos mil veintisiete')
-    .replace(/\b2026\b/g, 'dos mil veintiséis');
+    .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero doce, nueve cuatro ocho')
+    .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero doce, nueve cuatro ocho, cincuenta y dos')
+    .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero veinticinco, siete tres seis')
+    .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
+    .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
+    .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
+    .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
 
   // 2. Horarios
   str = str
@@ -2783,26 +2775,18 @@ function convertAllNumbersToSpokenSpanishAdmin(text) {
 
   // 3. Monedas en soles peruanos
   str = str
-    .replace(/S\/\.?\s*400(?:[.,]00)?/gi, 'cuatrocientos soles')
-    .replace(/S\/\.?\s*300(?:[.,]00)?/gi, 'trescientos soles')
-    .replace(/S\/\.?\s*250(?:[.,]00)?/gi, 'doscientos cincuenta soles')
-    .replace(/S\/\.?\s*240(?:[.,]00)?/gi, 'doscientos cuarenta soles')
-    .replace(/S\/\.?\s*200(?:[.,]00)?/gi, 'doscientos soles')
-    .replace(/S\/\.?\s*180(?:[.,]00)?/gi, 'ciento ochenta soles')
-    .replace(/S\/\.?\s*150(?:[.,]00)?/gi, 'ciento cincuenta soles')
-    .replace(/S\/\.?\s*100(?:[.,]00)?/gi, 'cien soles')
-    .replace(/S\/\.?\s*80(?:[.,]00)?/gi, 'ochenta soles')
-    .replace(/S\/\.?\s*65(?:[.,]00)?/gi, 'sesenta y cinco soles')
-    .replace(/S\/\.?\s*60(?:[.,]00)?/gi, 'sesenta soles')
-    .replace(/S\/\.?\s*50(?:[.,]00)?/gi, 'cincuenta soles')
-    .replace(/S\/\.?\s*40(?:[.,]00)?/gi, 'cuarenta soles')
-    .replace(/S\/\.?\s*35(?:[.,]00)?/gi, 'treinta y cinco soles')
-    .replace(/S\/\.?\s*30(?:[.,]00)?/gi, 'treinta soles')
-    .replace(/S\/\.?\s*25(?:[.,]00)?/gi, 'veinticinco soles')
-    .replace(/S\/\.?\s*15(?:[.,]00)?/gi, 'quince soles')
-    .replace(/S\/\.?\s*12(?:[.,]00)?/gi, 'doce soles')
-    .replace(/S\/\.?\s*5(?:[.,]00)?/gi, 'cinco soles')
-    .replace(/S\/\.?\s*(\d+)(?:[.,]00)?/gi, (match, n) => `${spanishNumberToWordsAdmin(n)} soles`);
+    .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
+    .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
+    .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
+    .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
+    .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
+    .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
+    .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
+    .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
+    .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
+    .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
+    .replace(/S\/\.?\s*5(?:\.00)?/gi, 'cinco soles')
+    .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, (match, n) => `${spanishNumberToWordsAdmin(n)} soles`);
 
   // 4. Frases cuantitativas y porcentajes
   str = str
@@ -3124,10 +3108,7 @@ function normalizePhoneticAdmin(text) {
     .replace(/\bBN\b/gi, 'Banco de la Nación')
     .replace(/\bCCI\b/gi, 'código interbancario')
     .replace(/\bDPI\b/gi, 'límite de faltas por inasistencia')
-    .replace(/\s*\(\s*(?:APSTI|ANI|CONTA|DPA|BN|SIS|MINEDU|SUNAT|FUT|TUPA|EFSRT|DPI|CCI|CEPRE|IESTP|IES)\s*\)/gi, '')
-    .replace(/\bPágalo\.pe\b/gi, 'Págalo punto pe')
-    .replace(/\bPagalo\.pe\b/gi, 'Págalo punto pe')
-    .replace(/\bAPSTI\b/gi, 'Arquitectura de Plataformas y Servicios de Tecnologías de la Información')
+    .replace(/\bAPSTI\b/gi, 'Computación y Desarrollo de Sistemas')
     .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
     .replace(/\bCONTA\b/gi, 'Contabilidad')
     .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
@@ -3217,30 +3198,26 @@ function speakAdminPhrase(rawText) {
     const chosenRate = rateRange ? parseFloat(rateRange.value) : 0.98;
     const chosenPitch = pitchRange ? parseFloat(pitchRange.value) : 1.00;
 
-    window._adminActiveUtterances = [];
     function speakQueue(queue) {
       if (!queue || queue.length === 0) return;
       const part = queue.shift();
       const utt = new SpeechSynthesisUtterance(part);
-      window._adminActiveUtterances.push(utt);
       if (adminSelectedVoice) {
         utt.voice = adminSelectedVoice;
-        utt.lang = adminSelectedVoice.lang || 'es-PE';
+        utt.lang = adminSelectedVoice.lang || 'es-MX';
       } else {
-        utt.lang = 'es-PE';
+        utt.lang = 'es-MX';
       }
       utt.rate = chosenRate;
       utt.pitch = chosenPitch;
       utt.volume = 1.0;
 
       utt.onend = () => {
-        window._adminActiveUtterances = (window._adminActiveUtterances || []).filter(u => u !== utt);
         if (queue.length > 0) {
           adminSpeechTimer = setTimeout(() => speakQueue(queue), 85);
         }
       };
       utt.onerror = () => {
-        window._adminActiveUtterances = [];
         window.speechSynthesis.cancel();
       };
       window.speechSynthesis.speak(utt);
@@ -3256,13 +3233,13 @@ function testAdminVoice(type) {
   let phrase = '';
   switch (type) {
     case 'cuenta_bn':
-      phrase = 'En el Instituto Superior Hermanos Cárcamo NO se usa Págalo.pe ni agentes. Todo pago es únicamente en ventanilla del Banco de la Nación: cuenta corriente 00-638-002361 para matrícula y trámites TUPA, y cuenta 00-638-025736 para el curso de inglés sacando 2 copias a tu voucher para Tesorería.';
+      phrase = 'La Cuenta Corriente Oficial del Banco de la Nación para todo pago de matrícula o trámite es 00-631-012948, con código interbancario 018-631-000631012948-52 a nombre del Instituto Superior Hermanos Cárcamo.';
       break;
     case 'tasas_tupa':
-      phrase = 'Según el TUPA 2026, la matrícula ordinaria cuesta S/ 250.00, el examen de admisión y suficiencia S/ 200.00, el certificado modular S/ 25.00, el formato de título S/ 60.00, el derecho de título S/ 100.00 y el curso de inglés S/ 400.00.';
+      phrase = 'La matrícula semestral tiene una tasa de ciento veinte soles según TUPA. El certificado modular cuesta treinta soles y la titulación profesional doscientos cincuenta soles en el Instituto Superior Hermanos Cárcamo.';
       break;
     case 'carreras':
-      phrase = 'Ofrecemos cuatro carreras técnicas públicas sin mensualidades: Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI), que en el 2027 pasará a llamarse Computación e Informática; Administración de Negocios Internacionales; Contabilidad; y Desarrollo Pesquero y Acuícola.';
+      phrase = 'Ofrecemos cuatro carreras profesionales técnicas: Computación y Desarrollo de Sistemas APSTI, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola. Todas son carreras públicas sin mensualidades en el Instituto Superior Hermanos Cárcamo.';
       break;
     case 'reglamento':
       phrase = 'La escala de calificación es vigesimal de cero a veinte con nota mínima aprobatoria de trece. El límite máximo de inasistencias es de treinta por ciento para no desaprobar por DPI.';
@@ -3279,8 +3256,8 @@ function testAdminVoice(type) {
    ========================================================================== */
 
 const AUDIT_LOG_MOCK = [
-  { hora: 'Hoy, 10:42 am', query: '¿Cuál es la cuenta oficial del Banco de la Nación y se acepta Págalo.pe?', tema: 'pagos', intent: 'Solo Ventanilla BN (00-638-002361 / 025736)', certainty: 99.6, feedback: 'up' },
-  { hora: 'Hoy, 10:35 am', query: 'Quiero ver la malla de APSTI y su cambio a Computación e Informática en 2027', tema: 'carreras', intent: 'APSTI → Computación e Informática 2027', certainty: 99.2, feedback: 'up' },
+  { hora: 'Hoy, 10:42 am', query: '¿Cuál es la cuenta oficial para pagar la matrícula en el Banco de la Nación?', tema: 'pagos', intent: 'Pagos BN (00-631-012948)', certainty: 99.4, feedback: 'up' },
+  { hora: 'Hoy, 10:35 am', query: 'Quiero ver la malla curricular y cursos de APSTI', tema: 'carreras', intent: 'Malla Curricular APSTI', certainty: 98.8, feedback: 'up' },
   { hora: 'Hoy, 10:18 am', query: '¿Qué pasa si jalo un curso o falto más de 30%?', tema: 'reglamento', intent: 'Reglamento & Inasistencias DPI', certainty: 97.9, feedback: 'up' },
   { hora: 'Hoy, 09:55 am', query: 'Requisitos para tramitar mi carné de medio pasaje de estudiante', tema: 'tramites', intent: 'Trámite Carné TUPA', certainty: 99.5, feedback: 'up' },
   { hora: 'Hoy, 09:30 am', query: '¿Cómo funciona el ingreso directo por la academia CEPRE?', tema: 'admision', intent: 'Modalidad CEPRE-HERCAR', certainty: 98.5, feedback: 'up' },
@@ -3514,7 +3491,14 @@ function initDatabaseSQLAdmin() {
               <small class="text-muted text-truncate d-block" style="font-size: 0.74rem;">${escapeHtml(u.career || 'Institucional')}</small>
             </td>
             <td class="text-truncate">
-              <span class="d-block font-monospace small text-primary text-truncate" title="${escapeHtml(u.email)}">${escapeHtml(u.email)}</span>
+              <span class="d-block font-monospace small text-primary text-truncate" title="${escapeHtml(u.email)}">
+                ${escapeHtml(u.email)}
+                ${u.auth_provider === 'google' ? `
+                  <span class="badge bg-white text-dark border shadow-xs px-1 py-0 ms-1" title="Vinculado a Google Workspace" style="font-size:0.68rem;">
+                    <i class="bi bi-google text-danger"></i> Google
+                  </span>
+                ` : ''}
+              </span>
               <small class="text-muted text-truncate d-block" style="font-size: 0.74rem;">@${escapeHtml(u.username)}</small>
             </td>
             <td>
@@ -3932,7 +3916,14 @@ function openUserProfileModal(userId) {
   
   document.getElementById('modalProfileAvatar').src = user.avatar || defaultAvatar;
   document.getElementById('modalProfileFullName').textContent = user.full_name || 'Usuario';
-  document.getElementById('modalProfileRole').textContent = user.role || 'Docente';
+  const roleEl = document.getElementById('modalProfileRole');
+  if (roleEl) {
+    if (user.auth_provider === 'google') {
+      roleEl.innerHTML = `${escapeHtml(user.role || 'Docente')} <span class="badge bg-white text-dark border ms-1" style="font-size:0.72rem;"><i class="bi bi-google text-danger me-1"></i>Google Workspace</span>`;
+    } else {
+      roleEl.textContent = user.role || 'Docente';
+    }
+  }
   document.getElementById('modalProfileCareer').textContent = user.career || 'Institucional';
   document.getElementById('modalProfileDni').textContent = user.dni || 'No registrado';
   const phoneEl = document.getElementById('modalProfilePhone');

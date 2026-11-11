@@ -624,7 +624,7 @@
             <i class="bi bi-mortarboard text-primary me-1"></i> Programa / Área:
           </label>
           <select id="regCareer" class="form-select" required>
-            <option value="APSTI - Computación e Informática 2027">💻 APSTI (2027: Computación e Informática)</option>
+            <option value="APSTI - Desarrollo de Software">💻 APSTI (Sistemas y Software)</option>
             <option value="Administración de Negocios Internacionales">🚢 Negocios Internacionales</option>
             <option value="Contabilidad">📊 Contabilidad</option>
             <option value="Desarrollo Pesquero y Acuícola">🐟 Pesquería y Acuicultura</option>
@@ -760,11 +760,10 @@
       await HercarSQL.init();
       const stats = HercarSQL.getStats();
 
-      const setCnt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-      setCnt('cntTotalUsers', stats.totalUsers);
-      setCnt('cntAdmins', stats.adminsCount);
-      setCnt('cntTeachers', stats.teachersCount);
-      setCnt('cntAuditLogs', stats.totalLogs);
+      document.getElementById('cntTotalUsers').textContent = stats.totalUsers;
+      document.getElementById('cntAdmins').textContent = stats.adminsCount;
+      document.getElementById('cntTeachers').textContent = stats.teachersCount;
+      document.getElementById('cntAuditLogs').textContent = stats.totalLogs;
 
       isCleanInitialState = (stats.totalUsers === 0);
 

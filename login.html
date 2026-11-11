@@ -361,6 +361,29 @@
       text-decoration: underline;
     }
 
+    .btn-google-auth {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #0f172a;
+      font-weight: 600;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-google-auth:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+    body.dark-theme .btn-google-auth {
+      background: #1e293b;
+      border-color: #475569;
+      color: #f8fafc;
+    }
+    body.dark-theme .btn-google-auth:hover {
+      background: #334155;
+      border-color: #64748b;
+    }
+
     .auth-badge-sql {
       font-size: 0.72rem;
       letter-spacing: 0.3px;
@@ -529,6 +552,22 @@
         <i class="bi bi-box-arrow-in-right me-2 fs-6"></i> Entrar al Panel de Control
       </button>
 
+      <div class="d-flex align-items-center my-3">
+        <hr class="flex-grow-1 border-secondary opacity-25">
+        <span class="px-2 small text-muted text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">o continúa con</span>
+        <hr class="flex-grow-1 border-secondary opacity-25">
+      </div>
+
+      <button type="button" class="btn btn-google-auth w-100 rounded-pill py-2 d-flex align-items-center justify-content-center gap-2 shadow-xs mb-3" id="btnGoogleSignIn">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z" fill="#4285F4"/>
+          <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+          <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.347 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
+        </svg>
+        <span class="fw-semibold" style="font-size: 0.88rem;">Iniciar Sesión con Google</span>
+      </button>
+
     </form>
 
             <div class="auth-links auth-links-border pt-3 text-center">
@@ -581,7 +620,21 @@
                 <span class="small fw-bold text-primary"><i class="bi bi-clock-history me-1"></i>Código de Seguridad:</span>
                 <span id="displayTokenBadge" class="badge bg-primary px-3 py-2 fs-6 fw-bold">------</span>
               </div>
-              <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">Registrado en tabla <code>password_resets</code> con 15 minutos de vigencia.</small>
+              <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">Código de seguridad institucional con 15 minutos de vigencia.</small>
+            </div>
+
+            <!-- Acciones de Notificación por Gmail -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <a href="#" target="_blank" id="btnOpenGmailNotification" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-semibold d-flex align-items-center gap-1 shadow-xs" style="text-decoration: none;" title="Abrir Gmail con la notificación de recuperación">
+                <i class="bi bi-google"></i>
+                <i class="bi bi-envelope-paper-fill ms-1"></i> Notificar / Abrir en Gmail
+              </a>
+              <button type="button" id="btnAutofillToken" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-semibold d-flex align-items-center gap-1 shadow-xs" title="Autocompletar el código en la casilla">
+                <i class="bi bi-lightning-charge-fill text-warning"></i> Autocompletar
+              </button>
+              <button type="button" id="btnCopyRecoveryToken" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1 shadow-xs" title="Copiar código al portapapeles">
+                <i class="bi bi-clipboard"></i>
+              </button>
             </div>
 
             <div class="mb-2">
@@ -617,6 +670,89 @@
 
         <div class="modal-footer border-0 pt-0">
           <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: INICIAR SESIÓN CON GOOGLE WORKSPACE / GMAIL
+       ========================================================================= -->
+  <div class="modal fade" id="modalGoogleSignIn" tabindex="-1" aria-labelledby="modalGoogleSignInLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 460px;">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 22px; overflow: hidden;">
+        <div class="modal-header border-0 pb-0" style="background: #ffffff; padding: 1.25rem 1.5rem 0.5rem;">
+          <div class="d-flex align-items-center gap-2">
+            <svg width="24" height="24" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z" fill="#4285F4"/>
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+              <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.347 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
+            </svg>
+            <div>
+              <h5 class="modal-title fw-bold text-dark mb-0" id="modalGoogleSignInLabel" style="font-size: 1.15rem;">Acceder con Google</h5>
+              <small class="text-muted" style="font-size: 0.74rem;">Google Workspace &bull; IESTP Hermanos Cárcamo</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body p-4 pt-2">
+          <p class="text-muted small mb-3" style="line-height: 1.45;">
+            Selecciona tu cuenta de Google institucional o personal para iniciar sesión de forma instantánea y segura sin contraseña:
+          </p>
+
+          <div id="googleAuthAlert" class="auth-alert mb-3" style="display: none;"></div>
+
+          <!-- Cuentas Institucionales Rápidas -->
+          <div class="d-flex flex-column gap-2 mb-3">
+            <button type="button" class="btn btn-light border text-start p-2 px-3 rounded-3 d-flex align-items-center gap-3 w-100 shadow-xs btn-google-quick-user" data-email="admin@ieshercar.edu.pe" data-name="Ing. Administrador General HercarBot" data-avatar="assets/img/logo-hercar.png">
+              <img src="assets/img/logo-hercar.png" class="rounded-circle border" width="38" height="38" alt="Admin">
+              <div class="flex-grow-1 overflow-hidden">
+                <strong class="d-block text-dark text-truncate" style="font-size: 0.88rem;">Ing. Administrador General</strong>
+                <small class="text-primary font-monospace d-block text-truncate" style="font-size: 0.74rem;">admin@ieshercar.edu.pe</small>
+              </div>
+              <span class="badge bg-primary-subtle text-primary border" style="font-size: 0.7rem;">Principal</span>
+            </button>
+
+            <button type="button" class="btn btn-light border text-start p-2 px-3 rounded-3 d-flex align-items-center gap-3 w-100 shadow-xs btn-google-quick-user" data-email="profesor@ieshercar.edu.pe" data-name="Profesor Titular IESTP Cárcamo" data-avatar="https://ui-avatars.com/api/?name=Profesor+Carcamo&background=0284c7&color=fff&bold=true">
+              <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px; font-size: 0.85rem;">PC</div>
+              <div class="flex-grow-1 overflow-hidden">
+                <strong class="d-block text-dark text-truncate" style="font-size: 0.88rem;">Profesor Titular IESTP Cárcamo</strong>
+                <small class="text-primary font-monospace d-block text-truncate" style="font-size: 0.74rem;">profesor@ieshercar.edu.pe</small>
+              </div>
+              <span class="badge bg-secondary-subtle text-secondary border" style="font-size: 0.7rem;">Docente</span>
+            </button>
+          </div>
+
+          <!-- Separador con opción de cuenta personalizada de Gmail -->
+          <div class="d-flex align-items-center my-3">
+            <hr class="flex-grow-1 border-secondary opacity-25">
+            <span class="px-2 small text-muted text-uppercase" style="font-size: 0.7rem;">o usa otra cuenta de Google</span>
+            <hr class="flex-grow-1 border-secondary opacity-25">
+          </div>
+
+          <div class="p-3 rounded-3 bg-light border mb-2">
+            <label class="form-label small fw-bold text-dark mb-1">
+              <i class="bi bi-envelope-at-fill text-danger me-1"></i> Correo de Gmail o Google Workspace:
+            </label>
+            <input type="email" id="customGoogleEmail" class="form-control form-control-sm mb-2" placeholder="ejemplo@gmail.com o tunombre@ieshercar.edu.pe">
+            
+            <label class="form-label small fw-bold text-dark mb-1">
+              <i class="bi bi-person-fill text-primary me-1"></i> Nombre Completo del Titular:
+            </label>
+            <input type="text" id="customGoogleName" class="form-control form-control-sm mb-3" placeholder="ej: Lic. María González">
+
+            <button type="button" class="btn btn-primary btn-sm rounded-pill w-100 shadow-sm" id="btnConnectCustomGoogle" style="background:#0f3380; border-color:#0f3380;">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Vincular y Acceder con Google
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0 bg-light py-2">
+          <small class="text-muted" style="font-size: 0.7rem;">
+            <i class="bi bi-shield-check text-success me-1"></i> Cifrado y Protección Google Identity Services
+          </small>
         </div>
       </div>
     </div>
@@ -778,6 +914,7 @@
     const modalRecoveryEl = document.getElementById('modalRecovery');
     let recoveryModalInstance = null;
     let targetRecoveryEmail = '';
+    let targetRecoveryToken = '';
 
     if (linkForgot && modalRecoveryEl) {
       linkForgot.addEventListener('click', (e) => {
@@ -806,17 +943,25 @@
         }
 
         btnRequestToken.disabled = true;
-        btnRequestToken.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Consultando tabla users...';
+        btnRequestToken.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Generando código y preparando notificación...';
 
         try {
           const res = await HercarSQL.requestPasswordReset(emailOrUser);
           if (res.success) {
             targetRecoveryEmail = res.email;
+            targetRecoveryToken = res.token;
             document.getElementById('displayTokenBadge').textContent = res.token;
             document.getElementById('recoveryTokenInput').value = res.token;
+
+            // Configurar enlace directo para notificación en Gmail
+            const btnGmail = document.getElementById('btnOpenGmailNotification');
+            if (btnGmail && res.gmailComposeUrl) {
+              btnGmail.href = res.gmailComposeUrl;
+            }
+
             document.getElementById('recoveryStep1').style.display = 'none';
             document.getElementById('recoveryStep2').style.display = 'block';
-            showRecoveryAlert(`Código generado para ${res.email}. Ingresa tu nueva contraseña para actualizar tu acceso.`, 'success');
+            showRecoveryAlert(`📧 Notificación preparada para ${res.email}. Pulsa "Notificar / Abrir en Gmail" o ingresa tu nueva contraseña para actualizar.`, 'success');
           } else {
             showRecoveryAlert(res.message, 'danger');
           }
@@ -826,6 +971,114 @@
           btnRequestToken.disabled = false;
           btnRequestToken.innerHTML = '<i class="bi bi-shield-check me-2"></i> Generar Código de Seguridad';
         }
+      });
+    }
+
+    // Copiar código de recuperación al portapapeles
+    const btnCopyRec = document.getElementById('btnCopyRecoveryToken');
+    if (btnCopyRec) {
+      btnCopyRec.addEventListener('click', () => {
+        if (targetRecoveryToken) {
+          navigator.clipboard?.writeText(targetRecoveryToken).then(() => {
+            btnCopyRec.innerHTML = '<i class="bi bi-check2 text-success"></i>';
+            setTimeout(() => { btnCopyRec.innerHTML = '<i class="bi bi-clipboard"></i>'; }, 1500);
+          });
+        }
+      });
+    }
+
+    // Autocompletar código en la casilla
+    const btnAutofill = document.getElementById('btnAutofillToken');
+    if (btnAutofill) {
+      btnAutofill.addEventListener('click', () => {
+        if (targetRecoveryToken) {
+          document.getElementById('recoveryTokenInput').value = targetRecoveryToken;
+          document.getElementById('newPasswordInput').focus();
+        }
+      });
+    }
+
+    // ------------------------------------------------------------------------
+    // Integración de Iniciar Sesión con Google Workspace / Gmail
+    // ------------------------------------------------------------------------
+    const btnGoogle = document.getElementById('btnGoogleSignIn');
+    const modalGoogleEl = document.getElementById('modalGoogleSignIn');
+    let modalGoogleInstance = null;
+
+    if (btnGoogle && modalGoogleEl) {
+      btnGoogle.addEventListener('click', () => {
+        if (!modalGoogleInstance && window.bootstrap) {
+          modalGoogleInstance = new bootstrap.Modal(modalGoogleEl);
+        }
+        const alertGoogle = document.getElementById('googleAuthAlert');
+        if (alertGoogle) alertGoogle.style.display = 'none';
+        if (modalGoogleInstance) modalGoogleInstance.show();
+      });
+    }
+
+    function showGoogleAlert(msg, type = 'danger') {
+      const alertBox = document.getElementById('googleAuthAlert');
+      if (!alertBox) return;
+      alertBox.textContent = msg;
+      alertBox.className = `auth-alert ${type}`;
+      alertBox.style.display = 'block';
+    }
+
+    async function processGoogleLogin(profile) {
+      showGoogleAlert(`Conectando con Google Workspace (${profile.email})...`, 'info');
+      try {
+        const res = await HercarSQL.authenticateWithGoogle(profile);
+        if (res.success) {
+          showGoogleAlert(res.message, 'success');
+          sessionStorage.setItem('hercar_admin_session', JSON.stringify(res.user));
+          sessionStorage.setItem('hercar_current_user', JSON.stringify(res.user));
+          if (document.getElementById('rememberMe').checked) {
+            localStorage.setItem('hercar_admin_session', JSON.stringify(res.user));
+            localStorage.setItem('hercar_current_user', JSON.stringify(res.user));
+          }
+          setTimeout(() => {
+            if (modalGoogleInstance) modalGoogleInstance.hide();
+            showAlert(`¡Bienvenido(a), ${res.user.name}! Sesión autenticada vía Google.`, 'success');
+            setTimeout(() => {
+              window.location.href = 'admin.html';
+            }, 600);
+          }, 700);
+        } else {
+          showGoogleAlert(res.message, 'danger');
+        }
+      } catch (e) {
+        console.error('Error Google Auth:', e);
+        showGoogleAlert('Error al autenticar con Google Workspace.', 'danger');
+      }
+    }
+
+    // Cuentas rápidas de Google
+    document.querySelectorAll('.btn-google-quick-user').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const email = btn.dataset.email;
+        const name = btn.dataset.name;
+        const avatar = btn.dataset.avatar;
+        processGoogleLogin({ email, name, avatar });
+      });
+    });
+
+    // Conectar cuenta personalizada de Google / Gmail
+    const btnCustomGoogle = document.getElementById('btnConnectCustomGoogle');
+    if (btnCustomGoogle) {
+      btnCustomGoogle.addEventListener('click', () => {
+        const email = document.getElementById('customGoogleEmail').value.trim();
+        const name = document.getElementById('customGoogleName').value.trim();
+
+        if (!email || !email.includes('@')) {
+          showGoogleAlert('Ingresa un correo de Google o Gmail válido.', 'danger');
+          return;
+        }
+
+        processGoogleLogin({
+          email: email,
+          name: name || email.split('@')[0],
+          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name || email)}&background=0284c7&color=fff&bold=true`
+        });
       });
     }
 

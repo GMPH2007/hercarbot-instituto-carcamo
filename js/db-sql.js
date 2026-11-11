@@ -371,6 +371,89 @@
     },
 
     // ------------------------------------------------------------------------
+    // Autenticación Federada con Google Workspace / Gmail
+    // ------------------------------------------------------------------------
+    async authenticateWithGoogle(googleProfile) {
+      await this.init();
+      if (!googleProfile || !googleProfile.email) {
+        return { success: false, message: 'No se recibió la información del perfil de Google.' };
+      }
+
+      const clientIp = getClientIp();
+      const cleanEmail = googleProfile.email.trim().toLowerCase();
+      const users = this._readTable('users');
+      let user = users.find(u => u.email.toLowerCase() === cleanEmail);
+
+      if (!user) {
+        // Crear cuenta automáticamente si es el primer acceso con este correo de Google
+        const newId = users.length > 0 ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;
+        const isFirstUser = users.length === 0;
+        const generatedUsername = cleanEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '') || `user${newId}`;
+        const fullName = googleProfile.name || googleProfile.displayName || cleanEmail.split('@')[0];
+
+        user = {
+          id: newId,
+          username: generatedUsername,
+          email: cleanEmail,
+          full_name: fullName,
+          password_hash: await sha256('google_oauth_authorized_' + cleanEmail),
+          password_plain: 'Google-Workspace',
+          role: isFirstUser ? 'Administrador Institucional' : 'Docente Evaluador',
+          career: cleanEmail.includes('ieshercar') ? 'Docente Oficial Cárcamo' : 'Docente Externo',
+          dni: googleProfile.dni || '45892014',
+          phone: googleProfile.phone || '968184783',
+          avatar: googleProfile.picture || googleProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=0284c7&color=fff&bold=true`,
+          status: 'ACTIVO',
+          auth_provider: 'google',
+          created_at: new Date().toISOString(),
+          last_login: new Date().toISOString(),
+          last_login_ip: clientIp
+        };
+        users.push(user);
+        this.logAudit(cleanEmail, 'GOOGLE_REGISTER_SUCCESS', `Cuenta registrada e integrada vía Google Workspace desde IP: ${clientIp}`);
+      } else {
+        if (user.status !== 'ACTIVO') {
+          this.logAudit(cleanEmail, 'LOGIN_BLOCKED', `Intento de acceso con Google a cuenta suspendida desde IP: ${clientIp}`);
+          return { success: false, message: 'Tu cuenta institucional se encuentra inactiva o suspendida.' };
+        }
+
+        user.last_login = new Date().toISOString();
+        user.last_login_ip = clientIp;
+        user.auth_provider = 'google';
+        if (googleProfile.picture || googleProfile.photoURL) {
+          user.avatar = googleProfile.picture || googleProfile.photoURL;
+        }
+        this.logAudit(cleanEmail, 'GOOGLE_LOGIN_SUCCESS', `Autenticación exitosa con Google Workspace desde IP: ${clientIp}`);
+      }
+
+      this._writeTable('users', users);
+
+      const sessionPayload = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        name: user.full_name,
+        full_name: user.full_name,
+        role: user.role,
+        career: user.career || 'Institucional',
+        dni: user.dni || '45892014',
+        phone: user.phone || '968184783',
+        avatar: user.avatar || 'assets/img/logo-hercar.png',
+        last_login_ip: clientIp,
+        loginTime: user.last_login,
+        status: user.status || 'ACTIVO',
+        auth_provider: 'google',
+        token: 'HC_GOOGLE_' + Math.random().toString(36).substring(2) + Date.now().toString(36)
+      };
+
+      return {
+        success: true,
+        user: sessionPayload,
+        message: `¡Bienvenido(a), ${user.full_name}! Sesión validada con Google Workspace.`
+      };
+    },
+
+    // ------------------------------------------------------------------------
     // Registro Exclusivo Protegido con Código Maestro Institucional
     // Soporta:
     // 1) Configuración Inicial desde Cero (el primer usuario se convierte en Super-Admin sin requerir código)
@@ -518,12 +601,27 @@
 
       this.logAudit(user.email, 'PASSWORD_RESET_REQUESTED', `Solicitud de recuperación con token generado`);
 
+      const gmailSubject = encodeURIComponent('Código de Recuperación de Contraseña — HercarBot IESTP Hermanos Cárcamo');
+      const gmailBody = encodeURIComponent(
+        `Estimado(a) ${user.full_name}:\n\n` +
+        `Se ha recibido una solicitud para recuperar la contraseña de su cuenta institucional en HercarBot IA.\n\n` +
+        `🔐 Su CÓDIGO DE SEGURIDAD de 6 dígitos es: ${token}\n\n` +
+        `Este código tiene una vigencia de 15 minutos.\n` +
+        `Si usted no solicitó este código, ignore este mensaje.\n\n` +
+        `Atentamente,\n` +
+        `Dirección General y Soporte TI\n` +
+        `IESTP Hermanos Cárcamo — Paita, Piura, Perú`
+      );
+      const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(user.email)}&su=${gmailSubject}&body=${gmailBody}`;
+
       return {
         success: true,
         message: 'Código de recuperación generado con éxito.',
         email: user.email,
-        token: token, // Se muestra en pantalla para verificación inmediata en la sustentación
-        expiresAt: expiresAt
+        name: user.full_name,
+        token: token,
+        expiresAt: expiresAt,
+        gmailComposeUrl: gmailComposeUrl
       };
     },
 

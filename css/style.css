@@ -505,7 +505,7 @@ body {
 /* --- Header Superior --- */
 .chat-top-header {
   height: 62px;
-  padding: 0 20px;
+  padding: 0 18px;
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
@@ -516,6 +516,8 @@ body {
   z-index: 10;
   gap: 10px;
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
@@ -523,6 +525,9 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: max-content;
 }
 
 .header-inst-logo {
@@ -573,12 +578,15 @@ body {
   align-items: center;
   gap: 6px;
   overflow-x: auto;
+  overflow-y: hidden;
   white-space: nowrap;
+  flex-wrap: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  flex: 0 1 auto;
+  flex: 1 1 0%;
   min-width: 0;
-  max-width: fit-content;
+  max-width: 100%;
+  padding: 2px 4px;
 }
 .header-quick-portals::-webkit-scrollbar {
   display: none;
@@ -658,7 +666,18 @@ body.dark-theme .header-search-btn .palette-kbd {
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
-  margin-left: auto;
+  margin-left: 0;
+}
+
+#btn-stop-speech {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  align-items: center !important;
+  gap: 5px !important;
+  height: 34px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .quick-portal-chip {
@@ -671,10 +690,11 @@ body.dark-theme .header-search-btn .palette-kbd {
   color: var(--txt-2);
   text-decoration: none;
   transition: all var(--dur);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .quick-portal-chip:hover {
@@ -2152,8 +2172,12 @@ body.dark-theme .quick-chip-btn:hover {
   .welcome-title {
     font-size: 1.65rem;
   }
+  .header-quick-portals {
+    gap: 5px;
+  }
   .quick-portal-chip {
-    display: none;
+    padding: 4px 9px;
+    font-size: 0.7rem;
   }
 }
 
@@ -5660,4 +5684,136 @@ body.dark-theme #futEntityQuickType .btn.active {
 
 .sidebar-login-btn:hover i {
   color: #ffffff !important;
+}
+
+/* ==========================================================================
+   SALUDO CON MANITO ANIMADA, ESCRITURA TIPO CHATGPT & GUÍA TUPA 2026
+   ========================================================================== */
+.wave-hand-emoji {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: hercarWaveHand 2.4s ease-in-out infinite;
+  margin: 0 2px;
+}
+
+@keyframes hercarWaveHand {
+  0%, 100% { transform: rotate(0deg); }
+  12% { transform: rotate(16deg); }
+  24% { transform: rotate(-8deg); }
+  36% { transform: rotate(14deg); }
+  48% { transform: rotate(-4deg); }
+  60% { transform: rotate(8deg); }
+  72% { transform: rotate(0deg); }
+}
+
+.gpt-stream-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  background: var(--brand-light, #1e56d6);
+  border-radius: 2px;
+  margin-left: 3px;
+  vertical-align: -2px;
+  animation: gptBlinkCursor 0.72s steps(2, start) infinite;
+}
+
+@keyframes gptBlinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+.bot-msg-suggestions-box.streaming-hidden {
+  opacity: 0;
+  pointer-events: none;
+  max-height: 0;
+  overflow: hidden;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: none !important;
+}
+
+.bot-msg-suggestions-box {
+  transition: opacity 0.25s ease;
+}
+
+/* Guía TUPA 2026: Cajas "¿Para qué sirve?" y Filtros */
+.tupa-sirve-box {
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid #2563eb;
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 0.83rem;
+  line-height: 1.52;
+  color: #1e293b;
+}
+
+.tupa-sirve-preview {
+  font-size: 0.75rem;
+  line-height: 1.42;
+  color: #475569;
+  margin-top: 4px;
+}
+
+.tupa-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.tupa-filter-pill {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  border-radius: 99px;
+  padding: 4px 11px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.tupa-filter-pill:hover,
+.tupa-filter-pill.active {
+  background: #0e2d6c;
+  border-color: #0e2d6c;
+  color: #ffffff;
+}
+
+.tupa-compendio-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+body.dark-theme .tupa-sirve-box {
+  background: rgba(30, 58, 138, 0.28);
+  border-color: rgba(96, 165, 250, 0.35);
+  border-left-color: #60a5fa;
+  color: #e2e8f0;
+}
+
+body.dark-theme .tupa-sirve-preview {
+  color: #94a3b8;
+}
+
+body.dark-theme .tupa-filter-pill {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+body.dark-theme .tupa-filter-pill.active,
+body.dark-theme .tupa-filter-pill:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+body.dark-theme .tupa-compendio-item {
+  background: #0f172a;
+  border-color: #1e293b;
 }

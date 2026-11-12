@@ -1036,7 +1036,7 @@ class HercarBotApp {
       'constancia_practicas': {
         sumilla: 'SOLICITO ACREDITACIÓN Y CONSTANCIA DE HORAS DE PRÁCTICAS EFSRT',
         autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
-        costo: 'S/ 25.00 (Tasa TUPA BN)',
+        costo: 'S/ 20.00 Carpeta EFSRT / S/ 25.00 Convalidación PPP (TUPA 2026 BN)',
         plazo: '3 a 5 días hábiles',
         wrap: null,
         draft: () => `Que, habiendo culminado satisfactoriamente mis prácticas preprofesionales (EFSRT) y habiendo presentado el Plan de Trabajo, Hoja de Evaluación del Empleador e Informe Final visado, solicito se me otorgue la Constancia de Acreditación de Prácticas Preprofesionales correspondiente.`,
@@ -1045,7 +1045,7 @@ class HercarBotApp {
       'cert_modular': {
         sumilla: 'SOLICITO CERTIFICADO MODULAR PROGRESIVO OFICIAL',
         autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 45.00 (Tasa TUPA BN)',
+        costo: 'S/ 25.00 (TUPA 2026 — Cta. BN 00-638-002361)',
         plazo: '5 a 7 días hábiles',
         wrap: 'futModuloWrap',
         draft: (d) => `Que, habiendo culminado y aprobado la totalidad de unidades didácticas y horas de prácticas preprofesionales (EFSRT) correspondientes al ${d.modulo || 'Módulo Formativo I'} del plan de estudios de mi programa, solicito la expedición de mi CERTIFICADO MODULAR PROGRESIVO con valor oficial MINEDU.`,
@@ -1054,7 +1054,7 @@ class HercarBotApp {
       'cert_modular_convenio': {
         sumilla: 'SOLICITO CERTIFICADO MODULAR CONVALIDANDO PRÁCTICAS POR CONVENIO',
         autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 45.00 (Tasa TUPA BN)',
+        costo: 'S/ 25.00 (TUPA 2026 — Cta. BN 00-638-002361)',
         plazo: '5 a 7 días hábiles',
         wrap: 'futModuloWrap',
         draft: (d) => `Que, habiendo aprobado los créditos curriculares y validado las horas de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) ejecutadas en el marco del Convenio de Cooperación Interinstitucional, solicito se sirva expedir mi CERTIFICADO MODULAR PROGRESIVO correspondiente al ${d.modulo || 'Módulo Formativo I'} con reconocimiento oficial.`,
@@ -1063,7 +1063,7 @@ class HercarBotApp {
       'cert_estudios_completo': {
         sumilla: 'SOLICITO CERTIFICADO OFICIAL DE ESTUDIOS COMPLETO (I AL VI CICLO)',
         autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 60.00 (Tasa TUPA BN)',
+        costo: 'S/ 240.00 6 Periodos / S/ 40.00 por Periodo (TUPA 2026 BN)',
         plazo: '3 a 5 días hábiles',
         wrap: null,
         draft: () => `Que, para fines laborales y de prosecución de estudios superiores, solicito se me expida mi CERTIFICADO OFICIAL DE ESTUDIOS correspondiente a la totalidad de semestres académicos cursados en el instituto, para lo cual adjunto los requisitos del TUPA.`,
@@ -1072,7 +1072,7 @@ class HercarBotApp {
       'titulacion_profesional': {
         sumilla: 'SOLICITO EXPEDICIÓN DE TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN',
         autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 180.00 (Tasa TUPA BN)',
+        costo: 'S/ 160.00 (Formato S/ 60.00 + Derecho Titulación S/ 100.00 — BN 00-638-002361)',
         plazo: '30 a 45 días hábiles (Registro MINEDU)',
         wrap: null,
         draft: () => `Que, habiendo culminado satisfactoriamente los 120 créditos curriculares, los 3 certificados modulares oficiales, el curso de inglés institucional y habiendo aprobado el proceso de sustentación de Proyecto / Examen de Suficiencia, solicito la expedición de mi TÍTULO PROFESIONAL TÉCNICO A NOMBRE DE LA NACIÓN e inscripción en el Registro Nacional de Títulos del MINEDU.`,
@@ -1081,7 +1081,7 @@ class HercarBotApp {
       'constancia_egresado': {
         sumilla: 'SOLICITO CONSTANCIA OFICIAL DE EGRESADO',
         autoridad: 'SECRETARÍA ACADÉMICA DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 20.00 (Tasa TUPA BN)',
+        costo: 'S/ 15.00 (TUPA 2026 — Cta. BN 00-638-002361)',
         plazo: '2 a 3 días hábiles',
         wrap: null,
         draft: () => `Que, habiendo culminado satisfactoriamente los seis semestres académicos del plan curricular de mi carrera, solicito se me extienda mi CONSTANCIA DE EGRESADO para los trámites laborales y profesionales pertinentes.`,
@@ -1090,7 +1090,7 @@ class HercarBotApp {
       'duplicado_titulo': {
         sumilla: 'SOLICITO DUPLICADO DE DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO',
         autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 90.00 (Tasa TUPA BN)',
+        costo: 'S/ 200.00 (TUPA 2026 — Trámite y Formato Cta. 00-638-002361)',
         plazo: '15 a 20 días hábiles',
         wrap: null,
         draft: () => `Que, habiéndose extraviado/deteriorado mi diploma original y habiendo realizado la denuncia policial y publicación correspondiente, solicito la expedición del DUPLICADO DE MI DIPLOMA DE TÍTULO PROFESIONAL TÉCNICO.`,
@@ -1099,16 +1099,16 @@ class HercarBotApp {
       'matricula_extemporanea': {
         sumilla: 'SOLICITO AUTORIZACIÓN PARA MATRÍCULA EXTEMPORÁNEA',
         autoridad: 'DIRECCIÓN GENERAL / JEFATURA DE UNIDAD ACADÉMICA',
-        costo: 'S/ 140.00 (Tasa regular + recargo BN)',
+        costo: 'S/ 250.00 Matrícula Ordinaria (BN Cta. 00-638-002361)',
         plazo: '2 días hábiles',
         wrap: null,
         draft: () => `Que, habiendo vencido el plazo regular de matrícula por motivos de fuerza mayor debidamente justificados y encontrándome habilitado académicamente, solicito se autorice mi matrícula extemporánea en el periodo lectivo en curso.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: false, practicas: false, medicos: false }
       },
       'reserva_matricula': {
-        sumilla: 'SOLICITO RESERVA DE MATRÍCULA SEMESTRAL',
+        sumilla: 'SOLICITO RESERVA DE MATRÍCULA / LICENCIA DE ESTUDIOS',
         autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 30.00 (Tasa TUPA BN)',
+        costo: 'S/ 60.00 Ingresantes · S/ 100.00 Licencia 2do–6to Sem. (TUPA 2026 BN)',
         plazo: '2 a 3 días hábiles',
         wrap: null,
         draft: () => `Que, por razones estrictamente personales y de fuerza mayor que me impiden continuar mis estudios en el presente semestre académico, solicito la RESERVA DE MI MATRÍCULA asegurando mi vacante para el reingreso respectivo según el Reglamento Institucional.`,
@@ -1117,7 +1117,7 @@ class HercarBotApp {
       'reingreso_estudios': {
         sumilla: 'SOLICITO REINGRESO / REINCORPORACIÓN DE ESTUDIOS',
         autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 35.00 (Tasa TUPA BN)',
+        costo: 'S/ 65.00 (TUPA 2026 — Cta. BN 00-638-002361)',
         plazo: '2 a 3 días hábiles',
         wrap: null,
         draft: () => `Que, habiendo culminado el periodo de reserva de matrícula concedido, solicito mi REINGRESO Y REINCORPORACIÓN al semestre académico correspondiente en mi carrera profesional.`,
@@ -1126,7 +1126,7 @@ class HercarBotApp {
       'convalidacion_cursos': {
         sumilla: 'SOLICITO CONVALIDACIÓN DE UNIDADES DIDÁCTICAS',
         autoridad: 'JEFATURA DE UNIDAD ACADÉMICA / COORDINACIÓN DE CARRERA',
-        costo: 'S/ 20.00 por unidad (BN)',
+        costo: 'S/ 30.00 por Unidad Didáctica (TUPA 2026 — Cta. BN 00-638-002361)',
         plazo: '5 a 7 días hábiles',
         wrap: 'futConvalidacionWrap',
         draft: (d) => `Que, habiendo cursado estudios superiores en "${d.convalInst || 'otra institución de educación superior'}", solicito la CONVALIDACIÓN DE UNIDADES DIDÁCTICAS afines a mi plan de estudios actual, para lo cual adjunto mis certificados y sílabos oficiales visados.`,
@@ -1135,16 +1135,16 @@ class HercarBotApp {
       'traslado_interno': {
         sumilla: 'SOLICITO TRASLADO INTERNO DE PROGRAMA DE ESTUDIOS',
         autoridad: 'DIRECCIÓN GENERAL DEL INSTITUTO SUPERIOR HERMANOS CÁRCAMO',
-        costo: 'S/ 50.00 (Tasa TUPA BN)',
+        costo: 'S/ 80.00 (TUPA 2026 — Cta. BN 00-638-002361)',
         plazo: '3 a 5 días hábiles',
         wrap: null,
         draft: () => `Que, de acuerdo al reglamento institucional y existiendo vacantes disponibles, solicito mi TRASLADO INTERNO de programa de estudios, comprometiéndome a cursar las unidades didácticas complementarias requeridas.`,
         reqs: { dni: true, voucher: true, fotos: false, notas: true, practicas: false, medicos: false }
       },
       'subsanacion_recuperacion': {
-        sumilla: 'SOLICITO EXAMEN DE SUBSANACIÓN / RECUPERACIÓN EXTRAORDINARIO',
+        sumilla: 'SOLICITO EVALUACIÓN DE RECUPERACIÓN / EXTRAORDINARIA',
         autoridad: 'JEFATURA DE UNIDAD ACADÉMICA',
-        costo: 'S/ 25.00 por curso (BN)',
+        costo: 'S/ 35.00 Recuperación / S/ 200–300 Eval. Extraordinaria (TUPA 2026 BN)',
         plazo: '2 días hábiles',
         wrap: null,
         draft: () => `Que, teniendo pendiente una unidad didáctica desaprobada del semestre anterior y cumpliendo los requisitos reglamentarios, solicito se me autorice rendir la EVALUACIÓN EXTRAORDINARIA DE SUBSANACIÓN correspondiente.`,
@@ -2119,6 +2119,7 @@ class HercarBotApp {
   }
 
   startNewChat(showAnimation = true) {
+    this.stopStreamingText();
     this.stopSpeaking();
     this.closeMobileSidebar();
     this.activeTest = null;
@@ -2145,24 +2146,41 @@ class HercarBotApp {
     }
 
     const conversations = this.getConversations();
-    let current = conversations.find(c => c.id === this.currentChatId);
+    const idx = conversations.findIndex(c => c.id === this.currentChatId);
+    let current = idx >= 0 ? conversations[idx] : null;
 
     const now = new Date();
     const todayStr = now.toLocaleDateString();
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const buildChatTitle = (rawText) => {
+      const cleaned = (rawText || '').replace(/\s+/g, ' ').trim();
+      if (!cleaned) return 'Nueva Conversación';
+      return cleaned.length > 38 ? cleaned.substring(0, 38) + '...' : cleaned;
+    };
 
     if (!current) {
       current = {
         id: this.currentChatId,
-        title: sender === 'user' ? (content.substring(0, 30) + (content.length > 30 ? '...' : '')) : 'Nueva Conversación',
+        title: sender === 'user' ? buildChatTitle(content) : 'Nueva Conversación',
         dateStr: todayStr,
         createdAt: now.getTime(),
+        updatedAt: now.getTime(),
         timestamp: timeStr,
         messages: []
       };
       conversations.unshift(current);
-    } else if (sender === 'user' && (current.title === 'Nueva Conversación' || current.messages.length <= 1)) {
-      current.title = content.substring(0, 30) + (content.length > 30 ? '...' : '');
+    } else {
+      if (sender === 'user' && (current.title === 'Nueva Conversación' || !current.title || current.messages.length === 0)) {
+        current.title = buildChatTitle(content);
+      }
+      current.updatedAt = now.getTime();
+      current.dateStr = todayStr;
+      current.timestamp = timeStr;
+      // Mantener la conversación activa más reciente arriba del historial (estilo ChatGPT)
+      if (idx > 0) {
+        conversations.splice(idx, 1);
+        conversations.unshift(current);
+      }
     }
 
     current.messages.push({
@@ -2173,10 +2191,11 @@ class HercarBotApp {
     });
 
     this.saveConversations(conversations);
-    this.renderHistoryList();
+    this.renderHistoryList(this.searchHistoryInput ? this.searchHistoryInput.value.trim() : '');
   }
 
   loadConversation(chatId) {
+    this.stopStreamingText();
     this.stopSpeaking();
     const conversations = this.getConversations();
     const chat = conversations.find(c => c.id === chatId);
@@ -2691,13 +2710,13 @@ class HercarBotApp {
         const isNatural = this.isNaturalOnlineVoice(v);
 
         let badge = '';
-        if (isDalia) badge = ' 🌸 Chica Dulce y Joven (Máxima Calidad)';
-        else if (isCamila) badge = ' 🌸 Voz Peruana Natural (Recomendada)';
-        else if (isSabina && isNatural) badge = ' 🌸 Voz Dulce y Relajada (Recomendada)';
-        else if (isGoogle) badge = ' 🌸 Voz Natural Google (Recomendada)';
+        if (isDalia) badge = ' ✨ Chica Dulce y Joven (Máxima Calidad)';
+        else if (isCamila) badge = ' ✨ Voz Peruana Natural (Recomendada)';
+        else if (isSabina && isNatural) badge = ' ✨ Voz Dulce y Relajada (Recomendada)';
+        else if (isGoogle) badge = ' ✨ Voz Natural Google (Recomendada)';
         else if (isNatural) badge = ' ✨ Voz Natural Online';
-        else if (isSabina) badge = ' 🌸 Voz Suave y Cálida';
-        else if (!nameLower.includes('desktop') && !v.localService) badge = ' 🌸 Voz Estándar';
+        else if (isSabina) badge = ' 🎙️ Voz Suave y Cálida';
+        else if (!nameLower.includes('desktop') && !v.localService) badge = ' 🎙️ Voz Estándar';
         else badge = ' 💻 (Voz Local de Escritorio)';
 
         option.textContent = `${v.name} (${v.lang})${badge}`;
@@ -2781,13 +2800,13 @@ class HercarBotApp {
 
     if (speedRange && speedLabel) {
       speedRange.value = this.voiceRate || 0.93;
-      speedLabel.textContent = `${Number(this.voiceRate || 0.93).toFixed(2)}x (🌸 Chica Dulce y Relajada)`;
+      speedLabel.textContent = `${Number(this.voiceRate || 0.93).toFixed(2)}x (Voz Dulce y Relajada)`;
 
       speedRange.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
         this.voiceRate = val;
         localStorage.setItem('hercar_voice_rate', val);
-        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.92 ? 'Muy Pausada' : val > 1.02 ? 'Ágil' : '🌸 Dulce y Relajada'})`;
+        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.92 ? 'Muy Pausada' : val > 1.02 ? 'Ágil' : 'Dulce y Relajada'})`;
       });
     }
 
@@ -2834,13 +2853,13 @@ class HercarBotApp {
         localStorage.setItem('hercar_voice_rate', '0.93');
         if (speedRange && speedLabel) {
           speedRange.value = 0.93;
-          speedLabel.textContent = '0.93x (🌸 Chica Dulce y Relajada)';
+          speedLabel.textContent = '0.93x (Voz Dulce y Relajada)';
         }
         btnWarm.classList.add('active', 'btn-primary');
         btnWarm.classList.remove('btn-outline-primary');
         btnPro.classList.remove('active', 'btn-primary');
         btnPro.classList.add('btn-outline-secondary');
-        this.showToast('Voz configurada: Chica Dulce, Suave y Relajada 🌸', 'success', 'bi-mic-fill');
+        this.showToast('Voz configurada: Dulce, Suave y Relajada', 'success', 'bi-mic-fill');
         this.speak('¡Hola! He ajustado mi voz para hablarte con suavidad, calma y cariño. Respira tranquilo, aquí estoy para orientarte.');
       });
 
@@ -2885,10 +2904,10 @@ class HercarBotApp {
         this.voiceURI = null;
         if (speedRange && speedLabel) {
           speedRange.value = 0.93;
-          speedLabel.textContent = '0.93x (🌸 Chica Dulce y Relajada)';
+          speedLabel.textContent = '0.93x (Voz Dulce y Relajada)';
         }
         this.initVoiceSynthesis();
-        this.showToast('Ajustes de voz restablecidos a Voz de Chica Dulce y Relajada 🌸', 'success', 'bi-arrow-counterclockwise');
+        this.showToast('Ajustes de voz restablecidos a Voz Dulce y Relajada', 'success', 'bi-arrow-counterclockwise');
         this.speak('¡Listo! He restablecido mi voz a su tono dulce, suave y natural de fábrica.');
       });
     }
@@ -3741,14 +3760,30 @@ class HercarBotApp {
     if (this.context.lastTramite) {
       const tramite = GUIA_TRAMITES_TUPA.find(t => t.id === this.context.lastTramite);
       if (tramite) {
+        if ((norm.includes('para que sirve') || norm.includes('que es') || norm.includes('utilidad')) && tramite.paraQueSirve) {
+          const html = `
+            <div class="faq-card-custom" style="border-left: 4px solid #2563eb !important;">
+              <h5 class="faq-custom-title text-primary"><i class="bi bi-lightbulb-fill text-warning me-2"></i>¿Para qué sirve: ${tramite.nombre}?</h5>
+              <div class="tupa-sirve-box mb-3">${tramite.paraQueSirve}</div>
+              <p class="small text-muted mb-2"><strong>Tasa Oficial TUPA 2026:</strong> ${tramite.costo}</p>
+              <div class="interactive-button-grid mt-2">
+                <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
+                <button class="interactive-btn" data-chat-action="ver_tupa_compendio"><i class="bi bi-table text-success"></i> Ver los 66 Ítems TUPA</button>
+              </div>
+            </div>
+          `;
+          this.appendBotMessage(html, tramite.paraQueSirve);
+          return true;
+        }
+
         if (isCost) {
           const html = `
             <div class="faq-card-custom" style="border-left: 4px solid #0f3380 !important;">
               <h5 class="faq-custom-title text-primary"><i class="bi bi-receipt me-2"></i>Costo de: ${tramite.nombre}</h5>
-              <p>El costo según el TUPA oficial es de <strong>${tramite.costo}</strong>.</p>
-              <p class="small text-muted"><strong>Plazo de entrega:</strong> ${tramite.plazo} &bull; <strong>Canal:</strong> ${tramite.responsable}</p>
+              <p>El costo según el TUPA 2026 oficial es de <strong>${tramite.costo}</strong>.</p>
+              <p class="small text-muted"><strong>Plazo de entrega:</strong> ${tramite.plazo}${tramite.cuentaBN ? ` &bull; <strong>Cuenta BN:</strong> ${tramite.cuentaBN}` : ''}</p>
               <div class="interactive-button-grid mt-3">
-                <button class="interactive-btn" data-chat-action="ver_tramite_detalle" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
+                <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="${tramite.id}"><i class="bi bi-card-checklist text-primary"></i> Ver Requisitos Completos</button>
                 <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuenta Banco de la Nación</button>
               </div>
             </div>
@@ -4144,21 +4179,13 @@ class HercarBotApp {
 
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
-        <!-- Avatar Central y Estado En Línea -->
-        <div class="welcome-hero-avatar-wrap">
-          <div class="welcome-hero-avatar-box">
-            <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="IESTP Hermanos Cárcamo" class="welcome-hero-avatar">
-            <span class="welcome-online-pulse" title="Asistente Oficial En Línea"></span>
-          </div>
-        </div>
-
         <div class="welcome-badge">
           <i class="bi bi-patch-check-fill text-primary"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo (Paita)
         </div>
         
-        <h1 class="welcome-title">¡Hola! ¿Cómo te puedo orientar hoy? 🌸</h1>
+        <h1 class="welcome-title">¡Hola! <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¿Cómo te puedo orientar hoy?</h1>
         <p class="welcome-subtitle">
-          Orientación vocacional, admisión 2026 sin costo de mensualidades, guías oficiales del Banco de la Nación, plana docente y trámites para Mesa de Partes.
+          Orientación vocacional, admisión 2026 sin costo de mensualidades, guías oficiales del Banco de la Nación, TUPA 2026 explicado paso a paso, plana docente y trámites para Mesa de Partes.
         </p>
 
         <!-- 4 Tarjetas Maestras Principales (Armónicas, Espaciosas y Modernas) -->
@@ -4211,6 +4238,7 @@ class HercarBotApp {
           <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Consultas rápidas recomendadas:</span>
           <div class="prompts-chips-wrapper">
             <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuentas BN (00-638-002361 / 025736)</button>
+            <button class="prompt-chip" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-ruled-fill me-1 text-primary"></i> TUPA 2026: ¿Para qué sirve cada trámite?</button>
             <button class="prompt-chip" data-prompt="¿Cómo es la admisión 2026 y requisitos?"><i class="bi bi-pencil-square me-1 text-success"></i> Admisión 2026</button>
             <button class="prompt-chip" data-prompt="Háblame sobre la carrera de Computación e Informática"><i class="bi bi-laptop me-1 text-info"></i> Computación e Informática</button>
             <button class="prompt-chip" data-prompt="Iniciar test de orientación vocacional"><i class="bi bi-compass-fill me-1 text-danger"></i> Test Vocacional</button>
@@ -4411,9 +4439,109 @@ class HercarBotApp {
 
     this.saveMessageToCurrentChat('bot', htmlContent, spokenSummary);
 
+    // Escritura fluida estilo ChatGPT (preservando todo el HTML y botones intactos)
+    const contentBody = msgEl.querySelector('.bot-content-body');
+    const suggestionsBox = msgEl.querySelector('.bot-msg-suggestions-box');
+    this.streamBotContent(contentBody, suggestionsBox);
+
     if (spokenSummary && !this.isMuted) {
       this.speak(spokenSummary);
     }
+  }
+
+  stopStreamingText() {
+    if (this.activeStreamTimer) {
+      clearInterval(this.activeStreamTimer);
+      this.activeStreamTimer = null;
+    }
+    if (typeof this.activeStreamFinalize === 'function') {
+      const fin = this.activeStreamFinalize;
+      this.activeStreamFinalize = null;
+      fin();
+    }
+  }
+
+  streamBotContent(contentBody, suggestionsBox) {
+    this.stopStreamingText();
+    if (!contentBody || typeof document.createTreeWalker !== 'function') return;
+
+    const entries = [];
+    const walker = document.createTreeWalker(contentBody, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'CODE' || parent.closest('button')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    let currentNode;
+    while ((currentNode = walker.nextNode())) {
+      entries.push({ node: currentNode, fullText: currentNode.nodeValue });
+    }
+
+    const totalChars = entries.reduce((sum, e) => sum + e.fullText.length, 0);
+    if (entries.length === 0 || totalChars < 20) return;
+
+    entries.forEach(e => { e.node.nodeValue = ''; });
+    if (suggestionsBox) suggestionsBox.classList.add('streaming-hidden');
+
+    const cursor = document.createElement('span');
+    cursor.className = 'gpt-stream-cursor';
+
+    let nodeIdx = 0;
+    let charIdx = 0;
+    const totalTicks = Math.min(60, Math.max(18, Math.ceil(totalChars / 18)));
+    const charsPerTick = Math.max(8, Math.ceil(totalChars / totalTicks));
+
+    const finalize = () => {
+      entries.forEach(e => { e.node.nodeValue = e.fullText; });
+      if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+      if (suggestionsBox) suggestionsBox.classList.remove('streaming-hidden');
+      this.scrollToBottom();
+    };
+
+    this.activeStreamFinalize = finalize;
+
+    this.activeStreamTimer = setInterval(() => {
+      let remaining = charsPerTick;
+      while (remaining > 0 && nodeIdx < entries.length) {
+        const item = entries[nodeIdx];
+        const left = item.fullText.length - charIdx;
+        if (remaining >= left) {
+          item.node.nodeValue = item.fullText;
+          remaining -= left;
+          nodeIdx++;
+          charIdx = 0;
+        } else {
+          let nextIdx = charIdx + remaining;
+          // Avanzar hasta el próximo espacio para escribir palabra por palabra como ChatGPT
+          while (nextIdx < item.fullText.length && item.fullText[nextIdx] !== ' ') {
+            nextIdx++;
+          }
+          item.node.nodeValue = item.fullText.slice(0, nextIdx);
+          charIdx = nextIdx;
+          remaining = 0;
+        }
+      }
+
+      if (nodeIdx < entries.length && entries[nodeIdx].node.parentNode) {
+        entries[nodeIdx].node.parentNode.insertBefore(cursor, entries[nodeIdx].node.nextSibling);
+      }
+
+      this.scrollToBottom();
+
+      if (nodeIdx >= entries.length) {
+        clearInterval(this.activeStreamTimer);
+        this.activeStreamTimer = null;
+        this.activeStreamFinalize = null;
+        finalize();
+      }
+    }, 22);
   }
 
   showTyping() {
@@ -4946,7 +5074,7 @@ ${text}
     }
 
     // 15. Pagos, Banco de la Nación, Cuenta Corriente, Subir Comprobante
-    if (norm.includes('pago') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('banco') || norm.includes('cuenta') || norm.includes('subir voucher') || norm.includes('tesoreria') || norm.includes('deposito') || norm.includes('pagos ieshercar')) {
+    if (!norm.includes('tupa') && !norm.includes('para que sirve') && (norm.includes('pago') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('banco') || norm.includes('cuenta') || norm.includes('subir voucher') || norm.includes('tesoreria') || norm.includes('deposito') || norm.includes('pagos ieshercar'))) {
       this.renderGuiaPagos();
       this.logQuery('pagos');
       return;
@@ -4970,21 +5098,37 @@ ${text}
       return;
     }
 
-    // 17. Trámites TUPA
+    // 17. Trámites TUPA 2026 (y explicación "¿Para qué sirve cada uno?")
     for (const tramite of GUIA_TRAMITES_TUPA) {
       const matchTramite = tramite.requisitos.some(r => norm.includes(this.normalizeText(r))) ||
                            norm.includes(this.normalizeText(tramite.nombre)) ||
                            (tramite.id === 'tramite-matricula' && (norm.includes('matricula') || norm.includes('matricularme') || norm.includes('ratificacion'))) ||
-                           (tramite.id === 'tramite-certificado-modular' && (norm.includes('modular') || norm.includes('certificado modular') || norm.includes('diploma'))) ||
-                           (tramite.id === 'tramite-titulacion' && (norm.includes('titulo') || norm.includes('titulacion') || norm.includes('titularme') || norm.includes('efsrt') || norm.includes('practicas'))) ||
+                           (tramite.id === 'tramite-certificado-modular' && (norm.includes('modular') || norm.includes('certificado modular'))) ||
+                           (tramite.id === 'tramite-titulacion' && (norm.includes('titulo') || norm.includes('titulacion') || norm.includes('titularme'))) ||
                            (tramite.id === 'tramite-carne' && (norm.includes('carne') || norm.includes('carnet') || norm.includes('pasaje') || norm.includes('medio pasaje'))) ||
-                           (tramite.id === 'tramite-constancia-estudios' && (norm.includes('constancia') || norm.includes('record') || norm.includes('notas')));
+                           (tramite.id === 'tramite-constancias-oficiales' && (norm.includes('constancia') || norm.includes('no adeudar') || norm.includes('tercio superior') || norm.includes('consolidado'))) ||
+                           (tramite.id === 'tramite-certificado-estudios' && (norm.includes('certificado de estudios') || norm.includes('certificados de estudio') || norm.includes('record'))) ||
+                           (tramite.id === 'tramite-evaluaciones-recuperacion' && (norm.includes('evaluacion extraordinaria') || norm.includes('recuperacion') || norm.includes('repitencia'))) ||
+                           (tramite.id === 'tramite-convalidacion' && (norm.includes('convalidacion') || norm.includes('silabos'))) ||
+                           (tramite.id === 'tramite-traslados' && norm.includes('traslado')) ||
+                           (tramite.id === 'tramite-reserva-licencia-reincorporacion' && (norm.includes('reserva') || norm.includes('licencia de estudios') || norm.includes('reincorporacion'))) ||
+                           (tramite.id === 'tramite-duplicado-diploma' && norm.includes('duplicado')) ||
+                           (tramite.id === 'tramite-rectificacion-error-cuenta' && (norm.includes('rectificacion') || norm.includes('error de cuenta'))) ||
+                           (tramite.id === 'tramite-sustentacion-proyecto' && (norm.includes('sustentacion') || norm.includes('trabajo de aplicacion'))) ||
+                           (tramite.id === 'tramite-ingles-actualizacion-ceremonia' && (norm.includes('actualizacion') || norm.includes('ceremonia') || norm.includes('toga') || norm.includes('medalla') || norm.includes('pre tecno') || norm.includes('auditorio')));
 
       if (matchTramite) {
         this.renderTramiteDetalle(tramite);
         this.logQuery('tramites');
         return;
       }
+    }
+
+    if (norm.includes('tupa') || norm.includes('para que sirve') || (norm.includes('tramite') && !norm.includes('fut'))) {
+      const showCompendio = norm.includes('todos') || norm.includes('completo') || norm.includes('para que sirve cada') || norm.includes('profundo') || norm.includes('66') || norm.includes('tupa');
+      this.renderTramitesList('todos', showCompendio);
+      this.logQuery('tramites');
+      return;
     }
 
     // 18. Ubicación, Horarios de Atención, Teléfonos, Contacto
@@ -7321,6 +7465,29 @@ ${text}
     this.appendBotMessage(html, "¡Hola! Con mucho gusto te oriento: los pagos no se realizan en Págalo punto pe ni en agentes, sino únicamente en ventanilla del Banco de la Nación. La cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno es para matrícula y trámites, y la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis es para el curso de inglés.", pagosChips);
   }
 
+  mapTramiteIdToFutKey(tramiteId) {
+    const map = {
+      'tramite-matricula': 'solicitud_libre',
+      'tramite-admision': 'solicitud_libre',
+      'tramite-certificado-modular': 'cert_modular',
+      'tramite-suficiencia-profesional': 'titulacion_profesional',
+      'tramite-sustentacion-proyecto': 'titulacion_profesional',
+      'tramite-titulacion': 'titulacion_profesional',
+      'tramite-certificado-estudios': 'cert_estudios_completo',
+      'tramite-constancias-oficiales': 'constancia_matricula',
+      'tramite-evaluaciones-recuperacion': 'subsanacion_recuperacion',
+      'tramite-convalidacion': 'convalidacion_cursos',
+      'tramite-traslados': 'traslado_interno',
+      'tramite-reserva-licencia-reincorporacion': 'reserva_matricula',
+      'tramite-duplicado-diploma': 'duplicado_titulo',
+      'tramite-rectificacion-error-cuenta': 'rectificacion_notas',
+      'tramite-ingles-actualizacion-ceremonia': 'solicitud_libre',
+      'tramite-carne': 'carne_estudiantil',
+      'tramite-justificacion-inasistencia': 'justificacion_inasistencia'
+    };
+    return map[tramiteId] || 'solicitud_libre';
+  }
+
   renderTramiteDetalle(tramite) {
     this.context.lastTramite = tramite.id;
     this.context.lastTopic = 'tramite';
@@ -7330,15 +7497,26 @@ ${text}
     const pasosList = tramite.pasos.map(p => `<li>${p.replace(/^\d+[\.\)]\s*/, '')}</li>`).join('');
 
     const futKey = this.mapTramiteIdToFutKey(tramite.id);
+    const cuentaLabel = tramite.cuentaBN ? `<span class="badge bg-warning text-dark border ms-1"><i class="bi bi-bank me-1"></i>Cta. BN ${tramite.cuentaBN}</span>` : '';
     const html = `
       <div class="tramite-detail-card">
-        <span class="badge bg-primary-subtle text-primary mb-1">${tramite.categoria}</span>
+        <div class="d-flex flex-wrap align-items-center gap-1 mb-2">
+          <span class="badge bg-primary-subtle text-primary">${tramite.categoria}</span>
+          ${cuentaLabel}
+        </div>
         <h5 class="fw-bold mb-2">${tramite.nombre}</h5>
+
+        ${tramite.paraQueSirve ? `
+          <div class="tupa-sirve-box mb-3">
+            <strong><i class="bi bi-lightbulb-fill text-warning me-1"></i> ¿Para qué sirve este trámite?</strong><br>
+            <span>${tramite.paraQueSirve}</span>
+          </div>
+        ` : ''}
 
         <div class="row g-2 mb-3">
           <div class="col-sm-6">
             <div class="p-2 bg-light rounded border small">
-              <strong><i class="bi bi-cash-coin me-1"></i> Costo / Tasa:</strong><br>${tramite.costo}
+              <strong><i class="bi bi-cash-coin me-1"></i> Costo / Tasa Oficial TUPA 2026:</strong><br>${tramite.costo}
             </div>
           </div>
           <div class="col-sm-6">
@@ -7358,40 +7536,119 @@ ${text}
           <button class="interactive-btn text-primary fw-bold" data-chat-action="abrir_generador_fut" data-chat-val="${futKey}">
             <i class="bi bi-file-earmark-text-fill text-primary"></i> Generar FUT para este trámite
           </button>
-          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card-2-front text-warning"></i> ¿Cómo pagar la tasa?</button>
-          <button class="interactive-btn" data-chat-action="ver_tramites_tupa"><i class="bi bi-arrow-left"></i> Ver Todos los Trámites</button>
+          <button class="interactive-btn" data-chat-action="ver_tupa_compendio"><i class="bi bi-list-check text-success"></i> Ver los 66 Conceptos TUPA</button>
+          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card-2-front text-warning"></i> ¿Cómo pagar en BN?</button>
+          <button class="interactive-btn" data-chat-action="ver_tramites_tupa"><i class="bi bi-arrow-left"></i> Volver a Guía TUPA</button>
         </div>
       </div>
     `;
 
-    this.appendBotMessage(html, `Te facilito los requisitos, el costo por tasa TUPA y el tiempo de entrega para el trámite de ${tramite.nombre}.`);
+    const sirveSpoken = tramite.paraQueSirve ? ` Este trámite sirve para lo siguiente: ${tramite.paraQueSirve}` : '';
+    this.appendBotMessage(html, `Te muestro el detalle oficial TUPA 2026 para ${tramite.nombre}.${sirveSpoken}`);
   }
 
-  renderTramitesList() {
-    const listHtml = GUIA_TRAMITES_TUPA.map(t => `
-      <div class="tramite-interactive-row" data-chat-action="ver_tramite_especifico" data-chat-val="${t.id}">
-        <div>
-          <span class="badge bg-secondary-subtle text-secondary small">${t.categoria}</span>
-          <h6 class="mb-0 fw-bold mt-1">${t.nombre}</h6>
-          <small class="text-muted">${t.plazo} • ${t.costo}</small>
-        </div>
-        <i class="bi bi-chevron-right text-muted"></i>
+  renderTramitesList(filterCat = 'todos', showFullCompendio = false) {
+    const categorias = ['todos', 'Académico', 'Certificaciones', 'Titulación', 'Documentos', 'Admisión', 'Actividades y Ceremonia', 'Bienestar'];
+    const catLabels = {
+      'todos': 'Todos los Trámites',
+      'Académico': 'Académico',
+      'Certificaciones': 'Certificados',
+      'Titulación': 'Titulación',
+      'Documentos': 'Constancias y Duplicados',
+      'Admisión': 'Admisión',
+      'Actividades y Ceremonia': 'Inglés / Ceremonia (025736)',
+      'Bienestar': 'Carné MINEDU'
+    };
+
+    const filterBtnsHtml = `
+      <div class="tupa-filter-bar">
+        ${categorias.map(cat => `
+          <button class="tupa-filter-pill ${(!showFullCompendio && filterCat === cat) ? 'active' : ''}" data-chat-action="filtrar_tupa_cat" data-chat-val="${cat}">
+            ${catLabels[cat] || cat}
+          </button>
+        `).join('')}
+        <button class="tupa-filter-pill ${showFullCompendio ? 'active' : ''}" data-chat-action="ver_tupa_compendio">
+          <i class="bi bi-table me-1"></i> Completo (66 Ítems TUPA 2026)
+        </button>
       </div>
-    `).join('');
+    `;
+
+    let bodyHtml = '';
+    if (showFullCompendio && typeof TUPA_COMPENDIO_OFICIAL_2026 !== 'undefined') {
+      const items002361 = TUPA_COMPENDIO_OFICIAL_2026.items.filter(x => x.cuenta === '00-638-002361');
+      const items025736 = TUPA_COMPENDIO_OFICIAL_2026.items.filter(x => x.cuenta === '00-638-025736');
+
+      const renderBlock = (arr) => arr.map(it => `
+        <div class="tupa-compendio-item">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div>
+              <span class="badge bg-primary-subtle text-primary me-1">#${it.item}</span>
+              <span class="badge bg-light text-dark border me-1">${it.categoria}</span>
+              <strong class="text-dark small">${it.concepto}</strong>
+            </div>
+            <span class="badge bg-success text-white flex-shrink-0">S/ ${Number(it.costo).toFixed(2)}</span>
+          </div>
+          <div class="tupa-sirve-preview">
+            <strong><i class="bi bi-lightbulb-fill text-warning me-1"></i>¿Para qué sirve?</strong> ${it.paraQueSirve}
+          </div>
+        </div>
+      `).join('');
+
+      bodyHtml = `
+        <div class="mb-3">
+          <h6 class="fw-bold text-primary mb-2"><i class="bi bi-bank2 me-1"></i> Cta. Cte. BN 00-638-002361 — 43 Procedimientos Administrativos TUPA:</h6>
+          ${renderBlock(items002361)}
+        </div>
+        <div class="mb-2">
+          <h6 class="fw-bold text-success mb-2"><i class="bi bi-award-fill me-1"></i> Cta. Cte. BN 00-638-025736 — 23 Actividades Productivas, Inglés y Ceremonia:</h6>
+          ${renderBlock(items025736)}
+        </div>
+      `;
+    } else {
+      const filtered = (filterCat && filterCat !== 'todos')
+        ? GUIA_TRAMITES_TUPA.filter(t => t.categoria === filterCat)
+        : GUIA_TRAMITES_TUPA;
+
+      const listHtml = filtered.map(t => `
+        <div class="tramite-interactive-row" data-chat-action="ver_tramite_especifico" data-chat-val="${t.id}">
+          <div class="pe-2">
+            <div class="d-flex flex-wrap align-items-center gap-1">
+              <span class="badge bg-secondary-subtle text-secondary small">${t.categoria}</span>
+              ${t.cuentaBN ? `<span class="badge bg-light text-primary border small">BN ${t.cuentaBN}</span>` : ''}
+            </div>
+            <h6 class="mb-1 fw-bold mt-1">${t.nombre}</h6>
+            <div class="small fw-semibold text-primary mb-1"><i class="bi bi-cash-coin me-1"></i>${t.costo}</div>
+            ${t.paraQueSirve ? `<div class="tupa-sirve-preview"><i class="bi bi-lightbulb-fill text-warning me-1"></i><strong>Para qué sirve:</strong> ${t.paraQueSirve}</div>` : ''}
+          </div>
+          <i class="bi bi-chevron-right text-muted flex-shrink-0"></i>
+        </div>
+      `).join('');
+
+      bodyHtml = `<div class="tramites-list-box">${listHtml}</div>`;
+    }
 
     const html = `
       <div class="tramites-catalog-card">
-        <h5 class="fw-bold mb-2"><i class="bi bi-file-earmark-ruled-fill text-primary me-2"></i>Trámites Académicos y Documentación Oficial</h5>
-        <p class="small text-muted mb-3">Selecciona el trámite que deseas realizar para ver sus requisitos y procedimiento:</p>
-        <div class="tramites-list-box">${listHtml}</div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+          <span class="badge bg-primary px-3 py-1 rounded-pill"><i class="bi bi-shield-check me-1"></i>R.D. N° 020-2026 Oficial</span>
+          <a href="https://ieshercar.edu.pe/Transparencia/TUPA/" target="_blank" class="small fw-bold text-decoration-none">Ver PDF Oficial TUPA ↗</a>
+        </div>
+        <h5 class="fw-bold mb-1"><i class="bi bi-file-earmark-ruled-fill text-primary me-2"></i>Guía TUPA 2026: ¿Cuánto Cuesta y Para Qué Sirve Cada Trámite?</h5>
+        <p class="small text-muted mb-2">
+          El <strong>TUPA 2026</strong> (<em>Texto Único de Procedimientos Administrativos</em>) fija los costos y reglas oficiales de cada documento. Todos los pagos se realizan <strong>solo en ventanilla del Banco de la Nación</strong> (no Págalo.pe): <code>00-638-002361</code> para trámites académicos y <code>00-638-025736</code> para inglés, actualización, Pre Tecno y ceremonia.
+        </p>
+        ${filterBtnsHtml}
+        ${bodyHtml}
         <div class="interactive-button-grid mt-3">
-          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card-2-front"></i> Sistema de Pagos</button>
-          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt"></i> Horarios de Mesa de Partes</button>
+          <button class="interactive-btn" data-chat-action="ver_cotizador_tupa"><i class="bi bi-calculator text-primary"></i> Cotizador TUPA</button>
+          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card-2-front text-warning"></i> Guía de Pagos BN</button>
+          <button class="interactive-btn" data-chat-action="abrir_generador_fut" data-chat-val="solicitud_libre"><i class="bi bi-file-earmark-pdf-fill text-danger"></i> Generar FUT PDF</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-success"></i> Mesa de Partes</button>
         </div>
       </div>
     `;
 
-    this.appendBotMessage(html, "Te presento la guía completa de trámites académicos TUPA, certificados modulares y expedición de títulos de nuestra institución.");
+    this.appendBotMessage(html, "Te presento la guía oficial del Tupa dos mil veintiséis del Instituto Hermanos Cárcamo, explicando qué es cada trámite, cuánto cuesta, en qué cuenta del Banco de la Nación se paga y para qué te sirve.");
   }
 
   renderContactoUbicacion() {
@@ -8190,7 +8447,15 @@ ${text}
         this.logQuery('pagos');
         break;
       case 'ver_tramites_tupa':
-        this.renderTramitesList();
+        this.renderTramitesList('todos', false);
+        this.logQuery('tramites');
+        break;
+      case 'filtrar_tupa_cat':
+        this.renderTramitesList(val || 'todos', false);
+        this.logQuery('tramites');
+        break;
+      case 'ver_tupa_compendio':
+        this.renderTramitesList('todos', true);
         this.logQuery('tramites');
         break;
       case 'ver_tramite_especifico':
@@ -8485,7 +8750,7 @@ class HercarTourGuide {
       },
       {
         selector: '.header-controls, .control-btn',
-        title: '🌸 Voz y Personalización',
+        title: '🎙️ Voz y Personalización',
         desc: 'Aquí arriba puedes activar o silenciar mi voz, cambiar al Modo Oscuro, alternar al Modo Burbuja Web flotante o descargar tu conversación.',
         voice: 'En los botones de la esquina superior derecha puedes personalizar mi voz, cambiar a modo oscuro, probar la vista flotante sobre la web oficial o descargar el historial de tus consultas.'
       },

@@ -400,15 +400,17 @@ const CARRERAS_COMPLETAS = [
 const GUIA_TRAMITES_TUPA = [
   {
     id: 'tramite-matricula',
-    nombre: 'Matrícula Regular y Ratificación Semestral',
+    nombre: 'Matrícula Ordinaria para Ingresantes y Regulares (TUPA Ítem 30)',
     categoria: 'Académico',
-    costo: 'S/ 250.00 (Pago en ventanilla del Banco de la Nación - Cta. Cte. N° 00-638-002361)',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 250.00 (Ventanilla Banco de la Nación - Cta. Cte. N° 00-638-002361)',
     plazo: 'Inmediato tras validación en Tesorería y registro en Secretaría Académica',
+    paraQueSirve: 'Sirve para acreditar formalmente tu condición de estudiante activo en el semestre (I al VI ciclo), reservar tu vacante, habilitar tu registro de notas en el Sistema Académico, acceder al Aula Virtual y postular al Carné MINEDU de medio pasaje.',
     requisitos: [
       'Pago de S/ 250.00 ÚNICAMENTE en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361), indicando DNI y nombres completos del estudiante (no se paga en Págalo.pe ni agentes)',
       'Registro del voucher en https://pagos.ieshercar.edu.pe/ para generar la boleta electrónica',
       'Presentación del voucher original + 3 copias de la boleta en Tesorería para sellado y firma',
-      'Entrega de 1 copia sellada y firmada en Secretaría Académica y selección de asignaturas en sistema.ieshercar.edu.pe'
+      'Entrega de 1 copia sellada y firmada en Secretaría Académica y selección de unidades didácticas en sistema.ieshercar.edu.pe'
     ],
     pasos: [
       'Pagar S/ 250.00 en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361 indicando DNI y nombres del estudiante (no en Págalo.pe ni agentes).',
@@ -419,71 +421,98 @@ const GUIA_TRAMITES_TUPA = [
     ]
   },
   {
-    id: 'tramite-matricula-extemporanea',
-    nombre: 'Matrícula Extemporánea / Fuera de Plazo',
-    categoria: 'Académico',
-    costo: 'S/ 250.00 + recargo extemporáneo según TUPA (Cta. Cte. N° 00-638-002361)',
-    plazo: '2 a 3 días hábiles previa autorización de Dirección',
+    id: 'tramite-admision',
+    nombre: 'Derecho de Examen de Admisión (TUPA Ítem 42)',
+    categoria: 'Admisión',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 200.00 (Ventanilla Banco de la Nación - Cta. Cte. N° 00-638-002361)',
+    plazo: 'Inscripción inmediata durante convocatoria oficial de Admisión',
+    paraQueSirve: 'Sirve para inscribirte oficialmente como postulante al Examen Ordinario de Admisión o Exonerados y acceder al derecho de evaluación para obtener una vacante de estudio público sin mensualidades en cualquiera de las 4 carreras técnicas.',
     requisitos: [
-      'Solicitud mediante Formulario Único de Trámite (FUT) justificando motivo de retraso',
-      'Voucher del Banco de la Nación pagado en ventanilla (Cta. Cte. N° 00-638-002361) con boleta electrónica y copias para Tesorería',
-      'Disponibilidad de vacante en el turno y sección solicitada'
+      'Pago de S/ 200.00 en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y boleta en pagos.ieshercar.edu.pe',
+      'Certificado Oficial de Estudios Secundarios (de 1° a 5° de secundaria con código QR MINEDU)',
+      'Partida de nacimiento original y copia simple de DNI vigente',
+      '2 fotografías recientes tamaño carné a color en fondo blanco'
     ],
     pasos: [
-      'Generar FUT dirigido a la Jefatura de Unidad Académica exponiendo el motivo.',
-      'Abonar el monto indicado en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y generar boleta en pagos.ieshercar.edu.pe.',
-      'Presentar el FUT con el voucher y copias selladas en Tesorería / Mesa de Partes.',
-      'Una vez aprobado el proveído, registrar asignaturas en el Sistema Académico.'
+      'Abonar S/ 200.00 en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361.',
+      'Registrar el voucher en pagos.ieshercar.edu.pe para obtener la boleta electrónica.',
+      'Presentar la carpeta de postulante en Secretaría / Comisión de Admisión y recoger tu carné de postulante.'
     ]
   },
   {
     id: 'tramite-certificado-modular',
-    nombre: 'Certificación Modular Progresiva (Módulos I, II o III)',
+    nombre: 'Certificado Modular PPP / EFSRT (TUPA Ítem 5)',
     categoria: 'Certificaciones',
-    costo: 'Tasa TUPA vigente en Banco de la Nación (Cta. Cte. N° 00-638-002361)',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 25.00 por módulo (TUPA Oficial — Carpeta EFSRT adicional: S/ 20.00)',
     plazo: '7 a 10 días hábiles (Emisión con firma de Dirección y Jefatura Académica)',
+    paraQueSirve: 'Sirve para acreditar ante cualquier empresa pública o privada que ya dominas un bloque técnico completo de tu carrera (Módulo I, II o III) y trabajar formalmente como técnico auxiliar/asistente incluso antes de terminar los 3 años; además es requisito indispensable para el Examen de Suficiencia y el Título.',
     requisitos: [
       'Haber aprobado el 100% de las unidades didácticas del Módulo I, II o III',
-      'Constancia aprobatoria de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) del módulo (mínimo 240 a 280 horas)',
-      'Voucher del Banco de la Nación (Cta. Cte. N° 00-638-002361) validado en pagos.ieshercar.edu.pe y sellado en Tesorería',
-      'FUT debidamente llenado solicitando el Certificado Modular respectivo'
+      'Haber adquirido la Carpeta de EFSRT (S/ 20.00 - Ítem 2) y contar con constancia aprobatoria de prácticas preprofesionales',
+      'Voucher de S/ 25.00 en ventanilla BN (Cta. Cte. N° 00-638-002361) validado en pagos.ieshercar.edu.pe',
+      'FUT dirigido a Dirección solicitando el Certificado Modular respectivo'
     ],
     pasos: [
-      'Verificar en el Sistema Académico que todas las notas del módulo estén registradas (nota mínima 13).',
-      'Abonar en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
+      'Verificar en el Sistema Académico que todas las notas del módulo estén aprobadas (nota mínima 13).',
+      'Abonar S/ 25.00 en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
       'Presentar FUT y constancia de prácticas EFSRT por Mesa de Partes.',
       'Secretaría Académica emite el Certificado Modular oficial con valor curricular MINEDU.'
     ]
   },
   {
     id: 'tramite-suficiencia-profesional',
-    nombre: 'Examen de Suficiencia Profesional (Requisitos Oficiales)',
+    nombre: 'Examen de Suficiencia Profesional (TUPA Ítems 25 y 26)',
     categoria: 'Titulación',
-    costo: 'S/ 200.00 soles (Derecho de Examen de Suficiencia - Banco de la Nación Cta. Cte. N° 00-638-002361)',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 200.00 primera opción (incluye actas) · Segunda opción: S/ 100.00 (Cta. 00-638-002361)',
     plazo: 'Según cronograma de coordinación de programa de estudios (expediente foliado)',
+    paraQueSirve: 'Sirve como modalidad oficial de evaluación teórico-práctica integral para egresados que buscan aprobar el requisito de titulación profesional demostrando las competencias de los 3 módulos de su carrera ante jurado calificador.',
     requisitos: [
       '1. Solicitud dirigida al Director General, pidiendo programar el Examen de Suficiencia Profesional cumpliendo con todos los requisitos',
-      '2. Copia a color de la Constancia de No Adeudar',
+      '2. Copia a color de la Constancia de No Adeudar (TUPA Ítem 10: S/ 15.00)',
       '3. Copia a color de DNI',
       '4. Copia a color de ambos lados de los tres (03) Certificados Modulares',
       '5. Copia a color de ambos lados del Certificado de Actualización según carrera profesional (Sólo para egresados del 2021 hacia atrás)',
       '6. Copia a color de ambos lados del Curso de Inglés Básico',
-      '7. Boleta electrónica de pago y copia sellada por el área de Tesorería por derecho de Examen de Suficiencia (S/. 200 soles) — Cta. Cte. N° 00-638-002361 en Banco de la Nación',
+      '7. Boleta electrónica de pago y copia sellada por el área de Tesorería por derecho de Examen de Suficiencia (S/. 200.00 primera opción / S/. 100.00 segunda opción — Cta. Cte. N° 00-638-002361 en Banco de la Nación)',
       'Presentar todo el expediente debidamente FOLIADO ante el Coordinador de su Programa de Estudios'
     ],
     pasos: [
-      'Pagar S/. 200.00 soles en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361 y generar tu boleta electrónica en pagos.ieshercar.edu.pe.',
+      'Pagar S/ 200.00 en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361 y generar tu boleta electrónica en pagos.ieshercar.edu.pe.',
       'Sellar la copia de tu boleta electrónica en el área de Tesorería del instituto.',
       'Reunir los 7 documentos requeridos en copia a color por ambos lados según corresponda y FOLIAR todo el expediente.',
-      'Coordinar los requisitos y la gestión directamente con el Coordinador de tu Programa de Estudios.'
+      'Coordinar la fecha y gestión directamente con el Coordinador de tu Programa de Estudios.'
+    ]
+  },
+  {
+    id: 'tramite-sustentacion-proyecto',
+    nombre: 'Sustentación de Trabajo de Aplicación Profesional (TUPA Ítem 38)',
+    categoria: 'Titulación',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 200.00 (Ventanilla Banco de la Nación - Cta. Cte. N° 00-638-002361)',
+    plazo: 'Según cronograma de jurado evaluador y Unidad Académica',
+    paraQueSirve: 'Sirve para presentar y sustentar un proyecto productivo, tecnológico o de innovación desarrollado en tu especialidad como modalidad alternativa de titulación profesional técnica.',
+    requisitos: [
+      'Ejemplares del Trabajo de Aplicación Profesional aprobados por el asesor y coordinador de carrera',
+      'Voucher de S/ 200.00 en ventanilla BN (Cta. 00-638-002361) y boleta sellada por Tesorería',
+      '3 Certificados Modulares, Constancia de No Adeudar y FUT dirigido al Director General'
+    ],
+    pasos: [
+      'Obtener visto bueno metodológico y técnico de tu asesor de proyecto.',
+      'Abonar S/ 200.00 en Banco de la Nación (Cta. 00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
+      'Presentar expediente y ejemplares ante Secretaría Académica para programación de fecha de sustentación.'
     ]
   },
   {
     id: 'tramite-titulacion',
-    nombre: 'Trámite de Título Profesional Técnico a Nombre de la Nación',
+    nombre: 'Trámite de Título Profesional Técnico a Nombre de la Nación (TUPA Ítems 19 y 27)',
     categoria: 'Titulación',
-    costo: 'Formato y Caligrafiado: S/ 60.00 + Derecho de Título Profesional: S/ 100.00 (+ Ficha de Actividades S/ 12.00 si eres del Sistema Tradicional 2008 hacia abajo) — Cta. Cte. N° 00-638-002361',
+    cuentaBN: '00-638-002361',
+    costo: 'Formato de Título: S/ 60.00 + Derecho de Titulación: S/ 100.00 (+ Ficha de Actividades S/ 12.00 si eres del Sistema Tradicional <= 2008)',
     plazo: 'Según trámite oficial MINEDU (Presentación foliada en folder A/4 + sobre manila A4)',
+    paraQueSirve: 'Sirve para obtener el diploma oficial de Profesional Técnico a Nombre de la Nación registrado en el MINEDU, indispensable para colegiarse/habilitarse laboralmente, postular a concursos públicos del Estado (CAS/728), ascensos salariales o convalidar con universidades.',
     requisitos: [
       'Presentación del expediente: Documentación debidamente FOLIADA, en Folder A/4 y acompañada de un Sobre Manila A4',
       '1. Solicitud dirigida al Director General, solicitando obtención de Título Profesional',
@@ -493,226 +522,225 @@ const GUIA_TRAMITES_TUPA = [
       '5. DNI Legalizado: Copia a color de DNI legalizada por Notario (totalmente nítida en nombre completo, fecha de nacimiento y número de DNI)',
       '6. Fotografías: Dos (02) fotografías tamaño pasaporte (fondo blanco, revelada no impresa, vestimenta formal, sin accesorios)',
       '7. Inglés Básico: Copia a color de Certificado de Inglés Básico',
-      '8. Pago por Formato y Caligrafiado de Título: Boleta electrónica de pago original y 1 copia sellada por Tesorería (Monto: S/. 60.00 — Cta. Cte. N° 00-638-002361)',
-      '9. Pago por Derecho de Título Profesional: Boleta electrónica de pago original y 1 copia sellada por Tesorería (Monto: S/. 100.00 — Cta. Cte. N° 00-638-002361)',
-      '10. Ficha de Actividades: Copia de Ficha de Actividades (Solo para egresados que estudiaron en el Sistema Tradicional del 2008 hacia abajo — Derecho de trámite: S/. 12.00)'
+      '8. Pago por Formato y Caligrafiado de Título: Boleta electrónica original y 1 copia sellada por Tesorería (S/ 60.00 — TUPA Ítem 27 — Cta. 00-638-002361)',
+      '9. Pago por Derecho de Titulación: Boleta electrónica original y 1 copia sellada por Tesorería (S/ 100.00 — TUPA Ítem 19 — Cta. 00-638-002361)',
+      '10. Ficha de Actividades: Copia de Ficha de Actividades (Solo egresados del Sistema Tradicional del 2008 hacia abajo — S/ 12.00)'
     ],
     pasos: [
-      'Pagar en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361: S/. 60.00 (Formato y Caligrafiado) y S/. 100.00 (Derecho de Título), más S/. 12.00 por Ficha de Actividades solo si eres egresado del Sistema Tradicional 2008 hacia abajo.',
+      'Pagar en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361: S/ 60.00 (Formato de Título) y S/ 100.00 (Derecho de Titulación), más S/ 12.00 por Ficha de Actividades solo si estudiaste en el Sistema Tradicional 2008 hacia abajo.',
       'Generar las boletas electrónicas en pagos.ieshercar.edu.pe y hacer sellar original y 1 copia en Tesorería.',
       'Ordenar los 10 documentos oficiales, FOLIAR el expediente completo e ingresarlo en un Folder A/4 acompañado de un Sobre Manila A4.',
       'Presentar el expediente completo en Mesa de Partes / Secretaría Académica.'
     ]
   },
   {
-    id: 'tramite-bachiller-tecnico',
-    nombre: 'Grado de Bachiller Técnico (Ley N° 30512)',
-    categoria: 'Grados',
-    costo: 'Según TUPA vigente (Banco de la Nación - Cta. Cte. N° 00-638-002361)',
-    plazo: '20 a 30 días hábiles',
+    id: 'tramite-certificado-estudios',
+    nombre: 'Certificado Oficial de Estudios (TUPA Ítems 3 y 4)',
+    categoria: 'Documentos',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 40.00 por Periodo Académico · S/ 240.00 completo (incluye los 6 Periodos Académicos)',
+    plazo: '3 a 5 días hábiles',
+    paraQueSirve: 'Sirve como documento legal con todas tus notas, créditos y unidades didácticas aprobadas por semestre. Es obligatorio para armar el expediente de Título Profesional, realizar traslados externos a universidades/institutos o postular a becas y concursos públicos.',
     requisitos: [
-      'Haber culminado satisfactoriamente los 120 créditos de la carrera técnica',
-      'Haber concluido y aprobado un trabajo de aplicación profesional o proyecto de investigación',
-      'Acreditar conocimiento de un idioma extranjero (Inglés básico-intermedio A2)',
-      'Voucher pagado en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y FUT oficial'
+      'Haber cursado y aprobado las asignaturas de los periodos solicitados',
+      'FUT especificando si solicitas por periodo académico (S/ 40.00 c/u) o el juego completo de los 6 periodos (S/ 240.00)',
+      'Comprobante de depósito en el Banco de la Nación (Cta. 00-638-002361) validado en pagos.ieshercar.edu.pe',
+      '2 fotografías recientes tamaño carné para el membrete oficial del certificado'
     ],
     pasos: [
-      'Presentar solicitud de Bachiller Técnico adjuntando trabajo de aplicación aprobado.',
-      'Pagar en ventanilla del Banco de la Nación (00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
-      'Revisión en Unidad Académica y emisión del diploma con registro oficial.'
+      'Pagar S/ 40.00 por periodo o S/ 240.00 por los 6 periodos en ventanilla BN (00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
+      'Presentar FUT y fotos por Mesa de Partes en campus Paita Alta.',
+      'Secretaría confecciona el certificado con sellos de seguridad y firmas oficiales.'
+    ]
+  },
+  {
+    id: 'tramite-constancias-oficiales',
+    nombre: 'Constancias Oficiales Numeradas: Estudios, Matrícula, Egresado, No Adeudar, Tercio Superior y Trámite de Título (TUPA Ítems 7 al 12)',
+    categoria: 'Documentos',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 15.00 cada constancia (Consolidado de notas: también S/ 15.00)',
+    plazo: '2 a 3 días hábiles',
+    paraQueSirve: 'Sirven para acreditar rápidamente tu situación oficial ante bancos, EsSalud, trabajos, becas o trámites internos: Estudios/Matrícula (seguro universitario, asignaciones familiares), Egresado (conseguir empleo formal antes del título), No Adeudar (obligatorio para Suficiencia y Titulación), Tercio Superior (becas y méritos) y Trámite de Título (acreditar en tu trabajo que tu título ya está en proceso).',
+    requisitos: [
+      'FUT especificando el tipo exacto de constancia requerida (Estudios, Matrícula, Egresado, No Adeudar, Tercio Superior, Trámite de Título o Consolidado de Notas)',
+      'Voucher de S/ 15.00 en ventanilla Banco de la Nación (Cta. 00-638-002361) y boleta en pagos.ieshercar.edu.pe',
+      'Para Constancia de No Adeudar: visto bueno previo de Biblioteca, Laboratorios y Tesorería'
+    ],
+    pasos: [
+      'Abonar S/ 15.00 en Banco de la Nación (Cta. 00-638-002361) y validar en pagos.ieshercar.edu.pe.',
+      'Presentar FUT en Mesa de Partes o Secretaría Académica.',
+      'Recoger la constancia numerada firmada y sellada.'
+    ]
+  },
+  {
+    id: 'tramite-evaluaciones-recuperacion',
+    nombre: 'Recuperación, Repitencia y Evaluación Extraordinaria de Unidades Didácticas (TUPA Ítems 17, 18, 32 y 34)',
+    categoria: 'Académico',
+    cuentaBN: '00-638-002361',
+    costo: 'Recuperación: S/ 35.00 · Repitencia: S/ 35.00 · Evaluación Extraordinaria: S/ 300.00 (UD Específica) / S/ 200.00 (UD Empleabilidad)',
+    plazo: 'Según programación académica de cierre de semestre o calendario extraordinario',
+    paraQueSirve: 'Sirven para regularizar cursos desaprobados y evitar perder tu avance de carrera: la Recuperación (S/ 35) permite subsanar tras nota 10–12; la Repitencia (S/ 35) habilita volver a llevar un curso desaprobado; y la Evaluación Extraordinaria (S/ 200 empleabilidad / S/ 300 específica) permite a egresados o casos especiales rendir examen de suficiencia de 1 curso pendiente para no retrasar su titulación.',
+    requisitos: [
+      'Estar registrado en acta con derecho a recuperación, repitencia o autorización de evaluación extraordinaria',
+      'FUT indicando nombre exacto de la Unidad Didáctica y semestre',
+      'Voucher del Banco de la Nación (Cta. 00-638-002361) validado en pagos.ieshercar.edu.pe'
+    ],
+    pasos: [
+      'Confirmar con tu Coordinador de Carrera el tipo de evaluación aplicable (Recuperación, Repitencia o Extraordinaria).',
+      'Pagar la tasa TUPA correspondiente en ventanilla BN (00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
+      'Entregar FUT y boleta sellada en Secretaría Académica para la emisión del acta de evaluación.'
+    ]
+  },
+  {
+    id: 'tramite-convalidacion',
+    nombre: 'Convalidación de Unidades Didácticas y Prácticas EFSRT (TUPA Ítems 1, 13, 14 y 16)',
+    categoria: 'Académico',
+    cuentaBN: '00-638-002361',
+    costo: 'Convalidación UD (traslado interno/externo): S/ 30.00 por UD · Convalidación PPP con experiencia laboral y EFSRT: S/ 150.00 (+ Carpeta Convalidación PPP S/ 25.00)',
+    plazo: '7 a 10 días hábiles (Dictamen de Comisión Académica)',
+    paraQueSirve: 'Sirve para ahorrar tiempo y no volver a cursar asignaturas aprobadas en otro instituto/universidad o en otra carrera del Hercar, y también permite a quienes ya trabajan formalmente convalidar sus prácticas preprofesionales (PPP/EFSRT) mediante experiencia laboral acreditada.',
+    requisitos: [
+      'Para cursos: Certificado oficial de estudios y sílabos visados (S/ 1.00 por hoja visada - Ítem 15) con coincidencia mínima de contenidos',
+      'Para prácticas con experiencia laboral: Certificado o constancia de trabajo formal en área afín + Carpeta de Convalidación PPP (S/ 25.00)',
+      'Voucher de Banco de la Nación (Cta. 00-638-002361) y FUT solicitando la convalidación'
+    ],
+    pasos: [
+      'Adquirir carpeta / pagar la tasa de convalidación en ventanilla BN (00-638-002361).',
+      'Adjuntar sílabos visados o certificados laborales y presentar FUT por Mesa de Partes.',
+      'La Comisión Evaluadora emite Resolución Directoral reconociendo los cursos o horas convalidadas.'
+    ]
+  },
+  {
+    id: 'tramite-traslados',
+    nombre: 'Traslado Interno y Traslado Externo Nacional (TUPA Ítems 39, 40 y 41)',
+    categoria: 'Académico',
+    cuentaBN: '00-638-002361',
+    costo: 'Traslado Interno: S/ 80.00 · Traslado Externo IEST Público: S/ 80.00 · Traslado Externo IEST Privado: S/ 200.00',
+    plazo: '5 a 12 días hábiles (Antes del inicio de matrícula)',
+    paraQueSirve: 'El Traslado Interno sirve para cambiarte a otra de nuestras 4 carreras dentro del mismo IESTP Hermanos Cárcamo sin volver a dar examen de admisión; el Traslado Externo sirve para ingresar directamente al instituto viniendo de otro instituto público, privado o universidad, convalidando tus cursos aprobados.',
+    requisitos: [
+      'Para Traslado Interno: haber aprobado como mínimo el I Ciclo en la carrera de origen y existir vacante en destino',
+      'Para Traslado Externo: Certificado Oficial de Estudios superiores, sílabos sellados, constancia de no separación disciplinaria y copia de DNI',
+      'FUT dirigido a Dirección General y voucher BN (Cta. 00-638-002361) según tarifa vigente'
+    ],
+    pasos: [
+      'Verificar disponibilidad de vacantes en Secretaría Académica antes del inicio del semestre.',
+      'Pagar S/ 80.00 (interno o externo público) o S/ 200.00 (externo privado) en Banco de la Nación.',
+      'Ingresar expediente por Mesa de Partes para emisión de Resolución Directoral y matrícula.'
+    ]
+  },
+  {
+    id: 'tramite-reserva-licencia-reincorporacion',
+    nombre: 'Reserva de Matrícula, Licencia de Estudios y Reincorporación (TUPA Ítems 29, 33 y 35)',
+    categoria: 'Académico',
+    cuentaBN: '00-638-002361',
+    costo: 'Reserva (Ingresantes): S/ 60.00 · Licencia de Estudios (2do a 6to sem.): S/ 100.00 · Reincorporación: S/ 65.00',
+    plazo: '3 a 5 días hábiles',
+    paraQueSirve: 'La Reserva (S/ 60 para ingresantes) y la Licencia de Estudios (S/ 100 para 2do a 6to semestre) sirven para pausar legalmente tus estudios por trabajo, salud o motivos personales sin perder tu vacante ni ser retirado del sistema; la Reincorporación (S/ 65) sirve para retomar tus clases al finalizar tu pausa o licencia.',
+    requisitos: [
+      'FUT exponiendo el motivo (salud, laboral o fuerza mayor) presentado dentro del plazo reglamentario',
+      'Para Reincorporación: resolución previa de reserva/licencia o no haber superado el límite máximo de abandono',
+      'Voucher del Banco de la Nación (Cta. 00-638-002361) validado en pagos.ieshercar.edu.pe'
+    ],
+    pasos: [
+      'Presentar solicitud mediante FUT por Mesa de Partes 15 días antes de iniciar el periodo o al requerir la pausa.',
+      'Pagar la tasa TUPA correspondiente en ventanilla BN (00-638-002361).',
+      'Recoger resolución de reserva/licencia o habilitación de matrícula por reincorporación.'
+    ]
+  },
+  {
+    id: 'tramite-duplicado-diploma',
+    nombre: 'Duplicados Oficiales: Título, Certificado Modular, Boleta de Notas y Oficio PPP (TUPA Ítems 20 al 24)',
+    categoria: 'Documentos',
+    cuentaBN: '00-638-002361',
+    costo: 'Duplicado de Título: S/ 200.00 · Duplicado Cert. Modular: S/ 30.00 · Duplicado Boleta/Notas PPP: S/ 10.00 · Duplicado Oficio PPP: S/ 4.00',
+    plazo: '3 a 20 días hábiles según documento',
+    paraQueSirve: 'Sirve para reponer documentos académicos oficiales perdidos, robados o deteriorados con pleno valor legal ante empleadores y ante el MINEDU, evitando tener que volver a cursar o rendir evaluaciones.',
+    requisitos: [
+      'Para Duplicado de Título (S/ 200) o Certificado Modular (S/ 30): Denuncia policial original por pérdida/robo (o documento deteriorado) + copia de DNI',
+      'Para Duplicado de Título: publicación en diario oficial y 2 fotografías tamaño pasaporte en vestimenta formal',
+      'FUT y voucher del Banco de la Nación (Cta. 00-638-002361)'
+    ],
+    pasos: [
+      'Realizar denuncia policial en caso de pérdida de diploma o certificado modular.',
+      'Abonar el monto exacto en ventanilla BN (00-638-002361) y generar boleta en pagos.ieshercar.edu.pe.',
+      'Ingresar expediente por Mesa de Partes para emisión del duplicado oficial.'
+    ]
+  },
+  {
+    id: 'tramite-rectificacion-error-cuenta',
+    nombre: 'Rectificación de Nombres y Apellidos / Transferencia por Error de Cuenta (TUPA Ítems 31 y 43)',
+    categoria: 'Documentos',
+    cuentaBN: '00-638-002361',
+    costo: 'Rectificación de Nombres/Apellidos: S/ 40.00 · Transferencia por Error de Cuenta: S/ 15.00',
+    plazo: '3 a 7 días hábiles',
+    paraQueSirve: 'La Rectificación de Nombres/Apellidos (S/ 40) sirve para corregir errores ortográficos o cambios legales RENIEC en actas y certificados antes de emitir tu título; la Transferencia por Error de Cuenta (S/ 15) sirve para rescatar un pago si por equivocación depositaste a la otra cuenta institucional (ej. Inglés vs Principal).',
+    requisitos: [
+      'Para Rectificación: Copia de DNI vigente, Partida de Nacimiento actualizada o resolución RENIEC que acredite el nombre correcto',
+      'Para Error de Cuenta: Voucher original del depósito equivocado + boleta del pago de S/ 15.00 por derecho de transferencia',
+      'FUT dirigido a Dirección / Área Administrativa explicando el caso'
+    ],
+    pasos: [
+      'Abonar S/ 40.00 (rectificación) o S/ 15.00 (error de cuenta) en ventanilla BN (00-638-002361).',
+      'Presentar FUT y documentos probatorios en Mesa de Partes / Tesorería.',
+      'Tesorería o Secretaría Académica realiza la corrección formal en sistema y legajo.'
+    ]
+  },
+  {
+    id: 'tramite-ingles-actualizacion-ceremonia',
+    nombre: 'Actividades Productivas: Curso de Inglés Básico, Ciclo de Actualización, Pre Tecno y Ceremonia (Cta. 00-638-025736)',
+    categoria: 'Actividades y Ceremonia',
+    cuentaBN: '00-638-025736',
+    costo: 'Inglés Básico Titulación: S/ 400.00 · Ciclo Actualización Suficiencia: S/ 400.00 · Academia Pre Tecno: S/ 400.00 · Toga/Birrete S/ 50 · Medalla S/ 60 · Porta Título S/ 50',
+    plazo: 'Inscripción inmediata entregando 2 copias del voucher en Tesorería',
+    paraQueSirve: 'Todos los ingresos por actividades formativas complementarias y ceremonia van a la cuenta específica 00-638-025736: el Curso de Inglés Básico (S/ 400) acredita el idioma obligatorio por Ley N° 30512 para titularte; el Ciclo de Actualización (S/ 400) actualiza a egresados 2021 o anteriores para el Examen de Suficiencia; la Academia Pre Tecno (S/ 400) prepara para el ingreso directo; y Toga/Medalla/Brindis cubren tu ceremonia de graduación.',
+    requisitos: [
+      'Depósito ÚNICAMENTE en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-025736',
+      'Sacar 2 COPIAS al voucher de pago del Banco de la Nación',
+      'Entregar ambas copias del voucher en la oficina de Tesorería del instituto junto a tu DNI'
+    ],
+    pasos: [
+      'Acudir presencialmente a ventanilla del Banco de la Nación e indicar la Cta. Cte. N° 00-638-025736.',
+      'Sacar exactamente 2 copias a tu voucher original del banco.',
+      'Entregar las 2 copias en la oficina de Tesorería del IESTP Hermanos Cárcamo para validar tu inscripción o derecho.'
     ]
   },
   {
     id: 'tramite-carne',
     nombre: 'Carné de Educación Superior MINEDU (Medio Pasaje Oficial)',
     categoria: 'Bienestar',
-    costo: 'S/ 18.00 (Tasa fijada por el Ministerio de Educación)',
+    cuentaBN: '00-638-002361',
+    costo: 'S/ 18.00 aprox. (Tasa fijada por el Ministerio de Educación según convocatoria anual)',
     plazo: 'Según cronograma oficial de remisión de lotes MINEDU (15 a 25 días)',
+    paraQueSirve: 'Sirve para acreditar tu condición de estudiante de educación superior tecnológica en todo el Perú y exigir el 50% de descuento (medio pasaje universitario) en transporte público urbano e interurbano conforme a la Ley N° 26271.',
     requisitos: [
       'Estar formalmente matriculado en el semestre lectivo vigente',
-      'Fotografía digital tamaño carnet a color con fondo blanco y ropa oscura (JPG/PNG)',
-      'Voucher de pago del Banco de la Nación validado en la plataforma de pagos'
+      'Fotografía digital tamaño carné a color con fondo blanco y vestimenta formal',
+      'Voucher de pago validado según comunicado semestral de Secretaría Académica'
     ],
     pasos: [
-      'Secretaría Académica publica la convocatoria semestral de carné institucional.',
-      'Abonar S/ 18.00 en el Banco de la Nación y subir comprobante a pagos.ieshercar.edu.pe.',
-      'Cargar o enviar foto digital con las especificaciones técnicas requeridas.',
-      'Recepción física del carné con chip para gozar del 50% de descuento en pasajes urbanos e interurbanos.'
-    ]
-  },
-  {
-    id: 'tramite-certificado-estudios',
-    nombre: 'Certificado Oficial de Estudios (Por Ciclo o Completo)',
-    categoria: 'Documentos',
-    costo: 'S/ 25.00 por ciclo / S/ 60.00 ciclo completo (I al VI)',
-    plazo: '3 a 5 días hábiles',
-    requisitos: [
-      'Haber cursado y aprobado las asignaturas correspondientes',
-      'FUT especificando si requiere desglose por ciclo o récord completo',
-      'Comprobante de depósito en el Banco de la Nación',
-      '2 Fotos tamaño carnet para el membrete oficial del certificado'
-    ],
-    pasos: [
-      'Pagar la tasa en el BN y validar comprobante en pagos.ieshercar.edu.pe.',
-      'Presentar FUT y fotos por Mesa de Partes en campus Paita Alta.',
-      'Secretaría confecciona el certificado con sellos de seguridad y firmas de ley.'
-    ]
-  },
-  {
-    id: 'tramite-convalidacion',
-    nombre: 'Convalidación de Unidades Didácticas',
-    categoria: 'Académico',
-    costo: 'S/ 15.00 por cada curso a convalidar',
-    plazo: '7 a 10 días hábiles (Dictamen de Comisión Académica)',
-    requisitos: [
-      'Certificado oficial de estudios de la institución de origen (otro instituto o universidad)',
-      'Sílabos de los cursos aprobados debidamente visados y sellados por la institución de origen',
-      'Coincidencia mínima del 80% de contenidos temáticos y créditos',
-      'FUT detallando la tabla de convalidaciones solicitada'
-    ],
-    pasos: [
-      'Solicitar formato de convalidación en Secretaría o generar FUT en línea.',
-      'Entregar expediente completo con sílabos visados por Mesa de Partes.',
-      'La Comisión Evaluadora emite Resolución Directoral de Convalidación de Asignaturas.'
-    ]
-  },
-  {
-    id: 'tramite-traslado-interno',
-    nombre: 'Traslado Interno de Carrera Profesional',
-    categoria: 'Académico',
-    costo: 'S/ 40.00 (Derecho de traslado y apertura de nuevo legajo)',
-    plazo: '5 a 7 días hábiles (Antes del inicio del semestre)',
-    requisitos: [
-      'Haber aprobado como mínimo el I Ciclo en la carrera de origen en el IESTP Hermanos Cárcamo',
-      'Existencia de vacante disponible en la carrera de destino (Computación e Informática, ANI, CONTA o DPA)',
-      'FUT solicitando traslado interno con justificación vocacional',
-      'Voucher del Banco de la Nación'
-    ],
-    pasos: [
-      'Presentar solicitud durante el periodo de matrícula o ratificación.',
-      'Evaluación del expediente por la Jefatura de Unidad Académica.',
-      'Convalidación automática de cursos transversales comunes y emisión de nueva ficha.'
-    ]
-  },
-  {
-    id: 'tramite-traslado-externo',
-    nombre: 'Traslado Externo Nacional (Desde otro Instituto o Universidad)',
-    categoria: 'Académico',
-    costo: 'S/ 70.00 (Derecho de traslado y convalidación inicial)',
-    plazo: '7 a 12 días hábiles',
-    requisitos: [
-      'Certificado oficial de estudios de educación superior técnica o universitaria',
-      'Constancia de no haber sido separado por medida disciplinaria en la institución de origen',
-      'Sílabos oficiales sellados y copia de DNI',
-      'Voucher del Banco de la Nación'
-    ],
-    pasos: [
-      'Presentar expediente por Mesa de Partes en las fechas fijadas en el cronograma de admisión.',
-      'Evaluación técnica de créditos y vacantes por la Coordinación de Carrera.',
-      'Resolución Directoral de admisión por traslado externo y matrícula formal.'
-    ]
-  },
-  {
-    id: 'tramite-reserva-matricula',
-    nombre: 'Reserva de Matrícula y Licencia Temporal de Estudios',
-    categoria: 'Académico',
-    costo: 'S/ 30.00 (Hasta por 2 semestres lectivos)',
-    plazo: '3 a 5 días hábiles',
-    requisitos: [
-      'FUT solicitando la reserva de vacante antes de finalizar el primer mes de clases',
-      'Exposición de motivos justificados (salud, trabajo, motivos familiares o económicos)',
-      'Comprobante de depósito en el Banco de la Nación'
-    ],
-    pasos: [
-      'Ingresar solicitud mediante FUT en Mesa de Partes Virtual o presencial.',
-      'Abonar la tasa en el BN y registrar comprobante.',
-      'Emisión de constancia oficial de reserva de vacante garantizada hasta por 1 año calendario.'
-    ]
-  },
-  {
-    id: 'tramite-reincorporacion',
-    nombre: 'Reincorporación de Estudios (Retorno tras Reserva)',
-    categoria: 'Académico',
-    costo: 'S/ 35.00',
-    plazo: '3 a 5 días hábiles antes del inicio de clases',
-    requisitos: [
-      'Haber contado con reserva aprobada o no haber excedido los 2 semestres de interrupción',
-      'FUT solicitando reincorporación y adecuación al plan curricular vigente',
-      'Voucher de pago del Banco de la Nación'
-    ],
-    pasos: [
-      'Presentar FUT 15 días antes de iniciar la matrícula del semestre siguiente.',
-      'Evaluación de adecuación de malla curricular si hubo actualización de plan de estudios.',
-      'Habilitación en el Sistema Académico para proceder con la matrícula regular.'
-    ]
-  },
-  {
-    id: 'tramite-rectificacion-matricula',
-    nombre: 'Rectificación de Matrícula (Cambio, Retiro o Inclusión de Curso)',
-    categoria: 'Académico',
-    costo: 'S/ 15.00',
-    plazo: '24 a 48 horas (Dentro de las 2 primeras semanas de clases)',
-    requisitos: [
-      'Ficha de matrícula preliminar del semestre en curso',
-      'FUT indicando las asignaturas que se agregan, retiran o cambian de sección',
-      'Voucher de depósito en el Banco de la Nación'
-    ],
-    pasos: [
-      'Llenar el formulario en Mesa de Partes o en línea.',
-      'Coordinación Académica valida que no exista cruce de horarios.',
-      'Actualización inmediata en el Sistema Académico Institucional.'
-    ]
-  },
-  {
-    id: 'tramite-constancia-egresado',
-    nombre: 'Constancia de Egresado y No Adeudo Institucional',
-    categoria: 'Documentos',
-    costo: 'S/ 20.00',
-    plazo: '2 a 3 días hábiles',
-    requisitos: [
-      'Haber aprobado la totalidad de los 120 créditos de la carrera (I al VI ciclo)',
-      'Constancia de no adeudo emitida por Biblioteca y Laboratorios',
-      'Voucher de pago BN y FUT formal'
-    ],
-    pasos: [
-      'Verificar récord académico completo en el sistema.',
-      'Abonar tasa en el BN y validar en pagos.ieshercar.edu.pe.',
-      'Emisión de Constancia de Egresado oficial para postular a empleos o tramitar prácticas.'
-    ]
-  },
-  {
-    id: 'tramite-duplicado-diploma',
-    nombre: 'Duplicado de Diploma de Título Técnico o Certificado Modular',
-    categoria: 'Documentos',
-    costo: 'S/ 90.00 (Por pérdida, deterioro o rectificación de datos)',
-    plazo: '15 a 20 días hábiles (Requiere publicación en diario y reporte MINEDU)',
-    requisitos: [
-      'Denuncia policial original por pérdida o robo (o entrega del documento deteriorado)',
-      'Publicación de pérdida en diario de circulación regional o nacional',
-      'Copia de DNI vigente y 2 fotos tamaño pasaporte en traje formal',
-      'Comprobante de depósito en el Banco de la Nación'
-    ],
-    pasos: [
-      'Presentar expediente completo con denuncia y recorte de diario por Mesa de Partes.',
-      'Dirección General emite Resolución de anulación del original y autorización de duplicado.',
-      'Emisión del nuevo diploma con sello de "DUPLICADO" y registro en el MINEDU.'
+      'Esperar la convocatoria semestral publicada por Secretaría Académica.',
+      'Abonar la tasa oficial en el Banco de la Nación y registrar comprobante en pagos.ieshercar.edu.pe.',
+      'Enviar la fotografía digital y recoger físicamente tu carné en Secretaría.'
     ]
   },
   {
     id: 'tramite-justificacion-inasistencia',
     nombre: 'Justificación Oficial de Inasistencias (Prevención de DPI)',
     categoria: 'Académico',
+    cuentaBN: 'Sin costo',
     costo: 'Gratuito (Trámite de Bienestar y Secretaría Académica)',
     plazo: '48 horas hábiles (Plazo máximo de presentación: 5 días hábiles tras la falta)',
+    paraQueSirve: 'Sirve para evitar que reprobación automática por Desaprobado por Inasistencia (DPI al superar el 30% de faltas) cuando faltas por enfermedad, hospitalización, accidente o comisión laboral formal debidamente sustentada.',
     requisitos: [
       'FUT detallando fechas exactas de inasistencia y unidades didácticas afectadas',
-      'Certificado médico original visado por MINSA / EsSalud (o constancia de trabajo en caso de fuerza mayor)',
+      'Certificado médico original visado por MINSA / EsSalud (o constancia laboral en caso de fuerza mayor)',
       'Copia simple de DNI del estudiante'
     ],
     pasos: [
-      'Presentar FUT y sustento médico o laboral dentro de los 5 días de ocurrida la falta.',
+      'Presentar FUT y sustento médico o laboral dentro de los 5 días hábiles de ocurrida la falta.',
       'Jefatura de Unidad Académica emite proveído de justificación a los docentes responsables.',
-      'Los docentes reprograman evaluaciones o prácticas pendientes sin penalización en nota.'
+      'Los docentes reprograman evaluaciones o prácticas pendientes sin penalización.'
     ]
   }
 ];
@@ -1353,27 +1381,27 @@ Para postular a la admisión del IESTP Hermanos Cárcamo ya no necesitas ir a tu
   },
   {
     id: 'faq-tupa-tramites-lista',
-    titulo: 'Guía Completa del TUPA Institucional y Pagos Oficiales',
-    keywords: ['tupa', 'tramites tupa', 'costos tramites', 'tasas institucionales', 'lista de tramites', 'cuanto cuesta cada tramite', 'todos los tramites'],
+    titulo: 'Guía Completa del TUPA 2026 Oficial (R.D. N° 020-2026) y Para Qué Sirve Cada Trámite',
+    keywords: ['tupa', 'tupa 2026', 'tramites tupa', 'costos tramites', 'tasas institucionales', 'lista de tramites', 'cuanto cuesta cada tramite', 'todos los tramites', 'para que sirve el tupa', 'para que sirve cada tramite'],
     categorias: ['tramites'],
-    locucion: "¡Hola! Todos los pagos de matrícula, suficiencia y titulación se realizan únicamente en ventanilla del Banco de la Nación en la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno, y para el curso de inglés en la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis. Recuerda que no se paga en Págalo punto pe ni en agentes. En tu pantalla tienes el tarifario oficial actualizado.",
-    respuesta: `📋 **Compendio Oficial de Trámites y Tasas del IESTP Hermanos Cárcamo:**
-*Todos los pagos se realizan presencialmente en **ventanilla del Banco de la Nación** (NO en Págalo.pe ni agentes). Cta. Cte. Principal: **\`00-638-002361\`** · Cta. Cte. Inglés: **\`00-638-025736\`**.*
+    locucion: "¡Hola! El Tupa dos mil veintiséis del Instituto Hermanos Cárcamo detalla sesenta y seis tasas oficiales divididas en dos cuentas del Banco de la Nación: la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno para matrícula, certificados, constancias, suficiencia y titulación; y la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis para el curso de inglés, ciclo de actualización, academia pre tecno y ceremonia de graduación. En tu pantalla puedes ver cuánto cuesta y para qué sirve cada uno.",
+    respuesta: `📋 **Compendio Oficial TUPA 2026 (R.D. N° 020-2026-ME-GRP-DREP-IESTP"HC"-DG):**
+*Todos los pagos se realizan presencialmente en **ventanilla del Banco de la Nación** (NO en Págalo.pe ni agentes). Cta. Cte. Trámites TUPA: **\`00-638-002361\`** · Cta. Cte. Actividades Productivas/Inglés: **\`00-638-025736\`**.*
 
-| N° | Trámite Institucional | Tasa Oficial (S/.) | Observación / Plazo |
-|:---|:----------------------|:-------------------|:--------------------|
-| 1 | **Matrícula Regular Semestral** | S/. 250.00 | Boleta en pagos.ieshercar.edu.pe + 3 copias Tesorería |
-| 2 | **Examen de Suficiencia Profesional** | S/. 200.00 | Cta. 00-638-002361 · Expediente foliado |
-| 3 | **Título Profesional: Derecho de Título** | S/. 100.00 | Cta. 00-638-002361 · Folder A/4 + sobre manila A4 |
-| 4 | **Título Profesional: Formato y Caligrafiado** | S/. 60.00 | Cta. 00-638-002361 · Boleta + 1 copia sellada Tesorería |
-| 5 | **Ficha de Actividades (Sist. Tradicional <=2008)** | S/. 12.00 | Solo egresados 2008 hacia abajo |
-| 6 | **Curso de Inglés (Cuenta Específica)** | Cta. 00-638-025736 | Entregar **2 copias del voucher** en Tesorería |
-| 7 | **Carné de Educación Superior MINEDU (Medio Pasaje)** | S/. 18.00 | Lote MINEDU |
-| 8 | **Certificado Modular Progresivo (I, II o III)** | S/. 45.00 | 7 a 10 días |
-| 9 | **Certificado Oficial de Estudios (Por Ciclo / Completo)** | S/. 25.00 / S/. 60.00 | 3 a 7 días |
-| 10 | **Constancia de Egresado / Estudios / No Adeudo** | S/. 20.00 | 2 a 3 días |
-| 11 | **Reserva / Reincorporación / Rectificación** | S/. 30.00 / S/. 35.00 / S/. 15.00 | 2 a 5 días |
-| 12 | **Traslado Interno / Externo / Convalidación** | S/. 40.00 / S/. 70.00 / S/. 15.00 | 5 a 12 días |`
+| N° | Trámite Oficial TUPA 2026 | Tasa (S/) | Cuenta BN | ¿Para qué sirve? |
+|:---|:--------------------------|:----------|:----------|:-----------------|
+| 1 | **Matrícula Ordinaria (Ingresantes/Regulares)** | S/ 250.00 | \`00-638-002361\` | Acredita tu vacante y estado de alumno regular del semestre |
+| 2 | **Derecho Examen de Admisión** | S/ 200.00 | \`00-638-002361\` | Inscripción oficial para postular e ingresar a una carrera |
+| 3 | **Certificado Modular (PPP / EFSRT)** | S/ 25.00 | \`00-638-002361\` | Acredita competencias de un módulo para trabajar o titularte |
+| 4 | **Certificado de Estudios (Por Periodo / 6 Periodos)** | S/ 40.00 / S/ 240.00 | \`00-638-002361\` | Respalda notas oficiales para título, traslado o concursos |
+| 5 | **Constancias (Egresado, Estudios, Matrícula, No Adeudar, Tercio, Trámite Título)** | S/ 15.00 c/u | \`00-638-002361\` | Demuestran tu condición académica, récord o ausencia de deudas |
+| 6 | **Examen de Suficiencia Profesional / 2da Opción** | S/ 200.00 / S/ 100.00 | \`00-638-002361\` | Evaluación integral para optar el título profesional técnico |
+| 7 | **Sustentación Trabajo de Aplicación Profesional** | S/ 200.00 | \`00-638-002361\` | Titulación mediante sustentación de proyecto productivo/innovador |
+| 8 | **Derecho de Titulación + Formato de Título** | S/ 100.00 + S/ 60.00 | \`00-638-002361\` | Emisión, caligrafiado y registro nacional MINEDU del Título |
+| 9 | **Convalidación UD (Interno/Externo) / PPP con Exp.** | S/ 30.00 / S/ 150.00 | \`00-638-002361\` | Reconoce cursos o experiencia laboral para no repetirlos |
+| 10 | **Recuperación / Repitencia / Eval. Extraordinaria** | S/ 35 / S/ 200–300 | \`00-638-002361\` | Subsanar unidades didácticas desaprobadas sin atrasar egreso |
+| 11 | **Reserva (Ingres.) / Licencia (2°-6°) / Reincorporación** | S/ 60 / S/ 100 / S/ 65 | \`00-638-002361\` | Pausar legalmente estudios sin perder vacante y retornar luego |
+| 12 | **Curso Inglés Básico / Ciclo Actualización / Pre Tecno** | S/ 400.00 c/u | \`00-638-025736\` | Idioma obligatorio para título, actualización o preparación Pre |`
   },
   {
     id: 'faq-fut-mesa-de-partes',
@@ -2189,27 +2217,123 @@ const GUIA_PRACTICAS_EFSRT = {
 };
 
 /**
- * CATÁLOGO OFICIAL DE TASAS Y TRÁMITES TUPA (PARA EL COTIZADOR INTERACTIVO)
+ * CATÁLOGO OFICIAL DE TASAS Y TRÁMITES TUPA 2026 (PARA EL COTIZADOR INTERACTIVO)
+ * Fuente: R.D. N° 020-2026-ME-GRP-DREP-IESTP"HC"-DG (TUPA 2026)
  */
 const TASAS_TUPA_COTIZADOR = [
-  { id: 'tupa-matricula', nombre: 'Matrícula Regular Semestral', costo: 250, categoria: 'Academico', icon: 'bi-pencil-square', detalle: 'Pago en ventanilla BN (Cta. 00-638-002361) + boleta en pagos.ieshercar.edu.pe + 3 copias en Tesorería' },
-  { id: 'tupa-suficiencia', nombre: 'Examen de Suficiencia Profesional', costo: 200, categoria: 'Titulacion', icon: 'bi-journal-check', detalle: 'Cta. 00-638-002361 • Boleta electrónica + copia sellada por Tesorería (expediente foliado)' },
-  { id: 'tupa-titulo-derecho', nombre: 'Título Profesional: Derecho de Título Profesional', costo: 100, categoria: 'Titulacion', icon: 'bi-award-fill', detalle: 'Cta. 00-638-002361 • Boleta original + 1 copia sellada por Tesorería' },
-  { id: 'tupa-titulo-formato', nombre: 'Título Profesional: Formato y Caligrafiado de Título', costo: 60, categoria: 'Titulacion', icon: 'bi-file-earmark-richtext', detalle: 'Cta. 00-638-002361 • Boleta original + 1 copia sellada por Tesorería' },
-  { id: 'tupa-ficha-actividades', nombre: 'Ficha de Actividades (Solo Sist. Tradicional <= 2008)', costo: 12, categoria: 'Titulacion', icon: 'bi-file-earmark-spreadsheet', detalle: 'Cta. 00-638-002361 • Solo para egresados del Sistema Tradicional del 2008 hacia abajo' },
-  { id: 'tupa-carne', nombre: 'Carné de Educación Superior MINEDU (Medio Pasaje)', costo: 18, categoria: 'Bienestar', icon: 'bi-card-heading', detalle: 'Carné oficial con vigencia anual según Ley 26271' },
-  { id: 'tupa-cert-modular', nombre: 'Certificado Modular Progresivo (Por Módulo)', costo: 45, categoria: 'Certificaciones', icon: 'bi-award', detalle: 'Diploma oficial por culminar Módulo I, II o III' },
-  { id: 'tupa-constancia-estudios', nombre: 'Constancia de Estudios / Notas / No Adeudo', costo: 20, categoria: 'Documentos', icon: 'bi-file-earmark-text', detalle: 'Emisión en 2 a 3 días hábiles con firma y sello' },
-  { id: 'tupa-cert-estudios-ciclo', nombre: 'Certificado Oficial de Estudios (Por Ciclo)', costo: 25, categoria: 'Documentos', icon: 'bi-file-earmark-ruled', detalle: 'Certificado oficial con asignaturas y calificaciones' },
-  { id: 'tupa-cert-estudios-comp', nombre: 'Certificado Oficial Completo (I al VI Ciclo)', costo: 60, categoria: 'Documentos', icon: 'bi-folder-check', detalle: 'Certificado de récord integral de los 6 semestres' },
-  { id: 'tupa-admision-ordinario', nombre: 'Carpeta e Inscripción Examen Ordinario', costo: 150, categoria: 'Admision', icon: 'bi-person-check', detalle: 'Derecho a examen de 100 preguntas y balotario' },
-  { id: 'tupa-convalidacion', nombre: 'Convalidación de Unidad Didáctica (Por Curso)', costo: 15, categoria: 'Academico', icon: 'bi-arrow-left-right', detalle: 'Para traslados de universidades u otros institutos' },
-  { id: 'tupa-traslado-interno', nombre: 'Traslado Interno de Carrera Profesional', costo: 40, categoria: 'Academico', icon: 'bi-shuffle', detalle: 'Cambio de especialidad en el instituto' },
-  { id: 'tupa-traslado-externo', nombre: 'Traslado Externo Nacional', costo: 70, categoria: 'Academico', icon: 'bi-box-arrow-in-right', detalle: 'Provenientes de otra institución superior' },
-  { id: 'tupa-reserva-matricula', nombre: 'Reserva de Matrícula (Hasta 2 semestres)', costo: 30, categoria: 'Academico', icon: 'bi-pause-circle', detalle: 'Licencia temporal con vacante asegurada' },
-  { id: 'tupa-reincorporacion', nombre: 'Reincorporación de Estudios', costo: 35, categoria: 'Academico', icon: 'bi-arrow-clockwise', detalle: 'Retorno formal tras reserva de vacante' },
-  { id: 'tupa-duplicado-titulo', nombre: 'Duplicado de Diploma de Título Técnico', costo: 90, categoria: 'Titulacion', icon: 'bi-files', detalle: 'Por pérdida o deterioro previa denuncia' }
+  { id: 'tupa-matricula', nombre: 'Matrícula Ordinaria para Ingresantes y Regulares', costo: 250, cuenta: '00-638-002361', categoria: 'Academico', icon: 'bi-pencil-square', detalle: 'Acredita tu matrícula semestral y habilita clases/notas en sistema.ieshercar.edu.pe' },
+  { id: 'tupa-suficiencia', nombre: 'Examen de Suficiencia Profesional (incluye actas)', costo: 200, cuenta: '00-638-002361', categoria: 'Titulacion', icon: 'bi-journal-check', detalle: 'Evaluación teórico-práctica integral para optar el Título Profesional Técnico' },
+  { id: 'tupa-titulo-derecho', nombre: 'Derecho de Titulación (Título Profesional)', costo: 100, cuenta: '00-638-002361', categoria: 'Titulacion', icon: 'bi-award-fill', detalle: 'Derecho oficial de titulación y trámite de registro ante el MINEDU' },
+  { id: 'tupa-titulo-formato', nombre: 'Formato de Título Profesional (y Caligrafiado)', costo: 60, cuenta: '00-638-002361', categoria: 'Titulacion', icon: 'bi-file-earmark-richtext', detalle: 'Cartón diploma oficial caligrafiado a nombre de la Nación' },
+  { id: 'tupa-ficha-actividades', nombre: 'Ficha de Actividades (Solo Sist. Tradicional <= 2008)', costo: 12, cuenta: '00-638-002361', categoria: 'Titulacion', icon: 'bi-file-earmark-spreadsheet', detalle: 'Solo para egresados del Sistema Tradicional del 2008 hacia abajo' },
+  { id: 'tupa-cert-modular', nombre: 'Certificado Modular (PPP / EFSRT) por Módulo', costo: 25, cuenta: '00-638-002361', categoria: 'Certificaciones', icon: 'bi-award', detalle: 'Certifica competencias de un módulo aprobado (I, II o III) para trabajar o titularte' },
+  { id: 'tupa-carpeta-efsrt', nombre: 'Carpeta de Experiencias Formativas (EFSRT)', costo: 20, cuenta: '00-638-002361', categoria: 'Certificaciones', icon: 'bi-folder2-open', detalle: 'Folder oficial para registrar y evaluar tus prácticas preprofesionales' },
+  { id: 'tupa-constancias', nombre: 'Constancia (Egresado / Estudios / Matrícula / No Adeudar / Tercio)', costo: 15, cuenta: '00-638-002361', categoria: 'Documentos', icon: 'bi-file-earmark-text', detalle: 'Documento numerado oficial para becas, empleos o expediente de título' },
+  { id: 'tupa-cert-estudios-ciclo', nombre: 'Certificado de Estudios (Por Periodo Académico)', costo: 40, cuenta: '00-638-002361', categoria: 'Documentos', icon: 'bi-file-earmark-ruled', detalle: 'Certificado oficial de notas de un semestre académico' },
+  { id: 'tupa-cert-estudios-comp', nombre: 'Certificado de Estudios Completo (6 Periodos)', costo: 240, cuenta: '00-638-002361', categoria: 'Documentos', icon: 'bi-folder-check', detalle: 'Juego completo oficial I al VI ciclo requerido para Título o traslados' },
+  { id: 'tupa-admision-ordinario', nombre: 'Derecho Examen de Admisión', costo: 200, cuenta: '00-638-002361', categoria: 'Admision', icon: 'bi-person-check', detalle: 'Inscripción oficial para postular en admisión ordinaria o exonerados' },
+  { id: 'tupa-ingles-titulacion', nombre: 'Curso de Inglés Básico para Titulación (Cta. Productivas)', costo: 400, cuenta: '00-638-025736', categoria: 'Titulacion', icon: 'bi-translate', detalle: 'Cta. 00-638-025736 (2 copias en Tesorería) • Idioma exigido para titularte' },
+  { id: 'tupa-actualizacion-suf', nombre: 'Ciclo de Actualización para Suficiencia (Cta. Productivas)', costo: 400, cuenta: '00-638-025736', categoria: 'Titulacion', icon: 'bi-journal-bookmark', detalle: 'Cta. 00-638-025736 • Obligatorio para egresados 2021 hacia atrás' },
+  { id: 'tupa-licencia-estudios', nombre: 'Licencia de Estudios (2do. al 6to. Semestre)', costo: 100, cuenta: '00-638-002361', categoria: 'Academico', icon: 'bi-pause-circle', detalle: 'Pausa formal de estudios sin perder vacante para alumnos regulares' },
+  { id: 'tupa-reserva-ingresantes', nombre: 'Reserva de Matrícula (Alumnos Ingresantes)', costo: 60, cuenta: '00-638-002361', categoria: 'Academico', icon: 'bi-bookmark-check', detalle: 'Reserva vacante de cachimbo ingresante antes de iniciar clases' },
+  { id: 'tupa-reincorporacion', nombre: 'Reincorporación de Estudios', costo: 65, cuenta: '00-638-002361', categoria: 'Academico', icon: 'bi-arrow-clockwise', detalle: 'Retorno formal a clases tras licencia o reserva de matrícula' },
+  { id: 'tupa-duplicado-titulo', nombre: 'Duplicado de Título (Trámite y Formato)', costo: 200, cuenta: '00-638-002361', categoria: 'Documentos', icon: 'bi-files', detalle: 'Reposición oficial ante pérdida o deterioro previa denuncia policial' }
 ];
+
+/**
+ * COMPENDIO COMPLETO TUPA 2026 — RESOLUCIÓN DIRECTORAL N° 020-2026-ME-GRP-DREP-IESTP"HC"-DG
+ * Incluye los 43 Procedimientos Administrativos (Cta. BN 00-638-002361)
+ * y los 23 Conceptos de Actividades Productivas y Empresariales (Cta. BN 00-638-025736),
+ * explicando detalladamente PARA QUÉ SIRVE cada uno.
+ */
+const TUPA_COMPENDIO_OFICIAL_2026 = {
+  resolucion: 'Resolución Directoral N° 020-2026-ME-GRP-DREP-IESTP"HC"-DG',
+  vigencia: 'TUPA 2026 Oficial — Unidad Administrativa / Tesorería',
+  canalPago: 'Presencial ÚNICAMENTE en ventanillas del Banco de la Nación (NO Págalo.pe, NO agentes)',
+  cuentas: [
+    {
+      cuenta: '00-638-002361',
+      titulo: 'Procedimientos Administrativos TUPA (43 conceptos)',
+      uso: 'Matrícula, Admisión, Certificados, Constancias, Convalidaciones, Recuperación, Suficiencia y Titulación. Registra tu voucher en pagos.ieshercar.edu.pe.'
+    },
+    {
+      cuenta: '00-638-025736',
+      titulo: 'Actividades Productivas y Empresariales (23 conceptos)',
+      uso: 'Curso de Inglés Básico, Ciclo de Actualización, Academia Pre Tecno, Ceremonia de Titulación (toga, medalla, porta título, pin) y alquiler de ambientes. Entrega 2 copias del voucher en Tesorería.'
+    }
+  ],
+  items: [
+    // --- CUENTA 00-638-002361: 43 PROCEDIMIENTOS ADMINISTRATIVOS ---
+    { item: 1, cuenta: '00-638-002361', categoria: 'Prácticas y Convalidación', concepto: 'Carpeta de Convalidación de PPP', costo: 25, paraQueSirve: 'Folder oficial para organizar y presentar los documentos laborales que acreditan tus prácticas preprofesionales mediante trabajo formal.' },
+    { item: 2, cuenta: '00-638-002361', categoria: 'Prácticas y Convalidación', concepto: 'Carpeta de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT)', costo: 20, paraQueSirve: 'Expediente físico oficial donde registras tu plan de trabajo, fichas de asistencia y evaluación del empleador para aprobar tus prácticas del módulo.' },
+    { item: 3, cuenta: '00-638-002361', categoria: 'Certificados y Notas', concepto: 'Certificado de Estudios (incluye los seis Periodos Académicos)', costo: 240, paraQueSirve: 'Acredita oficialmente todas tus notas de los 6 ciclos (I al VI). Es obligatorio para tramitar tu Título Profesional, postular a universidades o trabajos estatales.' },
+    { item: 4, cuenta: '00-638-002361', categoria: 'Certificados y Notas', concepto: 'Certificado de Estudios (por Periodo Académico)', costo: 40, paraQueSirve: 'Acredita formalmente las notas de un solo ciclo específico (ej. para demostrar avance semestral ante una beca, empresa o traslado parcial).' },
+    { item: 5, cuenta: '00-638-002361', categoria: 'Certificados y Notas', concepto: 'Certificado Modular (PPP / EFSRT)', costo: 25, paraQueSirve: 'Diploma progresivo por cada módulo formativo aprobado (I, II o III). Te permite postular a empleos técnicos calificados antes de egresar y es requisito para titularte.' },
+    { item: 6, cuenta: '00-638-002361', categoria: 'Certificados y Notas', concepto: 'Consolidado de notas (Asignaturas o Modular)', costo: 15, paraQueSirve: 'Resumen histórico oficial de todas tus calificaciones acumuladas en el sistema académico para seguimiento personal o trámite interno.' },
+    { item: 7, cuenta: '00-638-002361', categoria: 'Constancias', concepto: 'Constancia de Egresado (numerada)', costo: 15, paraQueSirve: 'Demuestra ante empresas o convocatorias que ya culminaste el 100% de tus 6 semestres mientras tramitas tu Título Profesional.' },
+    { item: 8, cuenta: '00-638-002361', categoria: 'Constancias', concepto: 'Constancia de Estudios (numerada)', costo: 15, paraQueSirve: 'Sirve para acreditar ante EsSalud, seguros privados, becas, bancos o empleadores que estás cursando estudios superiores activos.' },
+    { item: 9, cuenta: '00-638-002361', categoria: 'Constancias', concepto: 'Constancia de Matrícula (numerada)', costo: 15, paraQueSirve: 'Certifica formalmente que te encuentras matriculado en el semestre vigente para asignación familiar, permisos laborales o entidades públicas.' },
+    { item: 10, cuenta: '00-638-002361', categoria: 'Constancias', concepto: 'Constancia de No Adeudar', costo: 15, paraQueSirve: 'Demuestra que no debes libros en Biblioteca, equipos en laboratorios ni pagos en Tesorería. Es requisito obligatorio para dar Examen de Suficiencia o titularte.' },
+    { item: 11, cuenta: '00-638-002361', categoria: 'Constancias', concepto: 'Constancia de Tercio Superior', costo: 15, paraQueSirve: 'Acredita que perteneces al tercio superior de rendimiento académico de tu promoción, clave para becas PRONABEC, prácticas destacadas y concursos.' },
+    { item: 12, cuenta: '00-638-002361', categoria: 'Constancias', concepto: 'Constancia de Trámite de Título Profesional', costo: 15, paraQueSirve: 'Respalda formalmente ante tu centro de labores o concurso público que tu Título Profesional ya se encuentra en trámite y registro ante el MINEDU.' },
+    { item: 13, cuenta: '00-638-002361', categoria: 'Prácticas y Convalidación', concepto: 'Convalidación de Prácticas Pre Profesionales con experiencia laboral y EFSRT', costo: 150, paraQueSirve: 'Permite que quienes trabajan en un puesto formal de su carrera convaliden sus horas de prácticas EFSRT presentando constancias de trabajo y evaluación.' },
+    { item: 14, cuenta: '00-638-002361', categoria: 'Prácticas y Convalidación', concepto: 'Convalidación de Unidad Didáctica (traslado externo)', costo: 30, paraQueSirve: 'Evalúa y valida cada curso que ya aprobaste en otra universidad o instituto público/privado para que no tengas que repetirlo en el Hercar.' },
+    { item: 15, cuenta: '00-638-002361', categoria: 'Prácticas y Convalidación', concepto: 'Copia de SÍLABOS visado (por hoja impresa)', costo: 1, paraQueSirve: 'Entrega el sílabo oficial sellado de cada curso que llevaste en el instituto si necesitas convalidar estudios en una universidad o en otro instituto.' },
+    { item: 16, cuenta: '00-638-002361', categoria: 'Prácticas y Convalidación', concepto: 'Convalidación de Unidad Didáctica (traslado interno)', costo: 30, paraQueSirve: 'Valida unidades didácticas transversales o afines cuando te cambias de una carrera técnica a otra dentro del mismo IESTP Hermanos Cárcamo.' },
+    { item: 17, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Derecho de Evaluación Extraordinaria (Unidad Didáctica Específica)', costo: 300, paraQueSirve: 'Permite rendir examen extraordinario para aprobar una unidad didáctica específica técnica pendiente (sin esperar un año completo para regularizar egreso).' },
+    { item: 18, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Derecho de Evaluación Extraordinaria (Unidad Didáctica de Empleabilidad)', costo: 200, paraQueSirve: 'Permite rendir evaluación extraordinaria en cursos transversales/empleabilidad (comunicación, inglés, ética, emprendimiento) pendientes de aprobación.' },
+    { item: 19, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Derecho de Titulación', costo: 100, paraQueSirve: 'Cubre el trámite administrativo, revisión del expediente de titulación, resolución directoral de título y gestión de registro ante la DREP / MINEDU.' },
+    { item: 20, cuenta: '00-638-002361', categoria: 'Duplicados', concepto: 'Duplicado de Boleta de Notas (Por Periodo Académico)', costo: 10, paraQueSirve: 'Reemite tu boleta informativa de notas de un ciclo determinado si extraviaste la original entregada al finalizar el semestre.' },
+    { item: 21, cuenta: '00-638-002361', categoria: 'Duplicados', concepto: 'Duplicado de Certificado Modular', costo: 30, paraQueSirve: 'Expide un nuevo ejemplar oficial con igual valor legal cuando perdiste o se deterioró tu Certificado Modular original (necesario para Suficiencia/Título).' },
+    { item: 22, cuenta: '00-638-002361', categoria: 'Duplicados', concepto: 'Duplicado de Notas de haber aprobado Módulo Profesional PPP', costo: 10, paraQueSirve: 'Repone la constancia de calificación aprobatoria de tus prácticas de Módulo Profesional PPP.' },
+    { item: 23, cuenta: '00-638-002361', categoria: 'Duplicados', concepto: 'Duplicado de Oficio de prácticas pre profesionales y/o EFSRT', costo: 4, paraQueSirve: 'Reemite la carta u oficio de presentación hacia la empresa receptora si el documento anterior venció o necesita reimpresión.' },
+    { item: 24, cuenta: '00-638-002361', categoria: 'Duplicados', concepto: 'Duplicado de Título (Trámite y Formato)', costo: 200, paraQueSirve: 'Permite obtener un nuevo diploma oficial de Título Profesional Técnico por robo, pérdida o daño del original, previa denuncia policial y anulación oficial.' },
+    { item: 25, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Examen de Suficiencia Profesional (incluye actas)', costo: 200, paraQueSirve: 'Modalidad de titulación mediante examen integral ante jurado que evalúa tus competencias teóricas y prácticas de toda la carrera (incluye actas).' },
+    { item: 26, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Segunda Opción de Examen de Suficiencia Profesional', costo: 100, paraQueSirve: 'Brinda una segunda oportunidad a menor costo si en el primer intento de Examen de Suficiencia Profesional no lograste alcanzar la nota aprobatoria.' },
+    { item: 27, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Formato de Título Profesional', costo: 60, paraQueSirve: 'Cubre el diploma oficial MINEDU impreso y el caligrafiado formal con tus nombres, carrera y fecha para ser firmado y entregado.' },
+    { item: 28, cuenta: '00-638-002361', categoria: 'Certificados y Notas', concepto: 'Itinerario formativo por hoja', costo: 1, paraQueSirve: 'Documento oficial con el plan de estudios, horas y créditos de tu promoción (muy solicitado al postular a convalidación universitaria).' },
+    { item: 29, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Licencia de Estudios (Alumnos del 2do. al 6to. Semestre)', costo: 100, paraQueSirve: 'Permite a estudiantes regulares (del II al VI ciclo) suspender temporalmente sus estudios sin perder su vacante ni figurar como abandono.' },
+    { item: 30, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Matrícula Ordinaria para Ingresantes y Regulares', costo: 250, paraQueSirve: 'Matrícula semestral obligatoria para todos los cachimbos ingresantes y estudiantes regulares (recuerda: no hay pensiones ni mensualidades).' },
+    { item: 31, cuenta: '00-638-002361', categoria: 'Documentos y Rectificaciones', concepto: 'Rectificación de Nombres y Apellidos (Estudiantes y Egresados)', costo: 40, paraQueSirve: 'Corrige en actas, sistema académico y legajo cualquier error en tildes, letras o cambio legal de DNI antes de emitir certificados o título.' },
+    { item: 32, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Recuperación de Unidad Didáctica', costo: 35, paraQueSirve: 'Permite al estudiante que obtuvo nota 10, 11 o 12 al cierre del semestre rendir evaluación de subsanación para aprobar el curso sin repetirlo.' },
+    { item: 33, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Reincorporación', costo: 65, paraQueSirve: 'Habilita nuevamente tu matrícula en el Sistema Académico para retomar clases tras haber solicitado Reserva de Matrícula o Licencia de Estudios.' },
+    { item: 34, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Repitencia de Unidad Didáctica', costo: 35, paraQueSirve: 'Inscribe nuevamente al alumno en un curso desaprobado (con nota <= 9 o DPI) para llevarlo en el siguiente periodo correspondiente.' },
+    { item: 35, cuenta: '00-638-002361', categoria: 'Evaluaciones y Matrícula', concepto: 'Reserva de Matrícula (Alumnos Ingresantes)', costo: 60, paraQueSirve: 'Protege la vacante ganada por un postulante recién ingresado que por trabajo, salud u otro motivo no puede estudiar el primer semestre inmediatamente.' },
+    { item: 36, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Revalidación de acreditación de idioma extranjero (nivel B1)', costo: 150, paraQueSirve: 'Reconoce oficialmente certificados externos de idioma extranjero (ej. centros de idiomas universitarios o internacionales) para el requisito de titulación.' },
+    { item: 37, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Revalidación de Título Profesional', costo: 200, paraQueSirve: 'Procedimiento oficial de homologación o actualización formal de título según normativa vigente.' },
+    { item: 38, cuenta: '00-638-002361', categoria: 'Titulación', concepto: 'Sustentación de Trabajo de Aplicación Profesional', costo: 200, paraQueSirve: 'Modalidad de titulación donde sustentas ante jurado un proyecto productivo o solución tecnológica aplicada a la realidad laboral.' },
+    { item: 39, cuenta: '00-638-002361', categoria: 'Traslados y Admisión', concepto: 'Derecho Traslado Externo (Instituto Privado)', costo: 200, paraQueSirve: 'Evaluación e ingreso al IESTP Hermanos Cárcamo para estudiantes que provienen de un instituto superior o universidad privada.' },
+    { item: 40, cuenta: '00-638-002361', categoria: 'Traslados y Admisión', concepto: 'Derecho Traslado Externo (Instituto Público)', costo: 80, paraQueSirve: 'Evaluación e ingreso al IESTP Hermanos Cárcamo con tarifa preferencial para estudiantes provenientes de otro instituto o universidad pública.' },
+    { item: 41, cuenta: '00-638-002361', categoria: 'Traslados y Admisión', concepto: 'Derecho de Traslado Interno de Carrera Profesional', costo: 80, paraQueSirve: 'Permite cambiar de especialidad entre Computación e Informática, ANI, Contabilidad o DPA dentro del mismo instituto.' },
+    { item: 42, cuenta: '00-638-002361', categoria: 'Traslados y Admisión', concepto: 'Derecho Examen de Admisión', costo: 200, paraQueSirve: 'Derecho de inscripción para postular en el Examen de Admisión (100 preguntas) o modalidad de exonerados e ingresar al IESTP.' },
+    { item: 43, cuenta: '00-638-002361', categoria: 'Documentos y Rectificaciones', concepto: 'Pago por Transferencia por error de cuenta', costo: 15, paraQueSirve: 'Regulariza y traslada contablemente un depósito cuando por error pagaste a la otra cuenta corriente del instituto en el Banco de la Nación.' },
+
+    // --- CUENTA 00-638-025736: 23 CONCEPTOS DE ACTIVIDADES PRODUCTIVAS Y EMPRESARIALES ---
+    { item: 1, cuenta: '00-638-025736', categoria: 'Formación y Admisión (025736)', concepto: 'Academia Pre Tecno Hercar 2026', costo: 400, paraQueSirve: 'Ciclo de preparación académica oficial del instituto (CEPRE) que te prepara en los temas del examen y brinda ingreso directo por orden de mérito.' },
+    { item: 13, cuenta: '00-638-025736', categoria: 'Titulación e Idiomas (025736)', concepto: 'Ciclo de Actualización para Examen de Suficiencia Profesional', costo: 400, paraQueSirve: 'Curso obligatorio de actualización profesional para egresados del 2021 hacia atrás que van a rendir Examen de Suficiencia Profesional.' },
+    { item: 16, cuenta: '00-638-025736', categoria: 'Titulación e Idiomas (025736)', concepto: 'Curso de Inglés Básico para Titulación', costo: 400, paraQueSirve: 'Curso institucional que acredita el requisito obligatorio de idioma extranjero para poder rendir el Examen de Suficiencia y obtener tu Título Profesional.' },
+    { item: 17, cuenta: '00-638-025736', categoria: 'Titulación e Idiomas (025736)', concepto: 'Duplicado de Certificado de Inglés Básico para Titulación', costo: 50, paraQueSirve: 'Reemite el certificado oficial de haber aprobado el Curso de Inglés Básico del instituto en caso de pérdida (sacar 2 copias del voucher a Tesorería).' },
+    { item: 18, cuenta: '00-638-025736', categoria: 'Titulación e Idiomas (025736)', concepto: 'Duplicado de Certificado de Actualización para Examen de Suficiencia', costo: 50, paraQueSirve: 'Reemite el certificado de haber aprobado el Ciclo de Actualización profesional si se extravió el original.' },
+    { item: 11, cuenta: '00-638-025736', categoria: 'Ceremonia de Titulación (025736)', concepto: 'Alquiler de Toga y Birrete', costo: 50, paraQueSirve: 'Indumentaria académica ceremonial para participar oficialmente en tu ceremonia de colación y entrega de Título Profesional.' },
+    { item: 21, cuenta: '00-638-025736', categoria: 'Ceremonia de Titulación (025736)', concepto: 'Medalla Institucional de Titulación', costo: 60, paraQueSirve: 'Medalla oficial grabada con el escudo del IESTP Hermanos Cárcamo impuesta al graduado durante la ceremonia de titulación.' },
+    { item: 22, cuenta: '00-638-025736', categoria: 'Ceremonia de Titulación (025736)', concepto: 'Porta Título', costo: 50, paraQueSirve: 'Estuche rígido institucional elegante diseñado para resguardar y conservar tu Diploma de Título Profesional a Nombre de la Nación.' },
+    { item: 12, cuenta: '00-638-025736', categoria: 'Ceremonia de Titulación (025736)', concepto: 'Brindis de Ceremonia (incluye estudiante, papá y mamá)', costo: 30, paraQueSirve: 'Derecho de participación del titulado junto a sus padres en el brindis de honor posterior a la ceremonia de graduación.' },
+    { item: 20, cuenta: '00-638-025736', categoria: 'Ceremonia de Titulación (025736)', concepto: 'Invitado a Ceremonia (una persona)', costo: 15, paraQueSirve: 'Pase adicional para familiar o acompañante extra que desee asistir a tu ceremonia y brindis de graduación.' },
+    { item: 14, cuenta: '00-638-025736', categoria: 'Distintivos Institucionales (025736)', concepto: 'Corbata Institucional - Estudiante', costo: 15, paraQueSirve: 'Corbata oficial con emblema del instituto para presentaciones formales, prácticas o actos cívicos.' },
+    { item: 15, cuenta: '00-638-025736', categoria: 'Distintivos Institucionales (025736)', concepto: 'Corbatín Institucional - Estudiante', costo: 15, paraQueSirve: 'Corbatín formal institucional reglamentario para damas estudiantes en eventos protocolares.' },
+    { item: 19, cuenta: '00-638-025736', categoria: 'Distintivos Institucionales (025736)', concepto: 'Insignia Institucional - Estudiante', costo: 5, paraQueSirve: 'Emblema bordado o metálico del IESTP Hermanos Cárcamo para uniforme oficial de carrera.' },
+    { item: 23, cuenta: '00-638-025736', categoria: 'Distintivos Institucionales (025736)', concepto: 'Pin o Botón Institucional', costo: 25, paraQueSirve: 'Distintivo metálico de solapa para egresados, titulados y presentaciones ejecutivas.' },
+    { item: 2, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Auditorio para Eventos Culturales (por día)', costo: 300, paraQueSirve: 'Uso del Auditorio Central para capacitaciones, seminarios, congresos académicos y actos culturales de instituciones externas.' },
+    { item: 3, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Auditorio para Eventos Sociales (excepto bailes, por día)', costo: 500, paraQueSirve: 'Uso institucional del Auditorio Central para eventos protocolares o reuniones sociales sin fines de baile.' },
+    { item: 4, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Aula (jornada de 8 horas)', costo: 70, paraQueSirve: 'Cesión temporal de un aula pedagógica para evaluaciones externas, talleres o exámenes de entidades aliadas.' },
+    { item: 5, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Equipo de Sonido con Asistente (por hora)', costo: 40, paraQueSirve: 'Servicio de audio y amplificación con operador técnico para eventos realizados en las instalaciones del instituto.' },
+    { item: 6, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Equipo Multimedia (por hora, dentro del IESTP)', costo: 40, paraQueSirve: 'Uso de proyector y sistema multimedia para exposiciones, charlas y talleres dentro del campus.' },
+    { item: 7, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Laboratorio de Computación con 40 máquinas (por hora)', costo: 80, paraQueSirve: 'Uso de laboratorio equipado con 40 PCs para exámenes digitales, certificaciones, concursos públicos o capacitaciones externas.' },
+    { item: 8, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de mesas (c/u)', costo: 5, paraQueSirve: 'Mobiliario auxiliar de apoyo por unidad para ferias, charlas o eventos desarrollados en el campus.' },
+    { item: 9, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de Plataforma para Eventos Culturales y Recreativos (excepto bailes)', costo: 500, paraQueSirve: 'Uso de la losa/plataforma central del instituto para ferias institucionales, festivales culturales o jornadas deportivas diurnas.' },
+    { item: 10, cuenta: '00-638-025736', categoria: 'Alquiler de Ambientes y Equipos (025736)', concepto: 'Alquiler de sillas (c/u)', costo: 3, paraQueSirve: 'Alquiler unitario de sillería institucional para eventos en plataforma o patio central.' }
+  ]
+};
 
 /**
  * DIRECTORIO Y AMBIENTES DEL CAMPUS PAITA ALTA

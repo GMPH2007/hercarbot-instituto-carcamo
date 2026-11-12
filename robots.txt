@@ -16,6 +16,7 @@ Allow: /sitemap.xml
 
 # Bloquear panel administrativo y registro privado
 Disallow: /admin.html
+Disallow: /login.html
 Disallow: /register.html
 
 # Googlebot e Indexación de Imágenes y Favicon Oficial

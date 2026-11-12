@@ -233,8 +233,23 @@ function initAdminMobileSidebar() {
       }
     });
 
+    // Actualizar píldora informativa de sección activa en el header
+    const sectionPill = document.getElementById('admin-active-section-pill');
+    if (sectionPill) {
+      const activeLink = links.find(l => l.getAttribute('href') === `#${activeSectionId}`);
+      if (activeLink) {
+        const iconEl = activeLink.querySelector('i');
+        const iconCls = iconEl ? iconEl.className : 'bi bi-grid-fill';
+        const labelText = activeLink.querySelector('span')?.textContent || 'Sección';
+        sectionPill.innerHTML = `<i class="${iconCls} me-1 text-warning"></i>${escapeHtml(labelText)}`;
+      }
+    }
+
     if (activeSectionId === 'database-sql' && typeof window.refreshSQLData === 'function') {
       window.refreshSQLData();
+    }
+    if (activeSectionId === 'mi-perfil' && typeof window.renderMiPerfilSection === 'function') {
+      window.renderMiPerfilSection();
     }
 
     if (doScroll) {
@@ -3763,6 +3778,27 @@ function initDatabaseSQLAdmin() {
         `).join('');
       }
     }
+
+    // Render Resets Table
+    const resetsTabCount = document.getElementById('sql-tab-resets-count');
+    if (resetsTabCount) resetsTabCount.textContent = resets.length;
+    const resetsTbody = document.getElementById('sql-resets-table-body');
+    if (resetsTbody) {
+      if (resets.length === 0) {
+        resetsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No hay solicitudes de recuperación de contraseña registradas en la tabla password_resets.</td></tr>`;
+      } else {
+        resetsTbody.innerHTML = resets.map(r => `
+          <tr>
+            <td class="text-center small text-muted font-monospace">#${r.id}</td>
+            <td class="text-truncate"><span class="fw-semibold small text-truncate d-block">${escapeHtml(r.email || '-')}</span></td>
+            <td class="text-center"><code class="bg-light px-2 py-1 rounded border font-monospace fw-bold text-primary">${escapeHtml(r.token || '------')}</code></td>
+            <td class="text-center"><span class="badge ${r.status === 'COMPLETADO' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'} border px-2 py-1" style="font-size:0.72rem;">${escapeHtml(r.status || 'PENDIENTE')}</span></td>
+            <td class="small text-muted font-monospace">${r.created_at ? new Date(r.created_at).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '-'}</td>
+            <td class="small text-muted font-monospace">${r.expires_at ? new Date(r.expires_at).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '-'}</td>
+          </tr>
+        `).join('');
+      }
+    }
   }
 
   // Vaciar Base de Datos a CERO (0) Registros (Solo Super-Admin)
@@ -4027,6 +4063,14 @@ function initDatabaseSQLAdmin() {
     cardLogs.title = 'Ver Logs de Auditoría y Acceso';
     cardLogs.addEventListener('click', () => {
       document.getElementById('tab-sql-logs-btn')?.click();
+    });
+  }
+  const cardResets = document.getElementById('sql-count-resets')?.closest('.p-3');
+  if (cardResets) {
+    cardResets.style.cursor = 'pointer';
+    cardResets.title = 'Ver Solicitudes de Clave';
+    cardResets.addEventListener('click', () => {
+      document.getElementById('tab-sql-resets-btn')?.click();
     });
   }
 
@@ -4468,7 +4512,11 @@ function initHeaderUserProfile() {
 
   const openCurrentProfile = (ev) => {
     if (ev) ev.preventDefault();
-    openUserProfileModal(savedUser.id || 1);
+    if (typeof activateAdminSection === 'function') {
+      activateAdminSection('mi-perfil');
+    } else {
+      openUserProfileModal(savedUser.id || 1);
+    }
   };
 
   if (btnHeaderProfile) {
@@ -4481,5 +4529,226 @@ function initHeaderUserProfile() {
   }
 }
 
+// =========================================================================
+// GESTIÓN DE LA PÁGINA COMPLETA DE MI PERFIL (#mi-perfil)
+// =========================================================================
+function renderMiPerfilSection() {
+  const savedUser = getHercarAdminSession();
+  if (!savedUser) return;
+
+  const dbUser = (typeof HercarSQL !== 'undefined' && savedUser.id)
+    ? (HercarSQL.getUserById(savedUser.id) || savedUser)
+    : savedUser;
+
+  const isSuperAdmin = (dbUser.role || '').toLowerCase().includes('admin') || (dbUser.role || '').toLowerCase().includes('direc');
+  const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(dbUser.full_name || dbUser.username)}&background=0284c7&color=ffffff&bold=true`;
+  const avatarUrl = dbUser.avatar || defaultAvatar;
+
+  const elAvatar = document.getElementById('profilePageAvatar');
+  const elFullName = document.getElementById('profilePageFullName');
+  const elRole = document.getElementById('profilePageRole');
+  const elStatus = document.getElementById('profilePageStatus');
+  const elStatusDot = document.getElementById('profilePageStatusDot');
+  const elCareer = document.getElementById('profilePageCareer');
+  const elCreated = document.getElementById('profilePageCreated');
+  const elLastLogin = document.getElementById('profilePageLastLogin');
+  const elIp = document.getElementById('profilePageIp');
+  const elDni = document.getElementById('profilePageDni');
+  const elPhone = document.getElementById('profilePagePhone');
+  const elUsername = document.getElementById('profilePageUsername');
+  const elEmail = document.getElementById('profilePageEmail');
+  const elPassword = document.getElementById('profilePagePassword');
+  const elPrivileges = document.getElementById('profilePagePrivilegesList');
+
+  if (elAvatar) elAvatar.src = avatarUrl;
+  if (elFullName) elFullName.textContent = dbUser.full_name || 'Usuario Institucional';
+  if (elRole) elRole.textContent = dbUser.role || 'Docente Evaluador';
+  const isActive = (dbUser.status || 'ACTIVO') === 'ACTIVO';
+  if (elStatus) elStatus.textContent = dbUser.status || 'ACTIVO';
+  if (elStatusDot) elStatusDot.className = `position-absolute bottom-0 end-0 border border-2 border-white rounded-circle p-2 ${isActive ? 'bg-success' : 'bg-secondary'}`;
+
+  const normalizedCareer = /(apsti|arquitectura\s+de\s+plataformas)/i.test(dbUser.career || '')
+    ? 'Computación e Informática'
+    : (dbUser.career || 'Institucional');
+  if (elCareer) elCareer.textContent = normalizedCareer;
+
+  if (elCreated) elCreated.textContent = dbUser.created_at ? new Date(dbUser.created_at).toLocaleDateString('es-PE') : '10/11/2026';
+  if (elLastLogin) elLastLogin.textContent = dbUser.last_login ? new Date(dbUser.last_login).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : 'Hoy';
+  if (elIp) elIp.textContent = dbUser.last_login_ip || (typeof HercarSQL !== 'undefined' ? HercarSQL.getClientIp() : '190.237.45.12 (Paita)');
+
+  if (elDni) elDni.textContent = dbUser.dni || 'No registrado';
+  if (elPhone) elPhone.textContent = dbUser.phone || 'No registrado';
+  if (elUsername) elUsername.textContent = '@' + (dbUser.username || 'usuario');
+  if (elEmail) elEmail.textContent = dbUser.email || 'correo@ieshercar.edu.pe';
+
+  const plainPass = dbUser.password_plain || dbUser.plain_hint || (dbUser.username === 'admin' ? 'admin2026' : (dbUser.username === 'profesor' ? 'profesor2026' : 'docente2026'));
+  if (elPassword) {
+    elPassword.textContent = '••••••••';
+    elPassword.dataset.shown = 'false';
+    elPassword.dataset.raw = plainPass;
+    elPassword.style.letterSpacing = '2px';
+  }
+
+  if (elPrivileges) {
+    if (isSuperAdmin) {
+      elPrivileges.innerHTML = `
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Control total de Base de Datos Relacional SQL</div>
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Emisión de Enlaces Oficiales de Registro Docente</div>
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Gestión de Mallas, TUPA y Base de Conocimientos</div>
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Exportación de Informes Ejecutivos PDF y Dumps SQL</div>
+      `;
+    } else {
+      elPrivileges.innerHTML = `
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Evaluación y Consulta de Expedientes FUT</div>
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Revisión de Evaluaciones Vocacionales de Estudiantes</div>
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Acceso a Base de Conocimientos y Normativa</div>
+        <div class="col-12 col-md-6"><i class="bi bi-check-circle-fill text-success me-1"></i> Actualización de Perfil y Fotografía Institucional</div>
+      `;
+    }
+  }
+}
+window.renderMiPerfilSection = renderMiPerfilSection;
+
+// Conexión de eventos en la página de Mi Perfil
+function initProfilePageEvents() {
+  const btnTogglePwd = document.getElementById('btnToggleProfilePagePassword');
+  const btnCopyPwd = document.getElementById('btnCopyProfilePagePassword');
+  const pwdEl = document.getElementById('profilePagePassword');
+  const labelPwd = document.getElementById('labelProfilePageTogglePwd');
+
+  if (btnTogglePwd && pwdEl) {
+    btnTogglePwd.onclick = () => {
+      const isShown = pwdEl.dataset.shown === 'true';
+      if (isShown) {
+        pwdEl.textContent = '••••••••';
+        pwdEl.style.letterSpacing = '2px';
+        pwdEl.dataset.shown = 'false';
+        if (labelPwd) labelPwd.textContent = 'Ver Clave';
+        btnTogglePwd.querySelector('i').className = 'bi bi-eye me-1';
+      } else {
+        pwdEl.textContent = pwdEl.dataset.raw || '••••••••';
+        pwdEl.style.letterSpacing = 'normal';
+        pwdEl.dataset.shown = 'true';
+        if (labelPwd) labelPwd.textContent = 'Ocultar';
+        btnTogglePwd.querySelector('i').className = 'bi bi-eye-slash me-1';
+      }
+    };
+  }
+
+  if (btnCopyPwd && pwdEl) {
+    btnCopyPwd.onclick = () => {
+      const raw = pwdEl.dataset.raw;
+      if (raw && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(raw).then(() => {
+          showAdminToast('¡Contraseña institucional copiada al portapapeles!', 'success', 'bi-clipboard-check');
+        });
+      }
+    };
+  }
+
+  const btnSavePwd = document.getElementById('btnSaveProfilePagePassword');
+  const inputNewPwd = document.getElementById('profilePageNewPasswordInput');
+  if (btnSavePwd && inputNewPwd) {
+    btnSavePwd.onclick = async () => {
+      const newPass = inputNewPwd.value.trim();
+      if (newPass.length < 6) {
+        showAdminToast('La nueva contraseña debe tener al menos 6 caracteres.', 'warning');
+        return;
+      }
+      const savedUser = getHercarAdminSession();
+      if (!savedUser || !savedUser.id) return;
+      btnSavePwd.disabled = true;
+      btnSavePwd.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Guardando...';
+      const res = await HercarSQL.resetUserPassword(savedUser.id, newPass);
+      btnSavePwd.disabled = false;
+      btnSavePwd.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Guardar Clave';
+      if (res.success) {
+        showAdminToast('¡Contraseña actualizada exitosamente en HercarSQL!', 'success', 'bi-key-fill');
+        inputNewPwd.value = '';
+        renderMiPerfilSection();
+        if (typeof window.refreshSQLData === 'function') window.refreshSQLData();
+      } else {
+        showAdminToast(res.message || 'Error al actualizar clave.', 'danger');
+      }
+    };
+  }
+
+  const fileInput = document.getElementById('profilePageFileInput');
+  const btnSavePhoto = document.getElementById('btnSaveProfilePagePhoto');
+  const previewBadge = document.getElementById('profilePagePhotoPreviewBadge');
+  if (fileInput) {
+    fileInput.addEventListener('change', async (e) => {
+      if (!e.target.files || e.target.files.length === 0) return;
+      try {
+        const compressed = await compressImageToDataUrl(e.target.files[0]);
+        fileInput.dataset.pendingData = compressed;
+        const avatarEl = document.getElementById('profilePageAvatar');
+        if (avatarEl) avatarEl.src = compressed;
+        if (previewBadge) previewBadge.style.display = 'inline-block';
+        showAdminToast('Vista previa cargada. Haz clic en "Guardar Nueva Foto".', 'info', 'bi-image');
+      } catch (err) {
+        showAdminToast(err.message, 'warning');
+      }
+    });
+  }
+
+  if (btnSavePhoto && fileInput) {
+    btnSavePhoto.addEventListener('click', async () => {
+      let base64Data = fileInput.dataset.pendingData;
+      if (!base64Data && fileInput.files && fileInput.files.length > 0) {
+        try {
+          base64Data = await compressImageToDataUrl(fileInput.files[0]);
+        } catch (err) {
+          showAdminToast(err.message, 'warning');
+          return;
+        }
+      }
+      if (!base64Data) {
+        showAdminToast('Por favor selecciona primero un archivo de imagen.', 'warning', 'bi-camera');
+        return;
+      }
+      const savedUser = getHercarAdminSession();
+      if (!savedUser || !savedUser.id) return;
+      btnSavePhoto.disabled = true;
+      btnSavePhoto.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Guardando...';
+      const res = await HercarSQL.updateUserProfile(savedUser.id, { avatar: base64Data });
+      btnSavePhoto.disabled = false;
+      btnSavePhoto.innerHTML = '<i class="bi bi-upload me-1"></i> Guardar Nueva Foto';
+      if (res.success) {
+        fileInput.value = '';
+        delete fileInput.dataset.pendingData;
+        if (previewBadge) previewBadge.style.display = 'none';
+        showAdminToast('¡Foto oficial actualizada correctamente!', 'success', 'bi-camera-fill');
+        renderMiPerfilSection();
+        initHeaderUserProfile();
+        if (typeof window.refreshSQLData === 'function') window.refreshSQLData();
+      } else {
+        showAdminToast(res.message || 'Error al guardar foto.', 'danger');
+      }
+    });
+  }
+
+  const btnOpenModalFloating = document.getElementById('btn-open-profile-modal-floating');
+  if (btnOpenModalFloating) {
+    btnOpenModalFloating.onclick = () => {
+      const savedUser = getHercarAdminSession();
+      if (savedUser && savedUser.id) {
+        openUserProfileModal(savedUser.id);
+      }
+    };
+  }
+
+  const btnGoSQL = document.getElementById('btn-go-sql-from-profile');
+  if (btnGoSQL) {
+    btnGoSQL.onclick = () => {
+      if (typeof activateAdminSection === 'function') {
+        activateAdminSection('database-sql');
+      }
+    };
+  }
+}
+
 initHeaderUserProfile();
+initProfilePageEvents();
+renderMiPerfilSection();
 

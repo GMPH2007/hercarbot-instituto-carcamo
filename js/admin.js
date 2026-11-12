@@ -199,13 +199,79 @@ function initAdminMobileSidebar() {
   if (btnClose) btnClose.addEventListener('click', closeSidebar);
   if (backdrop) backdrop.addEventListener('click', closeSidebar);
 
-  // Manejo de clase activa y cierre al hacer clic en un enlace del sidebar en mobile
-  const links = sidebar ? sidebar.querySelectorAll('.sidebar-menu a') : [];
+  // Navegación modular por sección (evita muro abrumador) + toggle a Vista Completa
+  const VIEW_MODE_KEY = 'hercar_admin_view_mode';
+  const allMainSections = Array.from(document.querySelectorAll('.admin-main > section[id]'));
+  const links = sidebar ? Array.from(sidebar.querySelectorAll('.sidebar-menu a')) : [];
+  const btnViewMode = document.getElementById('btn-admin-view-mode');
+  const labelViewMode = document.getElementById('admin-view-mode-label');
+
+  let viewMode = localStorage.getItem(VIEW_MODE_KEY) || 'single';
+  let activeSectionId = (window.location.hash || '').replace('#', '');
+  if (!activeSectionId || !document.getElementById(activeSectionId)) {
+    activeSectionId = 'metricas';
+  }
+
+  function activateAdminSection(targetId, doScroll = true) {
+    const cleanId = (targetId || 'metricas').replace('#', '');
+    activeSectionId = document.getElementById(cleanId) ? cleanId : 'metricas';
+
+    allMainSections.forEach(sec => sec.classList.remove('admin-section-active'));
+    const targetSec = document.getElementById(activeSectionId);
+    if (targetSec) targetSec.classList.add('admin-section-active');
+
+    // Mantener visible el bloque de gráficos cuando se selecciona Dashboard & Métricas
+    if (activeSectionId === 'metricas') {
+      const chartsSec = document.getElementById('metricas-charts');
+      if (chartsSec) chartsSec.classList.add('admin-section-active');
+    }
+
+    links.forEach(l => {
+      const href = l.getAttribute('href') || '';
+      if (href.startsWith('#')) {
+        l.classList.toggle('active', href === `#${activeSectionId}`);
+      }
+    });
+
+    if (activeSectionId === 'database-sql' && typeof window.refreshSQLData === 'function') {
+      window.refreshSQLData();
+    }
+
+    if (doScroll) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 60);
+  }
+
+  function applyViewMode(mode) {
+    viewMode = mode === 'full' ? 'full' : 'single';
+    localStorage.setItem(VIEW_MODE_KEY, viewMode);
+    document.body.classList.toggle('admin-single-view', viewMode === 'single');
+    if (labelViewMode) {
+      labelViewMode.textContent = viewMode === 'single' ? 'Vista: Por Sección' : 'Vista: Completa';
+    }
+    if (btnViewMode) {
+      const icon = btnViewMode.querySelector('i');
+      if (icon) icon.className = viewMode === 'single' ? 'bi bi-layout-split' : 'bi bi-view-stacked';
+    }
+    activateAdminSection(activeSectionId, false);
+  }
+
+  if (btnViewMode) {
+    btnViewMode.addEventListener('click', () => {
+      applyViewMode(viewMode === 'single' ? 'full' : 'single');
+    });
+  }
+
   links.forEach(link => {
-    link.addEventListener('click', () => {
-      if (link.getAttribute('href') && link.getAttribute('href').startsWith('#')) {
-        links.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        if (viewMode === 'single') e.preventDefault();
+        activateAdminSection(href.slice(1), viewMode === 'single');
+        if (history.replaceState) {
+          history.replaceState(null, '', href);
+        }
       }
       if (window.innerWidth <= 992) {
         closeSidebar();
@@ -213,9 +279,10 @@ function initAdminMobileSidebar() {
     });
   });
 
-  // ScrollSpy automático para resaltar la sección activa en el sidebar al hacer scroll
-  const sectionIds = ['metricas', 'database-sql', 'comunicados', 'tramites-fut', 'vocacional', 'faqs', 'no-resueltas', 'configuracion'];
+  // ScrollSpy automático solo cuando está activa la Vista Completa
+  const sectionIds = allMainSections.map(s => s.id).filter(id => id !== 'metricas-charts');
   window.addEventListener('scroll', () => {
+    if (viewMode === 'single') return;
     let current = '';
     const scrollPos = window.scrollY + 140;
     sectionIds.forEach(id => {
@@ -234,6 +301,8 @@ function initAdminMobileSidebar() {
       });
     }
   }, { passive: true });
+
+  applyViewMode(viewMode);
 }
 
 function getStats() {
@@ -3458,6 +3527,13 @@ function initDatabaseSQLAdmin() {
     if (btnOpenModal) btnOpenModal.style.display = isSuperAdmin ? 'inline-block' : 'none';
     const btnOpenInvite = document.getElementById('btn-open-invite-modal');
     if (btnOpenInvite) btnOpenInvite.style.display = isSuperAdmin ? 'inline-block' : 'none';
+    const quickInviteCard = document.getElementById('sql-quick-invite-card');
+    if (quickInviteCard) {
+      quickInviteCard.style.display = isSuperAdmin ? 'block' : 'none';
+      if (isSuperAdmin && typeof updateQuickInviteCard === 'function') {
+        updateQuickInviteCard();
+      }
+    }
 
     // Filtro y Búsqueda en Tiempo Real
     const searchVal = (document.getElementById('sqlUserSearchInput')?.value || '').trim().toLowerCase();
@@ -3515,6 +3591,10 @@ function initDatabaseSQLAdmin() {
             </span>
           `;
 
+          const normalizedCareer = /(apsti|arquitectura\s+de\s+plataformas)/i.test(u.career || '')
+            ? 'Computación e Informática'
+            : (u.career || 'Institucional');
+
           return `
           <tr>
             <td class="text-center fw-bold text-muted small">#${u.id}</td>
@@ -3523,7 +3603,7 @@ function initDatabaseSQLAdmin() {
             </td>
             <td class="text-truncate">
               <span class="fw-semibold text-dark d-block text-truncate user-name-link" data-user-id="${u.id}" style="cursor: pointer;" title="Ver perfil de ${escapeHtml(u.full_name)}">${escapeHtml(u.full_name)}</span>
-              <small class="text-muted text-truncate d-block" style="font-size: 0.74rem;">${escapeHtml(u.career || 'Institucional')}</small>
+              <small class="text-muted text-truncate d-block" style="font-size: 0.74rem;">${escapeHtml(normalizedCareer)}</small>
             </td>
             <td class="text-truncate">
               <span class="d-block font-monospace small text-primary text-truncate" title="${escapeHtml(u.email)}">
@@ -3558,8 +3638,8 @@ function initDatabaseSQLAdmin() {
               ${u.last_login ? new Date(u.last_login).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : 'Nunca'}
             </td>
             <td class="text-center">
-              <div class="d-flex align-items-center justify-content-center gap-1">
-                <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 btn-view-profile" data-user-id="${u.id}" title="Ver perfil completo con foto y datos">
+              <div class="d-flex align-items-center justify-content-center gap-1 flex-nowrap">
+                <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-3 py-1 btn-view-profile text-nowrap" data-user-id="${u.id}" title="Ver perfil completo con foto y datos">
                   <i class="bi bi-person-lines-fill me-1"></i>Perfil
                 </button>
                 ${(isSuperAdmin && Number(u.id) !== 1) ? `
@@ -3739,6 +3819,29 @@ function initDatabaseSQLAdmin() {
   const modalInviteEl = document.getElementById('modalInviteDocente');
   let inviteModalInstance = null;
 
+  // Helper compartido de enlace oficial e invitación WhatsApp
+  function buildInvitePayload(career, role) {
+    const fullLink = HercarSQL.generateInviteLink(career, role);
+    const areaText = career ? ` para el área de *${career}*` : '';
+    const msg = `Estimado(a) docente, le compartimos el enlace oficial para registrar su cuenta institucional en la plataforma HercarBot del IESTP Hermanos Cárcamo${areaText}:\n\n🔗 ${fullLink}\n\nPor favor ingrese sus datos completos, número de celular y foto de perfil para activar su acceso.`;
+    return {
+      fullLink,
+      waHref: `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`
+    };
+  }
+
+  function updateQuickInviteCard() {
+    const careerSelect = document.getElementById('quickInviteCareer');
+    const roleSelect = document.getElementById('quickInviteRole');
+    const linkInput = document.getElementById('quickInviteLink');
+    const btnWA = document.getElementById('btnQuickInviteWhatsApp');
+    const career = careerSelect ? careerSelect.value : '';
+    const role = roleSelect ? roleSelect.value : 'Docente Evaluador';
+    const { fullLink, waHref } = buildInvitePayload(career, role);
+    if (linkInput) linkInput.value = fullLink;
+    if (btnWA) btnWA.href = waHref;
+  }
+
   function updateGeneratedInviteLink() {
     const careerSelect = document.getElementById('inviteFilterCareer');
     const roleSelect = document.getElementById('inviteFilterRole');
@@ -3749,18 +3852,41 @@ function initDatabaseSQLAdmin() {
     const career = careerSelect ? careerSelect.value : '';
     const role = roleSelect ? roleSelect.value : 'Docente Evaluador';
 
-    const fullLink = HercarSQL.generateInviteLink(career, role);
+    const { fullLink, waHref } = buildInvitePayload(career, role);
     if (inputLink) inputLink.value = fullLink;
     if (btnTest) btnTest.href = fullLink;
-    if (btnWhatsApp) {
-      const areaText = career ? ` para el área de *${career}*` : '';
-      const msg = `Estimado(a) docente, le compartimos el enlace oficial para registrar su cuenta institucional en la plataforma HercarBot del IESTP Hermanos Cárcamo${areaText}:\n\n🔗 ${fullLink}\n\nPor favor ingrese sus datos completos, número de celular y foto de perfil para activar su acceso.`;
-      btnWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
-    }
+    if (btnWhatsApp) btnWhatsApp.href = waHref;
     const qrImg = document.getElementById('inviteQrCodeImg');
     if (qrImg) {
       qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=4&data=${encodeURIComponent(fullLink)}`;
     }
+  }
+
+  // Tarjeta rápida inline en Base de Datos SQL
+  const quickCareer = document.getElementById('quickInviteCareer');
+  const quickRole = document.getElementById('quickInviteRole');
+  const btnCopyQuick = document.getElementById('btnCopyQuickInvite');
+  const btnQuickOpenQR = document.getElementById('btnQuickOpenQR');
+  if (quickCareer) quickCareer.addEventListener('change', updateQuickInviteCard);
+  if (quickRole) quickRole.addEventListener('change', updateQuickInviteCard);
+  if (btnCopyQuick) {
+    btnCopyQuick.addEventListener('click', () => {
+      const linkVal = document.getElementById('quickInviteLink')?.value;
+      if (linkVal && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(linkVal).then(() => {
+          showAdminToast('¡Enlace oficial de registro copiado al portapapeles!', 'success', 'bi-clipboard-check');
+        });
+      }
+    });
+  }
+  if (btnQuickOpenQR) {
+    btnQuickOpenQR.addEventListener('click', () => {
+      const modalCareer = document.getElementById('inviteFilterCareer');
+      const modalRole = document.getElementById('inviteFilterRole');
+      if (modalCareer && quickCareer) modalCareer.value = quickCareer.value;
+      if (modalRole && quickRole) modalRole.value = quickRole.value;
+      document.getElementById('btn-open-invite-modal')?.click();
+    });
   }
 
   if (btnOpenInvite && modalInviteEl) {
@@ -3878,6 +4004,9 @@ function initDatabaseSQLAdmin() {
     });
   }
 
+  // Exponer refreshSQLData globalmente para acciones desde modales (perfil, eliminar, restablecer)
+  window.refreshSQLData = refreshSQLData;
+
   // Cargar datos inicialmente
   HercarSQL.init().then(() => {
     refreshSQLData();
@@ -3959,7 +4088,23 @@ function openUserProfileModal(userId) {
       roleEl.textContent = user.role || 'Docente';
     }
   }
-  document.getElementById('modalProfileCareer').textContent = user.career || 'Institucional';
+  const modalCareerText = /(apsti|arquitectura\s+de\s+plataformas)/i.test(user.career || '')
+    ? 'Computación e Informática'
+    : (user.career || 'Institucional');
+  document.getElementById('modalProfileCareer').textContent = modalCareerText;
+  const statusDotEl = document.getElementById('modalProfileStatusDot');
+  const statusBadgeEl = document.getElementById('modalProfileStatusBadge');
+  const isUserActive = (user.status || 'ACTIVO') === 'ACTIVO';
+  if (statusDotEl) {
+    statusDotEl.className = `position-absolute bottom-0 end-0 border border-2 border-white rounded-circle p-2 ${isUserActive ? 'bg-success' : 'bg-secondary'}`;
+    statusDotEl.title = isUserActive ? 'Usuario Activo' : 'Usuario Suspendido';
+  }
+  if (statusBadgeEl) {
+    statusBadgeEl.className = isUserActive
+      ? 'badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill'
+      : 'badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-1 rounded-pill';
+    statusBadgeEl.textContent = user.status || 'ACTIVO';
+  }
   document.getElementById('modalProfileDni').textContent = user.dni || 'No registrado';
   const phoneEl = document.getElementById('modalProfilePhone');
   if (phoneEl) phoneEl.textContent = user.phone || 'No registrado';
@@ -4000,6 +4145,8 @@ function openUserProfileModal(userId) {
     modalFileEl.value = '';
     delete modalFileEl.dataset.pendingData;
   }
+  const previewBadgeEl = document.getElementById('modalPhotoPreviewBadge');
+  if (previewBadgeEl) previewBadgeEl.style.display = 'none';
   const modalAlertEl = document.getElementById('profileModalAlert');
   if (modalAlertEl) modalAlertEl.style.display = 'none';
 
@@ -4217,7 +4364,9 @@ if (fileInput) {
       fileInput.dataset.pendingData = compressed;
       const avatarEl = document.getElementById('modalProfileAvatar');
       if (avatarEl) avatarEl.src = compressed;
-      showAdminToast('Vista previa cargada. Haz clic en "Guardar" para registrar en la base de datos.', 'info', 'bi-image');
+      const previewBadgeEl = document.getElementById('modalPhotoPreviewBadge');
+      if (previewBadgeEl) previewBadgeEl.style.display = 'inline-block';
+      showAdminToast('Vista previa cargada. Haz clic en "Guardar Foto" para registrar en la base de datos.', 'info', 'bi-image');
     } catch (err) {
       showAdminToast(err.message, 'warning');
     }
@@ -4255,9 +4404,11 @@ if (btnSavePhoto && fileInput) {
         
         fileInput.value = '';
         delete fileInput.dataset.pendingData;
+        const previewBadgeEl = document.getElementById('modalPhotoPreviewBadge');
+        if (previewBadgeEl) previewBadgeEl.style.display = 'none';
 
         // Actualizar tabla en vivo
-        refreshSQLData();
+        if (typeof window.refreshSQLData === 'function') window.refreshSQLData();
 
         // Si es el usuario actualmente autenticado, actualizar header y sesión
         const savedUser = JSON.parse(sessionStorage.getItem('hercar_current_user') || localStorage.getItem('hercar_current_user') || '{}');
@@ -4279,7 +4430,7 @@ if (btnSavePhoto && fileInput) {
       showAdminToast('Error de procesamiento de imagen: ' + (err.message || 'Error desconocido'), 'danger');
     } finally {
       btnSavePhoto.disabled = false;
-      btnSavePhoto.innerHTML = '<i class="bi bi-upload me-1"></i> Guardar';
+      btnSavePhoto.innerHTML = '<i class="bi bi-upload me-1"></i> Guardar Foto';
     }
   });
 }

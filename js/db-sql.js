@@ -221,9 +221,13 @@
         this._writeTable('users', users);
         this.logAudit('SISTEMA', 'INIT_USERS', 'Cuentas oficiales de Administrador y Docente inicializadas en SQL.');
       } else {
-        // Asegurar que las cuentas tengan password_plain, phone, dni y avatar si faltan
+        // Asegurar que las cuentas tengan password_plain, phone, dni, avatar y nomenclatura 2026 vigente
         let needSave = false;
         users = users.map(u => {
+          if (u.career && /(apsti|arquitectura\s+de\s+plataformas)/i.test(u.career)) {
+            u.career = 'Computación e Informática';
+            needSave = true;
+          }
           if (!u.password_plain || u.password_plain === '••••••••') {
             u.password_plain = u.plain_hint || (u.username === 'admin' ? 'admin2026' : (u.username === 'profesor' ? 'profesor2026' : (u.role && u.role.includes('admin') ? 'admin2026' : 'docente2026')));
             u.plain_hint = u.password_plain;

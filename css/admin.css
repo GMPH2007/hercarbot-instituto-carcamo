@@ -1257,3 +1257,154 @@ body.dark-theme .btn-copy-user-pwd:hover {
   background: rgba(56, 189, 248, 0.2);
   color: #38bdf8;
 }
+
+/* ==========================================================================
+   MEJORAS DE ESPACIADO, NAVEGACIÓN POR SECCIÓN, SQL Y FICHA DE PERFIL
+   ========================================================================== */
+@keyframes adminSectionFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-main {
+  padding: 28px 34px 48px;
+}
+
+@media (max-width: 991.98px) {
+  .admin-main {
+    padding: 20px 16px 36px;
+  }
+}
+
+/* Tarjetas KPI más aireadas */
+#metricas .metric-card {
+  padding: 20px 22px;
+  min-height: 112px;
+  gap: 16px;
+  border-radius: 18px;
+}
+
+/* Navegación por Sección (por defecto evita muro abrumador) */
+body.admin-single-view .admin-main > section:not(.admin-section-active) {
+  display: none !important;
+}
+
+body.admin-single-view .admin-main > section.admin-section-active {
+  animation: adminSectionFade 0.24s ease-out;
+}
+
+/* Tarjetas SQL y Acentos Superiores */
+.sql-panel-card {
+  padding: 28px;
+}
+
+@media (max-width: 767.98px) {
+  .sql-panel-card {
+    padding: 18px;
+  }
+}
+
+.sql-metric-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  border-top-width: 4px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sql-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.sql-metric-users { border-top-color: #2563eb !important; }
+.sql-metric-resets { border-top-color: #f59e0b !important; }
+.sql-metric-logs { border-top-color: #0ea5e9 !important; }
+.sql-metric-crypto { border-top-color: #10b981 !important; }
+
+.sql-quick-invite-card {
+  background: linear-gradient(135deg, rgba(19, 53, 123, 0.04) 0%, rgba(2, 132, 199, 0.06) 100%);
+  border-color: rgba(2, 132, 199, 0.22) !important;
+}
+
+.sql-search-box {
+  background: #ffffff;
+}
+
+.sql-search-box .input-group-text,
+.sql-search-box .form-control {
+  background: transparent;
+}
+
+/* Evita salto de línea en botones de acción dentro de la tabla SQL */
+#database-sql .btn-view-profile,
+#database-sql .btn-delete-user {
+  white-space: nowrap !important;
+}
+
+/* Modal Ficha de Perfil Oficial */
+.profile-modal-cover {
+  background: linear-gradient(135deg, #0b2458 0%, #0f3d91 55%, #0284c7 100%);
+  padding: 18px 24px 58px;
+}
+
+.profile-avatar-stage {
+  margin-top: -48px;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-avatar-ring {
+  border: 4px solid #ffffff;
+  background: #ffffff;
+}
+
+.profile-info-tile {
+  background: #f8fafc;
+  border-color: #e2e8f0 !important;
+}
+
+/* Modo Oscuro para SQL, Barra de Búsqueda y Ficha de Perfil */
+body.dark-theme .sql-quick-invite-card {
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.24) 0%, rgba(15, 23, 42, 0.65) 100%);
+  border-color: rgba(56, 189, 248, 0.25) !important;
+}
+
+body.dark-theme .sql-search-box {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(148, 163, 184, 0.28) !important;
+}
+
+body.dark-theme .sql-search-box .input-group-text,
+body.dark-theme .sql-search-box .form-control {
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .profile-modal-content {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+body.dark-theme .profile-avatar-ring {
+  border-color: #0f172a;
+  background: #0f172a;
+}
+
+body.dark-theme .profile-info-tile {
+  background: rgba(30, 41, 59, 0.72);
+  border-color: rgba(148, 163, 184, 0.22) !important;
+}
+
+body.dark-theme .profile-modal-content .text-dark {
+  color: #f8fafc !important;
+}
+
+body.dark-theme .profile-modal-content .text-muted {
+  color: #cbd5e1 !important;
+}
+
+body.dark-theme .profile-pwd-box {
+  background: #020617 !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.35) !important;
+}

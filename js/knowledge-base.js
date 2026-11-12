@@ -11,7 +11,7 @@ const COMUNICADOS_OFICIALES = [
     titulo: 'Resultados Oficiales y Cuadro de Mérito: Examen Ordinario de Admisión 2026',
     fecha: 'Marzo 2026 — Publicación Oficial',
     importante: true,
-    resumen: 'Publicación oficial del Cuadro de Méritos General con los postulantes que alcanzaron vacante en los 4 programas de estudio: APSTI, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.',
+    resumen: 'Publicación oficial del Cuadro de Méritos General con los postulantes que alcanzaron vacante en los 4 programas de estudio: Computación e Informática, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.',
     enlaceDrive: 'https://drive.google.com/file/d/1tbEWl2oBRglGp9QWx012TIE66yYBS1VN/view?usp=drive_link',
     enlacePlataforma: 'https://sistema.ieshercar.edu.pe/acceso',
     indicaciones: 'Los ingresantes deben acercarse a Secretaría Académica portando DNI original y voucher de matrícula validado para recoger su Constancia Oficial de Ingreso e iniciar su registro de asignaturas.'
@@ -48,7 +48,7 @@ const COMUNICADOS_OFICIALES = [
     titulo: 'Video Instructivo Oficial: Sistema de Registro de Pagos (Banco de la Nación)',
     fecha: 'Vigente para el Periodo 2026',
     importante: true,
-    resumen: 'Tutorial oficial paso a paso para que estudiantes y postulantes de APSTI, ANI, CONTA y DPA registren sus comprobantes de depósito del Banco de la Nación en la plataforma oficial.',
+    resumen: 'Tutorial oficial paso a paso para que estudiantes y postulantes de Computación e Informática, ANI, CONTA y DPA registren sus comprobantes de depósito del Banco de la Nación en la plataforma oficial.',
     enlaceDrive: 'https://drive.google.com/file/d/1kYBJhVXOqO7BoQUpMZmYs-1E59gIUV9h/view?usp=sharing',
     enlacePlataforma: 'https://pagos.ieshercar.edu.pe/',
     indicaciones: 'Verifica que el número de operación, fecha e importe del voucher sean claramente legibles para que Tesorería valide en 24 a 48 horas hábiles.'
@@ -112,7 +112,7 @@ const COMUNICADOS_OFICIALES = [
     importante: true,
     resumen: 'Conmemoración de 39 años formando a los mejores profesionales técnicos de Paita y la macro región norte. Se desarrollarán actividades protocolares, pasacalles cívicos, campeonatos deportivos y feria de proyectos de titulación.',
     enlacePlataforma: 'https://ieshercar.edu.pe/',
-    indicaciones: 'Participan las 4 carreras: APSTI, Negocios Internacionales, Contabilidad y Desarrollo Pesquero. Habrá premiación especial para los mejores proyectos modulares e iniciativas de emprendimiento regional.'
+    indicaciones: 'Participan las 4 carreras: Computación e Informática, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola. Habrá premiación especial para los mejores proyectos modulares e iniciativas de emprendimiento regional.'
   },
   {
     id: 'comunicado-convalidacion-universitaria',
@@ -121,7 +121,7 @@ const COMUNICADOS_OFICIALES = [
     importante: true,
     resumen: 'Convenios estratégicos para que nuestros titulados convaliden sus 3 años de formación modular y obtengan el Grado de Bachiller e Ingeniería o Licenciatura universitaria en menor tiempo.',
     enlacePlataforma: 'https://ieshercar.edu.pe/registro-tramite/',
-    indicaciones: 'Aplica para APSTI (Ingeniería de Sistemas / Informática), ANI (Administración / Comercio Exterior), Contabilidad (Contabilidad y Finanzas) e Ingeniería Pesquera/Acuícola. Solicita tu Carta de Presentación en Secretaría General.'
+    indicaciones: 'Aplica para Computación e Informática (Ingeniería de Sistemas / Informática), Administración de Negocios Internacionales (Administración / Comercio Exterior), Contabilidad (Contabilidad y Finanzas) y Desarrollo Pesquero y Acuícola (Ingeniería Pesquera/Acuícola). Solicita tu Carta de Presentación en Secretaría General.'
   },
   {
     id: 'comunicado-feria-innovacion-paita',
@@ -211,12 +211,12 @@ function getInstitutionalAnnouncements() {
 const CARRERAS_COMPLETAS = [
   {
     id: 'apsti',
-    codigo: 'APSTI',
-    nombre: 'Arquitectura de Plataformas y Servicios de Tecnologías de la Información',
-    nombreCorto: 'APSTI (Computación / Software & TI)',
+    codigo: 'CI',
+    nombre: 'Computación e Informática',
+    nombreCorto: 'Computación e Informática',
     duracion: '3 años (6 semestres académicos / 120 créditos)',
     modalidad: 'Presencial - 100% Gratuito',
-    titulo: 'Profesional Técnico en Arquitectura de Plataformas y Servicios de Tecnologías de la Información (A Nombre de la Nación)',
+    titulo: 'Profesional Técnico en Computación e Informática (A Nombre de la Nación)',
     perfilEgreso: 'Especialista en diseño y administración de infraestructura de TI, servidores Linux/Windows, redes de comunicación, desarrollo de software web y móvil, bases de datos SQL/NoSQL y servicios de computación en la nube (Cloud) con ciberseguridad.',
     modulos: [
       {
@@ -555,7 +555,7 @@ const GUIA_TRAMITES_TUPA = [
     plazo: '5 a 7 días hábiles (Antes del inicio del semestre)',
     requisitos: [
       'Haber aprobado como mínimo el I Ciclo en la carrera de origen en el IESTP Hermanos Cárcamo',
-      'Existencia de vacante disponible en la carrera de destino (APSTI, ANI, CONTA o DPA)',
+      'Existencia de vacante disponible en la carrera de destino (Computación e Informática, ANI, CONTA o DPA)',
       'FUT solicitando traslado interno con justificación vocacional',
       'Voucher del Banco de la Nación'
     ],
@@ -709,7 +709,7 @@ const BASE_PREGUNTAS_RESPUESTAS = [
     categorias: ['admision'],
     locucion: "¡Hola! Los resultados oficiales de la academia Cepre con ingreso directo ya están publicados. En tu pantalla tienes el enlace directo a Google Drive para consultar si obtuviste tu vacante.",
     respuesta: `🎉 **Resultados de la Academia CEPRE-HERCAR 2026:**
-Los resultados oficiales con los ingresantes directos por carrera (APSTI, ANI, Contabilidad y Desarrollo Pesquero y Acuícola) están publicados en el enlace oficial de Google Drive:
+Los resultados oficiales con los ingresantes directos por carrera (Computación e Informática, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola) están publicados en el enlace oficial de Google Drive:
 📄 [Abrir Documento Oficial de Resultados en Google Drive](https://drive.google.com/file/d/1tbEWl2oBRglGp9QWx012TIE66yYBS1VN/view?usp=drive_link)
 
 Si obtuviste vacante, acércate a Secretaría General en la sede Paita con tu DNI y certificado de estudios para emitir tu constancia de ingreso.`
@@ -742,7 +742,7 @@ Cuenta con 3 modalidades de ingreso oficial:
     respuesta: `💳 **Guía del Sistema de Registro de Pagos:**
 1. **Depósito BN:** Deposita en el Banco de la Nación a la Cuenta Corriente N° **\`00-631-012948\`** (Titular: IESTP Hermanos Cárcamo).
 2. **Ingreso:** Entra con tu DNI a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
-3. **Registro:** Elige tu carrera (APSTI, ANI, CONTA o DPA) y concepto (Matrícula, Admisión, Certificado, etc.).
+3. **Registro:** Elige tu carrera (Computación e Informática, ANI, CONTA o DPA) y concepto (Matrícula, Admisión, Certificado, etc.).
 4. **Datos:** Digita el número de operación, fecha, monto exacto y sube una foto nítida del comprobante.
 5. **Validación:** Caja/Tesorería validará tu pago en un plazo de 24 a 48 horas hábiles.
 🎥 [Ver Video Instructivo Oficial en Drive](https://drive.google.com/file/d/1kYBJhVXOqO7BoQUpMZmYs-1E59gIUV9h/view?usp=sharing)`
@@ -750,11 +750,11 @@ Cuenta con 3 modalidades de ingreso oficial:
   {
     id: 'faq-carreras',
     titulo: 'Las 4 Carreras Profesionales Técnicas y Mallas',
-    keywords: ['carreras', 'programas', 'duracion', 'ani', 'apsti', 'conta', 'dpa', 'titulo', 'que carreras hay', 'cuales son las carreras', 'estudios'],
+    keywords: ['carreras', 'programas', 'duracion', 'ci', 'computacion', 'informatica', 'ani', 'apsti', 'conta', 'dpa', 'titulo', 'que carreras hay', 'cuales son las carreras', 'estudios'],
     categorias: ['carreras'],
-    locucion: "¡Hola! El instituto ofrece cuatro carreras técnicas profesionales de tres años: Computación y Desarrollo de Sistemas, Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola. Todas son públicas sin mensualidades. ¡En tu pantalla puedes revisar sus perfiles!",
+    locucion: "¡Hola! El Instituto Superior Hermanos Cárcamo ofrece cuatro Carreras Profesionales Técnicas de tres años de duración: Computación e Informática, Administración de Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola. Todas son públicas sin mensualidades, con título a nombre de la nación y certificación modular. ¡En tu pantalla puedes revisar sus perfiles!",
     respuesta: `🎓 **4 Carreras Técnicas (3 Años / 6 Semestres / 120 Créditos):**
-1. 💻 **APSTI:** Arquitectura de Plataformas y Servicios TI (Software, Redes, Cloud y Ciberseguridad).
+1. 💻 **CI:** Computación e Informática (Software, Redes, Cloud y Ciberseguridad).
 2. 🚢 **ANI:** Administración de Negocios Internacionales (Comercio Exterior, Aduanas y Logística Portuaria).
 3. 📊 **CONTA:** Contabilidad (Tributación SUNAT, Costos, Planillas y Auditoría).
 4. 🐟 **DPA:** Desarrollo Pesquero y Acuícola (Pesca, Acuicultura de concha de abanico/langostinos y Calidad HACCP).
@@ -819,7 +819,7 @@ Al ser una institución pública de educación superior licenciada, los estudian
     locucion: "¡Hola! Te cuento que para el curso de inglés de titulación, el pago se realiza en el Banco de la Nación en la cuenta cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda sacar dos copias a tu voucher y entregarlo en Tesorería del instituto para que no haya retrasos en la entrega de tu certificado. ¡En tu pantalla tienes el número de cuenta y los detalles oficiales!",
     respuesta: `🇬🇧 **Curso de Inglés & Requisito de Idioma Extranjero para Titulación:**
 
-Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un idioma extranjero (mínimo Nivel Básico A2) es un **requisito obligatorio para obtener el Título Profesional Técnico** en las 4 carreras (APSTI, ANI, CONTA y DPA).
+Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un idioma extranjero (mínimo Nivel Básico A2) es un **requisito obligatorio para obtener el Título Profesional Técnico** en las 4 carreras (Computación e Informática, ANI, CONTA y DPA).
 
 💳 **Datos Oficiales de Pago para el Curso de Inglés:**
 * 🏦 **Banco de la Nación - Cuenta Corriente Específica:** **\`00-638-025736\`**
@@ -842,7 +842,7 @@ Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un 
 * **Jefe de Unidad Administrativa:** **CPC Edson Maza** — Gestión administrativa, recursos y presupuesto institucional.
 * **Resoluciones Oficiales:** Creado por **R.M. N° 232-87-ED** y revalidado por **R.M. N° 0528-2006-ED**.
 * **Coordinaciones de Carrera:**
-  - Coordinación de **APSTI** (Arquitectura de Plataformas y Servicios TI).
+  - Coordinación de **Computación e Informática**.
   - Coordinación de **ANI** (Administración de Negocios Internacionales).
   - Coordinación de **Contabilidad** (Finanzas y Tributación).
   - Coordinación de **Desarrollo Pesquero y Acuícola** (Acuicultura y Tecnología Pesquera).
@@ -857,7 +857,7 @@ Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un 
     respuesta: `👨‍🏫 **Plana Docente Oficial del IESTP "Hermanos Cárcamo" de Paita:**
 *(Fuente Oficial: ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/)*
 
-💻 **Arquitectura de Plataformas y Servicios de TI (APSTI):**
+💻 **Computación e Informática:**
 1. **Prof. José Hernández Panta** — Desarrollo de software, arquitectura de sistemas y bases de datos.
 2. **Prof. Javier Jaramillo Atoche** — Redes de datos, conectividad y soporte de telecomunicaciones.
 3. **Prof. Luis Cherre Lizama** — Sistemas operativos monousuario/multiusuario y servidores.
@@ -939,7 +939,7 @@ Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un 
     respuesta: `⏰ **Horarios y Turnos de Formación Académica:**
 * ☀️ **Turno Diurno (Mañana):**
   - Horario regular de clases: **8:00 a.m. a 1:15 p.m.** (Lunes a Viernes).
-  - Aplica para los programas de APSTI, ANI, Contabilidad y Desarrollo Pesquero y Acuícola.
+  - Aplica para los programas de Computación e Informática, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.
 * 🌤️ **Turno Tarde / Vespertino:**
   - Habilitado según disponibilidad de talleres de cómputo, laboratorios de redes y plantas piloto.
 * 📍 **Modalidad:** Presencial con soporte de clases grabadas y material complementario en el [Aula Virtual Institucional](https://aula.ieshercar.edu.pe/).`
@@ -1024,7 +1024,7 @@ Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un 
 * 📄 **Voucher:** Debes **sacar 2 copias legibles al voucher** y entregarlos en la oficina de **Tesorería** del instituto en Paita Alta.
 * ⚠️ **Aviso de Tesorería (Lic. Omar García Reto):** Todos los participantes deben regularizar adeudos para no perjudicar la entrega de certificados del grupo ni el trámite de titulación. Coordinar con Tesorería (Srta. Tania Herrera Cruz).
 * **¿Dónde se estudia?**
-  1. **En el IESTP Hermanos Cárcamo:** El instituto dicta los módulos de inglés técnico y talleres de idiomas orientados a las carreras (APSTI, Negocios, Contabilidad y Pesquería).
+  1. **En el IESTP Hermanos Cárcamo:** El instituto dicta los módulos de inglés técnico y talleres de idiomas orientados a las carreras (Computación e Informática, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola).
   2. **Semi-presencial y Virtual:** Clases flexibles diseñadas para que los estudiantes cumplan las 120 horas lectivas requeridas.
 * **¿Se puede convalidar si ya estudié inglés?**
   - **SÍ.** Si cuentas con certificado o constancia de nivel básico concluido emitido por un Centro de Idiomas universitario o instituto reconocido (ej. ICPNA, Británico, UNP), preséntalo por **Mesa de Partes** con un FUT solicitando la convalidación oficial.
@@ -1055,7 +1055,7 @@ En el **IESTP "Hermanos Cárcamo" de Paita**, la educación pública es inclusiv
 * **Para Clases Teóricas:** Ropa casual formal y decorosa (pantalón, polo o camisa, calzado cerrado). No se permite el ingreso con sandalias playeras ni shorts por normas de seguridad en talleres.
 * **Uniforme Institucional:** Se utiliza en ceremonias oficiales, izamientos, desfiles cívicos y visitas técnicas a empresas (camisa/blusa institucional con el logo bordado del IESTP Hermanos Cárcamo y pantalón de vestir).
 * **Talleres y Laboratorios Especializados:**
-  - 💻 **APSTI:** Polo institucional y calzado dieléctrico para mantenimiento de computadoras y cableado estructurado.
+  - 💻 **Computación e Informática:** Polo institucional y calzado dieléctrico para mantenimiento de computadoras y cableado estructurado.
   - 🐟 **Desarrollo Pesquero y Acuícola:** Mandil blanco o mameluco de trabajo, botas impermeables y gorro protector para plantas piloto y laboratorios de calidad marina.
   - 🚢 **Negocios y Contabilidad:** Presentación ejecutiva para sustentaciones y ferias empresariales.`
   },
@@ -1082,7 +1082,7 @@ El IESTP Hermanos Cárcamo brinda facilidades para que los estudiantes puedan ge
 
 Por la cercanía al **Puerto de Paita (TPE)**, plantas congeladoras, agencias marítimas y sector agroindustrial, los profesionales técnicos del IESTP Hermanos Cárcamo tienen alta demanda:
 
-1. 💻 **APSTI (Sistemas / TI / Redes):**
+1. 💻 **Computación e Informática:**
    * *Practicante / Asistente inicial:* S/. 1,025 a S/. 1,500 mensuales.
    * *Técnico Especialista en Servidores, Redes o Software:* **S/. 2,200 a S/. 4,500+** (posibilidad de trabajo remoto para Lima y el extranjero).
 2. 🚢 **Negocios Internacionales (ANI):**
@@ -1221,7 +1221,7 @@ El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU
     respuesta: `🖥️ **Infraestructura y Equipamiento Tecnológico del IESTP Hermanos Cárcamo:**
 
 El campus de Paita Alta cuenta con ambientes diseñados para el aprendizaje práctico:
-* 💻 **Centros de Cómputo de APSTI:** Computadoras actualizadas con software de desarrollo (Visual Studio Code, Python, Node.js, Packet Tracer, Android Studio, servidores Linux y Windows Server).
+* 💻 **Centros de Cómputo de Computación e Informática:** Computadoras actualizadas con software de desarrollo (Visual Studio Code, Python, Node.js, Packet Tracer, Android Studio, servidores Linux y Windows Server).
 * 🌐 **Conectividad:** Red de fibra óptica y zonas de wifi estudiantil para investigación y acceso al Aula Virtual.
 * 🐟 **Plantas Piloto y Laboratorio de Pesquería y Acuicultura:** Módulos de cultivo acuícola, tinas de prueba biológica, equipos de medición físico-química de agua y taller de armado de artes de pesca.
 * 📊 **Aulas Climatizadas y Talleres Contables:** Equipadas con software contable profesional (Concar, Siscont, hojas electrónicas de cálculo avanzado y simuladores SUNAT).`
@@ -1236,7 +1236,7 @@ El campus de Paita Alta cuenta con ambientes diseñados para el aprendizaje prá
 
 Gracias a la Ley de Institutos N° 30512, los egresados titulados del IESTP Hermanos Cárcamo pueden convalidar sus 3 años de carrera técnica para obtener su grado universitario:
 * 🚀 **Equivalencias Directas:**
-  - **APSTI** ➡️ Convalida con **Ingeniería de Sistemas, Informática o Software**.
+  - **Computación e Informática** ➡️ Convalida con **Ingeniería de Sistemas, Informática o Software**.
   - **ANI** ➡️ Convalida con **Administración de Empresas o Comercio Exterior**.
   - **Contabilidad** ➡️ Convalida con **Contabilidad y Finanzas / Auditoría**.
   - **Desarrollo Pesquero** ➡️ Convalida con **Ingeniería Pesquera o Acuícola**.
@@ -1279,7 +1279,7 @@ Para mayor comodidad de los estudiantes y postulantes de Paita y Piura, existen 
 
 El campus institucional en Paita Alta está organizado en las siguientes zonas:
 * 🏛️ **Pabellón Administrativo (Ingreso Principal):** Dirección General, Jefatura de Unidad Académica, Secretaría General, Mesa de Partes y Ventanilla de Caja.
-* 💻 **Pabellón Tecnológico (APSTI):** Laboratorios de Cómputo 1, 2 y 3 equipados con internet de alta velocidad, fibra óptica y taller de ensamblaje/redes.
+* 💻 **Pabellón Tecnológico (Computación e Informática):** Laboratorios de Cómputo 1, 2 y 3 equipados con internet de alta velocidad, fibra óptica y taller de ensamblaje/redes.
 * 🚢 **Pabellón de Negocios y Finanzas:** Aulas climatizadas de Contabilidad y Administración de Negocios Internacionales.
 * 🐟 **Pabellón de Tecnología Marina (DPA):** Planta Piloto Pesquera, Laboratorio de Análisis de Calidad e Inocuidad HACCP y taller de artes de pesca.
 * 📚 **Centro de Recursos de Aprendizaje:** Biblioteca física y acceso a la Biblioteca Virtual Latina.
@@ -1364,7 +1364,7 @@ El **Formulario Único de Trámite (FUT)** es el documento oficial mediante el c
 * 📋 **Datos requeridos en el formulario:**
   1. **Sumilla:** Resumen claro del pedido (Ej: *"Solicito Emisión de Certificado Modular I"* o *"Solicito Justificación de Inasistencia"*).
   2. **Datos Personales:** Apellidos y nombres completos, DNI, dirección actual en Paita o Piura, celular y correo electrónico.
-  3. **Programa de Estudio y Semestre:** Carrera técnica (APSTI, ANI, CONTA o DPA), ciclo y turno (diurno o nocturno).
+  3. **Programa de Estudio y Semestre:** Carrera técnica (Computación e Informática, ANI, CONTA o DPA), ciclo y turno (diurno o nocturno).
   4. **Fundamentación:** Exposición breve de los hechos y base de la solicitud.
   5. **Anexos adjuntos:** Copia de DNI, voucher del Banco de la Nación y sustentos respectivos.
 * 🌐 **Canales de Recepción:**
@@ -1412,7 +1412,7 @@ El **Formulario Único de Trámite (FUT)** es el documento oficial mediante el c
 
 En el IESTP Hermanos Cárcamo la formación técnica está dividida en **3 Módulos Formativos Oficiales**. Cada vez que completas un módulo (1 año académico / 2 semestres) obtienes un diploma con valor oficial MINEDU:
 
-* 💻 **En APSTI (Sistemas y Redes):**
+* 💻 **En Computación e Informática:**
   - **Módulo I (Ciclos I y II):** *Soporte Técnico, Mantenimiento de Equipos y Redes de Cómputo*.
   - **Módulo II (Ciclos III y IV):** *Desarrollo de Software y Gestión de Bases de Datos*.
   - **Módulo III (Ciclos V y VI):** *Administración de Plataformas, Infraestructura Cloud y Seguridad*.
@@ -1454,13 +1454,13 @@ El IESTP Hermanos Cárcamo cuenta con una de las infraestructuras de formación 
   },
   {
     id: 'faq-laboratorios-apsti-cisco',
-    titulo: 'Laboratorios de Cómputo APSTI, Academia Cisco, Linux y Servidores Cloud',
+    titulo: 'Laboratorios de Cómputo de Computación e Informática, Academia Cisco, Linux y Servidores Cloud',
     keywords: ['laboratorios apsti', 'cisco', 'redes', 'computadoras', 'servidores', 'linux', 'packet tracer', 'programacion', 'hardware', 'software'],
     categorias: ['carreras', 'institucional'],
     locucion: "¡Hola! Para la carrera de Sistemas y Redes contamos con tres centros de cómputo con procesadores Core i7, fibra óptica dedicada, switches y routers Cisco para prácticas reales de cableado y servidores Linux en la nube.",
-    respuesta: `💻 **Centros de Cómputo de Alta Tecnología para APSTI:**
+    respuesta: `💻 **Centros de Cómputo de Alta Tecnología para Computación e Informática:**
 
-La carrera de **Arquitectura de Plataformas y Servicios TI** cuenta con equipamiento especializado de estándar corporativo:
+La carrera de **Computación e Informática** cuenta con equipamiento especializado de estándar corporativo:
 
 * 🖥️ **Centros de Cómputo 1, 2 y 3:**
   - Estaciones de trabajo de alto rendimiento con procesadores Intel Core i7, 16 GB de RAM y almacenamiento SSD NVMe.
@@ -1578,7 +1578,7 @@ Si por razones de fuerza mayor no puedes continuar el semestre, reserva tu vacan
     respuesta: `🔀 **Modalidades de Traslado Estudiantil en el IESTP Hermanos Cárcamo:**
 
 1. 🔄 **Traslado Interno (Cambio de Programa de Estudio dentro del Instituto):**
-   - **Requisito:** Haber aprobado por lo menos el I Semestre en la carrera de origen (APSTI, ANI, CONTA o DPA).
+   - **Requisito:** Haber aprobado por lo menos el I Semestre en la carrera de origen (Computación e Informática, ANI, CONTA o DPA).
    - **Procedimiento:** Presentar FUT solicitando traslado y justificación vocacional durante el periodo de matrícula + tasa TUPA de S/. 40.00.
    - **Convalidación:** Los cursos transversales de formación general (comunicación, matemática, inglés, TIC) se convalidan automáticamente.
 
@@ -1618,7 +1618,7 @@ El IESTP Hermanos Cárcamo fomenta la integración, el trabajo en equipo y el li
 
 * ⚽ **Olimpiadas Deportivas "Copa Hermanos Cárcamo":** Campeonatos intercarreras de fulbito femenino/masculino, vóley y básquetbol durante la Semana Técnica y el Aniversario Institucional.
 * 🎭 **Elencos de Arte y Danzas Folclóricas:** Participación en desfiles cívicos, pasacalles y concursos regionales de marinera norteña, tondero y estampas costumbristas piuranas.
-* 🐟 **Feria Tecnológica e Innovación Marina:** Exposición anual abierta al público de Paita donde los alumnos de DPA preparan degustaciones de conservas artesanales y hamburguesas de pota, y los de APSTI presentan aplicaciones móviles.
+* 🐟 **Feria Tecnológica e Innovación Marina:** Exposición anual abierta al público de Paita donde los alumnos de DPA preparan degustaciones de conservas artesanales y hamburguesas de pota, y los de Computación e Informática presentan aplicaciones móviles.
 * 🤝 **Proyección Social y Cuidado Ambiental:** Campañas de limpieza de playas en Paita y Yacila, jornadas de reforestación y soporte técnico gratuito a comedores populares.`
   },
   {
@@ -1632,7 +1632,7 @@ El IESTP Hermanos Cárcamo fomenta la integración, el trabajo en equipo y el li
 * 📡 **Conexión Wi-Fi Estudiantil:**
   - **Nombre de Red (SSID):** \`HERCAR-ESTUDIANTES\`
   - **Cobertura:** Pabellones de aulas, laboratorios de cómputo, biblioteca y losa deportiva.
-  - **Acceso:** Solicita la contraseña semestral en el Centro de Cómputo APSTI portando tu carné o constancia de matrícula.
+  - **Acceso:** Solicita la contraseña semestral en el Centro de Cómputo de Computación e Informática portando tu carné o constancia de matrícula.
 * 📚 **Biblioteca Virtual Latina (Acceso Gratuito 24/7):**
   - **Enlace de Ingreso:** [iestphercar.bibliotecalatina.com](https://iestphercar.bibliotecalatina.com/login)
   - **Usuario:** Tu número de **DNI**.
@@ -1711,11 +1711,11 @@ La mejor vía de preparación e ingreso directo para estudiantes de Paita, Sulla
   },
   {
     id: 'faq-perfil-egresado-apsti',
-    titulo: 'Perfil Profesional, Tecnologías y Campo Laboral de APSTI',
-    keywords: ['perfil apsti', 'que hace un apsti', 'sueldo apsti', 'tecnologias apsti', 'trabajo programador paita', 'sistemas paita'],
+    titulo: 'Perfil Profesional, Tecnologías y Campo Laboral de Computación e Informática',
+    keywords: ['perfil computacion', 'computacion e informatica', 'perfil apsti', 'que hace un apsti', 'sueldo apsti', 'tecnologias apsti', 'trabajo programador paita', 'sistemas paita'],
     categorias: ['carreras'],
-    locucion: "¡Hola! Como profesional en APSTI serás especialista en desarrollo de software web y móvil, administración de redes corporativas Cisco, gestión de bases de datos y soporte en la nube, con sueldos desde dos mil doscientos hasta más de cuatro mil quinientos soles.",
-    respuesta: `💻 **Perfil del Egresado en Arquitectura de Plataformas y Servicios TI:**
+    locucion: "¡Hola! Como profesional en Computación e Informática serás especialista en desarrollo de software web y móvil, administración de redes corporativas Cisco, gestión de bases de datos y soporte en la nube, con sueldos desde dos mil doscientos hasta más de cuatro mil quinientos soles.",
+    respuesta: `💻 **Perfil del Egresado en Computación e Informática:**
 
 * 🛠️ **Habilidades Clave:**
   - Creación de plataformas web modernas con JavaScript, React, Node.js y Python.
@@ -1903,7 +1903,7 @@ const CONVENIOS_BOLSA_TRABAJO = [
   {
     sector: 'Tecnología de Información, Software y Redes',
     empresas: ['Empresas Agroindustriales del Valle del Chira', 'Caja Municipal de Piura', 'Caja Sullana', 'Proveedores de Servicios Cloud y Telecomunicaciones'],
-    carrerasAfines: ['Arquitectura de Plataformas y Servicios TI (APSTI)']
+    carrerasAfines: ['Computación e Informática']
   },
   {
     sector: 'Sector Financiero, Tributario y Municipal',
@@ -2011,7 +2011,7 @@ const SIMULADOR_EXAMEN_HERCAR = [
     explicacion: 'El patrón es multiplicar por 2 y sumar 1: 4*2+1 = 9; 9*2+1 = 19; 19*2+1 = 39; 39*2+1 = 79.'
   },
   {
-    area: 'Tecnología y Redes APSTI (20%)',
+    area: 'Tecnología y Redes de Computación e Informática (20%)',
     pregunta: 'En arquitectura de redes de datos, ¿cuál es el dispositivo encargado de interconectar diferentes subredes y encaminar paquetes mediante direcciones IP?',
     opciones: ['Switch (Conmutador)', 'Router (Enrutador)', 'Hub (Concentrador)', 'Access Point'],
     correcta: 1, // Router
@@ -2047,8 +2047,8 @@ const SIMULADOR_EXAMEN_HERCAR = [
 const DATOS_COMPARATIVOS_CARRERAS = [
   {
     id: 'apsti',
-    codigo: 'APSTI',
-    nombre: 'Arquitectura de Plataformas y Servicios TI',
+    codigo: 'CI',
+    nombre: 'Computación e Informática',
     icono: 'bi-laptop-fill',
     color: '#0d6efd',
     colorBg: '#eff6ff',
@@ -2190,7 +2190,7 @@ const TASAS_TUPA_COTIZADOR = [
  */
 const CAMPUS_AMBIENTES_HERCAR = [
   { ambiente: 'Pabellón Administrativo', descripcion: 'Dirección General, Jefatura Académica, Secretaría General, Mesa de Partes y Ventanilla de Caja', icon: 'bi-building' },
-  { ambiente: 'Centros de Cómputo APSTI (1, 2 y 3)', descripcion: 'Laboratorios equipados con computadoras Core i7, fibra óptica de alta velocidad y servidores de prueba', icon: 'bi-laptop' },
+  { ambiente: 'Centros de Cómputo de Computación e Informática (1, 2 y 3)', descripcion: 'Laboratorios equipados con computadoras Core i7, fibra óptica de alta velocidad y servidores de prueba', icon: 'bi-laptop' },
   { ambiente: 'Taller de Conectividad y Redes Cisco', descripcion: 'Racks con routers y switches Cisco, patch panels y herramientas para cableado estructurado', icon: 'bi-hdd-network' },
   { ambiente: 'Planta Piloto Pesquera (DPA)', descripcion: 'Autoclaves verticales, selladoras de conservas, cámaras de congelado y mesas de fileteo en acero quirúrgico', icon: 'bi-box-seam' },
   { ambiente: 'Laboratorio de Microbiología y Control de Calidad HACCP', descripcion: 'Incubadoras biológicas, equipos de medición físico-química y análisis de inocuidad marina', icon: 'bi-water' },
@@ -2230,12 +2230,12 @@ const DATOS_OFICIALES_PORTAL = {
  * Fuente: https://ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/
  */
 const PLANA_DOCENTE_OFICIAL = [
-  // Arquitectura de Plataformas y Servicios de TI (APSTI)
-  { id: 'doc-apsti-1', nombre: 'José Hernández Panta', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Especialista en desarrollo de software, arquitectura de sistemas y bases de datos.' },
-  { id: 'doc-apsti-2', nombre: 'Javier Jaramillo Atoche', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Docente en redes de computadoras, conectividad y soporte tecnológico.' },
-  { id: 'doc-apsti-3', nombre: 'Luis Cherre Lizama', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Especialista en sistemas operativos, servidores e infraestructura tecnológica.' },
-  { id: 'doc-apsti-4', nombre: 'Erick Denegri Arizapana', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Docente en programación avanzada, aplicaciones empresariales y tecnologías cloud.' },
-  { id: 'doc-apsti-5', nombre: 'Juan Ruidias Casaverde', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Especialista en plataformas web, bases de datos y seguridad informática.' },
+  // Computación e Informática
+  { id: 'doc-apsti-1', nombre: 'José Hernández Panta', carreraId: 'apsti', carrera: 'Computación e Informática', cvPublicado: true, perfil: 'Especialista en desarrollo de software, arquitectura de sistemas y bases de datos.' },
+  { id: 'doc-apsti-2', nombre: 'Javier Jaramillo Atoche', carreraId: 'apsti', carrera: 'Computación e Informática', cvPublicado: true, perfil: 'Docente en redes de computadoras, conectividad y soporte tecnológico.' },
+  { id: 'doc-apsti-3', nombre: 'Luis Cherre Lizama', carreraId: 'apsti', carrera: 'Computación e Informática', cvPublicado: true, perfil: 'Especialista en sistemas operativos, servidores e infraestructura tecnológica.' },
+  { id: 'doc-apsti-4', nombre: 'Erick Denegri Arizapana', carreraId: 'apsti', carrera: 'Computación e Informática', cvPublicado: true, perfil: 'Docente en programación avanzada, aplicaciones empresariales y tecnologías cloud.' },
+  { id: 'doc-apsti-5', nombre: 'Juan Ruidias Casaverde', carreraId: 'apsti', carrera: 'Computación e Informática', cvPublicado: true, perfil: 'Especialista en plataformas web, bases de datos y seguridad informática.' },
 
   // Administración de Negocios Internacionales (ANI)
   { id: 'doc-ani-1', nombre: 'Eduardo Masías de la Rosa', carreraId: 'ani', carrera: 'Administración de Negocios Internacionales', cvPublicado: true, perfil: 'Especialista en comercio exterior, logística portuaria y gestión aduanera.' },

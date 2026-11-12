@@ -252,16 +252,16 @@ function getStats() {
     testsRealizados: [
       { 
         id: 101, 
-        carrera: 'APSTI', 
-        carreraNombre: 'Arquitectura de Plataformas y Servicios de TI', 
-        especialista: 'Especialista en Arquitectura de Software, Ciberseguridad e Infraestructura TI', 
+        carrera: 'CI', 
+        carreraNombre: 'Computación e Informática', 
+        especialista: 'Especialista en Computación e Informática, Redes y Desarrollo de Software', 
         afinidad: 95, 
         secundaria: 'ANI', 
         fecha: '28/02/2026, 10:15',
         respuestas: [
-          { dimension: 'Aptitud Tecnológica & Lógica', emoji: '💻', carrera: 'APSTI', text: 'Diseñar y programar sistemas de software, aplicaciones web y servidores' },
-          { dimension: 'Desarrollo Productivo de Paita', emoji: '⚓', carrera: 'APSTI', text: 'Implementar conectividad de fibra óptica y digitalización de operaciones en terminales portuarios' },
-          { dimension: 'Aspiración Profesional a 5 Años', emoji: '🛡️', carrera: 'APSTI', text: 'Liderar el departamento de TI, redes y ciberseguridad corporativa' }
+          { dimension: 'Aptitud Tecnológica & Lógica', emoji: '💻', carrera: 'CI', text: 'Diseñar y programar sistemas de software, aplicaciones web y servidores' },
+          { dimension: 'Desarrollo Productivo de Paita', emoji: '⚓', carrera: 'CI', text: 'Implementar conectividad de fibra óptica y digitalización de operaciones en terminales portuarios' },
+          { dimension: 'Aspiración Profesional a 5 Años', emoji: '🛡️', carrera: 'CI', text: 'Liderar el departamento de TI, redes y ciberseguridad corporativa' }
         ]
       },
       { 
@@ -270,7 +270,7 @@ function getStats() {
         carreraNombre: 'Administración de Negocios Internacionales', 
         especialista: 'Especialista en Operaciones Portuarias, Comercio Exterior y Gestión Aduanera', 
         afinidad: 91, 
-        secundaria: 'APSTI', 
+        secundaria: 'CI', 
         fecha: '28/02/2026, 09:40',
         respuestas: [
           { dimension: 'Desarrollo Productivo de Paita', emoji: '🚢', carrera: 'ANI', text: 'Operar logística internacional marítima en el Terminal Portuario Euroandinos (TPE)' },
@@ -368,13 +368,13 @@ function initDashboard() {
   }
 
   // Carrera top
-  let topCarrera = 'APSTI';
+  let topCarrera = 'Computación';
   let maxC = 0;
   if (stats.carrerasConsultas) {
     for (const [c, v] of Object.entries(stats.carrerasConsultas)) {
       if (v > maxC) {
         maxC = v;
-        topCarrera = c.toUpperCase();
+        topCarrera = (c.toLowerCase() === 'apsti' || c.toLowerCase() === 'ci') ? 'Computación' : c.toUpperCase();
       }
     }
   }
@@ -410,7 +410,7 @@ function renderCharts(stats) {
     careersChart = new Chart(ctxCarreras, {
       type: 'doughnut',
       data: {
-        labels: ['APSTI (TI)', 'ANI (Negocios)', 'Contabilidad', 'DPA (Pesquería)'],
+        labels: ['Computación e Informática', 'Negocios Internacionales', 'Contabilidad', 'Desarrollo Pesquero'],
         datasets: [{
           data: [cData.apsti, cData.ani, cData.conta, cData.dpa],
           backgroundColor: ['#0d6efd', '#198754', '#6f42c1', '#0dcaf0'],
@@ -687,7 +687,7 @@ function getFutRequests() {
       id: 'fut_101',
       nombre: 'CASTILLO RUIZ, JEAN PIERRE',
       dni: '73928104',
-      carrera: 'Arquitectura de Plataformas y Servicios de TI (APSTI)',
+      carrera: 'Computación e Informática',
       tramite: 'SOLICITO CARTA DE PRESENTACIÓN PARA PRÁCTICAS (EFSRT)',
       detalle: 'Para iniciar prácticas preprofesionales modulares en el área de sistemas del Terminal Portuario Euroandinos (TPE) de Paita.',
       fecha: '28/02/2026, 11:20',
@@ -978,7 +978,7 @@ function deleteFutRequest(id) {
 
 function simulateFutRequest() {
   const carreras = [
-    'Arquitectura de Plataformas y Servicios de TI (APSTI)',
+    'Computación e Informática',
     'Administración de Negocios Internacionales',
     'Contabilidad',
     'Desarrollo Pesquero y Acuícola'
@@ -1122,6 +1122,7 @@ function renderVocationalTable(filterText = '') {
   }
 
   const careerClassMap = {
+    'CI': 'badge-carrera-apsti',
     'APSTI': 'badge-carrera-apsti',
     'ANI': 'badge-carrera-ani',
     'CONTA': 'badge-carrera-conta',
@@ -1129,18 +1130,18 @@ function renderVocationalTable(filterText = '') {
   };
 
   tbody.innerHTML = tests.map(test => {
-    const badgeClass = careerClassMap[(test.carrera || '').toUpperCase()] || 'bg-primary';
+    const rawCarrCode = (test.carrera || 'CI').toUpperCase(); const normCarrBadge = rawCarrCode === 'APSTI' ? 'CI' : rawCarrCode; const normCarrName = (test.carreraNombre || '').replace(/Arquitectura de Plataformas y Servicios de TI|Arquitectura de Plataformas y Servicios de Tecnologías de la Información/gi, 'Computación e Informática'); const badgeClass = careerClassMap[rawCarrCode] || 'bg-primary';
     return `
       <tr>
         <td>
           <div class="small fw-semibold text-dark"><i class="bi bi-calendar-event me-1 text-muted"></i>${escapeHtml(test.fecha || 'Reciente')}</div>
         </td>
         <td>
-          <span class="${badgeClass}"><i class="bi bi-mortarboard-fill me-1"></i>${escapeHtml(test.carrera || 'APSTI')}</span>
+          <span class="${badgeClass}"><i class="bi bi-mortarboard-fill me-1"></i>${escapeHtml(normCarrBadge)}</span>
         </td>
         <td>
           <strong class="text-dark d-block" style="font-size:0.86rem;">${escapeHtml(test.especialista || test.carreraNombre || 'Especialista Técnico')}</strong>
-          <span class="small text-muted">${escapeHtml(test.carreraNombre || '')}</span>
+          <span class="small text-muted">${escapeHtml(normCarrName)}</span>
         </td>
         <td>
           <div class="d-flex justify-content-between align-items-center small fw-bold">
@@ -1179,6 +1180,7 @@ window.viewVocationalEvaluationDetail = function(testId) {
   if (!bodyEl) return;
 
   const careerColors = {
+    'CI': '#0d6efd',
     'APSTI': '#0d6efd',
     'ANI': '#198754',
     'CONTA': '#6f42c1',
@@ -1904,7 +1906,7 @@ function exportToCSV() {
   csvContent += "2. CONSULTAS POR PROGRAMA DE ESTUDIOS\r\n";
   csvContent += "Programa de Estudios;Abreviatura;Consultas Registradas\r\n";
   if (stats.carrerasConsultas) {
-    csvContent += `Arquitectura de Plataformas y Servicios de TI;APSTI;${stats.carrerasConsultas.apsti || 0}\r\n`;
+    csvContent += `Computación e Informática;CI;${stats.carrerasConsultas.apsti || 0}\r\n`;
     csvContent += `Administración de Negocios Internacionales;ANI;${stats.carrerasConsultas.ani || 0}\r\n`;
     csvContent += `Contabilidad;CONTA;${stats.carrerasConsultas.conta || 0}\r\n`;
     csvContent += `Desarrollo Pesquero y Acuícola;DPA;${stats.carrerasConsultas.dpa || 0}\r\n\r\n`;
@@ -2208,7 +2210,7 @@ function generateExecutivePdfReport() {
     </tr>
     <tr>
       <td class="memo-label">DE:</td>
-      <td><strong>Comisión de Desarrollo Tecnológico & Alumnos del Programa APSTI</strong></td>
+      <td><strong>Comisión de Desarrollo Tecnológico & Alumnos de Computación e Informática</strong></td>
     </tr>
     <tr>
       <td class="memo-label">ASUNTO:</td>
@@ -2253,8 +2255,8 @@ function generateExecutivePdfReport() {
     </thead>
     <tbody>
       <tr>
-        <td><strong>Arquitectura de Plataformas y Servicios de TI</strong></td>
-        <td>APSTI</td>
+        <td><strong>Computación e Informática</strong></td>
+        <td>CI</td>
         <td>${carreras.apsti || 0}</td>
         <td>${pctApsti}%</td>
         <td><div class="bar-container"><div class="bar-fill" style="width:${pctApsti}%; background:#2563eb;"></div></div> ${pctApsti}%</td>
@@ -2329,7 +2331,7 @@ function generateExecutivePdfReport() {
     </div>
     <div class="signature-item">
       <span class="signature-name">Comisión de Desarrollo TI</span>
-      <span class="signature-role">Área Académica de APSTI<br>Proyecto HercarBot IA</span>
+      <span class="signature-role">Área Académica de Computación e Informática<br>Proyecto HercarBot IA</span>
     </div>
   </div>
 
@@ -2363,8 +2365,8 @@ function resetDemoData() {
         satisfaccionNegativa: 5,
         totalTestsBonus: 38,
         testsRealizados: [
-          { id: 101, carrera: 'APSTI', carreraNombre: 'Arquitectura de Plataformas y Servicios de TI', especialista: 'Especialista en Arquitectura de Software, Ciberseguridad e Infraestructura TI', afinidad: 95, secundaria: 'ANI', fecha: '28/02/2026, 10:15' },
-          { id: 102, carrera: 'ANI', carreraNombre: 'Administración de Negocios Internacionales', especialista: 'Especialista en Operaciones Portuarias, Comercio Exterior y Gestión Aduanera', afinidad: 91, secundaria: 'APSTI', fecha: '28/02/2026, 09:40' },
+          { id: 101, carrera: 'CI', carreraNombre: 'Computación e Informática', especialista: 'Especialista en Arquitectura de Software, Ciberseguridad e Infraestructura TI', afinidad: 95, secundaria: 'ANI', fecha: '28/02/2026, 10:15' },
+          { id: 102, carrera: 'ANI', carreraNombre: 'Administración de Negocios Internacionales', especialista: 'Especialista en Operaciones Portuarias, Comercio Exterior y Gestión Aduanera', afinidad: 91, secundaria: 'CI', fecha: '28/02/2026, 09:40' },
           { id: 103, carrera: 'CONTA', carreraNombre: 'Contabilidad', especialista: 'Especialista en Auditoría Financiera, Tributación SUNAT y Costos Empresariales', afinidad: 88, secundaria: 'ANI', fecha: '27/02/2026, 17:30' },
           { id: 104, carrera: 'DPA', carreraNombre: 'Desarrollo Pesquero y Acuícola', especialista: 'Especialista en Biotecnología Acuícola, Tecnología Pesquera y Control de Calidad HACCP', afinidad: 93, secundaria: 'CONTA', fecha: '27/02/2026, 14:20' }
         ],
@@ -3109,7 +3111,11 @@ function normalizePhoneticAdmin(text) {
     .replace(/\bBN\b/gi, 'Banco de la Nación')
     .replace(/\bCCI\b/gi, 'código interbancario')
     .replace(/\bDPI\b/gi, 'límite de faltas por inasistencia')
-    .replace(/\bAPSTI\b/gi, 'Computación y Desarrollo de Sistemas')
+    .replace(/\bArquitectura\s+de\s+Plataformas\s+y\s+Servicios\s+de\s+Tecnolog[ií]as\s+de\s+la\s+Informaci[oó]n\b/gi, 'Computación e Informática')
+    .replace(/\bArquitectura\s+de\s+Plataformas\s+y\s+Servicios\s+(?:de\s+)?TI\b/gi, 'Computación e Informática')
+    .replace(/\bComputación\s+y\s+Desarrollo\s+de\s+Sistemas\b/gi, 'Computación e Informática')
+    .replace(/\bAPSTI\b/gi, 'Computación e Informática')
+    .replace(/\bCI\b/g, 'Computación e Informática')
     .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
     .replace(/\bCONTA\b/gi, 'Contabilidad')
     .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
@@ -3244,7 +3250,7 @@ function testAdminVoice(type) {
       phrase = 'La matrícula semestral tiene una tasa de ciento veinte soles según TUPA. El certificado modular cuesta treinta soles y la titulación profesional doscientos cincuenta soles en el Instituto Superior Hermanos Cárcamo.';
       break;
     case 'carreras':
-      phrase = 'Ofrecemos cuatro carreras profesionales técnicas: Computación y Desarrollo de Sistemas APSTI, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola. Todas son carreras públicas sin mensualidades en el Instituto Superior Hermanos Cárcamo.';
+      phrase = 'Ofrecemos cuatro Carreras Profesionales Técnicas: Computación e Informática, Administración de Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola. Todas son carreras públicas sin mensualidades en el Instituto Superior Hermanos Cárcamo.';
       break;
     case 'reglamento':
       phrase = 'La escala de calificación es vigesimal de cero a veinte con nota mínima aprobatoria de trece. El límite máximo de inasistencias es de treinta por ciento para no desaprobar por DPI.';
@@ -3262,7 +3268,7 @@ function testAdminVoice(type) {
 
 const AUDIT_LOG_MOCK = [
   { hora: 'Hoy, 10:42 am', query: '¿Cuál es la cuenta oficial para pagar la matrícula en el Banco de la Nación?', tema: 'pagos', intent: 'Pagos BN (00-631-012948)', certainty: 99.4, feedback: 'up' },
-  { hora: 'Hoy, 10:35 am', query: 'Quiero ver la malla curricular y cursos de APSTI', tema: 'carreras', intent: 'Malla Curricular APSTI', certainty: 98.8, feedback: 'up' },
+  { hora: 'Hoy, 10:35 am', query: 'Quiero ver la malla curricular y cursos de Computación e Informática', tema: 'carreras', intent: 'Malla Curricular Computación e Informática', certainty: 98.8, feedback: 'up' },
   { hora: 'Hoy, 10:18 am', query: '¿Qué pasa si jalo un curso o falto más de 30%?', tema: 'reglamento', intent: 'Reglamento & Inasistencias DPI', certainty: 97.9, feedback: 'up' },
   { hora: 'Hoy, 09:55 am', query: 'Requisitos para tramitar mi carné de medio pasaje de estudiante', tema: 'tramites', intent: 'Trámite Carné TUPA', certainty: 99.5, feedback: 'up' },
   { hora: 'Hoy, 09:30 am', query: '¿Cómo funciona el ingreso directo por la academia CEPRE?', tema: 'admision', intent: 'Modalidad CEPRE-HERCAR', certainty: 98.5, feedback: 'up' },
@@ -3456,7 +3462,11 @@ function initDatabaseSQLAdmin() {
     if (btnClear) btnClear.style.display = searchVal ? 'inline-block' : 'none';
 
     let displayUsers = users.filter(u => {
-      if (filterCareer && !(u.career || '').toLowerCase().includes(filterCareer)) return false;
+      if (filterCareer) {
+        const uCar = (u.career || '').toLowerCase();
+        const matchCompu = (filterCareer.includes('comput') || filterCareer === 'ci') && (uCar.includes('comput') || uCar.includes('apsti') || uCar.includes('software') || uCar.includes('arquitectura'));
+        if (!uCar.includes(filterCareer) && !matchCompu) return false;
+      }
       if (filterRole && !(u.role || '').toLowerCase().includes(filterRole)) return false;
       if (searchVal) {
         const rowStr = `${u.full_name} ${u.email} ${u.username} ${u.dni} ${u.phone} ${u.career} ${u.role}`.toLowerCase();
@@ -3484,10 +3494,19 @@ function initDatabaseSQLAdmin() {
           const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(u.full_name || u.username)}&background=0284c7&color=ffffff&bold=true`;
           const avatarUrl = u.avatar || defaultAvatar;
 
-          // Seguridad Cero Filtraciones: No exponer contraseñas en texto plano en el DOM
-          const pwdCellHtml = `
-            <span class="badge bg-light text-muted border font-monospace px-2 py-1" style="font-size:0.75rem;" title="Contraseña protegida mediante algoritmo criptográfico SHA-256">
-              <i class="bi bi-shield-lock-fill text-success me-1"></i>SHA-256 Cifrado
+          const pwdCellHtml = canViewPassword ? `
+            <div class="d-flex align-items-center gap-1">
+              <code id="pwd-user-${u.id}" class="bg-light px-2 py-1 rounded border font-monospace small" data-raw="${escapeHtml(u.password_plain || '••••••••')}" data-shown="false" style="letter-spacing: 2px;">••••••••</code>
+              <button type="button" class="btn btn-xs btn-outline-secondary rounded-circle p-1 btn-reveal-pwd" data-target="pwd-user-${u.id}" title="Ver / Ocultar contraseña" style="width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="bi bi-eye text-primary" style="font-size: 0.76rem;"></i>
+              </button>
+              <button type="button" class="btn btn-xs btn-outline-secondary rounded-circle p-1 btn-copy-user-pwd" data-val="${escapeHtml(u.password_plain || '')}" title="Copiar contraseña" style="width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;">
+                <i class="bi bi-clipboard" style="font-size: 0.76rem;"></i>
+              </button>
+            </div>
+          ` : `
+            <span class="badge bg-light text-muted border font-monospace px-2 py-1" style="font-size:0.75rem;">
+              <i class="bi bi-shield-lock-fill text-primary me-1"></i>Protegida
             </span>
           `;
 
@@ -3947,8 +3966,9 @@ function openUserProfileModal(userId) {
   const btnCopyModalPwd = document.getElementById('btnCopyModalPassword');
   const boxEditPhoto = document.getElementById('boxEditProfilePhoto');
 
-  if (isSelf) {
-    const plainPass = user.password_plain || user.plain_hint || 'admin2026';
+  const canViewPassword = isSelf || isSuperAdmin;
+  if (canViewPassword) {
+    const plainPass = user.password_plain || user.plain_hint || (user.username === 'admin' ? 'admin2026' : (user.username === 'profesor' ? 'profesor2026' : 'docente2026'));
     pwdEl.textContent = '••••••••';
     pwdEl.style.letterSpacing = '2px';
     pwdEl.dataset.shown = 'false';
@@ -3957,18 +3977,26 @@ function openUserProfileModal(userId) {
       btnToggleModalPwd.style.display = 'inline-block';
       btnToggleModalPwd.className = 'btn btn-sm btn-outline-primary rounded-pill px-3 py-1 shadow-xs fw-semibold';
       btnToggleModalPwd.innerHTML = '<i class="bi bi-eye me-1"></i> <span id="labelModalTogglePwd">Ver Clave</span>';
-      btnToggleModalPwd.title = 'Mostrar mi contraseña';
+      btnToggleModalPwd.title = isSelf ? 'Mostrar mi contraseña' : 'Mostrar u ocultar contraseña del docente';
     }
     if (btnCopyModalPwd) btnCopyModalPwd.style.display = 'inline-block';
   } else {
-    // Seguridad Cero Puertas Traseras: Las contraseñas ajenas permanecen protegidas por hash irreversible
-    pwdEl.textContent = 'Cifrada con SHA-256 (Protegida)';
+    pwdEl.textContent = 'Protegida';
     pwdEl.style.letterSpacing = 'normal';
     pwdEl.dataset.shown = 'false';
     pwdEl.dataset.raw = '';
     if (btnToggleModalPwd) btnToggleModalPwd.style.display = 'none';
     if (btnCopyModalPwd) btnCopyModalPwd.style.display = 'none';
   }
+
+  // Limpiar input de foto previo al abrir modal
+  const modalFileEl = document.getElementById('modalProfileFileInput');
+  if (modalFileEl) {
+    modalFileEl.value = '';
+    delete modalFileEl.dataset.pendingData;
+  }
+  const modalAlertEl = document.getElementById('profileModalAlert');
+  if (modalAlertEl) modalAlertEl.style.display = 'none';
 
   // Edición de foto: Solo el propio usuario o el Super-Admin puede cambiar la foto
   if (boxEditPhoto) {
@@ -4107,34 +4135,48 @@ if (btnCopyModalPwd) {
 // =========================================================================
 function compressImageToDataUrl(file, maxWidth = 256, maxHeight = 256, quality = 0.85) {
   return new Promise((resolve, reject) => {
-    if (!file || !file.type.startsWith('image/')) {
+    if (!file) {
+      return reject(new Error('No se seleccionó ningún archivo de imagen.'));
+    }
+    const isImageFile = (file.type && file.type.startsWith('image/')) || /\.(jpe?g|png|webp|gif|bmp|svg|jfif)$/i.test(file.name || '');
+    if (!isImageFile) {
       return reject(new Error('El archivo seleccionado debe ser una imagen (JPG, PNG o WebP).'));
     }
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('No se pudo leer el archivo de imagen.'));
     reader.onload = (e) => {
+      const rawDataUrl = e.target.result;
       const img = new Image();
-      img.onerror = () => reject(new Error('El formato de imagen no pudo ser procesado.'));
-      img.onload = () => {
-        const width = img.width;
-        const height = img.height;
-        // Recorte cuadrado centrado (avatar perfecto)
-        const minDim = Math.min(width, height);
-        const startX = (width - minDim) / 2;
-        const startY = (height - minDim) / 2;
-
-        const canvas = document.createElement('canvas');
-        canvas.width = maxWidth;
-        canvas.height = maxHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-
-        ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, maxWidth, maxHeight);
-        const compressedData = canvas.toDataURL('image/jpeg', quality);
-        resolve(compressedData);
+      img.onerror = () => {
+        if (rawDataUrl && typeof rawDataUrl === 'string' && rawDataUrl.startsWith('data:image/')) {
+          resolve(rawDataUrl);
+        } else {
+          reject(new Error('El formato de imagen no pudo ser procesado.'));
+        }
       };
-      img.src = e.target.result;
+      img.onload = () => {
+        try {
+          const width = img.width || maxWidth;
+          const height = img.height || maxHeight;
+          const minDim = Math.min(width, height);
+          const startX = (width - minDim) / 2;
+          const startY = (height - minDim) / 2;
+
+          const canvas = document.createElement('canvas');
+          canvas.width = maxWidth;
+          canvas.height = maxHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
+          ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, maxWidth, maxHeight);
+          const compressedData = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressedData || rawDataUrl);
+        } catch (err) {
+          resolve(rawDataUrl);
+        }
+      };
+      img.src = rawDataUrl;
     };
     reader.readAsDataURL(file);
   });
@@ -4202,7 +4244,9 @@ if (btnSavePhoto && fileInput) {
       if (res.success) {
         const avatarEl = document.getElementById('modalProfileAvatar');
         if (avatarEl) avatarEl.src = base64Data;
-        showAdminToast('¡Foto de perfil actualizada exitosamente en base de datos SQL!', 'success', 'bi-camera-fill');
+        showAdminToast('¡Foto de perfil actualizada exitosamente!', 'success', 'bi-camera-fill');
+        const pAlert = document.getElementById('profileModalAlert');
+        if (pAlert) { pAlert.className = 'alert alert-success py-2 px-3 small mb-3'; pAlert.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> ¡Foto de perfil guardada y actualizada correctamente!'; pAlert.style.display = 'block'; }
         
         fileInput.value = '';
         delete fileInput.dataset.pendingData;

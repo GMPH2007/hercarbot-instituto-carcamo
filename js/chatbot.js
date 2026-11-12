@@ -475,7 +475,7 @@ class HercarBotApp {
 
     if (this.btnTestVoiceCarreras) {
       this.btnTestVoiceCarreras.addEventListener('click', () => {
-        this.speak('En el Instituto Superior Hermanos Cárcamo de Paita puedes estudiar cuatro carreras técnicas públicas: Computación y Desarrollo de Sistemas, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.');
+        this.speak('En el Instituto Superior Hermanos Cárcamo de Paita puedes estudiar cuatro Carreras Profesionales Técnicas públicas: Computación e Informática, Administración de Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola.');
       });
     }
 
@@ -687,7 +687,7 @@ class HercarBotApp {
 
     const PREDEFINED_SUGGESTIONS = [
       { text: '¿Cuáles son las 4 carreras que ofrece el instituto?', prompt: '¿Cuáles son las 4 carreras que ofrece el instituto?', cat: 'carrera', icon: 'bi-mortarboard-fill', label: 'Carreras' },
-      { text: 'APSTI: Perfil, cursos de software y campo laboral', prompt: '¿Cómo es la carrera de APSTI y cuál es su campo laboral?', cat: 'carrera', icon: 'bi-laptop', label: 'APSTI' },
+      { text: 'Computación e Informática: Perfil, software y campo laboral', prompt: '¿Cómo es la carrera de Computación e Informática y cuál es su campo laboral?', cat: 'carrera', icon: 'bi-laptop', label: 'Computación e Informática' },
       { text: 'Negocios Internacionales (ANI): Comercio exterior y aduanas', prompt: '¿De qué trata la carrera de Administración de Negocios Internacionales?', cat: 'carrera', icon: 'bi-ship', label: 'ANI' },
       { text: 'Contabilidad: Finanzas, tributación y gestión empresarial', prompt: '¿Cuál es el perfil y campo de trabajo en Contabilidad?', cat: 'carrera', icon: 'bi-calculator-fill', label: 'Contabilidad' },
       { text: 'Desarrollo Pesquero y Acuícola (DPA): Recursos y plantas', prompt: '¿Qué se aprende en Desarrollo Pesquero y Acuícola en Paita?', cat: 'carrera', icon: 'bi-water', label: 'DPA' },
@@ -1404,7 +1404,7 @@ class HercarBotApp {
     setVal('futDni', '12345678');
     setVal('futTelefono', '987 654 321');
     setVal('futCorreo', 'estudiante@ieshercar.edu.pe');
-    setVal('futCarrera', 'Arquitectura de Plataformas y Servicios de Tecnologías de la Información (APSTI)');
+    setVal('futCarrera', 'Computación e Informática');
     setVal('futCiclo', 'Semestre V (Quinto Ciclo)');
     setVal('futDireccion', 'Paita, Piura');
     setVal('futEmpresaNombre', 'Colegio Tal / Empresa Receptora');
@@ -1447,7 +1447,7 @@ class HercarBotApp {
       dni: getVal('futDni', '--------'),
       telefono: getVal('futTelefono', '--------'),
       correo: getVal('futCorreo', 'estudiante@ieshercar.edu.pe'),
-      carrera: getVal('futCarrera', 'Arquitectura de Plataformas y TI (APSTI)'),
+      carrera: getVal('futCarrera', 'Computación e Informática'),
       ciclo: getVal('futCiclo', 'Semestre V'),
       direccion: getVal('futDireccion', 'Paita, Piura'),
       detalle: enteredDetalle || defaultLegalText,
@@ -3090,8 +3090,8 @@ class HercarBotApp {
       confidence = 99.8;
       category = 'pagos';
     } else if (norm.includes('carrera') || norm.includes('apsti') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes')) {
-      detectedIntent = 'Consulta Curricular - APSTI';
-      matchedEntity = 'Programa de Arquitectura de Plataformas y TI';
+      detectedIntent = 'Consulta Curricular - Computación e Informática';
+      matchedEntity = 'Programa de Computación e Informática';
       confidence = 99.6;
       category = 'carreras';
     } else if (norm.includes('ani') || norm.includes('negocios') || norm.includes('aduanas') || norm.includes('comercio')) {
@@ -3175,9 +3175,9 @@ class HercarBotApp {
       detectedIntent = 'Gestión de Pagos & Tesorería BN';
       matchedEntity = 'Banco de la Nación (Cta Cte: 00-631-012948)';
       confidence = 99.8;
-    } else if (norm.includes('apsti') || norm.includes('computacion') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes') || norm.includes('programacion')) {
-      detectedIntent = 'Consulta Curricular - APSTI';
-      matchedEntity = 'Programa de Arquitectura de Plataformas y TI';
+    } else if (norm.includes('apsti') || norm.includes('computacion') || norm.includes('informatica') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes') || norm.includes('programacion')) {
+      detectedIntent = 'Consulta Curricular - Computación e Informática';
+      matchedEntity = 'Programa de Computación e Informática';
       confidence = 99.6;
     } else if (norm.includes('ani') || norm.includes('negocios') || norm.includes('aduanas') || norm.includes('comercio') || norm.includes('puerto')) {
       detectedIntent = 'Consulta Curricular - Negocios Internacionales';
@@ -3284,12 +3284,12 @@ class HercarBotApp {
       },
       {
         id: 'cmd-apsti',
-        title: 'Carrera Técnica: APSTI (Sistemas y Redes)',
-        desc: 'Arquitectura de Plataformas y Servicios TI • 3 años • 120 créditos',
+        title: 'Carrera Técnica: Computación e Informática',
+        desc: 'Computación e Informática • 3 años • 120 créditos',
         category: 'Carreras Profesionales',
         icon: 'bi-laptop',
         color: '#2563eb',
-        tags: 'computacion software programacion desarrollo redes servidores base de datos apsti',
+        tags: 'computacion informatica software programacion desarrollo redes servidores base de datos apsti ci',
         action: () => this.triggerAction('ver_malla_carrera', 'apsti')
       },
       {
@@ -3591,7 +3591,7 @@ class HercarBotApp {
         <div class="palette-empty-state">
           <i class="bi bi-search text-muted fs-3 mb-2 d-block"></i>
           <p class="mb-1 fw-bold text-dark">No se encontraron comandos coincidentes</p>
-          <small class="text-muted">Intenta escribir palabras clave como "pagos", "apsti", "fut", "simulador" o "notas".</small>
+          <small class="text-muted">Intenta escribir palabras clave como "computación", "pagos", "fut", "simulador" o "notas".</small>
         </div>
       `;
       return;
@@ -3905,10 +3905,36 @@ class HercarBotApp {
       .replace(/\bWhatsApp\b/gi, 'WhatsApp')
       .replace(/\bchatbot\b/gi, 'asistente virtual')
       .replace(/\bIA\b/gi, 'inteligencia artificial')
-      .replace(/\bAPSTI\b/gi, 'Computación y Desarrollo de Sistemas')
+      .replace(/\bArquitectura\s+de\s+Plataformas\s+y\s+Servicios\s+de\s+Tecnolog[ií]as\s+de\s+la\s+Informaci[oó]n\b/gi, 'Computación e Informática')
+      .replace(/\bArquitectura\s+de\s+Plataformas\s+y\s+Servicios\s+(?:de\s+)?TI\b/gi, 'Computación e Informática')
+      .replace(/\bComputación\s+y\s+Desarrollo\s+de\s+Sistemas\b/gi, 'Computación e Informática')
+      .replace(/\bDesarrollo\s+de\s+Sistemas\s+y\s+Software\b/gi, 'Computación e Informática')
+      .replace(/Computación\s+e\s+Informática\s*\((?:CI|APSTI)\)/gi, 'Computación e Informática')
+      .replace(/Administración\s+de\s+Negocios\s+Internacionales\s*\(ANI\)/gi, 'Administración de Negocios Internacionales')
+      .replace(/Contabilidad\s*\(CONTA\)/gi, 'Contabilidad')
+      .replace(/Desarrollo\s+Pesquero\s+y\s+Acuícola\s*\(DPA\)/gi, 'Desarrollo Pesquero y Acuícola')
+      .replace(/\b(?:CI|APSTI)\s*:\s*Computación\s+e\s+Informática/gi, 'Computación e Informática')
+      .replace(/\bANI\s*:\s*Administración\s+de\s+Negocios\s+Internacionales/gi, 'Administración de Negocios Internacionales')
+      .replace(/\bCONTA\s*:\s*Contabilidad/gi, 'Contabilidad')
+      .replace(/\bDPA\s*:\s*Desarrollo\s+Pesquero\s+y\s+Acuícola/gi, 'Desarrollo Pesquero y Acuícola')
+      .replace(/\bAPSTI\b/gi, 'Computación e Informática')
+      .replace(/\bCI\b/g, 'Computación e Informática')
       .replace(/\bANI\b/gi, 'Administración de Negocios Internacionales')
       .replace(/\bCONTA\b/gi, 'Contabilidad')
       .replace(/\bDPA\b/gi, 'Desarrollo Pesquero y Acuícola')
+      .replace(/\bLinux\s*\/\s*Windows\b/gi, 'Linux y Windows')
+      .replace(/\bSQL\s*\/\s*NoSQL\b/gi, 'S Q L y No S Q L')
+      .replace(/\bNoSQL\b/gi, 'No S Q L')
+      .replace(/\bSQL\b/gi, 'S Q L')
+      .replace(/\(Cloud\)/gi, '')
+      .replace(/\bCloud\b/gi, 'en la nube')
+      .replace(/\bIGV\b/gi, 'I G V')
+      .replace(/\bPDT\b/gi, 'P D T')
+      .replace(/\bSIRE\b/gi, 'Sire')
+      .replace(/\bPLAME\b/gi, 'Plame')
+      .replace(/\bHACCP\b/gi, 'sistema H A C C P')
+      .replace(/\bBPM\b/gi, 'buenas prácticas de manufactura')
+      .replace(/\bTI\b/g, 'tecnologías de la información')
       .replace(/\bpagos\.ieshercar\.edu\.pe\b/gi, 'portal de pagos del Instituto Superior Hermanos Cárcamo')
       .replace(/\bsistema\.ieshercar\.edu\.pe\b/gi, 'sistema académico del Instituto Superior Hermanos Cárcamo')
       .replace(/\baula\.ieshercar\.edu\.pe\b/gi, 'aula virtual del Instituto Superior Hermanos Cárcamo')
@@ -4113,16 +4139,83 @@ class HercarBotApp {
 
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
-        <div class="welcome-badge">
-          <i class="bi bi-patch-check-fill text-primary"></i> Información oficial del Instituto Superior Hermanos Cárcamo · Paita 2026
+        <!-- Avatar Central y Estado En Línea -->
+        <div class="welcome-hero-avatar-wrap">
+          <div class="welcome-hero-avatar-box">
+            <img src="assets/img/logo-hercar.png" onerror="this.src='https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png'" alt="IESTP Hermanos Cárcamo" class="welcome-hero-avatar">
+            <span class="welcome-online-pulse" title="Asistente Oficial En Línea"></span>
+          </div>
         </div>
-        <h1 class="welcome-title">¡Hola! ¿En qué te puedo ayudar hoy? 👋</h1>
+
+        <div class="welcome-badge">
+          <i class="bi bi-patch-check-fill text-primary"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo (Paita)
+        </div>
+        
+        <h1 class="welcome-title">¡Hola! ¿Cómo te puedo orientar hoy? 🌸</h1>
         <p class="welcome-subtitle">
-          Soy tu asesora virtual del <strong>Instituto Superior Hermanos Cárcamo</strong> de Paita. Selecciona uno de los temas principales o escribe tu duda en el chat:
+          Orientación vocacional, admisión 2026 sin costo de mensualidades, guías oficiales del Banco de la Nación, plana docente y trámites para Mesa de Partes.
         </p>
 
-        <!-- Banner Visual Institucional del Campus Real -->
-        <div class="welcome-campus-card mb-3">
+        <!-- 4 Tarjetas Maestras Principales (Armónicas, Espaciosas y Modernas) -->
+        <div class="features-pill-grid mb-3">
+
+          <div class="feature-pill" data-chat-action="ver_todas_carreras" style="border-top: 3px solid #2563eb;">
+            <div class="feature-pill-icon-box" style="background: rgba(37,99,235,0.12); color: #2563eb;">
+              <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>4 Carreras Técnicas</strong>
+              <small>Computación e Informática, Negocios, Contabilidad y Pesquería. 100% gratuitas con título a la Nación.</small>
+            </div>
+          </div>
+
+          <div class="feature-pill" data-chat-action="ver_guia_pagos" style="border-top: 3px solid #059669;">
+            <div class="feature-pill-icon-box" style="background: rgba(5,150,105,0.12); color: #059669;">
+              <i class="bi bi-credit-card-2-front-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>Matrícula & Pagos BN</strong>
+              <small>Cuentas oficiales BN, guía paso a paso, tasas TUPA y validación de vouchers.</small>
+            </div>
+          </div>
+
+          <div class="feature-pill" data-chat-action="abrir_generador_fut" style="border-top: 3px solid #dc2626;">
+            <div class="feature-pill-icon-box" style="background: rgba(220,38,38,0.12); color: #dc2626;">
+              <i class="bi bi-file-earmark-pdf-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>Generador Oficial de FUT</strong>
+              <small>Genera y descarga tu Formulario Único de Trámite en PDF para Mesa de Partes.</small>
+            </div>
+          </div>
+
+          <div class="feature-pill" data-chat-action="ver_plana_docente" style="border-top: 3px solid #7c3aed;">
+            <div class="feature-pill-icon-box" style="background: rgba(124,58,237,0.12); color: #7c3aed;">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>Plana Docente & Módulos</strong>
+              <small>20 docentes titulados, perfiles por carrera y certificación modular progresiva.</small>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sugerencias Rápidas y Preguntas Frecuentes (Pills Limpios y Modernos) -->
+        <div class="suggested-prompts-section mb-3">
+          <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Consultas rápidas recomendadas:</span>
+          <div class="prompts-chips-wrapper">
+            <button class="prompt-chip" data-prompt="¿Cuál es el número de cuenta bancaria para pagar?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuenta BN 00-631-012948</button>
+            <button class="prompt-chip" data-prompt="¿Cómo es la admisión 2026 y requisitos?"><i class="bi bi-pencil-square me-1 text-success"></i> Admisión 2026</button>
+            <button class="prompt-chip" data-prompt="Háblame sobre la carrera de Computación e Informática"><i class="bi bi-laptop me-1 text-info"></i> Computación e Informática</button>
+            <button class="prompt-chip" data-prompt="Iniciar test de orientación vocacional"><i class="bi bi-compass-fill me-1 text-danger"></i> Test Vocacional</button>
+            <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final"><i class="bi bi-calculator me-1 text-warning"></i> Calculadora Notas (70/30)</button>
+            <button class="prompt-chip" data-prompt="¿Cuántas faltas puedo tener con la regla del 30%?"><i class="bi bi-alarm-fill me-1 text-danger"></i> Límite de Faltas (DPI)</button>
+          </div>
+        </div>
+
+        <!-- Banner Visual Armónico del Campus Central -->
+        <div class="welcome-campus-card mb-2">
           <div class="campus-banner-img-wrap">
             <img src="assets/img/campus-hercar.jpg" alt="Campus Central Instituto Superior Hermanos Cárcamo - Paita" class="campus-banner-img" />
             <div class="campus-banner-overlay">
@@ -4138,161 +4231,19 @@ class HercarBotApp {
                 <span class="campus-badge"><i class="bi bi-telephone-fill me-1"></i> (073) 251013</span>
                 <span class="campus-badge"><i class="bi bi-clock-fill me-1"></i> Lun-Vie 8am-3pm</span>
                 <span class="campus-badge bg-gold"><i class="bi bi-mortarboard-fill me-1"></i> 100% Gratuito</span>
+                <button class="btn btn-xs btn-light rounded-pill px-2 py-1 fw-bold text-dark shadow-xs" data-chat-action="ver_mapa_campus" style="font-size:0.73rem;">
+                  <i class="bi bi-map-fill text-primary me-1"></i> Croquis & Mapa
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 12 Tarjetas Principales, Espaciosas y Ordenadas (3 filas x 4 columnas) -->
-        <div class="features-pill-grid">
-
-          <div class="feature-pill" data-chat-action="ver_todas_carreras" style="border-top: 3px solid #2563eb;">
-            <div class="feature-pill-icon-box" style="background: rgba(37,99,235,0.12); color: #2563eb;">
-              <i class="bi bi-mortarboard-fill"></i>
-            </div>
-            <div>
-              <strong>4 Carreras Profesionales</strong>
-              <small>APSTI, Negocios, Contabilidad y Pesquería con mallas completas</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_comparador_carreras" style="border-top: 3px solid #0f3380;">
-            <div class="feature-pill-icon-box" style="background: rgba(15,51,128,0.12); color: #0f3380;">
-              <i class="bi bi-columns-gap"></i>
-            </div>
-            <div>
-              <strong>Comparador de Carreras</strong>
-              <small>Compara perfiles, demanda en Paita, sueldos y convalidación</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_sueldos_campo" style="border-top: 3px solid #d97706;">
-            <div class="feature-pill-icon-box" style="background: rgba(217,119,6,0.12); color: #d97706;">
-              <i class="bi bi-cash-stack"></i>
-            </div>
-            <div>
-              <strong>Sueldos & Empleo en Paita</strong>
-              <small>Demanda laboral en el Puerto TPE, pesqueras y empresas TI</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="iniciar_test_vocacional" style="border-top: 3px solid #ef4444;">
-            <div class="feature-pill-icon-box" style="background: rgba(239,68,68,0.12); color: #ef4444;">
-              <i class="bi bi-compass-fill"></i>
-            </div>
-            <div>
-              <strong>Test Vocacional IA</strong>
-              <small>Descubre tu carrera ideal según tus talentos y vocación</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_admision_completa" style="border-top: 3px solid #10b981;">
-            <div class="feature-pill-icon-box" style="background: rgba(16,185,129,0.12); color: #10b981;">
-              <i class="bi bi-pencil-square"></i>
-            </div>
-            <div>
-              <strong>Admisión & Simulador 2026</strong>
-              <small>Requisitos, balotario y simulador de 8 preguntas de examen</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_matricula_paso_a_paso" style="border-top: 3px solid #f59e0b;">
-            <div class="feature-pill-icon-box" style="background: rgba(245,158,11,0.12); color: #f59e0b;">
-              <i class="bi bi-credit-card-2-front-fill"></i>
-            </div>
-            <div>
-              <strong>Matrícula Paso a Paso</strong>
-              <small>¿Qué pago? ¿Dónde voy? ¿Cómo registro mi voucher en el BN?</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_cotizador_tupa" style="border-top: 3px solid #0284c7;">
-            <div class="feature-pill-icon-box" style="background: rgba(2,132,199,0.12); color: #0284c7;">
-              <i class="bi bi-receipt-cutoff"></i>
-            </div>
-            <div>
-              <strong>Cotizador de Pagos TUPA</strong>
-              <small>Calcula el monto exacto de certificados, carné y trámites</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_metodos_pago_digitales" style="border-top: 3px solid #059669;">
-            <div class="feature-pill-icon-box" style="background: rgba(5,150,105,0.12); color: #059669;">
-              <i class="bi bi-phone-fill"></i>
-            </div>
-            <div>
-              <strong>Pagos Digitales & Págalo.pe</strong>
-              <small>Paga sin colas desde tu celular con App BN, Yape o Págalo.pe</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_calculadora_notas" style="border-top: 3px solid #6366f1;">
-            <div class="feature-pill-icon-box" style="background: rgba(99,102,241,0.12); color: #6366f1;">
-              <i class="bi bi-calculator"></i>
-            </div>
-            <div>
-              <strong>Calculadora de Notas</strong>
-              <small>EC 70% + EF 30%, nota aprobatoria mínima y subsanación</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_calculadora_dpi" style="border-top: 3px solid #dc2626;">
-            <div class="feature-pill-icon-box" style="background: rgba(220,38,38,0.12); color: #dc2626;">
-              <i class="bi bi-alarm-fill"></i>
-            </div>
-            <div>
-              <strong>Calculadora DPI (Faltas 30%)</strong>
-              <small>Calcula tus inasistencias máximas para no desaprobar tu curso</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_titulacion_efsrt" style="border-top: 3px solid #8b5cf6;">
-            <div class="feature-pill-icon-box" style="background: rgba(139,92,246,0.12); color: #8b5cf6;">
-              <i class="bi bi-award-fill"></i>
-            </div>
-            <div>
-              <strong>Titulación & Prácticas EFSRT</strong>
-              <small>820 horas de prácticas, carta de presentación y título MINEDU</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_calendario_2026" style="border-top: 3px solid #0891b2;">
-            <div class="feature-pill-icon-box" style="background: rgba(8,145,178,0.12); color: #0891b2;">
-              <i class="bi bi-calendar3"></i>
-            </div>
-            <div>
-              <strong>Calendario & Campus 2026</strong>
-              <small>Cronograma de clases, fechas clave y croquis de pabellones</small>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Chips Rápidos Espaciosos y Variados -->
-        <div class="suggested-prompts-section">
-          <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Preguntas Frecuentes y Herramientas Rápidas:</span>
-          <div class="prompts-chips-wrapper">
-            <button class="prompt-chip" data-prompt="¿Cuál es el número de cuenta bancaria para pagar?">🏦 Número de Cuenta BN</button>
-            <button class="prompt-chip" data-prompt="¿Cuánto cuesta la matrícula y qué hago después de pagar?">💰 ¿Qué pago y dónde voy?</button>
-            <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final">📊 Calculadora de Notas (70/30)</button>
-            <button class="prompt-chip" data-prompt="Cotizador de trámites TUPA">🧮 Cotizador TUPA</button>
-            <button class="prompt-chip" data-prompt="¿Cómo pagar por Págalo.pe o transferencia bancaria?">📱 Págalo.pe / App BN</button>
-            <button class="prompt-chip" data-prompt="Calculadora de faltas e inasistencias DPI">⏱️ ¿Cuántas faltas puedo tener?</button>
-            <button class="prompt-chip" data-prompt="Comparar las 4 carreras del instituto">⚖️ Comparar 4 carreras</button>
-            <button class="prompt-chip" data-prompt="¿Cuánto gana un egresado técnico en Paita?">💼 Sueldos en Paita</button>
-            <button class="prompt-chip" data-prompt="¿Cómo hago mis prácticas preprofesionales EFSRT?">🏢 Prácticas EFSRT (820 hrs)</button>
-            <button class="prompt-chip" data-prompt="Calendario académico 2026 y fechas clave">📅 Calendario Académico 2026</button>
-            <button class="prompt-chip" data-prompt="Mapa del campus y ambientes del instituto">🗺️ Croquis de Ambientes</button>
-            <button class="prompt-chip" data-prompt="¿Cómo justificar inasistencias por salud o trabajo?">📝 Justificar faltas</button>
-            <button class="prompt-chip" data-prompt="¿Cómo recupero mi clave del sistema o aula virtual?">🔑 Olvidé mi contraseña</button>
-          </div>
-        </div>
       </div>
     `;
 
     this.messagesContainer.innerHTML = welcomeHtml;
   }
-
   handleUserSubmit(overrideText = null, isVoice = false) {
     if (this.isSubmitting) return;
 
@@ -4734,7 +4685,7 @@ ${text}
           <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt-fill" style="color:#ec4899;"></i> Contacto</button>
         </div>
       `, `${saludo}. ¿En qué te puedo orientar hoy?`, [
-        { label: "💻 Carrera APSTI", prompt: "Háblame sobre la carrera de APSTI" },
+        { label: "💻 Computación e Informática", prompt: "Háblame sobre la carrera de Computación e Informática" },
         { label: "💰 ¿Es gratuito?", prompt: "¿Cuánto cuesta la mensualidad o es gratuito?" },
         { label: "🏛️ Autoridades", prompt: "¿Quién es el director del instituto?" }
       ]);
@@ -5166,7 +5117,7 @@ ${text}
       - Ubicación: Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita Alta, Piura.
       - Horario de Atención: Lunes a Viernes de 8:00 a.m. a 3:00 p.m.
       - 4 Carreras Profesionales Técnicas 100% Gratuitas (3 años / 6 semestres / 120 créditos):
-        1. APSTI: Arquitectura de Plataformas y Servicios de Tecnologías de la Información
+        1. Computación e Informática
         2. ANI: Administración de Negocios Internacionales (logística portuaria de Paita)
         3. Contabilidad: Tributación SUNAT, finanzas y costos empresariales
         4. DPA: Desarrollo Pesquero y Acuícola (plantas de congelado Tierra Colorada, conchas de abanico, SANIPES)
@@ -5449,7 +5400,7 @@ ${text}
         <div class="p-3 bg-white rounded-3 border small mb-3">
           <h6 class="fw-bold text-dark mb-1"><i class="bi bi-diagram-3-fill text-primary me-1"></i> Coordinaciones de Carrera:</h6>
           <div class="d-flex flex-wrap gap-2 mt-2">
-            <span class="badge bg-primary-subtle text-primary p-2"><i class="bi bi-laptop me-1"></i> Coord. APSTI (Software & Redes)</span>
+            <span class="badge bg-primary-subtle text-primary p-2"><i class="bi bi-laptop me-1"></i> Coord. Computación e Informática</span>
             <span class="badge bg-success-subtle text-success p-2"><i class="bi bi-globe me-1"></i> Coord. Negocios (ANI)</span>
             <span class="badge bg-purple-subtle text-purple p-2" style="background:#f3e8ff; color:#7e22ce;"><i class="bi bi-calculator me-1"></i> Coord. Contabilidad</span>
             <span class="badge bg-info-subtle text-info p-2"><i class="bi bi-water me-1"></i> Coord. Pesquería (DPA)</span>
@@ -5466,7 +5417,7 @@ ${text}
     this.appendBotMessage(html, "¡Hola! Qué gusto saludarte. Con todo cariño te cuento que nuestra institución está dirigida por la Dirección General junto a la Unidad Académica y Secretaría General. Fue creada por Resolución Ministerial doscientos treinta y dos y revalidada con Resolución quinientos veintiocho. En tu pantalla puedes conocer a todo nuestro equipo directivo con calma.", [
       { label: "👨‍🏫 Plana Docente Completa", prompt: "¿Quiénes son los profesores del instituto?" },
       { label: "📍 Horarios y Ubicación", prompt: "¿Dónde queda el instituto y cuál es el horario de atención?" },
-      { label: "💻 Carrera APSTI", prompt: "¿Qué cursos se llevan en APSTI?" }
+      { label: "💻 Computación e Informática", prompt: "¿Qué cursos se llevan en Computación e Informática?" }
     ]);
   }
 
@@ -5474,7 +5425,7 @@ ${text}
     const docentes = (typeof PLANA_DOCENTE_OFICIAL !== 'undefined' ? PLANA_DOCENTE_OFICIAL : []);
     const carreras = [
       { id: 'todas', label: 'Todas las Carreras' },
-      { id: 'apsti', label: '💻 APSTI (Sistemas)' },
+      { id: 'apsti', label: '💻 Computación e Informática' },
       { id: 'ani', label: '🌐 Negocios (ANI)' },
       { id: 'conta', label: '📊 Contabilidad' },
       { id: 'dpa', label: '🐟 Pesquería (DPA)' }
@@ -5546,7 +5497,7 @@ ${text}
     const locucionTexto = "¡Hola! Con mucho cariño te cuento que el Instituto Hermanos Cárcamo cuenta con una plana docente oficial de veinte docentes titulados y especializados. En tu pantalla puedes ver a todos los profesores y filtrar por carrera con toda tranquilidad.";
 
     this.appendBotMessage(html, locucionTexto, [
-      { label: "💻 Docentes APSTI", prompt: "¿Quiénes son los profesores de APSTI?" },
+      { label: "💻 Docentes Computación", prompt: "¿Quiénes son los profesores de Computación e Informática?" },
       { label: "🌐 Docentes Negocios", prompt: "¿Quiénes son los profesores de Negocios Internacionales?" },
       { label: "📊 Docentes Contabilidad", prompt: "¿Quiénes son los profesores de Contabilidad?" },
       { label: "🐟 Docentes Pesquería", prompt: "¿Quiénes son los profesores de Desarrollo Pesquero?" }
@@ -5600,7 +5551,7 @@ ${text}
     const locucionTexto = `¡Hola! Con mucho gusto te cuento que en el Instituto Hermanos Cárcamo la carrera de ${carrera.nombre} se divide en tres módulos formativos con certificación progresiva anual. En tu pantalla te comparto los módulos y certificados que obtendrás.`;
 
     this.appendBotMessage(html, locucionTexto, [
-      { label: `💻 Módulos APSTI`, prompt: "Ver módulos de APSTI" },
+      { label: `💻 Módulos Computación`, prompt: "Ver módulos de Computación e Informática" },
       { label: `🌐 Módulos Negocios`, prompt: "Ver módulos de Negocios Internacionales" },
       { label: `📊 Módulos Contabilidad`, prompt: "Ver módulos de Contabilidad" },
       { label: `🐟 Módulos Pesquería`, prompt: "Ver módulos de Desarrollo Pesquero" }
@@ -5701,7 +5652,7 @@ ${text}
     `;
     this.appendBotMessage(html, "¡Hola! Con más de treinta y ocho años formando profesionales técnicos en Paita, el Instituto Hermanos Cárcamo tiene como misión brindar educación pública de calidad y alta empleabilidad. ¡En tu pantalla te comparto nuestra historia!", [
       { label: "🏛️ Autoridades", prompt: "¿Quiénes son las autoridades del instituto?" },
-      { label: "💻 Carrera APSTI", prompt: "¿Qué se aprende en APSTI?" }
+      { label: "💻 Computación e Informática", prompt: "¿Qué se aprende en Computación e Informática?" }
     ]);
   }
 
@@ -5720,7 +5671,7 @@ ${text}
             <div class="p-3 bg-light rounded-3 border small h-100">
               <h6 class="fw-bold text-success mb-1"><i class="bi bi-sun-fill text-warning me-1"></i> Turno Diurno (Mañana)</h6>
               <p class="mb-1"><strong>Horario:</strong> 8:00 a.m. a 1:15 p.m.</p>
-              <p class="mb-0 text-muted">Lunes a Viernes para estudiantes regulares de APSTI, Negocios Internacionales, Contabilidad y Pesquería.</p>
+              <p class="mb-0 text-muted">Lunes a Viernes para estudiantes regulares de Computación e Informática, Administración de Negocios Internacionales, Contabilidad y Desarrollo Pesquero y Acuícola.</p>
             </div>
           </div>
           <div class="col-sm-6">
@@ -5809,7 +5760,7 @@ ${text}
 
         <div class="p-3 bg-white rounded-3 border small mb-3">
           <h6 class="fw-bold text-success mb-1"><i class="bi bi-shuffle me-1"></i> Traslado Interno:</h6>
-          <p class="mb-0 text-muted">Permite cambiarte entre las carreras del IESTP Hermanos Cárcamo (ej. de Contabilidad a APSTI). Se solicita antes del inicio del ciclo académico y está sujeto a vacantes disponibles.</p>
+          <p class="mb-0 text-muted">Permite cambiarte entre las carreras del IESTP Hermanos Cárcamo (ej. de Contabilidad a Computación e Informática). Se solicita antes del inicio del ciclo académico y está sujeto a vacantes disponibles.</p>
         </div>
 
         <div class="interactive-button-grid">
@@ -6174,7 +6125,7 @@ ${text}
             <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
               <div class="d-flex align-items-center gap-2 mb-1">
                 <i class="bi bi-laptop-fill text-primary fs-5"></i>
-                <h6 class="fw-bold text-dark mb-0">APSTI (Sistemas & TI)</h6>
+                <h6 class="fw-bold text-dark mb-0">Computación e Informática</h6>
               </div>
               <span class="badge bg-primary-subtle text-primary mb-2">S/. 2,200 a S/. 4,500+</span>
               <p class="small text-muted mb-1"><strong>Puestos:</strong> Administrador de redes, soporte técnico, desarrollador web, analista cloud y ciberseguridad.</p>
@@ -7189,13 +7140,13 @@ ${text}
     `;
 
     const allCareerChips = [
-      { label: 'APSTI (Computación)', prompt: '¿Cómo es la carrera de APSTI y cuál es su campo laboral?' },
+      { label: 'Computación e Informática', prompt: '¿Cómo es la carrera de Computación e Informática y cuál es su campo laboral?' },
       { label: 'Negocios Internacionales', prompt: '¿De qué trata la carrera de Administración de Negocios Internacionales?' },
       { label: 'Contabilidad', prompt: '¿Cuál es el perfil y campo de trabajo en Contabilidad?' },
       { label: 'Desarrollo Pesquero', prompt: '¿Qué se aprende en Desarrollo Pesquero y Acuícola en Paita?' },
       { label: 'Test Vocacional', prompt: 'Quiero hacer el test vocacional' }
     ];
-    this.appendBotMessage(html, "¡Hola! En el Instituto Cárcamo contamos con cuatro carreras técnicas de tres años: Desarrollo de Sistemas y Software, Administración de Negocios Internacionales, Contabilidad, y Pesquería. Al ser educación pública, no pagas mensualidades, solo la matrícula administrativa de cada semestre.", allCareerChips);
+    this.appendBotMessage(html, "¡Hola! En el Instituto Superior Hermanos Cárcamo de Paita contamos con cuatro Carreras Profesionales Técnicas de tres años de duración: Computación e Informática, Administración de Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola. Al ser educación pública, no pagas mensualidades y obtienes título a nombre de la nación con certificación modular.", allCareerChips);
   }
 
   renderAdmisionInfo(query = '') {
@@ -7317,7 +7268,7 @@ ${text}
       'Paso 2: Asegúrate de que el voucher contenga tu DNI, fecha, hora y número de operación de forma nítida.',
       'Paso 3: Ingresa desde tu celular o PC a https://pagos.ieshercar.edu.pe/',
       'Paso 4: Digita tu número de DNI para ingresar.',
-      'Paso 5: Selecciona tu carrera (APSTI, ANI, CONTA o DPA) y el concepto pagado (Matrícula, Admisión, Certificado).',
+      'Paso 5: Selecciona tu carrera (Computación e Informática, ANI, CONTA o DPA) y el concepto pagado (Matrícula, Admisión, Certificado).',
       'Paso 6: Digita el número de operación y sube la foto clara del comprobante.',
       'Paso 7: Guarda y espera la validación de Caja (24 a 48 horas hábiles).'
     ];
@@ -7703,7 +7654,7 @@ ${text}
           <span><i class="bi bi-award-fill text-success me-1"></i>Diagnóstico de Arquetipo</span>
         </div>
         <div class="d-flex justify-content-center gap-2 flex-wrap" style="font-size:0.75rem; font-weight:700;">
-          <span class="badge bg-primary text-white"><i class="bi bi-laptop me-1"></i>APSTI</span>
+          <span class="badge bg-primary text-white"><i class="bi bi-laptop me-1"></i>CI • Computación</span>
           <span class="badge bg-success text-white"><i class="bi bi-globe me-1"></i>ANI Negocios</span>
           <span class="badge bg-secondary text-white" style="background:#7e22ce !important;"><i class="bi bi-calculator me-1"></i>Contabilidad</span>
           <span class="badge bg-info text-white"><i class="bi bi-water me-1"></i>Pesquería DPA</span>
@@ -7805,7 +7756,7 @@ ${text}
         arquetipo: 'El Arquitecto Digital & Solucionador Lógico',
         rasgoPrincipal: 'Pensamiento Estructurado y Algorítmico',
         descripcionPsicologica: 'Tu cerebro procesa la realidad a través de esquemas lógicos, patrones y relaciones de causa-efecto. Ante situaciones complejas, no te dejas llevar por impulsos: descompones el problema en partes, investigas la raíz y creas soluciones automáticas que perduran.',
-        titulo: 'Especialista en Arquitectura de Software, Ciberseguridad e Infraestructura TI',
+        titulo: 'Especialista en Computación e Informática, Redes y Desarrollo de Software',
         campoPaita: 'Empresas de telecomunicaciones, centros de datos, automatización de terminales portuarios, banca regional y desarrollo de software para exportadoras de Paita.',
         empresas: ['Terminales Portuarios Euroandinos (TPE)', 'Caja Piura / Caja Sullana', 'Agroindustrias del Valle del Chira', 'Empresas de Telecomunicaciones']
       },
@@ -8188,7 +8139,7 @@ ${text}
     `;
     const bolsaChips = [
       { label: 'Ver Carreras de HERCAR', prompt: '¿Cuáles son las 4 carreras que ofrece el instituto?' },
-      { label: 'Malla de APSTI', prompt: '¿Qué materias o cursos se llevan en APSTI?' },
+      { label: 'Malla de Computación', prompt: '¿Qué materias o cursos se llevan en Computación e Informática?' },
       { label: 'Test Vocacional', prompt: 'Quiero hacer el test vocacional' }
     ];
     this.appendBotMessage(html, "Contamos con convenios laborales activos con empresas pesqueras, agencias marítimas y aduanas para que realices tus prácticas profesionales en Paita.", bolsaChips);
@@ -8217,14 +8168,14 @@ ${text}
         this.logQuery('carreras');
         break;
       case 'ver_carrera_detalle':
-        const cDet = CARRERAS_COMPLETAS.find(c => c.id === val);
+        const cDet = CARRERAS_COMPLETAS.find(c => c.id === (val === "ci" ? "apsti" : val));
         if (cDet) {
           this.renderCarreraCompleta(cDet);
           this.logQuery('carreras', cDet.id);
         }
         break;
       case 'ver_malla_carrera':
-        const cMalla = CARRERAS_COMPLETAS.find(c => c.id === val);
+        const cMalla = CARRERAS_COMPLETAS.find(c => c.id === (val === "ci" ? "apsti" : val));
         if (cMalla) {
           this.renderMallaCurricular(cMalla);
           this.logQuery('carreras', cMalla.id);
@@ -8420,7 +8371,7 @@ ${text}
       sugerencia = `
         <div class="fallback-notice-box p-2 px-3 rounded-3 mb-3 d-flex align-items-center gap-2">
           <i class="bi bi-lightbulb-fill text-primary fs-5"></i>
-          <span class="small"><strong>Tip:</strong> Prueba preguntando: <em>"¿Cuáles son las 4 carreras técnicas?"</em> o <em>"Malla de APSTI"</em>.</span>
+          <span class="small"><strong>Tip:</strong> Prueba preguntando: <em>"¿Cuáles son las 4 carreras técnicas?"</em> o <em>"Malla de Computación e Informática"</em>.</span>
         </div>
       `;
     } else if (q.includes('titulo') || q.includes('cert') || q.includes('egre') || q.includes('gradu')) {

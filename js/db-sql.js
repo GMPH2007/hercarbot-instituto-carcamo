@@ -212,7 +212,7 @@
             role: 'Docente Evaluador',
             dni: '02849182',
             phone: '973849102',
-            career: 'APSTI - Desarrollo de Software',
+            career: 'Computación e Informática',
             status: 'ACTIVO',
             created_at: new Date().toISOString(),
             last_login: new Date().toISOString()

@@ -1749,6 +1749,51 @@ body.dark-theme .btn-fut-chip:hover {
   line-height: 1.45;
 }
 
+.test-intro-compact {
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.test-choice-btn.is-selected {
+  background: #ecfdf5 !important;
+  border-color: #059669 !important;
+  color: #065f46 !important;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.16);
+  transform: none !important;
+}
+
+.test-choice-btn.is-selected .choice-letter {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+  color: #ffffff !important;
+}
+
+.test-choice-btn.is-selected::after {
+  content: '✓ Elegida';
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #059669;
+  background: #d1fae5;
+  padding: 2px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.test-choice-btn.is-dimmed {
+  opacity: 0.55;
+  cursor: default !important;
+  transform: none !important;
+}
+
+.test-choice-btn:disabled {
+  cursor: default !important;
+}
+
+.test-choice-btn:disabled:hover {
+  transform: none !important;
+}
+
 .result-trophy {
   font-size: 2.8rem;
   filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
@@ -3169,6 +3214,19 @@ body.dark-theme .test-choice-btn .choice-text {
 body.dark-theme .test-choice-btn:hover {
   background: #19274a;
   border-color: #3b82f6;
+}
+body.dark-theme .test-intro-compact {
+  background: rgba(30, 58, 110, 0.35) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+body.dark-theme .test-choice-btn.is-selected {
+  background: rgba(5, 150, 105, 0.22) !important;
+  border-color: #10b981 !important;
+  color: #ecfdf5 !important;
+}
+body.dark-theme .test-choice-btn.is-selected::after {
+  background: #065f46;
+  color: #a7f3d0;
 }
 
 /* Modales en Modo Oscuro */

@@ -615,9 +615,10 @@ class HercarBotApp {
     document.addEventListener('click', (e) => {
       const btnAction = e.target.closest('[data-chat-action]');
       if (btnAction) {
+        if (btnAction.disabled) return;
         const action = btnAction.getAttribute('data-chat-action');
         const val = btnAction.getAttribute('data-chat-val') || btnAction.getAttribute('data-fut-tramite');
-        this.triggerAction(action, val);
+        this.triggerAction(action, val, btnAction);
       }
 
       const promptBtn = e.target.closest('[data-prompt]');
@@ -4790,7 +4791,7 @@ ${text}
 
     // 1. Manejo del Test Vocacional o Simulador en curso
     if (this.activeTest) {
-      this.handleTestResponse(norm);
+      this.handleTestResponse(norm, null, rawQuery);
       return;
     }
 
@@ -4968,8 +4969,33 @@ ${text}
       return;
     }
 
+    // 9.0 Test Vocacional Inteligente (evaluación interactiva antes de coincidencias de carrera)
+    if (
+      norm.includes('test vocacional') ||
+      norm.includes('orientacion vocacional') ||
+      norm.includes('test de carrera') ||
+      norm.includes('test para elegir') ||
+      norm.includes('test de orientacion') ||
+      /\b(hacer|iniciar|empezar|activar|probar|abrir)\s+(el\s+)?test\b/.test(norm) ||
+      norm === 'test' ||
+      norm === 'el test' ||
+      norm.includes('que carrera elegir') ||
+      norm.includes('que carrera estudiar') ||
+      norm.includes('cual carrera estudiar') ||
+      norm.includes('que estudiar') ||
+      norm.includes('no se que carrera') ||
+      norm.includes('no se que elegir') ||
+      norm.includes('no me decido') ||
+      norm.includes('ayudame a elegir') ||
+      norm.includes('que carrera me recomiendas')
+    ) {
+      this.startVocationalTest();
+      this.logQuery('test_vocacional');
+      return;
+    }
+
     // 9.1 Comparador Interactivo de las 4 Carreras Técnicas
-    if (norm.includes('comparar carreras') || norm.includes('comparativa') || norm.includes('cual carrera es mejor') || norm.includes('cual carrera elegir') || norm.includes('diferencias entre carreras') || norm.includes('comparador de carreras') || norm.includes('que carrera me recomiendas') || norm.includes('cual carrera tiene mas futuro') || norm.includes('comparar apsti')) {
+    if (norm.includes('comparar carreras') || norm.includes('comparativa') || norm.includes('cual carrera es mejor') || norm.includes('diferencias entre carreras') || norm.includes('comparador de carreras') || norm.includes('cual carrera tiene mas futuro') || norm.includes('comparar apsti') || norm.includes('comparar computacion')) {
       this.renderComparadorCarreras();
       this.logQuery('carreras');
       return;
@@ -5009,12 +5035,13 @@ ${text}
       const cCode = carrera.codigo.toLowerCase();
       const cNom = this.normalizeText(carrera.nombre);
       const cNomCorto = carrera.nombreCorto ? this.normalizeText(carrera.nombreCorto) : '';
+      const hasWordCode = new RegExp(`\\b${cCode}\\b`, 'i').test(norm);
 
-      const matchesCareer = norm.includes(cId) || norm.includes(cCode) || norm.includes(cNom) || (cNomCorto && norm.includes(cNomCorto)) ||
-        (cId === 'apsti' && (norm.includes('sistemas') || norm.includes('software') || norm.includes('programacion') || norm.includes('computacion') || norm.includes('redes') || norm.includes('ti') || norm.includes('informatica') || norm.includes('desarrollo web') || norm.includes('ciberseguridad'))) ||
-        (cId === 'ani' && (norm.includes('aduanas') || norm.includes('comercio exterior') || norm.includes('negocios internacionales') || norm.includes('exportacion') || norm.includes('importacion') || norm.includes('logistica portuaria') || norm.includes('tpe'))) ||
+      const matchesCareer = new RegExp(`\\b${cId}\\b`, 'i').test(norm) || hasWordCode || norm.includes(cNom) || (cNomCorto && norm.includes(cNomCorto)) ||
+        (cId === 'apsti' && (norm.includes('sistemas') || norm.includes('software') || norm.includes('programacion') || norm.includes('computacion') || norm.includes('redes') || /\bti\b/i.test(norm) || norm.includes('informatica') || norm.includes('desarrollo web') || norm.includes('ciberseguridad'))) ||
+        (cId === 'ani' && (norm.includes('aduanas') || norm.includes('comercio exterior') || norm.includes('negocios internacionales') || norm.includes('exportacion') || norm.includes('importacion') || norm.includes('logistica portuaria') || /\btpe\b/i.test(norm))) ||
         (cId === 'conta' && (norm.includes('contabilidad') || norm.includes('contador') || norm.includes('tributacion') || norm.includes('sunat') || norm.includes('finanzas') || norm.includes('impuestos') || norm.includes('sire') || norm.includes('costos'))) ||
-        (cId === 'dpa' && (norm.includes('pesca') || norm.includes('pesquero') || norm.includes('pesqueria') || norm.includes('acuicola') || norm.includes('acuicultura') || norm.includes('mar') || norm.includes('mariscos') || norm.includes('pota') || norm.includes('haccp')));
+        (cId === 'dpa' && (norm.includes('pesca') || norm.includes('pesquero') || norm.includes('pesqueria') || norm.includes('acuicola') || norm.includes('acuicultura') || /\bmar\b/i.test(norm) || norm.includes('mariscos') || norm.includes('pota') || norm.includes('haccp')));
 
       if (matchesCareer) {
         if (norm.includes('curso') || norm.includes('malla') || norm.includes('materia') || norm.includes('asignatura') || norm.includes('ciclo') || norm.includes('semestre') || norm.includes('plan')) {
@@ -7788,218 +7815,414 @@ ${text}
      ========================================================================== */
 
   startVocationalTest() {
-    // Banco Psicológico y de Lógica Mental: Dilemas de comportamiento, templanza y toma de decisiones
-    const BANCO_PSICOLOGICO_VOCACIONAL = [
+    // Banco Inteligente Multi-Dimensional: Intereses reales, Habilidades, Entorno laboral y Toma de decisiones
+    const BANCO_VOCACIONAL_INTELIGENTE = [
+      {
+        dim: 'Actividades que Disfrutas',
+        emoji: '⚡',
+        q: 'Imagina un fin de semana libre aprendiendo algo práctico por gusto propio. ¿Qué actividad te atrapa por horas sin darte cuenta?',
+        opts: [
+          { t: 'Armar o configurar computadoras, programar una app/página web, automatizar tareas o resolver fallos de red y sistemas.', c: 'apsti', w: { apsti: 4, ani: 1 } },
+          { t: 'Analizar cómo importar o vender productos, investigar mercados internacionales, cotizar envíos o negociar acuerdos comerciales.', c: 'ani', w: { ani: 4, conta: 1 } },
+          { t: 'Ordenar ingresos y gastos en Excel, analizar finanzas personales, calcular impuestos o revisar presupuestos para ahorrar más.', c: 'conta', w: { conta: 4, ani: 1 } },
+          { t: 'Explorar temas del mar, crianza de especies acuícolas, biología aplicada, control de calidad de alimentos marinos o producción ecológica.', c: 'dpa', w: { dpa: 4, conta: 1 } }
+        ]
+      },
+      {
+        dim: 'Tus Fortalezas Naturales',
+        emoji: '🎯',
+        q: 'En el colegio o en proyectos en grupo, ¿en qué área sueles destacar con mayor naturalidad frente a los demás?',
+        opts: [
+          { t: 'Lógica, computación, soporte técnico, pensamiento paso a paso y resolver problemas digitales rápidamente.', c: 'apsti', w: { apsti: 4 } },
+          { t: 'Comunicación persuasiva, liderazgo comercial, organización logística y trato con clientes o proveedores.', c: 'ani', w: { ani: 4 } },
+          { t: 'Precisión con los números, orden documental, responsabilidad ética, análisis de cuentas y atención al detalle.', c: 'conta', w: { conta: 4 } },
+          { t: 'Observación científica de campo, trabajo práctico en laboratorio o planta y cuidado sanitario de procesos marinos.', c: 'dpa', w: { dpa: 4 } }
+        ]
+      },
+      {
+        dim: 'Ambiente Laboral Ideal',
+        emoji: '🏢',
+        q: 'Pensando en tu futuro trabajo diario en Paita o cualquier ciudad del Perú, ¿en qué espacio te ves más feliz y motivado?',
+        opts: [
+          { t: 'En un área de TI, centro de datos, oficina de desarrollo de software o brindando soporte de redes y ciberseguridad.', c: 'apsti', w: { apsti: 4, ani: 1 } },
+          { t: 'En el Puerto de Paita, una agencia de aduanas o una empresa exportadora coordinando embarques hacia Asia, Europa o EE. UU.', c: 'ani', w: { ani: 4, dpa: 1 } },
+          { t: 'En un estudio contable, banco/caja municipal o departamento financiero dirigiendo presupuestos, planillas y tributos SUNAT.', c: 'conta', w: { conta: 4 } },
+          { t: 'En plantas congeladoras de exportación, centros acuícolas de concha de abanico/langostino o laboratorios de control sanitario.', c: 'dpa', w: { dpa: 4, ani: 1 } }
+        ]
+      },
       {
         dim: 'Lógica Algorítmica & Automatización',
         emoji: '🧩',
-        q: 'Tienes 1,000 expedientes urgentes que deben organizarse antes del mediodía y es humanamente imposible hacerlo a mano. ¿Cómo responde tu mente?',
+        q: 'Tienes 1,000 expedientes urgentes que deben organizarse antes del mediodía y es imposible hacerlo a mano. ¿Cómo responde tu mente?',
         opts: [
-          { t: 'Diseño un script, macro o algoritmo en la computadora para que el sistema clasifique y ordene todo automáticamente en segundos.', c: 'apsti' },
-          { t: 'Coordino con agentes aduaneros y clientes para negociar una prórroga de entrega y organizo una cadena logística ágil de trabajo.', c: 'ani' },
-          { t: 'Aplico un método de conciliación y control cruzado por códigos contables para asegurar que ni un solo sol o dato se traspapele.', c: 'conta' },
-          { t: 'Inspecciono los lotes de mayor criticidad biológica para salvar la inocuidad y procesar primero los productos marinos perecibles.', c: 'dpa' }
+          { t: 'Diseño un script, macro o sistema en la computadora para clasificar y ordenar automáticamente todo en segundos.', c: 'apsti', w: { apsti: 4, conta: 1 } },
+          { t: 'Coordino un equipo de trabajo ágil, delego prioridades y negocio con aduanas o clientes para cumplir la entrega sin demoras.', c: 'ani', w: { ani: 4 } },
+          { t: 'Aplico una matriz de conciliación por códigos contables para asegurar que ni un solo sol o comprobante se pierda.', c: 'conta', w: { conta: 4 } },
+          { t: 'Priorizo inmediatamente los lotes perecibles según cadena de frío e inocuidad para proteger la producción marina.', c: 'dpa', w: { dpa: 4 } }
         ]
       },
       {
-        dim: 'Temple Emocional & Reacción ante Crisis',
+        dim: 'Reacción ante una Crisis',
         emoji: '🚨',
-        q: 'Surge una emergencia crítica imprevista que paraliza las operaciones y pone en riesgo el patrimonio de la institución. ¿Cuál es tu reacción instintiva?',
+        q: 'Surge una emergencia crítica imprevista que paraliza las operaciones de tu empresa. ¿Cuál es tu reacción instintiva?',
         opts: [
-          { t: 'Siento curiosidad técnica y adrenalina lógica: ingreso a la consola del servidor, aíslo el fallo en el sistema y restauro la infraestructura.', c: 'apsti' },
-          { t: 'Mantengo la serenidad social: llamo a las autoridades del puerto y empresas para calmarlos y pactar una solución diplomática comercial.', c: 'ani' },
-          { t: 'Me concentro en auditar las pérdidas con total frialdad matemática para blindar legal, tributaria y contablemente a la entidad.', c: 'conta' },
-          { t: 'Corro a verificar los sistemas de frío, oxígeno y bioseguridad en planta para salvaguardar la vida marina y los lotes de exportación.', c: 'dpa' }
+          { t: 'Entro al sistema o servidor, analizo el registro de errores, aíslo el fallo técnico y restauro la plataforma operativa.', c: 'apsti', w: { apsti: 4 } },
+          { t: 'Tomo el liderazgo comunicacional: llamo a navieras, puerto o clientes para calmar la situación y pactar rutas alternativas.', c: 'ani', w: { ani: 4 } },
+          { t: 'Audito el impacto financiero con calma matemática para proteger el flujo de caja y evitar multas tributarias o laborales.', c: 'conta', w: { conta: 4 } },
+          { t: 'Verifico de inmediato temperatura, oxígeno, bioseguridad y protocolos HACCP para salvar la biomasa o el lote marino.', c: 'dpa', w: { dpa: 4 } }
         ]
       },
       {
-        dim: 'Dilema Ético & Principios Innegociables',
+        dim: 'Dilema Ético & Prioridad Profesional',
         emoji: '⚖️',
-        q: 'Descubres una anomalía oculta que nadie más ha notado en tu institución o empresa. ¿Qué principio guía tu decisión inmediata?',
+        q: 'Descubres una anomalía importante que nadie más ha notado en tu institución. ¿Qué prioridad guía tu decisión inmediata?',
         opts: [
-          { t: 'La integridad de los números es sagrada: audito y corrijo el descuadre financiero antes de que SUNAT o una auditoría aplique sanciones.', c: 'conta' },
-          { t: 'La salud pública y la bioseguridad no se negocian: si un lote de pesca o conchas no cumple normas SANIPES, detengo el despacho al instante.', c: 'dpa' },
-          { t: 'La seguridad de la información es prioritaria: aplico un parche contra la vulnerabilidad digital antes de que un ciberataque robe datos.', c: 'apsti' },
-          { t: 'La reputación internacional y los contratos son vitales: renegocio las cláusulas de flete y aduanas para blindar los acuerdos comerciales.', c: 'ani' }
+          { t: 'La ciberseguridad y los datos: cierro la vulnerabilidad digital antes de que alguien filtre información o dañe el sistema.', c: 'apsti', w: { apsti: 4 } },
+          { t: 'El cumplimiento internacional: reviso contratos, aranceles e Incoterms para proteger los despachos y la reputación exterior.', c: 'ani', w: { ani: 4 } },
+          { t: 'La transparencia contable: corrijo el descuadre de libros y tributos ante SUNAT antes de que genere sanciones económicas.', c: 'conta', w: { conta: 4 } },
+          { t: 'La salud pública e inocuidad: si un producto hidrobiológico no cumple normas SANIPES, detengo el despacho al instante.', c: 'dpa', w: { dpa: 4, ani: 1 } }
         ]
       },
       {
-        dim: 'Arquetipo de Liderazgo & Influencia Social',
+        dim: 'Arquetipo de Liderazgo & Impacto',
         emoji: '👑',
-        q: 'En un congreso de desarrollo regional en Piura, ¿en qué papel te sientes más influyente y realizado?',
+        q: 'En un gran proyecto regional en Piura, ¿qué rol te hace sentir más útil y orgulloso de tus resultados?',
         opts: [
-          { t: 'El Negociador Global: abro mercados en el extranjero, firmo alianzas de exportación y represento a Paita ante inversionistas.', c: 'ani' },
-          { t: 'El Arquitecto Invisible: diseño las plataformas digitales, servidores en la nube y redes que sostienen todo sin interrupciones.', c: 'apsti' },
-          { t: 'El Guardián Financiero: aseguro la rentabilidad, optimizo los tributos y garantizo que cada inversión genere riqueza real.', c: 'conta' },
-          { t: 'El Científico del Mar: lidero en campo y laboratorio la biotecnología acuícola, mejorando la producción de especies marinas.', c: 'dpa' }
+          { t: 'El Arquitecto Tecnológico: crear el software, base de datos, red o infraestructura en la nube que hace funcionar todo.', c: 'apsti', w: { apsti: 4 } },
+          { t: 'El Negociador Global: abrir mercados extranjeros, cerrar alianzas de exportación y mover mercancía al mundo.', c: 'ani', w: { ani: 4 } },
+          { t: 'El Guardián Financiero: garantizar la rentabilidad real, controlar los costos industriales y respaldar decisiones con balances claros.', c: 'conta', w: { conta: 4 } },
+          { t: 'El Especialista Marino-Productivo: innovar en acuicultura sostenible, navegación responsable y calidad alimentaria del océano.', c: 'dpa', w: { dpa: 4 } }
         ]
       },
       {
-        dim: 'Curiosidad Intelectual & Fascinación de la Mente',
+        dim: 'Curiosidad Intelectual',
         emoji: '🧠',
-        q: 'Si te otorgaran una beca de investigación con acceso ilimitado a los mayores genios del planeta, ¿qué enigma te entusiasma descifrar?',
+        q: 'Si te dieran una beca con los mejores especialistas del mundo, ¿qué tema te entusiasmaría dominar a fondo?',
         opts: [
-          { t: 'Inteligencia Artificial generativa, desarrollo de software autónomo y ciberdefensa en infraestructuras críticas.', c: 'apsti' },
-          { t: 'Rutas comerciales interoceánicas, logística de megapuertos de contenedores y geopolítica del comercio internacional.', c: 'ani' },
-          { t: 'Estrategias de arquitectura financiera corporativa, prevención de delitos económicos y optimización tributaria legal.', c: 'conta' },
-          { t: 'Genética y cultivo tecnificado de especies hidrobiológicas, nutrición de conchas de abanico y preservación del océano.', c: 'dpa' }
+          { t: 'Inteligencia artificial, desarrollo web y móvil full-stack, servidores Linux y ciberdefensa empresarial.', c: 'apsti', w: { apsti: 4 } },
+          { t: 'Logística de megapuertos, inteligencia comercial exterior, tratados globales y dirección de exportaciones.', c: 'ani', w: { ani: 4 } },
+          { t: 'Auditoría financiera avanzada, planeamiento tributario legal, costos de producción y peritaje contable.', c: 'conta', w: { conta: 4 } },
+          { t: 'Biotecnología marina, cultivo tecnificado de especies hidrobiológicas y aseguramiento de calidad pesquera.', c: 'dpa', w: { dpa: 4 } }
         ]
       },
       {
-        dim: 'Resolución de Problemas con Recursos Limitados',
+        dim: 'Ingeniería con Recursos Limitados',
         emoji: '⏳',
-        q: 'Te asignan un proyecto con la mitad del presupuesto habitual y la mitad del tiempo. ¿Cómo respondes?',
+        q: 'Te asignan un reto con la mitad del tiempo y la mitad del presupuesto habitual. ¿Cuál es tu estrategia ganadora?',
         opts: [
-          { t: 'Automatizo procesos repetitivos con herramientas open-source y software libre para multiplicar la productividad por diez.', c: 'apsti' },
-          { t: 'Hago alianzas estratégicas, negocio con proveedores plazos flexibles y aprovecho las ventajas del puerto para abaratar costos.', c: 'ani' },
-          { t: 'Rediseño el plan presupuestal al céntimo, elimino fugas de dinero y priorizo el retorno de capital más seguro.', c: 'conta' },
-          { t: 'Aprovecho los recursos marinos naturales locales y métodos de cultivo sostenibles de bajo costo pero alto rendimiento.', c: 'dpa' }
+          { t: 'Automatizo tareas manuales con herramientas digitales y software libre para multiplicar la velocidad de trabajo.', c: 'apsti', w: { apsti: 4 } },
+          { t: 'Negocio plazos flexibles con proveedores, optimizo rutas logísticas y aprovecho alianzas estratégicas comerciales.', c: 'ani', w: { ani: 4, conta: 1 } },
+          { t: 'Reestructuro el presupuesto al céntimo, elimino gastos innecesarios y priorizo lo que da mayor retorno económico.', c: 'conta', w: { conta: 4 } },
+          { t: 'Uso métodos productivos naturales, sostenibles y de bajo costo operativo manteniendo la máxima calidad técnica.', c: 'dpa', w: { dpa: 4 } }
         ]
       },
       {
-        dim: 'Tu Huella y Trascendencia en la Sociedad',
-        emoji: '🌍',
-        q: 'Al culminar tu trayectoria profesional, ¿qué legado personal te hará sentir que tu vida valió la pena?',
-        opts: [
-          { t: 'Haber desarrollado y protegido sistemas digitales que facilitaron la vida, la educación y el trabajo de millones de personas.', c: 'apsti' },
-          { t: 'Haber llevado los productos de mi tierra (pesca, frutas, artesanía) a las mesas y tiendas de los 5 continentes.', c: 'ani' },
-          { t: 'Haber blindado la solidez económica y la transparencia de empresas que generaron empleo formal y riqueza para sus comunidades.', c: 'conta' },
-          { t: 'Haber defendido la riqueza marina de nuestra costa norte, asegurando alimento saludable y mares limpios para las futuras generaciones.', c: 'dpa' }
-        ]
-      },
-      {
-        dim: 'Detección de Oportunidades en el Ecosistema de Paita',
+        dim: 'Oportunidades en Paita',
         emoji: '⚓',
-        q: 'Caminas por la bahía y la zona industrial de Paita. ¿Qué oportunidad detecta tu intuición con mayor rapidez?',
+        q: 'Al observar el movimiento económico de Paita y su puerto, ¿qué oportunidad sientes que deberías liderar?',
         opts: [
-          { t: 'La urgencia de modernizar los sistemas digitales, cámaras con IA y conectividad de alta velocidad en las empresas.', c: 'apsti' },
-          { t: 'El inmenso potencial de despachar más contenedores refrigerados hacia Asia y Europa aprovechando el puerto de aguas profundas.', c: 'ani' },
-          { t: 'La necesidad de asesorar contable y tributariamente a cientos de mypes pesqueras para que crezcan formalmente con crédito bancario.', c: 'conta' },
-          { t: 'El enorme valor de transformar los descartes de pota y pescado en bioproductos de exportación y tecnificar los criaderos marinos.', c: 'dpa' }
+          { t: 'Modernizar empresas con sistemas web/móviles, cámaras inteligentes, facturación integrada y conectividad segura.', c: 'apsti', w: { apsti: 4, ani: 1 } },
+          { t: 'Impulsar exportaciones directas desde el Puerto de Paita hacia el mundo aprovechando acuerdos comerciales.', c: 'ani', w: { ani: 4 } },
+          { t: 'Formalizar y asesorar tributaria y contablemente a negocios y pesqueras para que escalen con crédito sólido.', c: 'conta', w: { conta: 4, ani: 1 } },
+          { t: 'Tecnificar criaderos acuícolas y plantas de congelado para exportar productos marinos con alto valor agregado.', c: 'dpa', w: { dpa: 4, ani: 1 } }
         ]
       }
     ];
 
-    // Algoritmo de Selección Psicológica Dinámica: Extraer 6 dilemas aleatorios en cada intento
+    // Mezcla equilibrada: incluye los 3 ejes reales (Actividades, Fortalezas, Ambiente) + 4 dilemas variados
     const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
-    const selectedQuestions = shuffle(BANCO_PSICOLOGICO_VOCACIONAL).slice(0, 6);
-
-    // Mezclar las 4 opciones de cada dilema para evitar sesgo de posición
-    selectedQuestions.forEach(q => {
-      q.opts = shuffle(q.opts);
-    });
+    const coreReal = shuffle(BANCO_VOCACIONAL_INTELIGENTE.slice(0, 3));
+    const coreSituacional = shuffle(BANCO_VOCACIONAL_INTELIGENTE.slice(3)).slice(0, 4);
+    const selectedQuestions = [...coreReal, ...coreSituacional].map(q => ({
+      ...q,
+      opts: shuffle(q.opts.map(o => ({ ...o, w: { ...(o.w || { [o.c]: 4 }) } })))
+    }));
 
     this.activeTest = {
       step: 0,
       scores: { apsti: 0, ani: 0, conta: 0, dpa: 0 },
+      maxScores: { apsti: 0, ani: 0, conta: 0, dpa: 0 },
       questions: selectedQuestions,
-      userAnswers: []
+      userAnswers: [],
+      choicesSummary: [],
+      tieBreakerTriggered: false
     };
 
-    const introHtml = `
-      <div style="background:#fff; border-radius:18px; border:1px solid #e2e8f0; padding:24px; text-align:center; box-shadow:0 4px 20px rgba(19,53,123,0.08);">
-        <div style="width:70px; height:70px; background:linear-gradient(135deg,#eff6ff,#dbeafe); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; box-shadow:0 4px 18px rgba(19,53,123,0.15);">
-          <i class="bi bi-brain" style="color:#13357b; font-size:2rem;"></i>
-        </div>
-        <div class="d-inline-flex align-items-center gap-1 badge bg-primary-subtle text-primary px-3 py-1 mb-2 fw-bold" style="border-radius:20px;">
-          <i class="bi bi-stars"></i> Test Vocacional de Perfil Psicológico & Lógica Mental
-        </div>
-        <h4 style="font-weight:900; color:#0f2b69; margin-bottom:10px; font-size:1.18rem; letter-spacing:-0.3px;">Evaluación de Dilemas, Lógica y Toma de Decisiones</h4>
-        <p style="color:#475569; font-size:0.88rem; margin-bottom:18px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.65;">
-          No hay respuestas incorrectas. Pondré a prueba tu forma de pensar ante situaciones reales a través de <strong>6 dilemas situacionales</strong> para revelar tu arquetipo profesional y tu carrera ideal en el instituto.
-        </p>
-        <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap; font-size:0.78rem; color:#64748b; margin-bottom:18px;">
-          <span><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Dilemas psicológicos</span>
-          <span><i class="bi bi-cpu-fill text-primary me-1"></i>Lógica situacional</span>
-          <span><i class="bi bi-award-fill text-success me-1"></i>Diagnóstico de Arquetipo</span>
-        </div>
-        <div class="d-flex justify-content-center gap-2 flex-wrap" style="font-size:0.75rem; font-weight:700;">
-          <span class="badge bg-primary text-white"><i class="bi bi-laptop me-1"></i>CI • Computación</span>
-          <span class="badge bg-success text-white"><i class="bi bi-globe me-1"></i>ANI Negocios</span>
-          <span class="badge bg-secondary text-white" style="background:#7e22ce !important;"><i class="bi bi-calculator me-1"></i>Contabilidad</span>
-          <span class="badge bg-info text-white"><i class="bi bi-water me-1"></i>Pesquería DPA</span>
-        </div>
-      </div>
-    `;
-
-    this.appendBotMessage(introHtml, "¡Comencemos tu Test Vocacional! Responde con total naturalidad según tus gustos e intereses para descubrir tu carrera ideal.");
-    this.renderNextQuestion();
+    this.renderNextQuestion(true);
   }
 
-  renderNextQuestion() {
+  getTieBreakerQuestion(careerA, careerB) {
+    const pairKey = [careerA, careerB].sort().join('-');
+    const TIE_BREAKER_BANK = {
+      'ani-apsti': {
+        dim: 'Desempate Inteligente · Tecnología vs Comercio Global',
+        emoji: '⚡',
+        q: 'Tu perfil muestra alta afinidad tanto en Computación e Informática como en Negocios Internacionales. En un proyecto exportador real, ¿qué papel prefieres asumir tú personalmente?',
+        opts: [
+          { t: 'Construir el sistema web, base de datos, servidores y automatización digital que hace operar toda la plataforma comercial.', c: 'apsti', w: { apsti: 5 } },
+          { t: 'Negociar con compradores extranjeros, gestionar aduanas, aranceles, Incoterms y dirigir la logística de contenedores en puerto.', c: 'ani', w: { ani: 5 } }
+        ]
+      },
+      'apsti-conta': {
+        dim: 'Desempate Inteligente · Software & Redes vs Contabilidad & Finanzas',
+        emoji: '⚡',
+        q: 'Tienes un perfil analítico muy fuerte entre Computación e Informática y Contabilidad. Si pudieras elegir tu día a día ideal, ¿cuál prefieres?',
+        opts: [
+          { t: 'Programar aplicaciones, administrar redes/servidores, bases de datos y proteger infraestructura tecnológica.', c: 'apsti', w: { apsti: 5 } },
+          { t: 'Formular estados financieros, liquidar tributos SUNAT (IGV/Renta), manejar planillas PLAME, costos y auditoría contable.', c: 'conta', w: { conta: 5 } }
+        ]
+      },
+      'apsti-dpa': {
+        dim: 'Desempate Inteligente · Tecnología Digital vs Producción Marina',
+        emoji: '⚡',
+        q: 'Tu perfil combina gusto por la tecnología y el sector productivo marino. ¿Dónde te entusiasma pasar la mayor parte de tu jornada profesional?',
+        opts: [
+          { t: 'Frente a equipos de cómputo, desarrollando software, configurando redes y administrando servidores y datos.', c: 'apsti', w: { apsti: 5 } },
+          { t: 'En contacto con el mar, centros acuícolas y plantas pesqueras aplicando biotecnología, cultivo e inocuidad HACCP.', c: 'dpa', w: { dpa: 5 } }
+        ]
+      },
+      'ani-conta': {
+        dim: 'Desempate Inteligente · Aduanas & Negocios vs Contabilidad & Tributación',
+        emoji: '⚡',
+        q: 'Tus respuestas muestran equilibrio entre Negocios Internacionales y Contabilidad. ¿Qué reto te atrae más dominar como especialista?',
+        opts: [
+          { t: 'Abrir mercados exteriores, coordinar despachos portuarios, tramitar embarques VUCE y negociar contratos internacionales.', c: 'ani', w: { ani: 5 } },
+          { t: 'Controlar la exactitud financiera de la empresa, auditoría interna, cálculo de costos y cumplimiento tributario ante SUNAT.', c: 'conta', w: { conta: 5 } }
+        ]
+      },
+      'ani-dpa': {
+        dim: 'Desempate Inteligente · Comercio Portuario vs Ingeniería Pesquera & Acuícola',
+        emoji: '⚡',
+        q: 'Estás muy cerca entre Negocios Internacionales y Desarrollo Pesquero y Acuícola. En la industria de Paita, ¿qué etapa prefieres dirigir?',
+        opts: [
+          { t: 'La gestión aduanera, documentación de exportación, fletes marítimos y negociación con mercados en el extranjero.', c: 'ani', w: { ani: 5 } },
+          { t: 'La producción técnica en el mar o planta: extracción responsable, cultivo acuícola e inocuidad alimentaria HACCP.', c: 'dpa', w: { dpa: 5 } }
+        ]
+      },
+      'conta-dpa': {
+        dim: 'Desempate Inteligente · Finanzas Empresariales vs Tecnología Pesquera',
+        emoji: '⚡',
+        q: 'Tus respuestas equilibran Contabilidad y Desarrollo Pesquero y Acuícola. ¿Qué enfoque te representa mejor al trabajar en una empresa pesquera?',
+        opts: [
+          { t: 'Llevar la contabilidad de costos pesqueros, balances, planillas, facturación electrónica y declaraciones SUNAT en oficina.', c: 'conta', w: { conta: 5 } },
+          { t: 'Estar en planta, laboratorio o centro acuícola supervisando calidad sanitaria, procesos productivos y especies marinas.', c: 'dpa', w: { dpa: 5 } }
+        ]
+      }
+    };
+    const q = TIE_BREAKER_BANK[pairKey];
+    if (!q) return null;
+    return { ...q, isTieBreaker: true, opts: [...q.opts].sort(() => Math.random() - 0.5) };
+  }
+
+  renderNextQuestion(isFirst = false) {
+    if (!this.activeTest) return;
     const qIndex = this.activeTest.step;
     const currentQ = this.activeTest.questions[qIndex];
     const total = this.activeTest.questions.length;
     const progressPercent = Math.round(((qIndex + 1) / total) * 100);
 
     const optionsHtml = currentQ.opts.map((opt, i) => `
-      <button class="test-choice-btn" data-chat-action="responder_pregunta_test" data-chat-val="${opt.c}">
+      <button type="button" class="test-choice-btn" data-chat-action="responder_pregunta_test" data-chat-val="${i}" data-opt-career="${opt.c}">
         <span class="choice-letter">${String.fromCharCode(65 + i)}</span>
         <span class="choice-text">${opt.t}</span>
       </button>
     `).join('');
 
+    const introBannerHtml = isFirst ? `
+      <div class="test-intro-compact mb-3">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="badge bg-primary-subtle text-primary px-2 py-1 fw-bold rounded-pill" style="font-size:0.72rem;">
+            <i class="bi bi-stars me-1"></i>Test Vocacional Inteligente 2026
+          </span>
+          <span class="small text-muted" style="font-size:0.74rem;">Motor adaptativo multi-carrera</span>
+        </div>
+        <div class="small text-dark" style="line-height:1.45;">
+          Responde con honestidad estas <strong>${total} preguntas</strong> (y si hay empate, activaré un desempate inteligente) para recomendarte tu carrera técnica ideal en Paita.
+        </div>
+      </div>
+    ` : '';
+
     const html = `
       <div class="test-question-card">
+        ${introBannerHtml}
         <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
-          <span class="badge" style="background:linear-gradient(130deg,#13357b,#1d4ed8); color:#fff; font-size:0.75rem; font-weight:700; padding:6px 14px; border-radius:20px;">
-            ${currentQ.emoji} ${currentQ.dim} • Dilema ${qIndex + 1} de ${total}
+          <span class="badge" style="background:${currentQ.isTieBreaker ? 'linear-gradient(130deg,#d97706,#ea580c)' : 'linear-gradient(130deg,#13357b,#1d4ed8)'}; color:#fff; font-size:0.74rem; font-weight:700; padding:6px 14px; border-radius:20px;">
+            ${currentQ.emoji} ${currentQ.dim} • ${currentQ.isTieBreaker ? 'Desempate Final' : `Pregunta ${qIndex + 1} de ${total}`}
           </span>
-          <span class="small fw-bold text-primary">${progressPercent}% analizado</span>
+          <span class="small fw-bold ${currentQ.isTieBreaker ? 'text-warning' : 'text-primary'}">${progressPercent}% completado</span>
         </div>
-        <div style="height:6px; background:#f1f5f9; border-radius:10px; margin-bottom:16px; overflow:hidden;">
-          <div style="width:${progressPercent}%; height:100%; background:linear-gradient(90deg,#13357b,#2563eb); border-radius:10px; transition:width .4s ease;"></div>
+        <div style="height:6px; background:#f1f5f9; border-radius:10px; margin-bottom:15px; overflow:hidden;">
+          <div style="width:${progressPercent}%; height:100%; background:${currentQ.isTieBreaker ? 'linear-gradient(90deg,#f59e0b,#ea580c)' : 'linear-gradient(90deg,#13357b,#2563eb)'}; border-radius:10px; transition:width .4s ease;"></div>
         </div>
-        <h5 class="fw-bold text-dark mb-3" style="font-size:1.02rem; line-height:1.45;">${currentQ.q}</h5>
+        <h5 class="fw-bold text-dark mb-3" style="font-size:1.01rem; line-height:1.45;">${currentQ.q}</h5>
         <div class="test-choices-list">${optionsHtml}</div>
-        <p class="small text-muted text-center mt-3 mb-0">
-          <i class="bi bi-hand-index-thumb me-1"></i>Elige la alternativa que mejor refleje cómo actúa tu mente en la realidad.
-        </p>
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top flex-wrap gap-2">
+          <span class="small text-muted" style="font-size:0.75rem;">
+            <i class="bi bi-hand-index-thumb me-1"></i>Haz clic en una alternativa o escribe A, B, C o D.
+          </span>
+          <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none p-0" data-chat-action="cancelar_test_vocacional" style="font-size:0.74rem;">
+            <i class="bi bi-x-circle me-1"></i>Salir del test
+          </button>
+        </div>
       </div>
     `;
 
-    this.appendBotMessage(html, false);
+    const spokenFirst = isFirst
+      ? '¡Comencemos tu Test Vocacional Inteligente! Te haré siete preguntas sobre tus gustos, habilidades y decisiones para recomendar la carrera técnica que mejor encaja contigo.'
+      : false;
+    this.appendBotMessage(html, spokenFirst);
   }
 
-  handleTestResponse(carreraId) {
+  handleTestResponse(inputVal, sourceEl = null, rawText = '') {
     if (!this.activeTest) return;
 
-    if (this.activeTest.scores[carreraId] !== undefined) {
-      this.activeTest.scores[carreraId] += 3;
-    }
-    this.activeTest.userAnswers.push(carreraId);
-
     const currentQ = this.activeTest.questions[this.activeTest.step];
-    if (currentQ) {
-      const chosenOpt = currentQ.opts.find(o => o.c === carreraId);
-      if (!this.activeTest.choicesSummary) this.activeTest.choicesSummary = [];
-      if (chosenOpt) {
-        this.activeTest.choicesSummary.push({
-          dim: currentQ.dim,
-          emoji: currentQ.emoji,
-          carrera: carreraId,
-          texto: chosenOpt.t
-        });
+    if (!currentQ) {
+      this.finishTest();
+      return;
+    }
+
+    // Permitir salir del test en cualquier momento desde texto escrito o botón
+    const valStr = String(inputVal || '').trim().toLowerCase();
+    if (!sourceEl && /^(salir|cancelar|terminar|cerrar|parar|stop|ya no|salir del test)$/.test(valStr)) {
+      this.activeTest = null;
+      this.appendBotMessage(`
+        <div class="p-3 bg-white rounded-3 border">
+          <i class="bi bi-info-circle-fill text-primary me-1"></i> Has salido del Test Vocacional. Puedes volver a iniciarlo cuando quieras o preguntarme sobre carreras, admisión o trámites TUPA.
+        </div>
+      `, 'Test vocacional cancelado. Dime en qué más te puedo ayudar.');
+      return;
+    }
+
+    // Evitar doble clic sobre una tarjeta de pregunta ya respondida
+    if (sourceEl) {
+      const parentCard = sourceEl.closest('.test-question-card');
+      if (parentCard && parentCard.dataset.answered === '1') {
+        return;
       }
     }
+
+    // Resolver la opción seleccionada (por índice 0-3, letra A-D, carrera o texto libre)
+    let chosenOpt = null;
+    if (/^\d+$/.test(valStr)) {
+      const idx = parseInt(valStr, 10);
+      if (idx >= 0 && idx < currentQ.opts.length) chosenOpt = currentQ.opts[idx];
+    }
+
+    if (!chosenOpt) {
+      const letterMatch = valStr.match(/^(?:opcion\s*|alternativa\s*|letra\s*)?([a-d1-4])(?:\)|\.|\s|$)/i);
+      if (letterMatch) {
+        const ch = letterMatch[1].toLowerCase();
+        const mapIdx = { a: 0, b: 1, c: 2, d: 3, '1': 0, '2': 1, '3': 2, '4': 3 }[ch];
+        if (mapIdx !== undefined && currentQ.opts[mapIdx]) chosenOpt = currentQ.opts[mapIdx];
+      }
+    }
+
+    if (!chosenOpt) {
+      const mappedCareer = valStr === 'ci' ? 'apsti' : valStr;
+      chosenOpt = currentQ.opts.find(o => o.c === mappedCareer) || null;
+    }
+
+    if (!chosenOpt && valStr.length > 2) {
+      let guessedCareer = null;
+      if (/(computa|informat|program|software|codigo|sistema|redes|pc|tecnologia|app|web|ia|hack)/.test(valStr)) guessedCareer = 'apsti';
+      else if (/(negocio|aduana|comercio|export|import|puerto|logistica|empresa|vender|viajar|cliente)/.test(valStr)) guessedCareer = 'ani';
+      else if (/(contab|numero|matem|finanza|dinero|banco|sunat|impuesto|excel|cuenta|auditoria|costo)/.test(valStr)) guessedCareer = 'conta';
+      else if (/(pesc|mar|oceano|acuic|concha|pota|biolog|calidad|planta|alimento|natura|ambiente)/.test(valStr)) guessedCareer = 'dpa';
+      if (guessedCareer) {
+        chosenOpt = currentQ.opts.find(o => o.c === guessedCareer) || currentQ.opts[0];
+      }
+    }
+
+    // Si escribió algo no reconocido, guiarle sin perder la pregunta actual
+    if (!chosenOpt) {
+      const letters = currentQ.opts.map((_, i) => String.fromCharCode(65 + i)).join(', ');
+      this.appendBotMessage(`
+        <div class="p-3 bg-white rounded-3 border small">
+          <i class="bi bi-compass-fill text-primary me-1"></i> Para avanzar en la pregunta actual, haz clic en una de las tarjetas de arriba o escribe la letra de tu alternativa (<strong>${letters}</strong>). Si deseas detener la evaluación, escribe <strong>salir</strong>.
+        </div>
+      `, false);
+      return;
+    }
+
+    // Bloquear y marcar visualmente la opción elegida en la tarjeta respondida
+    const cards = this.messagesContainer ? this.messagesContainer.querySelectorAll('.test-question-card') : [];
+    const targetCard = sourceEl ? sourceEl.closest('.test-question-card') : cards[cards.length - 1];
+    if (targetCard) {
+      targetCard.dataset.answered = '1';
+      const chosenIdx = currentQ.opts.indexOf(chosenOpt);
+      targetCard.querySelectorAll('.test-choice-btn').forEach((btn, idx) => {
+        btn.disabled = true;
+        if (btn === sourceEl || (!sourceEl && idx === chosenIdx)) {
+          btn.classList.add('is-selected');
+        } else {
+          btn.classList.add('is-dimmed');
+        }
+      });
+    }
+
+    // Sumar puntajes ponderados reales y registrar el máximo alcanzable en la pregunta
+    const weights = chosenOpt.w || { [chosenOpt.c]: 4 };
+    Object.keys(weights).forEach(k => {
+      if (this.activeTest.scores[k] !== undefined) {
+        this.activeTest.scores[k] += weights[k];
+      }
+    });
+
+    const perQuestionMax = {};
+    currentQ.opts.forEach(o => {
+      const ow = o.w || { [o.c]: 4 };
+      Object.keys(ow).forEach(k => {
+        perQuestionMax[k] = Math.max(perQuestionMax[k] || 0, ow[k]);
+      });
+    });
+    Object.keys(this.activeTest.maxScores).forEach(k => {
+      this.activeTest.maxScores[k] += (perQuestionMax[k] || 4);
+    });
+
+    this.activeTest.userAnswers.push(chosenOpt.c);
+    this.activeTest.choicesSummary.push({
+      dim: currentQ.dim,
+      emoji: currentQ.emoji,
+      carrera: chosenOpt.c,
+      texto: chosenOpt.t,
+      isTieBreaker: !!currentQ.isTieBreaker
+    });
 
     this.activeTest.step++;
     const totalQ = this.activeTest.questions.length;
 
     if (this.activeTest.step < totalQ) {
-      this.renderNextQuestion();
-    } else {
-      this.finishTest();
+      this.renderNextQuestion(false);
+      return;
     }
+
+    // Evaluar si existe empate o resultado muy ajustado (<= 4 pts, p. ej. 4 vs 3) para activar Desempate Inteligente
+    if (!this.activeTest.tieBreakerTriggered) {
+      const sorted = Object.keys(this.activeTest.scores).sort((a, b) => this.activeTest.scores[b] - this.activeTest.scores[a]);
+      const diff = this.activeTest.scores[sorted[0]] - this.activeTest.scores[sorted[1]];
+      if (diff <= 4) {
+        const tieQ = this.getTieBreakerQuestion(sorted[0], sorted[1]);
+        if (tieQ) {
+          this.activeTest.tieBreakerTriggered = true;
+          this.activeTest.questions.push(tieQ);
+          this.renderNextQuestion(false);
+          return;
+        }
+      }
+    }
+
+    this.finishTest();
   }
 
   finishTest() {
     const scores = this.activeTest.scores;
-    const totalQ = this.activeTest.questions.length;
+    const maxScores = this.activeTest.maxScores;
     const choicesSummary = this.activeTest.choicesSummary || [];
+    const tieBreakerUsed = !!this.activeTest.tieBreakerTriggered;
     this.activeTest = null;
 
-    // Ordenar carreras por puntaje de compatibilidad
+    // Ordenar carreras por puntaje ponderado real
     const sortedCareerIds = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
     const topCareerId = sortedCareerIds[0] || 'apsti';
     const secondaryCareerId = sortedCareerIds[1] || 'ani';
@@ -8007,85 +8230,96 @@ ${text}
     const topCareer = CARRERAS_COMPLETAS.find(c => c.id === topCareerId) || CARRERAS_COMPLETAS[0];
     const secondaryCareer = CARRERAS_COMPLETAS.find(c => c.id === secondaryCareerId);
 
-    // Porcentaje de compatibilidad calibrado
-    const topPercent = Math.min(98, Math.max(65, Math.round(((scores[topCareerId] + 3) / (totalQ * 3 + 3)) * 100)));
+    const calcPct = (cId) => {
+      const maxP = Math.max(maxScores[cId] || 1, 1);
+      return Math.min(98, Math.max(15, Math.round((scores[cId] / maxP) * 100)));
+    };
+    const topPercent = calcPct(topCareerId);
 
-    // Perfiles Psicológicos y Arquetipos Profesionales ("Juega con su mente")
+    // Arquetipos Psicológicos y Perfiles Laborales Actualizados (Paita / Piura)
     const ARQUETIPOS_PSICOLOGICOS = {
       apsti: {
         arquetipo: 'El Arquitecto Digital & Solucionador Lógico',
-        rasgoPrincipal: 'Pensamiento Estructurado y Algorítmico',
-        descripcionPsicologica: 'Tu cerebro procesa la realidad a través de esquemas lógicos, patrones y relaciones de causa-efecto. Ante situaciones complejas, no te dejas llevar por impulsos: descompones el problema en partes, investigas la raíz y creas soluciones automáticas que perduran.',
+        rasgoPrincipal: 'Pensamiento Estructurado y Automatización',
+        descripcionPsicologica: 'Procesas los retos con lógica paso a paso y visión tecnológica. Disfrutas diseñar soluciones digitales, comprender cómo funcionan los sistemas por dentro y automatizar procesos para evitar tareas repetitivas.',
         titulo: 'Especialista en Computación e Informática, Redes y Desarrollo de Software',
-        campoPaita: 'Empresas de telecomunicaciones, centros de datos, automatización de terminales portuarios, banca regional y desarrollo de software para exportadoras de Paita.',
+        campoPaita: 'Áreas de sistemas en empresas exportadoras y portuarias de Paita, desarrollo web/móvil, banca regional, soporte de redes y ciberseguridad.',
         empresas: ['Terminales Portuarios Euroandinos (TPE)', 'Caja Piura / Caja Sullana', 'Agroindustrias del Valle del Chira', 'Empresas de Telecomunicaciones']
       },
       ani: {
         arquetipo: 'El Negociador Estratégico & Líder Global',
-        rasgoPrincipal: 'Inteligencia Social Persuasiva y Visión de Oportunidades',
-        descripcionPsicologica: 'Tu mente se orienta naturalmente hacia la diplomacia, la persuasión y la toma de decisiones bajo presión. Posees agilidad social para conectar personas, detectar valor en los intercambios y liderar negociaciones comerciales donde otros ven conflicto.',
+        rasgoPrincipal: 'Inteligencia Comercial y Visión Portuaria',
+        descripcionPsicologica: 'Tu mente se orienta hacia las oportunidades comerciales, la coordinación logística y la negociación. Te motiva conectar productos locales con mercados internacionales y tomar decisiones ágiles en operaciones de comercio exterior.',
         titulo: 'Especialista en Operaciones Portuarias, Comercio Exterior y Gestión Aduanera',
-        campoPaita: 'Despacho y logística en el Puerto de Paita, agencias de aduana marítima, exportadoras de productos hidrobiológicos, frutas del Chira y navieras internacionales.',
-        empresas: ['Terminal Portuario Euroandinos (TPE Paita)', 'Ransa Comercial / Medlog', 'Agencias de Aduana de Paita y Talara', 'Empresas Navieras']
+        campoPaita: 'Agencias de aduana en el Puerto de Paita, operadores logísticos, áreas de exportación/importación de pesqueras y agroexportadoras.',
+        empresas: ['Terminales Portuarios Euroandinos (TPE Paita)', 'Ransa Comercial / Medlog', 'Agencias de Aduana de Paita y Talara', 'Navieras y Agroexportadoras']
       },
       conta: {
         arquetipo: 'El Guardián Financiero & Analista de Precisión',
         rasgoPrincipal: 'Meticulosidad Ética y Control Cuantitativo',
-        descripcionPsicologica: 'Tu personalidad se distingue por la búsqueda de certeza, el orden escrupuloso y la responsabilidad ética. Eres inmune al caos numérico: tu mente encuentra de inmediato discrepancias, cuida la rentabilidad y blinda el patrimonio frente a cualquier riesgo.',
+        descripcionPsicologica: 'Destacas por tu orden, criterio numérico y responsabilidad. Sabes detectar inconsistencias rápidamente, organizar presupuestos con exactitud y proteger la salud tributaria y rentable de cualquier organización.',
         titulo: 'Especialista en Auditoría Financiera, Tributación SUNAT y Costos Empresariales',
-        campoPaita: 'Estudios contables, consultoras tributarias, auditorías de exportadoras, cooperativas de ahorro y crédito, y gerencia de costos en empresas pesqueras de Paita.',
-        empresas: ['Estudios Contables de Paita y Piura', 'Banca y Cajas Municipales', 'Empresas Industriales de Paita Alta', 'Municipalidad Provincial de Paita']
+        campoPaita: 'Estudios contables, áreas administrativas y de costos en pesqueras industriales, cajas municipales, cooperativas y gestión pública.',
+        empresas: ['Estudios Contables de Paita y Piura', 'Banca y Cajas Municipales', 'Empresas Pesqueras Industriales', 'Municipalidad Provincial de Paita']
       },
       dpa: {
-        arquetipo: 'El Biólogo Productivo & Explorador Marino',
-        rasgoPrincipal: 'Inteligencia Bioambiental y Pragmatismo de Campo',
-        descripcionPsicologica: 'Posees una profunda conexión con el entorno natural, el respeto por los ciclos biológicos y la practicidad para transformar la materia prima en riqueza sostenible. Tu mente combina la observación científica con la acción concreta en el mar.',
+        arquetipo: 'El Especialista Marino & Productivo Sostenible',
+        rasgoPrincipal: 'Vocación Bioambiental y Calidad Alimentaria',
+        descripcionPsicologica: 'Combinas un fuerte sentido práctico con el interés por la ciencia aplicada al mar y los recursos hidrobiológicos. Disfrutas el trabajo de campo, laboratorio o planta controlando calidad, sanidad e innovación acuícola.',
         titulo: 'Especialista en Biotecnología Acuícola, Tecnología Pesquera y Control de Calidad HACCP',
-        campoPaita: 'Plantas de congelado de pota y merluza en Tierra Colorada, criaderos tecnificados de conchas de abanico, langostineras de la bahía y laboratorios de sanidad pesquera.',
+        campoPaita: 'Plantas de congelado de pota y merluza en Tierra Colorada, centros acuícolas de concha de abanico y langostinos, y laboratorios sanitarios.',
         empresas: ['Seafrost S.A.C.', 'Pesquera Hayduk / Austral Group', 'Laboratorios SANIPES / CERPER', 'Asociaciones Acuícolas de la Bahía de Paita']
       }
     };
 
     const espData = ARQUETIPOS_PSICOLOGICOS[topCareerId] || ARQUETIPOS_PSICOLOGICOS.apsti;
 
-    // Resumen de justificaciones clave
-    const winningChoices = choicesSummary.filter(ch => ch.carrera === topCareerId);
-    const displayChoices = (winningChoices.length >= 2) ? winningChoices : choicesSummary.slice(0, 3);
+    // Decisiones que definieron el diagnóstico
+    const winningChoices = choicesSummary.filter(ch => ch.carrera === topCareerId || ch.isTieBreaker);
+    const displayChoices = (winningChoices.length >= 2) ? winningChoices.slice(0, 4) : choicesSummary.slice(0, 3);
     const summaryItemsHtml = displayChoices.map(ch => `
       <li class="mb-2">
-        <strong>${ch.emoji} En ${ch.dim}:</strong>
+        <strong>${ch.emoji} ${ch.dim}:</strong>
         <span>Elegiste «<em>${this.escapeHtml(ch.texto)}</em>».</span>
       </li>
     `).join('');
 
-    // Sinergia con carrera secundaria
+    // Sinergia con segunda carrera
     let sinergiaTexto = '';
     if (topCareerId === 'apsti' && secondaryCareerId === 'ani') {
-      sinergiaTexto = 'Perfil Tecnológico-Portuario: Tienes una combinación de oro para liderar la digitalización y el software de control aduanero en el puerto de Paita.';
+      sinergiaTexto = 'Perfil Tecnológico-Portuario: Excelente combinación para liderar software logístico, facturación electrónica y sistemas aduaneros en Paita.';
     } else if (topCareerId === 'ani' && secondaryCareerId === 'apsti') {
-      sinergiaTexto = 'Perfil Logístico-Digital: Tu visión para abrir mercados globales se potencia enormemente con dominio de plataformas web y automatización.';
+      sinergiaTexto = 'Perfil Logístico-Digital: Tu capacidad de negociación global se potencia con herramientas digitales, análisis de datos y comercio electrónico.';
     } else if (topCareerId === 'conta' && secondaryCareerId === 'ani') {
-      sinergiaTexto = 'Perfil Financiero-Comercial: Destreza ideal para gestionar aranceles, costos de flete internacional y tributación de corporaciones globales.';
+      sinergiaTexto = 'Perfil Financiero-Comercial: Ideal para controlar costos de flete, draw-back aduanero, finanzas corporativas y tributación de exportadoras.';
     } else if (topCareerId === 'dpa' && secondaryCareerId === 'conta') {
-      sinergiaTexto = 'Perfil Productivo-Rentable: Capacidad para dirigir plantas pesqueras combinando el estricto control de calidad marina con la optimización de costos.';
+      sinergiaTexto = 'Perfil Productivo-Rentable: Capacidad clave para dirigir plantas pesqueras cuidando tanto la calidad HACCP como la rentabilidad operativa.';
     } else {
-      sinergiaTexto = `Sinergia complementaria con ${secondaryCareer ? secondaryCareer.codigo : 'otras especialidades'}: Desarrollarás una visión multidisciplinaria sumamente cotizada en la región.`;
+      sinergiaTexto = `Segunda afinidad con ${secondaryCareer ? `${secondaryCareer.nombre} (${secondaryCareer.codigo})` : 'otras especialidades'}: tendrás un perfil versátil muy valorado por las empresas de Paita y Piura.`;
     }
 
-    // Barras de Afinidades Psicológicas y Carreras
-    const barsHtml = sortedCareerIds.map(cId => {
+    // Módulos formativos reales desde CARRERAS_COMPLETAS
+    const modulosHtml = (topCareer.modulos || []).map((m, idx) => `
+      <div class="d-flex align-items-start gap-2 mb-1 small">
+        <span class="badge bg-primary-subtle text-primary rounded-pill fw-bold">M${idx + 1}</span>
+        <span class="text-dark">${m.certificacion || m.modulo}</span>
+      </div>
+    `).join('');
+
+    // Barras ordenadas con porcentajes reales
+    const barsHtml = sortedCareerIds.map((cId, idx) => {
       const cObj = CARRERAS_COMPLETAS.find(c => c.id === cId) || { nombre: cId, codigo: cId.toUpperCase(), icono: 'bi-mortarboard' };
-      const pts = scores[cId] || 0;
-      const pct = Math.round(Math.min(98, Math.max(20, (pts / (totalQ * 3)) * 100)));
-      const isWinner = cId === topCareerId;
+      const pct = calcPct(cId);
+      const isWinner = idx === 0;
+      const rankTag = idx === 0 ? ' · Ideal para ti' : idx === 1 ? ' · 2da Opción Afín' : '';
       return `
         <div style="margin-bottom:10px;">
           <div class="d-flex justify-content-between small mb-1" style="font-weight:${isWinner ? '800' : '600'};">
-            <span><i class="bi ${cObj.icono || 'bi-mortarboard'} me-1 text-primary"></i>${cObj.codigo} — ${cObj.nombreCorto || cObj.nombre}</span>
+            <span><i class="bi ${cObj.icono || 'bi-mortarboard'} me-1 text-primary"></i>${cObj.codigo} — ${cObj.nombreCorto || cObj.nombre}<span class="text-success small">${rankTag}</span></span>
             <span class="fw-bold ${isWinner ? 'text-primary' : 'text-muted'}">${pct}% compatibilidad</span>
           </div>
           <div style="height:8px; background:#e2e8f0; border-radius:10px; overflow:hidden;">
-            <div style="width:${pct}%; height:100%; background:${isWinner ? 'linear-gradient(90deg,#13357b,#2563eb)' : '#94a3b8'}; border-radius:10px; transition:width .8s ease;"></div>
+            <div style="width:${pct}%; height:100%; background:${isWinner ? 'linear-gradient(90deg,#13357b,#2563eb)' : idx === 1 ? '#38bdf8' : '#94a3b8'}; border-radius:10px; transition:width .8s ease;"></div>
           </div>
         </div>
       `;
@@ -8094,37 +8328,37 @@ ${text}
     const html = `
       <div class="test-result-hero p-4 bg-white rounded-4 border shadow-sm" style="border-top: 6px solid ${topCareer.color || '#13357b'} !important;">
         
-        <!-- Cabecera del Ganador -->
         <div class="text-center mb-3">
-          <div style="width:68px; height:68px; background:${topCareer.color || '#13357b'}18; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
-            <i class="bi bi-award-fill" style="color:${topCareer.color || '#13357b'}; font-size:2.2rem;"></i>
+          <div style="width:66px; height:66px; background:${topCareer.color || '#13357b'}18; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:10px;">
+            <i class="bi bi-award-fill" style="color:${topCareer.color || '#13357b'}; font-size:2.1rem;"></i>
           </div>
-          <div class="badge px-3 py-1 fs-7 mb-2 text-white" style="background:linear-gradient(130deg,#13357b,#2563eb); border-radius:20px;">
-            <i class="bi bi-stars me-1"></i> Diagnóstico Vocacional & Psicológico Final
+          <div class="d-flex justify-content-center gap-2 flex-wrap mb-2">
+            <span class="badge px-3 py-1 text-white" style="background:linear-gradient(130deg,#13357b,#2563eb); border-radius:20px;">
+              <i class="bi bi-stars me-1"></i> Diagnóstico Vocacional Inteligente
+            </span>
+            ${tieBreakerUsed ? `<span class="badge px-3 py-1 text-white" style="background:linear-gradient(130deg,#d97706,#ea580c); border-radius:20px;"><i class="bi bi-lightning-fill me-1"></i>Resuelto con Desempate Adaptativo</span>` : ''}
           </div>
-          <h3 class="fw-bold mb-1 text-dark" style="font-size:1.35rem;">${topCareer.nombre}</h3>
-          <p class="small text-muted mb-0">Título Profesional Técnico a Nombre de la Nación • 3 Años • 100% Gratuito</p>
+          <h3 class="fw-bold mb-1 text-dark" style="font-size:1.35rem;">${topCareer.nombre} (${topCareer.codigo})</h3>
+          <p class="small text-muted mb-0">${topCareer.titulo} • ${topCareer.duracion}</p>
         </div>
 
-        <!-- Tarjeta de Arquetipo de Personalidad Psicológica -->
         <div class="p-3 rounded-3 mb-3 bg-light border">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
             <span class="badge bg-primary px-3 py-1"><i class="bi bi-person-bounding-box me-1"></i>${espData.arquetipo}</span>
-            <span class="small fw-bold text-primary">${topPercent}% de Afinidad Mental</span>
+            <span class="small fw-bold text-primary">${topPercent}% de Compatibilidad</span>
           </div>
           <p class="small text-dark mb-2" style="line-height:1.6;">
             ${espData.descripcionPsicologica}
           </p>
           <div class="small text-muted">
-            <strong><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Rasgo Dominante:</strong> ${espData.rasgoPrincipal}
+            <strong><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Fortaleza clave:</strong> ${espData.rasgoPrincipal}
           </div>
         </div>
 
-        <!-- Justificación de Respuestas Clave -->
         ${summaryItemsHtml ? `
         <div class="p-3 rounded-3 mb-3 border reasons-summary-box small">
           <h6 class="fw-bold text-dark mb-2">
-            <i class="bi bi-check-circle-fill text-success me-1"></i> Análisis de tus Decisiones ante los Dilemas:
+            <i class="bi bi-check-circle-fill text-success me-1"></i> Por qué esta carrera coincide con tus respuestas:
           </h6>
           <ul class="mb-0 ps-3 text-muted">
             ${summaryItemsHtml}
@@ -8132,35 +8366,38 @@ ${text}
         </div>
         ` : ''}
 
-        <!-- Barras de Compatibilidad de las 4 Carreras -->
         <div class="p-3 rounded-3 mb-3 bg-light border">
           <h6 class="fw-bold mb-3 text-dark" style="font-size:0.84rem;">
-            <i class="bi bi-bar-chart-fill text-primary me-1"></i> Balance de Compatibilidad Vocacional:
+            <i class="bi bi-bar-chart-fill text-primary me-1"></i> Compatibilidad en las 4 Carreras del Instituto:
           </h6>
           ${barsHtml}
         </div>
 
-        <!-- Inserción Laboral y Entorno Paita -->
+        ${modulosHtml ? `
         <div class="p-3 bg-white rounded-3 border mb-3 small">
-          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Dónde se desempeña tu Arquetipo en Paita y Piura:</h6>
+          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-layers-fill text-primary me-1"></i> Certificaciones Modulares que obtendrás en ${topCareer.codigo}:</h6>
+          ${modulosHtml}
+        </div>
+        ` : ''}
+
+        <div class="p-3 bg-white rounded-3 border mb-3 small">
+          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Campo Laboral en Paita y Piura:</h6>
           <p class="text-muted mb-2">${espData.campoPaita}</p>
           <div class="d-flex flex-wrap gap-1 mt-1">
             ${espData.empresas.map(emp => `<span class="badge bg-light text-dark border"><i class="bi bi-building me-1 text-primary"></i>${emp}</span>`).join('')}
           </div>
         </div>
 
-        <!-- Sinergia Complementaria -->
         <div class="p-3 rounded-3 mb-3 small bg-light border">
           <i class="bi bi-lightbulb-fill text-warning me-1"></i>
-          <strong>Sinergia Multidisciplinaria:</strong><br>
+          <strong>Sinergia con tu 2da Opción Afín:</strong><br>
           <span class="text-muted">${sinergiaTexto}</span>
         </div>
 
-        <!-- Acciones Directas: WhatsApp y PDF -->
         <div class="d-flex flex-wrap gap-2 justify-content-center mb-3">
-          <a href="https://wa.me/51969035252?text=${encodeURIComponent(`¡Hola! Acabo de rendir el Test Vocacional Psicológico en HercarBot IA del IESTP Hermanos Cárcamo de Paita.\n\n🎯 Mi diagnóstico:\n• Carrera: ${topCareer.nombre} (${topCareer.codigo})\n• Arquetipo: ${espData.arquetipo}\n• Compatibilidad: ${topPercent}%\n\n¿Podrían orientarme sobre los requisitos de admisión y fechas de inscripción?`)}" target="_blank" class="btn-whatsapp-advisor">
+          <a href="https://wa.me/51969100257?text=${encodeURIComponent(`¡Hola! Acabo de realizar el Test Vocacional Inteligente en HercarBot IA del IESTP Hermanos Cárcamo de Paita.\n\n🎯 Mi diagnóstico:\n• Carrera recomendada: ${topCareer.nombre} (${topCareer.codigo})\n• Perfil: ${espData.arquetipo}\n• Compatibilidad: ${topPercent}%\n\n¿Podrían orientarme sobre los requisitos de admisión y fechas de inscripción?`)}" target="_blank" class="btn-whatsapp-advisor">
             <i class="bi bi-whatsapp fs-5"></i>
-            <span>Compartir Resultado con Asesor por WhatsApp</span>
+            <span>Consultar por WhatsApp (+51 969 100 257)</span>
           </a>
           <button type="button" class="btn-print-vocational" onclick="hercarBotApp.printVocationalSheet()">
             <i class="bi bi-printer-fill fs-6"></i>
@@ -8168,16 +8405,18 @@ ${text}
           </button>
         </div>
 
-        <!-- Botones de Acción Inmediata -->
         <div class="interactive-button-grid">
           <button class="interactive-btn" data-chat-action="ver_malla_carrera" data-chat-val="${topCareer.id}">
             <i class="bi bi-book text-primary"></i> Ver Malla Curricular
+          </button>
+          <button class="interactive-btn" data-chat-action="ver_comparador_carreras">
+            <i class="bi bi-columns-gap text-info"></i> Comparar las 4 Carreras
           </button>
           <button class="interactive-btn" data-chat-action="ver_admision_completa">
             <i class="bi bi-mortarboard-fill text-success"></i> ¿Cómo Postular?
           </button>
           <button class="interactive-btn" data-chat-action="iniciar_test_vocacional">
-            <i class="bi bi-arrow-repeat text-secondary"></i> Repetir Test (Nuevos Dilemas)
+            <i class="bi bi-arrow-repeat text-secondary"></i> Repetir Test
           </button>
         </div>
       </div>
@@ -8185,7 +8424,6 @@ ${text}
 
     this.triggerConfetti();
 
-    // Guardar en estadísticas
     const stats = this.getStats();
     if (!stats.testsRealizados) stats.testsRealizados = [];
     stats.testsRealizados.unshift({
@@ -8197,6 +8435,7 @@ ${text}
       secundaria: secondaryCareer ? secondaryCareer.codigo : 'General',
       respuestas: choicesSummary,
       scores: { ...scores },
+      desempateAdaptativo: tieBreakerUsed,
       fecha: new Date().toLocaleDateString() + ', ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     });
     if (stats.testsRealizados.length > 50) stats.testsRealizados.pop();
@@ -8207,13 +8446,13 @@ ${text}
     this.saveStats(stats);
 
     const testChips = [
-      { label: `Malla de ${topCareer.codigo}`, prompt: `¿Qué materias o cursos se llevan en ${topCareer.codigo}?` },
+      { label: `Malla de ${topCareer.codigo}`, prompt: `¿Qué cursos se llevan en ${topCareer.nombre}?` },
       { label: 'Requisitos de Admisión', prompt: '¿Cuáles son los requisitos para postular en la admisión 2026?' },
       { label: '¿Cuánto cuesta la matrícula?', prompt: '¿Cómo es el pago de matrícula y cuánto cuesta en el Banco de la Nación?' },
-      { label: 'Practicar Simulador', prompt: 'Quiero practicar el simulador de admisión' }
+      { label: 'Repetir Test Vocacional', prompt: 'Quiero hacer el test vocacional' }
     ];
 
-    const spokenIntro = `¡Felicitaciones! Tras evaluar tus respuestas, tu carrera técnica ideal en el instituto es ${topCareer.nombre}. Tu perfil encaja perfectamente como ${espData.titulo}. ¡Muchos éxitos en tu camino profesional!`;
+    const spokenIntro = `¡Diagnóstico listo! Según tus respuestas, tu carrera ideal en el Instituto Hermanos Cárcamo es ${topCareer.nombre}, con ${topPercent} por ciento de compatibilidad${secondaryCareer ? `, seguida de cerca por ${secondaryCareer.nombre}` : ''}. ¡Muchos éxitos en tu futuro profesional!`;
     this.appendBotMessage(html, spokenIntro, testChips);
   }
 
@@ -8409,7 +8648,7 @@ ${text}
      DISPARADOR DE ACCIONES
      ========================================================================== */
 
-  triggerAction(action, val = null) {
+  triggerAction(action, val = null, sourceEl = null) {
     this.currentNeuralThought = this.computeNeuralReasoning((action || '').replace(/_/g, ' ') + ' ' + (val || ''));
     switch (action) {
       case 'abrir_paleta_comandos':
@@ -8489,7 +8728,10 @@ ${text}
         this.logQuery('test_vocacional');
         break;
       case 'responder_pregunta_test':
-        this.handleTestResponse(val);
+        this.handleTestResponse(val, sourceEl);
+        break;
+      case 'cancelar_test_vocacional':
+        this.handleTestResponse('salir', null, 'salir');
         break;
       case 'iniciar_simulador_admision':
         this.startAdmissionSimulator();

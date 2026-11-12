@@ -4179,82 +4179,15 @@ class HercarBotApp {
 
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
-        <div class="welcome-badge">
-          <i class="bi bi-patch-check-fill text-primary"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo (Paita)
-        </div>
-        
-        <h1 class="welcome-title">
-          <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¡Hola! ¿Cómo te puedo orientar hoy?
-        </h1>
-        <p class="welcome-subtitle">
-          Asistencia instantánea sobre carreras públicas sin mensualidades, admisión 2026, pagos en Banco de la Nación y guía oficial del TUPA 2026.
-        </p>
-
-        <!-- 4 Tarjetas Maestras Principales (Armónicas, Espaciosas y Modernas) -->
-        <div class="features-pill-grid mb-3">
-
-          <div class="feature-pill" data-chat-action="ver_todas_carreras" style="border-top: 3px solid #2563eb;">
-            <div class="feature-pill-icon-box" style="background: rgba(37,99,235,0.12); color: #2563eb;">
-              <i class="bi bi-mortarboard-fill"></i>
-            </div>
-            <div class="feature-pill-content">
-              <strong>4 Carreras Técnicas</strong>
-              <small>Computación e Informática, ANI, Contabilidad y Pesquería sin mensualidades.</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_guia_pagos" style="border-top: 3px solid #059669;">
-            <div class="feature-pill-icon-box" style="background: rgba(5,150,105,0.12); color: #059669;">
-              <i class="bi bi-credit-card-2-front-fill"></i>
-            </div>
-            <div class="feature-pill-content">
-              <strong>Pagos BN & Tasas 2026</strong>
-              <small>Cuentas 00-638-002361 y 025736 (solo ventanilla) y guía de matrícula.</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_tramites_tupa" style="border-top: 3px solid #dc2626;">
-            <div class="feature-pill-icon-box" style="background: rgba(220,38,38,0.12); color: #dc2626;">
-              <i class="bi bi-file-earmark-ruled-fill"></i>
-            </div>
-            <div class="feature-pill-content">
-              <strong>Guía TUPA 2026 (66 Ítems)</strong>
-              <small>Conoce para qué sirve cada trámite oficial, requisitos, costos y plazos.</small>
-            </div>
-          </div>
-
-          <div class="feature-pill" data-chat-action="ver_plana_docente" style="border-top: 3px solid #7c3aed;">
-            <div class="feature-pill-icon-box" style="background: rgba(124,58,237,0.12); color: #7c3aed;">
-              <i class="bi bi-people-fill"></i>
-            </div>
-            <div class="feature-pill-content">
-              <strong>Plana Docente & Módulos</strong>
-              <small>20 docentes titulados, mallas curriculares y certificación modular.</small>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Sugerencias Rápidas y Preguntas Frecuentes (Pills Limpios y Modernos) -->
-        <div class="suggested-prompts-section mb-3">
-          <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Consultas rápidas recomendadas:</span>
-          <div class="prompts-chips-wrapper">
-            <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuentas BN (00-638-002361 / 025736)</button>
-            <button class="prompt-chip" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-ruled-fill me-1 text-primary"></i> TUPA 2026: ¿Para qué sirve cada trámite?</button>
-            <button class="prompt-chip" data-prompt="¿Cómo es la admisión 2026 y requisitos?"><i class="bi bi-pencil-square me-1 text-success"></i> Admisión 2026</button>
-            <button class="prompt-chip" data-prompt="Háblame sobre la carrera de Computación e Informática"><i class="bi bi-laptop me-1 text-info"></i> Computación e Informática</button>
-            <button class="prompt-chip" data-prompt="Iniciar test de orientación vocacional"><i class="bi bi-compass-fill me-1 text-danger"></i> Test Vocacional</button>
-            <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final"><i class="bi bi-calculator me-1 text-warning"></i> Calculadora Notas (70/30)</button>
-            <button class="prompt-chip" data-prompt="¿Cuántas faltas puedo tener con la regla del 30%?"><i class="bi bi-alarm-fill me-1 text-danger"></i> Límite de Faltas (DPI)</button>
-          </div>
-        </div>
-
-        <!-- Banner Visual Armónico del Campus Central -->
-        <div class="welcome-campus-card mb-2">
+        <!-- Portada Superior del Campus Central IESTP Hermanos Cárcamo -->
+        <div class="welcome-campus-card">
           <div class="campus-banner-img-wrap">
             <img src="assets/img/campus-hercar.jpg" alt="Campus Central Instituto Superior Hermanos Cárcamo - Paita" class="campus-banner-img" />
+            <div class="campus-hero-top-pill">
+              <i class="bi bi-patch-check-fill text-info"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo
+            </div>
             <div class="campus-banner-overlay">
-              <div>
+              <div class="campus-banner-info">
                 <div class="campus-banner-title">
                   <i class="bi bi-geo-alt-fill text-danger me-1"></i> Campus Central Paita Alta
                 </div>
@@ -4266,11 +4199,79 @@ class HercarBotApp {
                 <span class="campus-badge"><i class="bi bi-telephone-fill me-1"></i> (073) 251013</span>
                 <span class="campus-badge"><i class="bi bi-clock-fill me-1"></i> Lun-Vie 8am-3pm</span>
                 <span class="campus-badge bg-gold"><i class="bi bi-mortarboard-fill me-1"></i> 100% Gratuito</span>
-                <button class="btn btn-xs btn-light rounded-pill px-2 py-1 fw-bold text-dark shadow-xs" data-chat-action="ver_mapa_campus" style="font-size:0.73rem;">
+                <button class="btn btn-xs btn-light rounded-pill px-2 py-1 fw-bold text-dark shadow-xs campus-map-btn" data-chat-action="ver_mapa_campus">
                   <i class="bi bi-map-fill text-primary me-1"></i> Croquis & Mapa
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="welcome-hero-intro">
+          <h1 class="welcome-title">
+            <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¡Hola! ¿Cómo te puedo orientar hoy?
+          </h1>
+          <p class="welcome-subtitle">
+            Asistencia instantánea sobre carreras públicas sin mensualidades, admisión 2026, pagos en Banco de la Nación y guía oficial del TUPA 2026.
+          </p>
+        </div>
+
+        <!-- 4 Tarjetas Maestras Principales (Armónicas, Espaciosas y Modernas) -->
+        <div class="features-pill-grid">
+
+          <div class="feature-pill feature-pill--blue" data-chat-action="ver_todas_carreras">
+            <div class="feature-pill-icon-box" style="background: rgba(37,99,235,0.12); color: #2563eb;">
+              <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>4 Carreras Técnicas</strong>
+              <small>Computación e Informática, ANI, Contabilidad y Pesquería sin mensualidades.</small>
+            </div>
+          </div>
+
+          <div class="feature-pill feature-pill--green" data-chat-action="ver_guia_pagos">
+            <div class="feature-pill-icon-box" style="background: rgba(5,150,105,0.12); color: #059669;">
+              <i class="bi bi-credit-card-2-front-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>Pagos BN & Tasas 2026</strong>
+              <small>Cuentas 00-638-002361 y 025736 (solo ventanilla) y guía de matrícula.</small>
+            </div>
+          </div>
+
+          <div class="feature-pill feature-pill--red" data-chat-action="ver_tramites_tupa">
+            <div class="feature-pill-icon-box" style="background: rgba(220,38,38,0.12); color: #dc2626;">
+              <i class="bi bi-file-earmark-ruled-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>Guía TUPA 2026 (66 Ítems)</strong>
+              <small>Conoce para qué sirve cada trámite oficial, requisitos, costos y plazos.</small>
+            </div>
+          </div>
+
+          <div class="feature-pill feature-pill--purple" data-chat-action="ver_plana_docente">
+            <div class="feature-pill-icon-box" style="background: rgba(124,58,237,0.12); color: #7c3aed;">
+              <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="feature-pill-content">
+              <strong>Plana Docente & Módulos</strong>
+              <small>20 docentes titulados, mallas curriculares y certificación modular.</small>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sugerencias Rápidas y Preguntas Frecuentes (Pills Limpios y Centrados) -->
+        <div class="suggested-prompts-section">
+          <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Consultas rápidas recomendadas</span>
+          <div class="prompts-chips-wrapper">
+            <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuentas BN (00-638-002361 / 025736)</button>
+            <button class="prompt-chip" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-ruled-fill me-1 text-primary"></i> TUPA 2026: ¿Para qué sirve cada trámite?</button>
+            <button class="prompt-chip" data-prompt="¿Cómo es la admisión 2026 y requisitos?"><i class="bi bi-pencil-square me-1 text-success"></i> Admisión 2026</button>
+            <button class="prompt-chip" data-prompt="Háblame sobre la carrera de Computación e Informática"><i class="bi bi-laptop me-1 text-info"></i> Computación e Informática</button>
+            <button class="prompt-chip" data-prompt="Iniciar test de orientación vocacional"><i class="bi bi-compass-fill me-1 text-danger"></i> Test Vocacional</button>
+            <button class="prompt-chip" data-prompt="Calculadora de notas y promedio final"><i class="bi bi-calculator me-1 text-warning"></i> Calculadora Notas (70/30)</button>
+            <button class="prompt-chip" data-prompt="¿Cuántas faltas puedo tener con la regla del 30%?"><i class="bi bi-alarm-fill me-1 text-danger"></i> Límite de Faltas (DPI)</button>
           </div>
         </div>
 

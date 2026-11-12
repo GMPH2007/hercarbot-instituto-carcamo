@@ -60,7 +60,7 @@ const COMUNICADOS_OFICIALES = [
     importante: false,
     resumen: 'Apertura de la matrícula a través del Sistema Académico Institucional (sistema.ieshercar.edu.pe) para alumnos regulares e ingresantes a las 4 carreras técnicas.',
     enlacePlataforma: 'https://sistema.ieshercar.edu.pe/acceso',
-    indicaciones: 'Pagar la tasa administrativa correspondiente en el Banco de la Nación (Cta. Cte. 00-631-012948), subir el voucher a pagos.ieshercar.edu.pe y luego matricular tus unidades didácticas en el portal académico.'
+    indicaciones: 'Realizar el pago presencialmente en ventanilla del Banco de la Nación (Cta. Cte. 00-638-002361 para matrícula/trámites o 00-638-025736 para Inglés — no se paga en Págalo.pe ni agentes). Luego registrar el voucher en pagos.ieshercar.edu.pe y entregar las copias en Tesorería y Secretaría.'
   },
   {
     id: 'comunicado-bolsa-trabajo-puerto',
@@ -177,8 +177,8 @@ const INSTITUTO_DETALLE = {
   },
   ubicacion: {
     direccion: 'Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita Alta, Piura',
-    referencia: 'Av. Miguel Grau con Urb. El Parque Mz. A Lt. 01',
-    horario: 'Lunes a Viernes de 8:00 a.m. a 1:00 p.m. y de 2:00 p.m. a 4:30 p.m.'
+    referencia: 'Av. Miguel Grau . Urb. El Parque - Mz. A - Lote 01 - Paita',
+    horario: 'Lunes a Viernes de 8:00 a.m. a 3:00 p.m. (Horario continuo)'
   },
   contacto: {
     telefonoFijo: '(073) 251013',
@@ -190,8 +190,10 @@ const INSTITUTO_DETALLE = {
   bancoNacion: {
     banco: 'Banco de la Nación del Perú',
     titular: 'IESTP Hermanos Cárcamo - Paita',
-    cuentaCorriente: '00-631-012948',
-    cci: '018-631-000631012948-52'
+    cuentaCorriente: '00-638-002361',
+    cuentaPrincipal: '00-638-002361',
+    cuentaIngles: '00-638-025736',
+    canalPago: 'Únicamente presencial en ventanilla del Banco de la Nación (indicando DNI y nombres completos del estudiante). No se aceptan pagos por Págalo.pe ni en agentes.'
   }
 };
 
@@ -400,37 +402,37 @@ const GUIA_TRAMITES_TUPA = [
     id: 'tramite-matricula',
     nombre: 'Matrícula Regular y Ratificación Semestral',
     categoria: 'Académico',
-    costo: 'S/ 120.00 (Tasa semestral en Banco de la Nación)',
-    plazo: 'Inmediato tras validación de Caja (24-48 horas)',
+    costo: 'S/ 250.00 (Pago en ventanilla del Banco de la Nación - Cta. Cte. N° 00-638-002361)',
+    plazo: 'Inmediato tras validación en Tesorería y registro en Secretaría Académica',
     requisitos: [
-      'Haber aprobado los cursos correlativos (máximo 2 asignaturas a cargo)',
-      'Comprobante de depósito en el Banco de la Nación (Cta. Cte. N° 00-631-012948)',
-      'Ficha de matrícula generada en sistema.ieshercar.edu.pe',
-      'No registrar adeudos de material bibliográfico ni cuotas pendientes'
+      'Pago de S/ 250.00 ÚNICAMENTE en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361), indicando DNI y nombres completos del estudiante (no se paga en Págalo.pe ni agentes)',
+      'Registro del voucher en https://pagos.ieshercar.edu.pe/ para generar la boleta electrónica',
+      'Presentación del voucher original + 3 copias de la boleta en Tesorería para sellado y firma',
+      'Entrega de 1 copia sellada y firmada en Secretaría Académica y selección de asignaturas en sistema.ieshercar.edu.pe'
     ],
     pasos: [
-      'Depositar en el Banco de la Nación a la Cta. Cte. N° 00-631-012948.',
-      'Subir el voucher a https://pagos.ieshercar.edu.pe/.',
-      'Esperar la validación de Caja (24 a 48 horas hábiles).',
-      'Ingresar a https://sistema.ieshercar.edu.pe/acceso con tu DNI y seleccionar tus asignaturas.',
-      'Descargar y guardar tu Ficha Oficial de Matrícula en PDF.'
+      'Pagar S/ 250.00 en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361 indicando DNI y nombres del estudiante (no en Págalo.pe ni agentes).',
+      'Registrar el voucher en https://pagos.ieshercar.edu.pe/ para generar tu boleta electrónica.',
+      'Presentar el voucher original y 3 copias de la boleta en Tesorería del instituto para su sellado.',
+      'Entregar 1 copia sellada y firmada en Secretaría Académica.',
+      'Ingresar a https://sistema.ieshercar.edu.pe/acceso con tu DNI y descargar tu Ficha Oficial de Matrícula.'
     ]
   },
   {
     id: 'tramite-matricula-extemporanea',
     nombre: 'Matrícula Extemporánea / Fuera de Plazo',
     categoria: 'Académico',
-    costo: 'S/ 140.00 (Tasa regular + recargo administrativo BN)',
+    costo: 'S/ 250.00 + recargo extemporáneo según TUPA (Cta. Cte. N° 00-638-002361)',
     plazo: '2 a 3 días hábiles previa autorización de Dirección',
     requisitos: [
       'Solicitud mediante Formulario Único de Trámite (FUT) justificando motivo de retraso',
-      'Voucher del Banco de la Nación con el recargo correspondiente',
+      'Voucher del Banco de la Nación pagado en ventanilla (Cta. Cte. N° 00-638-002361) con boleta electrónica y copias para Tesorería',
       'Disponibilidad de vacante en el turno y sección solicitada'
     ],
     pasos: [
       'Generar FUT dirigido a la Jefatura de Unidad Académica exponiendo el motivo.',
-      'Abonar S/ 140.00 en el Banco de la Nación y subir voucher a pagos.ieshercar.edu.pe.',
-      'Presentar el FUT con voucher validado por Mesa de Partes.',
+      'Abonar el monto indicado en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y generar boleta en pagos.ieshercar.edu.pe.',
+      'Presentar el FUT con el voucher y copias selladas en Tesorería / Mesa de Partes.',
       'Una vez aprobado el proveído, registrar asignaturas en el Sistema Académico.'
     ]
   },
@@ -438,58 +440,85 @@ const GUIA_TRAMITES_TUPA = [
     id: 'tramite-certificado-modular',
     nombre: 'Certificación Modular Progresiva (Módulos I, II o III)',
     categoria: 'Certificaciones',
-    costo: 'S/ 45.00 por cada módulo formativo',
+    costo: 'Tasa TUPA vigente en Banco de la Nación (Cta. Cte. N° 00-638-002361)',
     plazo: '7 a 10 días hábiles (Emisión con firma de Dirección y Jefatura Académica)',
     requisitos: [
       'Haber aprobado el 100% de las unidades didácticas del Módulo I, II o III',
       'Constancia aprobatoria de Experiencias Formativas en Situaciones Reales de Trabajo (EFSRT) del módulo (mínimo 240 a 280 horas)',
-      'Comprobante de pago validado en pagos.ieshercar.edu.pe',
+      'Voucher del Banco de la Nación (Cta. Cte. N° 00-638-002361) validado en pagos.ieshercar.edu.pe y sellado en Tesorería',
       'FUT debidamente llenado solicitando el Certificado Modular respectivo'
     ],
     pasos: [
       'Verificar en el Sistema Académico que todas las notas del módulo estén registradas (nota mínima 13).',
-      'Abonar S/ 45.00 en el Banco de la Nación y registrar en pagos.ieshercar.edu.pe.',
-      'Presentar FUT y constancia de prácticas EFSRT por Mesa de Partes Virtual o presencial.',
+      'Abonar en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
+      'Presentar FUT y constancia de prácticas EFSRT por Mesa de Partes.',
       'Secretaría Académica emite el Certificado Modular oficial con valor curricular MINEDU.'
     ]
   },
   {
-    id: 'tramite-titulacion',
-    nombre: 'Título Profesional Técnico a Nombre de la Nación',
+    id: 'tramite-suficiencia-profesional',
+    nombre: 'Examen de Suficiencia Profesional (Requisitos Oficiales)',
     categoria: 'Titulación',
-    costo: 'S/ 180.00 (Incluye derecho de jurado, diploma caligráfico y registro MINEDU)',
-    plazo: '30 a 45 días hábiles (Inscripción en el Registro Nacional de Títulos MINEDU)',
+    costo: 'S/ 200.00 soles (Derecho de Examen de Suficiencia - Banco de la Nación Cta. Cte. N° 00-638-002361)',
+    plazo: 'Según cronograma de coordinación de programa de estudios (expediente foliado)',
     requisitos: [
-      'Haber aprobado los 6 semestres académicos (120 créditos curriculares completos)',
-      'Contar con los 3 Certificados Modulares oficiales emitidos por el instituto',
-      'Constancia global de Prácticas Preprofesionales EFSRT (720 a 840 horas según carrera)',
-      'Constancia de acreditación de idioma extranjero (Inglés nivel A2 emitido por el instituto)',
-      'Aprobación de la sustentación del Proyecto de Innovación Productiva o Examen de Suficiencia',
-      'Constancia de no adeudo general (Biblioteca, Tesorería, Laboratorios y Dirección)',
-      '4 Fotografías tamaño pasaporte en papel mate a color con terno formal'
+      '1. Solicitud dirigida al Director General, pidiendo programar el Examen de Suficiencia Profesional cumpliendo con todos los requisitos',
+      '2. Copia a color de la Constancia de No Adeudar',
+      '3. Copia a color de DNI',
+      '4. Copia a color de ambos lados de los tres (03) Certificados Modulares',
+      '5. Copia a color de ambos lados del Certificado de Actualización según carrera profesional (Sólo para egresados del 2021 hacia atrás)',
+      '6. Copia a color de ambos lados del Curso de Inglés Básico',
+      '7. Boleta electrónica de pago y copia sellada por el área de Tesorería por derecho de Examen de Suficiencia (S/. 200 soles) — Cta. Cte. N° 00-638-002361 en Banco de la Nación',
+      'Presentar todo el expediente debidamente FOLIADO ante el Coordinador de su Programa de Estudios'
     ],
     pasos: [
-      'Aperturar Expediente de Titulación en Secretaría Académica.',
-      'Designación de asesor y fecha de sustentación del Proyecto de Innovación o Examen.',
-      'Sustentación pública y firma del Acta de Titulación Profesional Técnica.',
-      'Tramitación del diploma oficial ante el MINEDU y entrega en ceremonia solemne.'
+      'Pagar S/. 200.00 soles en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361 y generar tu boleta electrónica en pagos.ieshercar.edu.pe.',
+      'Sellar la copia de tu boleta electrónica en el área de Tesorería del instituto.',
+      'Reunir los 7 documentos requeridos en copia a color por ambos lados según corresponda y FOLIAR todo el expediente.',
+      'Coordinar los requisitos y la gestión directamente con el Coordinador de tu Programa de Estudios.'
+    ]
+  },
+  {
+    id: 'tramite-titulacion',
+    nombre: 'Trámite de Título Profesional Técnico a Nombre de la Nación',
+    categoria: 'Titulación',
+    costo: 'Formato y Caligrafiado: S/ 60.00 + Derecho de Título Profesional: S/ 100.00 (+ Ficha de Actividades S/ 12.00 si eres del Sistema Tradicional 2008 hacia abajo) — Cta. Cte. N° 00-638-002361',
+    plazo: 'Según trámite oficial MINEDU (Presentación foliada en folder A/4 + sobre manila A4)',
+    requisitos: [
+      'Presentación del expediente: Documentación debidamente FOLIADA, en Folder A/4 y acompañada de un Sobre Manila A4',
+      '1. Solicitud dirigida al Director General, solicitando obtención de Título Profesional',
+      '2. Certificado de Estudios de Educación Secundaria (Original firmado por Director de I.E. con código virtual de verificación y código QR)',
+      '3. Certificado de Estudios de Educación Superior (Original)',
+      '4. Partida de Nacimiento (Original actualizada)',
+      '5. DNI Legalizado: Copia a color de DNI legalizada por Notario (totalmente nítida en nombre completo, fecha de nacimiento y número de DNI)',
+      '6. Fotografías: Dos (02) fotografías tamaño pasaporte (fondo blanco, revelada no impresa, vestimenta formal, sin accesorios)',
+      '7. Inglés Básico: Copia a color de Certificado de Inglés Básico',
+      '8. Pago por Formato y Caligrafiado de Título: Boleta electrónica de pago original y 1 copia sellada por Tesorería (Monto: S/. 60.00 — Cta. Cte. N° 00-638-002361)',
+      '9. Pago por Derecho de Título Profesional: Boleta electrónica de pago original y 1 copia sellada por Tesorería (Monto: S/. 100.00 — Cta. Cte. N° 00-638-002361)',
+      '10. Ficha de Actividades: Copia de Ficha de Actividades (Solo para egresados que estudiaron en el Sistema Tradicional del 2008 hacia abajo — Derecho de trámite: S/. 12.00)'
+    ],
+    pasos: [
+      'Pagar en ventanilla del Banco de la Nación a la Cta. Cte. N° 00-638-002361: S/. 60.00 (Formato y Caligrafiado) y S/. 100.00 (Derecho de Título), más S/. 12.00 por Ficha de Actividades solo si eres egresado del Sistema Tradicional 2008 hacia abajo.',
+      'Generar las boletas electrónicas en pagos.ieshercar.edu.pe y hacer sellar original y 1 copia en Tesorería.',
+      'Ordenar los 10 documentos oficiales, FOLIAR el expediente completo e ingresarlo en un Folder A/4 acompañado de un Sobre Manila A4.',
+      'Presentar el expediente completo en Mesa de Partes / Secretaría Académica.'
     ]
   },
   {
     id: 'tramite-bachiller-tecnico',
     nombre: 'Grado de Bachiller Técnico (Ley N° 30512)',
     categoria: 'Grados',
-    costo: 'S/ 120.00 (Emisión de diploma y registro oficial)',
+    costo: 'Según TUPA vigente (Banco de la Nación - Cta. Cte. N° 00-638-002361)',
     plazo: '20 a 30 días hábiles',
     requisitos: [
       'Haber culminado satisfactoriamente los 120 créditos de la carrera técnica',
       'Haber concluido y aprobado un trabajo de aplicación profesional o proyecto de investigación',
       'Acreditar conocimiento de un idioma extranjero (Inglés básico-intermedio A2)',
-      'Voucher del Banco de la Nación validado y FUT oficial'
+      'Voucher pagado en ventanilla del Banco de la Nación (Cta. Cte. N° 00-638-002361) y FUT oficial'
     ],
     pasos: [
       'Presentar solicitud de Bachiller Técnico adjuntando trabajo de aplicación aprobado.',
-      'Validar pago de la tasa oficial en pagos.ieshercar.edu.pe.',
+      'Pagar en ventanilla del Banco de la Nación (00-638-002361) y registrar en pagos.ieshercar.edu.pe.',
       'Revisión en Unidad Académica y emisión del diploma con registro oficial.'
     ]
   },
@@ -735,16 +764,19 @@ Cuenta con 3 modalidades de ingreso oficial:
   },
   {
     id: 'faq-pagos',
-    titulo: '¿Cómo registrar y validar vouchers en pagos.ieshercar.edu.pe?',
-    keywords: ['pago', 'pagos', 'pagar', 'voucher', 'banco', 'cuenta', 'subir voucher', 'tesoreria', 'banco de la nacion', 'bn', 'plataforma de pagos'],
+    titulo: '¿Cómo pagar en el Banco de la Nación (2 Cuentas Oficiales) y registrar vouchers?',
+    keywords: ['pago', 'pagos', 'pagar', 'voucher', 'banco', 'cuenta', 'subir voucher', 'tesoreria', 'banco de la nacion', 'bn', 'plataforma de pagos', '00-638-002361', '00-638-025736', 'pagalo'],
     categorias: ['pagos'],
-    locucion: "¡Hola! Para registrar tu pago, primero abonas en el Banco de la Nación a la cuenta corriente del instituto. Luego entras con tu D N I a pagos punto i e s hercar punto edu punto pe y subes la foto de tu comprobante. En tu pantalla te dejé los pasos completos.",
-    respuesta: `💳 **Guía del Sistema de Registro de Pagos:**
-1. **Depósito BN:** Deposita en el Banco de la Nación a la Cuenta Corriente N° **\`00-631-012948\`** (Titular: IESTP Hermanos Cárcamo).
-2. **Ingreso:** Entra con tu DNI a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
-3. **Registro:** Elige tu carrera (Computación e Informática, ANI, CONTA o DPA) y concepto (Matrícula, Admisión, Certificado, etc.).
-4. **Datos:** Digita el número de operación, fecha, monto exacto y sube una foto nítida del comprobante.
-5. **Validación:** Caja/Tesorería validará tu pago en un plazo de 24 a 48 horas hábiles.
+    locucion: "¡Hola! En el Instituto Hermanos Cárcamo NO se realizan pagos en Págalo punto pe ni en agentes. Todos los pagos se hacen únicamente en ventanilla del Banco de la Nación usando dos cuentas oficiales: cero cero, seis tres ocho, cero cero, dos tres seis uno para matrícula y trámites, y cero cero, seis tres ocho, cero veinticinco, siete tres seis para el curso de inglés.",
+    respuesta: `💳 **Guía Oficial de Pagos — 2 Cuentas del Banco de la Nación:**
+⚠️ **Importante:** **NO se realizan pagos por Págalo.pe, Yape, Plin ni Agentes MultiRed.** Todos los pagos deben realizarse presencialmente en **ventanillas del Banco de la Nación**, brindando el DNI y nombres completos del estudiante.
+
+1. 🏦 **Cuenta Principal (Matrícula S/ 250.00, Examen de Suficiencia S/ 200.00, Título Profesional y TUPA):**
+   - **Cuenta Corriente BN N° \`00-638-002361\`** (Titular: *IESTP Hermanos Cárcamo*).
+   - Para **Matrícula:** Registra el voucher en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) para generar tu **boleta electrónica**, presenta voucher original + **3 copias** en **Tesorería** y entrega 1 copia sellada y firmada en **Secretaría Académica**.
+2. 🇬🇧 **Cuenta Específica para Curso de Inglés:**
+   - **Cuenta Corriente BN N° \`00-638-025736\`**.
+   - Saca **2 copias al voucher** y entrégalos en **Tesorería**, en la oficina del instituto.
 🎥 [Ver Video Instructivo Oficial en Drive](https://drive.google.com/file/d/1kYBJhVXOqO7BoQUpMZmYs-1E59gIUV9h/view?usp=sharing)`
   },
   {
@@ -790,14 +822,14 @@ Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Parte Alta, Paita, Piura.
   },
   {
     id: 'faq-gratuidad',
-    titulo: '¿Cuánto cuesta la mensualidad o pensión?',
+    titulo: '¿Cuánto cuesta la mensualidad o pensión y la matrícula?',
     keywords: ['mensualidad', 'pension', 'cuanto cuesta', 'costo', 'gratis', 'publico', 'cuanto se paga', 'pagar mes'],
     categorias: ['admision'],
-    locucion: "¡Hola! Te cuento con mucho gusto que en el Instituto Hermanos Cárcamo estudiar es público y no se pagan pensiones ni mensualidades. Únicamente abonas la tasa administrativa de matrícula por semestre en el Banco de la Nación, que son unos ciento veinte soles e incluye tu carné y seguro de salud. ¡En tu pantalla te dejé todos los detalles!",
+    locucion: "¡Hola! Te cuento con mucho gusto que en el Instituto Hermanos Cárcamo estudiar es público y no se pagan pensiones ni mensualidades. Únicamente abonas la tasa administrativa de matrícula semestral de doscientos cincuenta soles en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno.",
     respuesta: `🎓 **Educación Pública sin Mensualidades:**
 El **IESTP Hermanos Cárcamo es una institución tecnológica pública** del Estado, dependiente del Ministerio de Educación (MINEDU). 
 **¡NO SE PAGAN PENSIONES NI MENSUALIDADES!** 
-La formación profesional técnica es pública y no tiene mensualidades. El único abono corresponde a la **tasa administrativa por derecho de matrícula semestral** (aprox. S/. 120.00 por semestre fijado en el TUPA institucional), que incluye carné oficial de medio pasaje, Seguro Integral de Salud (SIS) y servicios académicos.`
+La formación profesional técnica es pública y sin mensualidades. El único abono semestral regular es el **Derecho de Matrícula Semestral de S/. 250.00**, pagado **presencialmente en ventanilla del Banco de la Nación** a la Cuenta Corriente N° **\`00-638-002361\`** (no se realiza por Págalo.pe ni agentes).`
   },
   {
     id: 'faq-becas',
@@ -975,41 +1007,37 @@ Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un 
     titulo: 'Paso a Paso de Matrícula y Pagos: ¿Qué pago, dónde voy y qué hago?',
     keywords: ['matricula', 'paso a paso', 'que pago', 'donde voy', 'que hago', 'como matricularme', 'proceso matricula', 'pago matricula', 'donde pagar', 'voucher matricula', 'donde registrar', 'cuanto pago'],
     categorias: ['pagos', 'tramites'],
-    locucion: "¡Hola! Con mucho gusto te explico los pasos de matrícula: pagas tu tasa semestral en el Banco de la Nación, le tomas foto clara a tu comprobante y lo subes a pagos punto i e s hercar punto edu punto pe. ¡En tu pantalla te preparé la guía completa!",
-    respuesta: `📋 **Guía Completa y Paso a Paso para Tu Matrícula en el IESTP Hermanos Cárcamo:**
+    locucion: "¡Hola! Con mucho gusto te explico el proceso oficial de matrícula: realizas el pago de doscientos cincuenta soles únicamente en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno, recuerda que no se paga en Págalo punto pe ni en agentes. Luego registras tu voucher en pagos punto i e s hercar punto edu punto pe, sacas tres copias de la boleta para Tesorería y entregas una copia sellada en Secretaría Académica.",
+    respuesta: `📋 **Guía Oficial de Matrícula en el IESTP Hermanos Cárcamo (ieshercar.edu.pe):**
 
 1️⃣ **¿QUÉ PAGO Y CUÁNTO ES?**
-* La enseñanza en el instituto es **100% GRATUITA** (sin pensiones mensuales por ser instituto público).
-* Solo se abona la tasa administrativa por concepto de **Derecho de Matrícula Semestral** (aprox. **S/. 120.00** según TUPA vigente, que cubre carné de medio pasaje y seguro estudiantil).
+* En el instituto **NO se pagan mensualidades** por ser educación superior pública.
+* El derecho de **Matrícula Semestral es de S/. 250.00** (para alumnos regulares).
 
-2️⃣ **¿DÓNDE PAGO?**
-* **Banco de la Nación:** En ventanilla, Agente MultiRed de Paita/Piura o por la app **Págalo.pe**.
-* **Cuenta Corriente Oficial:** N° **\`00-631-012948\`** a nombre del *IESTP Hermanos Cárcamo*.
-* *(Conserva el voucher original físico en perfecto estado; no lo dobles ni manches).*
+2️⃣ **¿DÓNDE PAGO? (SOLO EN VENTANILLA DEL BANCO DE LA NACIÓN)**
+* ⚠️ **No se realizan pagos por Págalo.pe ni en agentes.**
+* Acércate presencialmente a una **ventanilla del Banco de la Nación** y dicta la **Cuenta Corriente N° \`00-638-002361\`** a nombre del *IESTP Hermanos Cárcamo*.
+* Brinda siempre el **DNI y nombres completos del estudiante** (aun cuando el pago lo haga otra persona).
 
-3️⃣ **¿QUÉ HAGO INMEDIATAMENTE DESPUÉS DE PAGAR?**
-* Tómale una foto nítida y legible con tu celular o escanéalo en formato PDF/JPG.
-* Asegúrate de que se vean claramente: **Número de Operación**, **Fecha**, **Hora** e **Importe depositado**.
+3️⃣ **¿QUÉ HAGO DESPUÉS DE PAGAR?**
+* Ingresa al portal [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/), registra tu voucher del Banco de la Nación y genera tu **Boleta Electrónica**.
+* Si el pago es para el **Curso de Inglés**, la cuenta específica es **\`00-638-025736\`** y debes sacar **2 copias** al voucher y entregarlas en **Tesorería**.
 
-4️⃣ **¿A DÓNDE VOY O DÓNDE LO REGISTRO?**
-* **Opción Online (Recomendada):** Entra al portal [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/), selecciona el trámite "Matrícula", ingresa tu DNI, los datos del voucher y sube la foto.
-* **Opción Presencial:** Acércate a la **Oficina de Tesorería / Secretaría Académica** en el campus central (Av. Víctor Raúl Haya de la Torre s/n, Paita Alta) de Lunes a Viernes de 8:00 a.m. a 1:00 p.m.
-
-5️⃣ **¿CÓMO SÉ QUE YA ESTOY MATRICULADO?**
-* Secretaría valida tu pago en un plazo de **24 a 48 horas hábiles**.
-* Te emiten tu **Ficha de Matrícula Oficial** y se te activan los accesos al [Sistema Académico](https://sistema.ieshercar.edu.pe/acceso) y al [Aula Virtual](https://aula.ieshercar.edu.pe/).`
+4️⃣ **PRESENTACIÓN EN TESORERÍA Y SECRETARÍA ACADÉMICA:**
+* Acércate a la oficina de **Tesorería** en el campus (Av. Miguel Grau . Urb. El Parque - Mz. A - Lote 01 - Paita, Lunes a Viernes de 8:00 a.m. a 3:00 p.m.) con el **voucher original + 3 copias de la boleta electrónica** para su sellado y firma.
+* Entrega **1 copia sellada y firmada** en **Secretaría Académica** para completar tu matrícula en [sistema.ieshercar.edu.pe](https://sistema.ieshercar.edu.pe/acceso).`
   },
   {
     id: 'faq-que-hago-despues-de-pagar',
     titulo: '¿Qué hago después de pagar en el Banco de la Nación? (Dónde ir y qué presentar)',
     keywords: ['despues de pagar', 'ya pague', 'donde llevo el voucher', 'que hago con el voucher', 'subir voucher', 'validar voucher', 'donde ir', 'oficina pagos', 'caja'],
     categorias: ['pagos'],
-    locucion: "¡Hola! Después de pagar en el Banco de la Nación, debes tomarle una foto nítida al voucher y registrarlo en pagos punto i e s hercar punto edu punto pe para que Tesorería valide tu matrícula en veinticuatro a cuarenta y ocho horas.",
-    respuesta: `🧾 **¿Ya pagaste en el Banco de la Nación? Sigue estos 3 pasos obligatorios:**
+    locucion: "¡Hola! Después de pagar en ventanilla del Banco de la Nación, registra tu voucher en pagos punto i e s hercar punto edu punto pe para generar tu boleta electrónica, y preséntala en Tesorería del instituto con sus copias según el trámite.",
+    respuesta: `🧾 **¿Ya pagaste en ventanilla del Banco de la Nación? Sigue estos pasos obligatorios:**
 
-1. **Fotografía el Voucher:** Toma una foto nítida donde se lea el N° de Operación del Banco de la Nación (Cta. Cte. \`00-631-012948\`).
-2. **Regístralo en la Plataforma:** Ingresa a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) y completa los campos de DNI, fecha, hora, monto y archivo de imagen.
-3. **Confirmación en Secretaría:** Si el trámite requiere entrega de expediente físico (como titulación o carné), acércate con el voucher original a la Secretaría General del campus en Paita Alta. En 24 a 48 horas recibirás la constancia oficial.`
+1. **Registra tu Voucher Online:** Ingresa a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) con tu DNI, registra los datos del voucher para generar tu **boleta electrónica**.
+2. **Para Matrícula o Trámites (Cta. \`00-638-002361\`):** Presenta el voucher original y **3 copias de la boleta** en **Tesorería** para sellado y entrega 1 copia sellada/firmada en **Secretaría Académica** (para Examen de Suficiencia y Título se adjunta boleta electrónica + copia sellada por Tesorería).
+3. **Para Curso de Inglés (Cta. \`00-638-025736\`):** Saca **2 copias al voucher** y entrégalos directamente en **Tesorería**, en la oficina del instituto.`
   },
   {
     id: 'faq-ingles-titulacion-minedu',
@@ -1150,23 +1178,32 @@ Las EFSRT son obligatorias para obtener los Certificados Modulares y el Título 
   },
   {
     id: 'faq-como-titularme',
-    titulo: '¿Cómo obtener el Título Profesional Técnico a Nombre de la Nación?',
-    keywords: ['como me titulo', 'titulacion', 'requisitos para titularme', 'tesis', 'plan de negocios', 'examen de suficiencia', 'tramite de titulo', 'titulo a nombre de la nacion'],
-    categorias: ['titulacion', 'academico'],
-    locucion: "¡Hola! Para obtener tu título a nombre de la nación debes aprobar los ciento veinte créditos de tu carrera, completar tus prácticas preprofesionales y acreditar el curso de inglés. En tu pantalla puedes ver las modalidades de titulación.",
-    respuesta: `🎓 **Requisitos y Modalidades para la Titulación Profesional Técnica:**
+    titulo: 'Requisitos para Trámite de Título Profesional y Examen de Suficiencia Profesional',
+    keywords: ['como me titulo', 'titulacion', 'requisitos para titularme', 'tesis', 'plan de negocios', 'examen de suficiencia', 'tramite de titulo', 'titulo a nombre de la nacion', 'formato y caligrafiado', 'ficha de actividades'],
+    categorias: ['titulacion', 'academico', 'tramites'],
+    locucion: "¡Hola! Para obtener tu Título Profesional debes presentar tu expediente foliado en folder A cuatro con sobre manila A cuatro, abonando sesenta soles por formato y caligrafiado y cien soles por derecho de título en la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno del Banco de la Nación. Si vas a solicitar Examen de Suficiencia Profesional, el derecho es de doscientos soles a esa misma cuenta.",
+    respuesta: `🎓 **Requisitos Oficiales para Título Profesional y Examen de Suficiencia (Cta. BN N° \`00-638-002361\`):**
 
-El IESTP Hermanos Cárcamo emite Títulos Oficiales registrados ante el **MINEDU**:
-* 📌 **Requisitos Obligatorios:**
-  1. Haber aprobado los **120 créditos académicos** de los 6 semestres.
-  2. Contar con los **3 Certificados Modulares** correspondientes a tu carrera.
-  3. Haber culminado y sustentado las **820 horas de Prácticas EFSRT**.
-  4. Constancia de dominio de **Idioma Extranjero (Inglés Básico A2)**.
-  5. Constancia de no adeudo de libros (Biblioteca) ni tasas administrativas (Tesorería).
-* 🏆 **Modalidades de Titulación:**
-  * **Proyecto de Innovación / Investigación Aplicada:** Desarrollo de un software, producto hidrobiológico innovador o plan logístico para Paita.
-  * **Plan de Negocios de Exportación / Emprendimiento:** Modelo de negocio rentable evaluado por jurado docente.
-  * **Examen de Suficiencia Profesional:** Evaluación teórica-práctica de competencias de la carrera.`
+📄 **1. TRÁMITE DE TÍTULO PROFESIONAL (Expediente debidamente foliado en folder A/4 + sobre manila A4):**
+1. Solicitud dirigida al Director General, solicitando obtención de Título Profesional.
+2. Certificado de Estudios de Educación Secundaria (original firmado por Director de I.E. con código virtual y código QR).
+3. Certificado de Estudios de Educación Superior (original).
+4. Partida de Nacimiento (original actualizada).
+5. Copia a color de DNI legalizada por Notario (totalmente nítida en nombre completo, fecha de nacimiento y N° de DNI).
+6. Dos (02) fotografías tamaño pasaporte (fondo blanco, revelada no impresa, vestimenta formal, sin accesorios).
+7. Copia a color de Certificado de Inglés Básico.
+8. Pago por **Formato y Caligrafiado de Título**: Boleta electrónica original + 1 copia sellada por Tesorería — **S/. 60.00**.
+9. Pago por **Derecho de Título Profesional**: Boleta electrónica original + 1 copia sellada por Tesorería — **S/. 100.00**.
+10. **Ficha de Actividades**: Copia (solo egresados del Sistema Tradicional del 2008 hacia abajo) — Derecho: **S/. 12.00**.
+
+📝 **2. REQUISITOS PARA EXAMEN DE SUFICIENCIA PROFESIONAL (Expediente debidamente foliado ante el Coordinador de tu Programa):**
+1. Solicitud dirigida al Director General pidiendo programar el Examen de Suficiencia Profesional.
+2. Copia a color de la Constancia de No Adeudar.
+3. Copia a color de DNI.
+4. Copia a color de ambos lados de los **tres (03) Certificados Modulares**.
+5. Copia a color de ambos lados del **Certificado de Actualización** según carrera (sólo egresados del 2021 hacia atrás).
+6. Copia a color de ambos lados del **Curso de Inglés Básico**.
+7. Boleta electrónica de pago y copia sellada por Tesorería por derecho de Examen de Suficiencia — **S/. 200.00 soles** (Cta. Cte. BN N° \`00-638-002361\`).`
   },
   {
     id: 'faq-como-llegar-paita',
@@ -1244,30 +1281,22 @@ Gracias a la Ley de Institutos N° 30512, los egresados titulados del IESTP Herm
   },
   {
     id: 'faq-pagos-digitales-yape-pagalo',
-    titulo: '¿Cómo pagar con Págalo.pe, Yape, Transferencia Bancaria (CCI) o Agentes?',
-    keywords: ['yape', 'plin', 'pagalo.pe', 'pagalo', 'transferencia', 'cci', 'interbancario', 'agente multired', 'bcp a banco de la nacion', 'como pagar sin ir al banco'],
+    titulo: '¿Se puede pagar por Págalo.pe, Yape, Plin o Agentes? — Canal Único Oficial',
+    keywords: ['yape', 'plin', 'pagalo.pe', 'pagalo', 'transferencia', 'cci', 'interbancario', 'agente multired', 'bcp a banco de la nacion', 'como pagar sin ir al banco', 'canales de pago'],
     categorias: ['pagos'],
-    locucion: "¡Hola! Puedes realizar tus pagos sin salir de casa mediante Págalo punto pe con tarjeta, o por transferencia bancaria y Yape utilizando nuestro código interbancario oficial. ¡En tu pantalla tienes el número para copiarlo con un toque!",
-    respuesta: `💳 **Métodos de Pago Digitales y Sin Hacer Colas:**
+    locucion: "¡Atención! En el Instituto Hermanos Cárcamo NO se realizan pagos en Págalo punto pe, Yape, Plin ni en agentes. Todos los pagos se hacen únicamente de manera presencial en ventanilla del Banco de la Nación usando las dos cuentas oficiales del instituto.",
+    respuesta: `⚠️ **Aviso Oficial Sobre Canales de Pago (IESTP Hermanos Cárcamo):**
 
-Para mayor comodidad de los estudiantes y postulantes de Paita y Piura, existen múltiples formas de abonar a la cuenta oficial del instituto:
+❌ **NO se realizan pagos en Págalo.pe, Yape, Plin ni Agentes MultiRed.**  
+✅ Todos los abonos se efectúan **ÚNICAMENTE de forma presencial en ventanillas del Banco de la Nación**, dictando el número de cuenta correcto y los datos (**DNI y nombres completos del estudiante**, aunque pague otra persona):
 
-1. 📱 **App y Web Págalo.pe (Banco de la Nación):**
-   * Ingresa a [pagalo.pe](https://pagalo.pe/) desde tu celular o computadora.
-   * Regístrate y busca el concepto o paga con tarjeta de débito/crédito **Visa, Mastercard o American Express** de cualquier banco.
-   * Descarga la constancia en PDF y súbela a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).
+1. 🏦 **Cuenta Corriente N° \`00-638-002361\` (Banco de la Nación):**
+   * Para **Matrícula Semestral (S/. 250.00)**, **Examen de Suficiencia Profesional (S/. 200.00)**, **Título Profesional** (S/. 60.00 Formato/Caligrafiado + S/. 100.00 Derecho de Título + S/. 12.00 Ficha Tradicional) y trámites TUPA.
+   * Luego registra tu voucher en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) para generar la boleta electrónica y preséntalo en **Tesorería** del instituto.
 
-2. 🏦 **Transferencia Interbancaria (Desde BCP, BBVA, Interbank o Scotiabank):**
-   * **Código de Cuenta Interbancario (CCI):** \`018-631-000631012948-52\`
-   * **Titular:** IESTP Hermanos Cárcamo
-   * *Importante:* Guarda la captura donde figure la operación exitosa y el número de transferencia.
-
-3. 🏪 **Agentes MultiRed en Paita y Alrededores:**
-   * Hay más de 30 agentes en Paita Alta, Paita Baja, Pueblo Nuevo y Miraflores.
-   * Solo brinda el número de Cuenta Corriente: **\`00-631-012948\`** y tu DNI.
-
-4. 📲 **¿Se puede pagar con Yape o Plin?**
-   * **Sí, mediante transferencia interbancaria:** Utiliza la opción *"Transferir a otros bancos"* en Yape o Plin e ingresa el CCI oficial (\`018-631-000631012948-52\`).`
+2. 🇬🇧 **Cuenta Corriente N° \`00-638-025736\` (Banco de la Nación — Inglés):**
+   * Exclusiva para pagos del **Curso de Inglés**.
+   * Saca **2 copias a tu voucher** y entrégalos en **Tesorería**, en la oficina del instituto.`
   },
   {
     id: 'faq-croquis-campus-ambientes',
@@ -1324,31 +1353,27 @@ Para postular a la admisión del IESTP Hermanos Cárcamo ya no necesitas ir a tu
   },
   {
     id: 'faq-tupa-tramites-lista',
-    titulo: 'Guía Completa del TUPA Institucional (16 Trámites Oficiales)',
+    titulo: 'Guía Completa del TUPA Institucional y Pagos Oficiales',
     keywords: ['tupa', 'tramites tupa', 'costos tramites', 'tasas institucionales', 'lista de tramites', 'cuanto cuesta cada tramite', 'todos los tramites'],
     categorias: ['tramites'],
-    locucion: "¡Hola! En el instituto disponemos de dieciséis procedimientos oficiales aprobados en nuestro TUPA institucional, entre ellos matrículas, certificados modulares, grado de bachiller técnico y titulación profesional. En tu pantalla tienes el tarifario oficial completo.",
-    respuesta: `📋 **Compendio Oficial de Trámites y Tasas TUPA del IESTP Hermanos Cárcamo:**
-*Los pagos se efectúan en el Banco de la Nación (Cta. Cte. N° **\`00-631-012948\`**) y se validan en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/).*
+    locucion: "¡Hola! Todos los pagos de matrícula, suficiencia y titulación se realizan únicamente en ventanilla del Banco de la Nación en la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno, y para el curso de inglés en la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis. Recuerda que no se paga en Págalo punto pe ni en agentes. En tu pantalla tienes el tarifario oficial actualizado.",
+    respuesta: `📋 **Compendio Oficial de Trámites y Tasas del IESTP Hermanos Cárcamo:**
+*Todos los pagos se realizan presencialmente en **ventanilla del Banco de la Nación** (NO en Págalo.pe ni agentes). Cta. Cte. Principal: **\`00-638-002361\`** · Cta. Cte. Inglés: **\`00-638-025736\`**.*
 
-| N° | Trámite Institucional | Tasa Oficial (S/.) | Plazo Estimado |
-|:---|:----------------------|:-------------------|:---------------|
-| 1 | **Matrícula Regular Semestral** | S/. 120.00 | 24 - 48 horas |
-| 2 | **Matrícula Extemporánea** | S/. 140.00 | 48 - 72 horas |
-| 3 | **Certificado Modular Progresivo (I, II o III)** | S/. 45.00 | 7 a 10 días |
-| 4 | **Título Profesional Técnico a Nombre de la Nación** | S/. 180.00 | 30 a 45 días |
-| 5 | **Grado de Bachiller Técnico (Ley 30512)** | S/. 120.00 | 20 a 30 días |
-| 6 | **Carné de Educación Superior MINEDU (Medio Pasaje)** | S/. 18.00 | Lote MINEDU |
-| 7 | **Certificado Oficial de Estudios (Por Ciclo)** | S/. 25.00 | 3 a 5 días |
-| 8 | **Certificado Oficial Completo (I al VI Ciclo)** | S/. 60.00 | 5 a 7 días |
-| 9 | **Convalidación de Unidad Didáctica (Por curso)** | S/. 15.00 | 7 a 10 días |
-| 10 | **Traslado Interno de Carrera** | S/. 40.00 | 5 a 7 días |
-| 11 | **Traslado Externo Nacional** | S/. 70.00 | 7 a 12 días |
-| 12 | **Reserva de Matrícula (Hasta 2 semestres)** | S/. 30.00 | 3 a 5 días |
-| 13 | **Reincorporación de Estudios** | S/. 35.00 | 3 a 5 días |
-| 14 | **Rectificación de Matrícula** | S/. 15.00 | 24 a 48 horas |
-| 15 | **Constancia de Egresado y No Adeudo** | S/. 20.00 | 2 a 3 días |
-| 16 | **Duplicado de Diploma de Título Técnico** | S/. 90.00 | 15 a 20 días |`
+| N° | Trámite Institucional | Tasa Oficial (S/.) | Observación / Plazo |
+|:---|:----------------------|:-------------------|:--------------------|
+| 1 | **Matrícula Regular Semestral** | S/. 250.00 | Boleta en pagos.ieshercar.edu.pe + 3 copias Tesorería |
+| 2 | **Examen de Suficiencia Profesional** | S/. 200.00 | Cta. 00-638-002361 · Expediente foliado |
+| 3 | **Título Profesional: Derecho de Título** | S/. 100.00 | Cta. 00-638-002361 · Folder A/4 + sobre manila A4 |
+| 4 | **Título Profesional: Formato y Caligrafiado** | S/. 60.00 | Cta. 00-638-002361 · Boleta + 1 copia sellada Tesorería |
+| 5 | **Ficha de Actividades (Sist. Tradicional <=2008)** | S/. 12.00 | Solo egresados 2008 hacia abajo |
+| 6 | **Curso de Inglés (Cuenta Específica)** | Cta. 00-638-025736 | Entregar **2 copias del voucher** en Tesorería |
+| 7 | **Carné de Educación Superior MINEDU (Medio Pasaje)** | S/. 18.00 | Lote MINEDU |
+| 8 | **Certificado Modular Progresivo (I, II o III)** | S/. 45.00 | 7 a 10 días |
+| 9 | **Certificado Oficial de Estudios (Por Ciclo / Completo)** | S/. 25.00 / S/. 60.00 | 3 a 7 días |
+| 10 | **Constancia de Egresado / Estudios / No Adeudo** | S/. 20.00 | 2 a 3 días |
+| 11 | **Reserva / Reincorporación / Rectificación** | S/. 30.00 / S/. 35.00 / S/. 15.00 | 2 a 5 días |
+| 12 | **Traslado Interno / Externo / Convalidación** | S/. 40.00 / S/. 70.00 / S/. 15.00 | 5 a 12 días |`
   },
   {
     id: 'faq-fut-mesa-de-partes',
@@ -1838,12 +1863,12 @@ La mejor vía de preparación e ingreso directo para estudiantes de Paita, Sulla
     titulo: 'Paso a paso para tramitar el Carné Universitario / Técnico MINEDU',
     keywords: ['pasos carnet', 'como sacar carnet', 'tramite de carnet', 'foto para carnet', 'medio pasaje tramitar', 'donde pagar carnet'],
     categorias: ['bienestar', 'tramites'],
-    locucion: "¡Hola! Para tramitar tu carné de medio pasaje oficial del Minedu, solo debes abonar la tasa de dieciocho soles en el Banco de la Nación, validar tu comprobante en la plataforma de pagos y entregar tu foto digital formal con fondo blanco en Secretaría.",
+    locucion: "¡Hola! Para tramitar tu carné de medio pasaje oficial del Minedu, solo debes abonar la tasa en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno, registrar tu boleta electrónica en la plataforma de pagos y entregar tu foto digital formal con fondo blanco en Secretaría.",
     respuesta: `🚌 **Paso a Paso para Tramitar tu Carné de Educación Superior MINEDU:**
 
-1. 💳 **Pago en el Banco de la Nación:**
-   - Monto: **S/. 18.00** a la Cuenta Corriente N° **\`00-631-012948\`**.
-   - Sube tu voucher a [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) eligiendo el concepto *"Carné de Medio Pasaje"*.
+1. 💳 **Pago en el Banco de la Nación (Solo ventanilla):**
+   - Monto: **S/. 18.00** a la Cuenta Corriente N° **\`00-638-002361\`** (no Págalo.pe ni agentes).
+   - Registra tu voucher en [pagos.ieshercar.edu.pe](https://pagos.ieshercar.edu.pe/) eligiendo el concepto *"Carné de Medio Pasaje"*.
 2. 📸 **Especificaciones de la Fotografía:**
    - Fotografía digital a color tamaño carnet (formato JPG o PNG).
    - Fondo blanco liso, sin sombras, tomada de frente con rostro descubierto.
@@ -2167,11 +2192,14 @@ const GUIA_PRACTICAS_EFSRT = {
  * CATÁLOGO OFICIAL DE TASAS Y TRÁMITES TUPA (PARA EL COTIZADOR INTERACTIVO)
  */
 const TASAS_TUPA_COTIZADOR = [
-  { id: 'tupa-matricula', nombre: 'Matrícula Regular Semestral', costo: 120, categoria: 'Academico', icon: 'bi-pencil-square', detalle: 'Incluye seguro estudiantil y registro en sistema.ieshercar.edu.pe' },
-  { id: 'tupa-matricula-ext', nombre: 'Matrícula Extemporánea', costo: 140, categoria: 'Academico', icon: 'bi-clock-history', detalle: 'Matrícula con recargo fuera de fecha oficial' },
+  { id: 'tupa-matricula', nombre: 'Matrícula Regular Semestral', costo: 250, categoria: 'Academico', icon: 'bi-pencil-square', detalle: 'Pago en ventanilla BN (Cta. 00-638-002361) + boleta en pagos.ieshercar.edu.pe + 3 copias en Tesorería' },
+  { id: 'tupa-suficiencia', nombre: 'Examen de Suficiencia Profesional', costo: 200, categoria: 'Titulacion', icon: 'bi-journal-check', detalle: 'Cta. 00-638-002361 • Boleta electrónica + copia sellada por Tesorería (expediente foliado)' },
+  { id: 'tupa-titulo-derecho', nombre: 'Título Profesional: Derecho de Título Profesional', costo: 100, categoria: 'Titulacion', icon: 'bi-award-fill', detalle: 'Cta. 00-638-002361 • Boleta original + 1 copia sellada por Tesorería' },
+  { id: 'tupa-titulo-formato', nombre: 'Título Profesional: Formato y Caligrafiado de Título', costo: 60, categoria: 'Titulacion', icon: 'bi-file-earmark-richtext', detalle: 'Cta. 00-638-002361 • Boleta original + 1 copia sellada por Tesorería' },
+  { id: 'tupa-ficha-actividades', nombre: 'Ficha de Actividades (Solo Sist. Tradicional <= 2008)', costo: 12, categoria: 'Titulacion', icon: 'bi-file-earmark-spreadsheet', detalle: 'Cta. 00-638-002361 • Solo para egresados del Sistema Tradicional del 2008 hacia abajo' },
   { id: 'tupa-carne', nombre: 'Carné de Educación Superior MINEDU (Medio Pasaje)', costo: 18, categoria: 'Bienestar', icon: 'bi-card-heading', detalle: 'Carné oficial con vigencia anual según Ley 26271' },
   { id: 'tupa-cert-modular', nombre: 'Certificado Modular Progresivo (Por Módulo)', costo: 45, categoria: 'Certificaciones', icon: 'bi-award', detalle: 'Diploma oficial por culminar Módulo I, II o III' },
-  { id: 'tupa-constancia-estudios', nombre: 'Constancia de Estudios / Notas / Egresado', costo: 20, categoria: 'Documentos', icon: 'bi-file-earmark-text', detalle: 'Emisión en 2 a 3 días hábiles con firma y sello' },
+  { id: 'tupa-constancia-estudios', nombre: 'Constancia de Estudios / Notas / No Adeudo', costo: 20, categoria: 'Documentos', icon: 'bi-file-earmark-text', detalle: 'Emisión en 2 a 3 días hábiles con firma y sello' },
   { id: 'tupa-cert-estudios-ciclo', nombre: 'Certificado Oficial de Estudios (Por Ciclo)', costo: 25, categoria: 'Documentos', icon: 'bi-file-earmark-ruled', detalle: 'Certificado oficial con asignaturas y calificaciones' },
   { id: 'tupa-cert-estudios-comp', nombre: 'Certificado Oficial Completo (I al VI Ciclo)', costo: 60, categoria: 'Documentos', icon: 'bi-folder-check', detalle: 'Certificado de récord integral de los 6 semestres' },
   { id: 'tupa-admision-ordinario', nombre: 'Carpeta e Inscripción Examen Ordinario', costo: 150, categoria: 'Admision', icon: 'bi-person-check', detalle: 'Derecho a examen de 100 preguntas y balotario' },
@@ -2180,8 +2208,6 @@ const TASAS_TUPA_COTIZADOR = [
   { id: 'tupa-traslado-externo', nombre: 'Traslado Externo Nacional', costo: 70, categoria: 'Academico', icon: 'bi-box-arrow-in-right', detalle: 'Provenientes de otra institución superior' },
   { id: 'tupa-reserva-matricula', nombre: 'Reserva de Matrícula (Hasta 2 semestres)', costo: 30, categoria: 'Academico', icon: 'bi-pause-circle', detalle: 'Licencia temporal con vacante asegurada' },
   { id: 'tupa-reincorporacion', nombre: 'Reincorporación de Estudios', costo: 35, categoria: 'Academico', icon: 'bi-arrow-clockwise', detalle: 'Retorno formal tras reserva de vacante' },
-  { id: 'tupa-bachiller-tecnico', nombre: 'Grado de Bachiller Técnico (Ley 30512)', costo: 120, categoria: 'Titulacion', icon: 'bi-mortarboard', detalle: 'Grado académico superior oficial MINEDU' },
-  { id: 'tupa-titulacion', nombre: 'Título Profesional Técnico a Nombre de la Nación', costo: 180, categoria: 'Titulacion', icon: 'bi-award-fill', detalle: 'Sustentación de proyecto e inscripción oficial en MINEDU' },
   { id: 'tupa-duplicado-titulo', nombre: 'Duplicado de Diploma de Título Técnico', costo: 90, categoria: 'Titulacion', icon: 'bi-files', detalle: 'Por pérdida o deterioro previa denuncia' }
 ];
 
@@ -2216,8 +2242,9 @@ const DATOS_OFICIALES_PORTAL = {
   correo: 'ieshercar@ieshercar.edu.pe',
   horarioAtencion: 'Lunes a viernes de 8:00 a. m. a 3:00 p. m.',
   cuentaMatriculaBN: '00-638-002361',
-  cuentaInstitucionalBN: '00-631-012948',
-  codigoCCI: '018-631-000631012948-52',
+  cuentaInstitucionalBN: '00-638-002361',
+  cuentaInglesBN: '00-638-025736',
+  canalPagoOficial: 'Únicamente presencial en ventanillas del Banco de la Nación (no Págalo.pe, no agentes)',
   portalPagos: 'https://pagos.ieshercar.edu.pe/',
   portalAcademico: 'https://sistema.ieshercar.edu.pe/acceso',
   aulaVirtual: 'https://aula.ieshercar.edu.pe/',

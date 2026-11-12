@@ -2289,7 +2289,7 @@ function generateExecutivePdfReport() {
   <div class="technical-box">
     <strong>Operaciones de Tesorería Verificadas:</strong>
     <ul>
-      <li>Cuenta Corriente Oficial del Banco de la Nación: <strong>N° 00-631-012948</strong> para abono de tasas institucionales y matrícula (S/ 120.00).</li>
+      <li>Cuentas Oficiales del Banco de la Nación (Solo ventanilla BN, no Págalo.pe): <strong>N° 00-638-002361</strong> (Matrícula S/ 250.00, Suficiencia S/ 200.00, Título S/ 100.00 + S/ 60.00) y <strong>N° 00-638-025736</strong> (Curso de Inglés: 2 copias del voucher en Tesorería).</li>
       <li>Mesa de Partes Virtual: Generador interactivo de <strong>Formato Único de Trámite (FUT)</strong> con registro persistente de solicitudes modulares.</li>
       <li>Portal de Comprobantes: Redireccionamiento y validación guiada en <code>pagos.ieshercar.edu.pe</code>.</li>
     </ul>
@@ -2628,11 +2628,11 @@ function runAdminNeuralTest() {
     category = 'Carreras Profesionales';
     confidence = 99.6;
     entity = '4 Carreras Técnicas (120 Créditos / 3 Años)';
-  } else if (normalized.includes('cuenta') || normalized.includes('banco') || normalized.includes('pago') || normalized.includes('voucher') || normalized.includes('bn') || normalized.includes('00-631')) {
-    intent = 'Cuenta Corriente BN & Procedimiento de Pagos';
+  } else if (normalized.includes('cuenta') || normalized.includes('banco') || normalized.includes('pago') || normalized.includes('voucher') || normalized.includes('bn') || normalized.includes('00-638')) {
+    intent = 'Cuentas Oficiales BN & Procedimiento de Pagos';
     category = 'Tesorería & Pagos';
     confidence = 99.8;
-    entity = 'Banco de la Nación (Cta: 00-631-012948)';
+    entity = 'Banco de la Nación (Ctas: 00-638-002361 y 00-638-025736)';
   } else if (normalized.includes('jalo') || normalized.includes('desaprueb') || normalized.includes('dpi') || normalized.includes('nota') || normalized.includes('recupera') || normalized.includes('13')) {
     intent = 'Reglamento Académico, Nota Mínima (13) & Inasistencias (30% DPI)';
     category = 'Normativa Académica';
@@ -2758,12 +2758,12 @@ function convertAllNumbersToSpokenSpanishAdmin(text) {
 
   // 1. Cuentas bancarias oficiales y telefonos
   str = str
-    .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero doce, nueve cuatro ocho')
-    .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero doce, nueve cuatro ocho, cincuenta y dos')
+    .replace(/00-638-002361/g, 'cero cero, seis tres ocho, cero cero, dos tres seis uno')
     .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero veinticinco, siete tres seis')
     .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
     .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
     .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
+    .replace(/969\s*100\s*257|969100257/g, 'nueve seis nueve, cien, dos cinco siete')
     .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
 
   // 2. Horarios
@@ -2778,14 +2778,19 @@ function convertAllNumbersToSpokenSpanishAdmin(text) {
   // 3. Monedas en soles peruanos
   str = str
     .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
+    .replace(/S\/\.?\s*200(?:\.00)?/gi, 'doscientos soles')
     .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
     .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
     .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
+    .replace(/S\/\.?\s*100(?:\.00)?/gi, 'cien soles')
+    .replace(/S\/\.?\s*60(?:\.00)?/gi, 'sesenta soles')
     .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
     .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
     .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
     .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
+    .replace(/S\/\.?\s*18(?:\.00)?/gi, 'dieciocho soles')
     .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
+    .replace(/S\/\.?\s*12(?:\.00)?/gi, 'doce soles')
     .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
     .replace(/S\/\.?\s*5(?:\.00)?/gi, 'cinco soles')
     .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, (match, n) => `${spanishNumberToWordsAdmin(n)} soles`);
@@ -3244,10 +3249,10 @@ function testAdminVoice(type) {
   let phrase = '';
   switch (type) {
     case 'cuenta_bn':
-      phrase = 'La Cuenta Corriente Oficial del Banco de la Nación para todo pago de matrícula o trámite es 00-631-012948, con código interbancario 018-631-000631012948-52 a nombre del Instituto Superior Hermanos Cárcamo.';
+      phrase = 'En el Instituto Superior Hermanos Cárcamo los pagos se realizan únicamente en ventanilla del Banco de la Nación, nunca por Págalo punto pe ni agentes. Las dos cuentas oficiales son 00-638-002361 para matrícula, suficiencia y titulación, y 00-638-025736 para el curso de inglés.';
       break;
     case 'tasas_tupa':
-      phrase = 'La matrícula semestral tiene una tasa de ciento veinte soles según TUPA. El certificado modular cuesta treinta soles y la titulación profesional doscientos cincuenta soles en el Instituto Superior Hermanos Cárcamo.';
+      phrase = 'La matrícula semestral cuesta S/ 250.00 en la cuenta 00-638-002361. El Examen de Suficiencia Profesional cuesta S/ 200.00, el Formato y Caligrafiado de Título S/ 60.00 y el Derecho de Título Profesional S/ 100.00.';
       break;
     case 'carreras':
       phrase = 'Ofrecemos cuatro Carreras Profesionales Técnicas: Computación e Informática, Administración de Negocios Internacionales, Contabilidad, y Desarrollo Pesquero y Acuícola. Todas son carreras públicas sin mensualidades en el Instituto Superior Hermanos Cárcamo.';
@@ -3267,7 +3272,7 @@ function testAdminVoice(type) {
    ========================================================================== */
 
 const AUDIT_LOG_MOCK = [
-  { hora: 'Hoy, 10:42 am', query: '¿Cuál es la cuenta oficial para pagar la matrícula en el Banco de la Nación?', tema: 'pagos', intent: 'Pagos BN (00-631-012948)', certainty: 99.4, feedback: 'up' },
+  { hora: 'Hoy, 10:42 am', query: '¿Cuál es la cuenta oficial para pagar la matrícula en el Banco de la Nación?', tema: 'pagos', intent: 'Pagos BN (00-638-002361 y 00-638-025736)', certainty: 99.4, feedback: 'up' },
   { hora: 'Hoy, 10:35 am', query: 'Quiero ver la malla curricular y cursos de Computación e Informática', tema: 'carreras', intent: 'Malla Curricular Computación e Informática', certainty: 98.8, feedback: 'up' },
   { hora: 'Hoy, 10:18 am', query: '¿Qué pasa si jalo un curso o falto más de 30%?', tema: 'reglamento', intent: 'Reglamento & Inasistencias DPI', certainty: 97.9, feedback: 'up' },
   { hora: 'Hoy, 09:55 am', query: 'Requisitos para tramitar mi carné de medio pasaje de estudiante', tema: 'tramites', intent: 'Trámite Carné TUPA', certainty: 99.5, feedback: 'up' },

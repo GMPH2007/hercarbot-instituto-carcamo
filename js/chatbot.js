@@ -150,12 +150,12 @@ function convertAllNumbersToSpokenSpanish(text) {
 
   // 1. Cuentas bancarias específicas y teléfonos institucionales (con cadencia y pausas de respiración)
   str = str
-    .replace(/00-631-012948/g, 'cero cero, seis tres uno, cero doce, nueve cuatro ocho')
-    .replace(/018-631-000631012948-52/g, 'cero uno ocho, seis tres uno, triple cero, seis tres uno, cero doce, nueve cuatro ocho, cincuenta y dos')
+    .replace(/00-638-002361/g, 'cero cero, seis tres ocho, cero cero, dos tres seis uno')
     .replace(/00-638-025736/g, 'cero cero, seis tres ocho, cero veinticinco, siete tres seis')
     .replace(/20215039231/g, 'dos cero dos uno, cinco cero tres nueve, dos tres uno')
     .replace(/\(073\)\s*251013|073-251013/g, 'cero siete tres, veinticinco, diez, trece')
     .replace(/\(073\)\s*211048|073-211048/g, 'cero siete tres, veintiuno, diez, cuarenta y ocho')
+    .replace(/969\s*100\s*257|969100257/g, 'nueve seis nueve, cien, dos cinco siete')
     .replace(/968\s*184\s*783|968184783/g, 'nueve seis ocho, uno ocho cuatro, siete ocho tres');
 
   // 2. Horarios con formato am/pm
@@ -170,14 +170,19 @@ function convertAllNumbersToSpokenSpanish(text) {
   // 3. Monedas en soles peruanos
   str = str
     .replace(/S\/\.?\s*250(?:\.00)?/gi, 'doscientos cincuenta soles')
+    .replace(/S\/\.?\s*200(?:\.00)?/gi, 'doscientos soles')
     .replace(/S\/\.?\s*180(?:\.00)?/gi, 'ciento ochenta soles')
     .replace(/S\/\.?\s*150(?:\.00)?/gi, 'ciento cincuenta soles')
     .replace(/S\/\.?\s*120(?:\.00)?/gi, 'ciento veinte soles')
+    .replace(/S\/\.?\s*100(?:\.00)?/gi, 'cien soles')
+    .replace(/S\/\.?\s*60(?:\.00)?/gi, 'sesenta soles')
     .replace(/S\/\.?\s*50(?:\.00)?/gi, 'cincuenta soles')
     .replace(/S\/\.?\s*30(?:\.00)?/gi, 'treinta soles')
     .replace(/S\/\.?\s*25(?:\.00)?/gi, 'veinticinco soles')
     .replace(/S\/\.?\s*20(?:\.00)?/gi, 'veinte soles')
+    .replace(/S\/\.?\s*18(?:\.00)?/gi, 'dieciocho soles')
     .replace(/S\/\.?\s*15(?:\.00)?/gi, 'quince soles')
+    .replace(/S\/\.?\s*12(?:\.00)?/gi, 'doce soles')
     .replace(/S\/\.?\s*10(?:\.00)?/gi, 'diez soles')
     .replace(/S\/\.?\s*5(?:\.00)?/gi, 'cinco soles')
     .replace(/S\/\.?\s*(\d+)(?:\.00)?/gi, (match, n) => `${spanishNumberToWords(n)} soles`);
@@ -469,7 +474,7 @@ class HercarBotApp {
 
     if (this.btnTestVoiceNumbers) {
       this.btnTestVoiceNumbers.addEventListener('click', () => {
-        this.speak('La Cuenta Corriente Oficial del Banco de la Nación para matrícula y trámites es 00-631-012948, y la tasa de matrícula es de ciento veinte soles.');
+        this.speak('Las cuentas oficiales en ventanilla del Banco de la Nación son 00-638-002361 para matrícula de S/ 250.00, suficiencia y titulación, y 00-638-025736 para el curso de inglés.');
       });
     }
 
@@ -697,16 +702,16 @@ class HercarBotApp {
       { text: 'Test Vocacional Inteligente (24 preguntas orientadoras)', prompt: 'Quiero hacer el test vocacional', cat: 'general', icon: 'bi-compass-fill', label: 'Test Vocacional' },
       { text: 'Guía de Matrícula paso a paso (Dónde voy y qué hago)', prompt: '¿Cómo es el proceso de matrícula paso a paso en el instituto?', cat: 'tramites', icon: 'bi-ui-checks', label: 'Matrícula' },
       { text: 'Pago en el Banco de la Nación y registro de comprobante', prompt: '¿Cómo realizo el pago en el Banco de la Nación y cómo registro mi voucher?', cat: 'pagos', icon: 'bi-bank', label: 'Pagos BN' },
-      { text: 'Número de Cuenta Bancaria Oficial del Banco de la Nación (00-631-012948)', prompt: '¿Cuál es el número de cuenta bancaria para pagar?', cat: 'pagos', icon: 'bi-bank2', label: 'Cuenta BN' },
-      { text: 'Curso de Inglés obligatorio para titularse (MINEDU Nivel A2)', prompt: '¿El curso de inglés es obligatorio para titularme según el Minedu?', cat: 'tramites', icon: 'bi-translate', label: 'Inglés' },
-      { text: 'Requisitos para tramitar Certificado Modular Progresivo', prompt: '¿Cómo tramito mi Certificado Modular y cuánto demora?', cat: 'tramites', icon: 'bi-award-fill', label: 'Certificados' },
+      { text: 'Números de Cuenta Oficiales del Banco de la Nación (00-638-002361 y 00-638-025736)', prompt: '¿Cuáles son los números de cuenta del Banco de la Nación?', cat: 'pagos', icon: 'bi-bank2', label: 'Cuentas BN' },
+      { text: 'Curso de Inglés obligatorio para titularse (Cuenta BN 00-638-025736)', prompt: '¿El curso de inglés es obligatorio para titularme según el Minedu?', cat: 'tramites', icon: 'bi-translate', label: 'Inglés' },
+      { text: 'Requisitos para Examen de Suficiencia Profesional (S/ 200.00) y Título', prompt: '¿Cuáles son los requisitos para el Examen de Suficiencia Profesional?', cat: 'tramites', icon: 'bi-award-fill', label: 'Suficiencia / Título' },
       { text: 'Bolsa de trabajo y convenios para prácticas en el Puerto de Paita', prompt: '¿Cómo funciona la bolsa de trabajo y convenios para prácticas?', cat: 'general', icon: 'bi-briefcase-fill', label: 'Bolsa Trabajo' },
       { text: 'Ubicación del campus en Paita y turnos de estudio', prompt: '¿Dónde queda el campus institucional y cuál es el horario?', cat: 'general', icon: 'bi-geo-alt-fill', label: 'Ubicación' },
       { text: 'Convenios con Beca 18 y Beca Pronabec', prompt: '¿Puedo estudiar con Beca 18 o Beca Continuidad en HERCAR?', cat: 'admision', icon: 'bi-star-fill', label: 'Becas' },
       { text: 'Calculadora de Inasistencias y límite de DPI (Regla del 30%)', prompt: 'Calculadora de faltas e inasistencias DPI', cat: 'academico', icon: 'bi-calculator-fill', label: 'Calculadora DPI' },
       { text: 'Calculadora de notas y subsanación (Promedio EC 70% + EF 30%)', prompt: 'Calculadora de notas y promedio final', cat: 'academico', icon: 'bi-calculator', label: 'Notas' },
       { text: 'Cotizador y simulador de tasas y pagos TUPA', prompt: 'Cotizador de trámites TUPA', cat: 'pagos', icon: 'bi-receipt', label: 'Cotizador' },
-      { text: 'Métodos de pago digitales: Págalo.pe, App BN, Yape y transferencias CCI', prompt: '¿Cómo pagar por Págalo.pe o transferencia bancaria?', cat: 'pagos', icon: 'bi-phone', label: 'Pagos Digitales' },
+      { text: '¿Se puede pagar por Págalo.pe o agentes? Solo ventanilla del Banco de la Nación', prompt: '¿Se puede pagar por Págalo.pe o agentes?', cat: 'pagos', icon: 'bi-bank', label: 'Canales de Pago' },
       { text: 'Mapa del campus y croquis de pabellones en Paita', prompt: 'Mapa del campus y ambientes del instituto', cat: 'general', icon: 'bi-map', label: 'Campus' },
       { text: 'Calendario Académico 2026: Inicio de clases y cronograma oficial', prompt: 'Calendario académico 2026 y fechas clave', cat: 'academico', icon: 'bi-calendar-event', label: 'Calendario' },
       { text: 'Comparativa de las 4 carreras técnicas: Perfiles y demanda', prompt: 'Comparar las 4 carreras del instituto', cat: 'carrera', icon: 'bi-columns-gap', label: 'Comparador' },
@@ -953,8 +958,8 @@ class HercarBotApp {
     const btnCopyBn = document.getElementById('btnCopyBnFut');
     if (btnCopyBn) {
       btnCopyBn.addEventListener('click', () => {
-        navigator.clipboard?.writeText('00-631-012948').then(() => {
-          this.showToast('Cuenta Banco de la Nación copiada: 00-631-012948', 'success', 'bi-clipboard-check');
+        navigator.clipboard?.writeText('00-638-002361').then(() => {
+          this.showToast('Cuenta Banco de la Nación copiada: 00-638-002361', 'success', 'bi-clipboard-check');
         });
       });
     }
@@ -1427,7 +1432,7 @@ class HercarBotApp {
     const isChecked = (id) => !!document.getElementById(id)?.checked;
     const reqList = [];
     if (isChecked('futAdjDni')) reqList.push('Copia legible de DNI vigente del solicitante');
-    if (isChecked('futAdjVoucher')) reqList.push(`Comprobante de depósito en Banco de la Nación (${cfg.costo}) - Cta. Cte. Nº 00-631-012948`);
+    if (isChecked('futAdjVoucher')) reqList.push(`Comprobante de depósito presencial en ventanilla del Banco de la Nación (${cfg.costo}) - Cta. Cte. N° 00-638-002361`);
     if (isChecked('futAdjFotos')) reqList.push('Fotografías tamaño carné / pasaporte en fondo blanco');
     if (isChecked('futAdjNotas')) reqList.push('Récord académico / Certificado de notas oficial');
     if (isChecked('futAdjPracticas')) reqList.push('Aceptación / Constancia de prácticas preprofesionales EFSRT');
@@ -1961,7 +1966,7 @@ class HercarBotApp {
         </tr>
         <tr>
           <td style="font-weight: bold; color: #065f46;">TASA TUPA:</td>
-          <td colspan="3" style="font-weight: bold; color: #047857;">${data.costo} &bull; Banco de la Nación (Cta. Cte. Nº 00-631-012948)</td>
+          <td colspan="3" style="font-weight: bold; color: #047857;">${data.costo} &bull; Banco de la Nación (Cta. Cte. N° 00-638-002361)</td>
         </tr>
       </table>
     </div>
@@ -3084,9 +3089,9 @@ class HercarBotApp {
     let confidence = 98.4;
     let category = 'general';
 
-    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-631-012948')) {
+    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-638-002361') || norm.includes('00-638-025736')) {
       detectedIntent = 'Gestión de Pagos & Tesorería';
-      matchedEntity = 'Banco de la Nación (Cta: 00-631-012948)';
+      matchedEntity = 'Banco de la Nación (Ctas: 00-638-002361 / 00-638-025736)';
       confidence = 99.8;
       category = 'pagos';
     } else if (norm.includes('carrera') || norm.includes('apsti') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes')) {
@@ -3171,9 +3176,9 @@ class HercarBotApp {
     let matchedEntity = 'IESTP Hermanos Cárcamo';
     let confidence = 98.6;
 
-    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-631-012948') || norm.includes('pagos') || norm.includes('matricula pago')) {
+    if (norm.includes('cuenta') || norm.includes('banco') || norm.includes('pagar') || norm.includes('voucher') || norm.includes('00-638-002361') || norm.includes('00-638-025736') || norm.includes('pagos') || norm.includes('matricula pago')) {
       detectedIntent = 'Gestión de Pagos & Tesorería BN';
-      matchedEntity = 'Banco de la Nación (Cta Cte: 00-631-012948)';
+      matchedEntity = 'Banco de la Nación (Ctas: 00-638-002361 y 00-638-025736)';
       confidence = 99.8;
     } else if (norm.includes('apsti') || norm.includes('computacion') || norm.includes('informatica') || norm.includes('software') || norm.includes('sistemas') || norm.includes('redes') || norm.includes('programacion')) {
       detectedIntent = 'Consulta Curricular - Computación e Informática';
@@ -3364,12 +3369,12 @@ class HercarBotApp {
       },
       {
         id: 'cmd-banco-nacion',
-        title: 'Cuenta Oficial Banco de la Nación & Pagos',
-        desc: 'Cta Cte N° 00-631-012948 • Subir voucher a pagos.ieshercar.edu.pe',
+        title: '2 Cuentas Oficiales Banco de la Nación & Pagos',
+        desc: 'Cta Principal 00-638-002361 • Cta Inglés 00-638-025736 (Solo ventanilla BN)',
         category: 'Pagos & Matrícula',
         icon: 'bi-credit-card-2-front-fill',
         color: '#16a34a',
-        tags: 'banco de la nacion cuenta corriente pagar matricula voucher tasa pagos 00-631-012948',
+        tags: 'banco de la nacion cuenta corriente pagar matricula voucher tasa pagos 00-638-002361 00-638-025736',
         action: () => this.triggerAction('ver_guia_pagos')
       },
       {
@@ -3678,14 +3683,14 @@ class HercarBotApp {
             <div class="faq-card-custom" style="border-left: 4px solid #10b981 !important;">
               <h5 class="faq-custom-title text-success"><i class="bi bi-cash-coin me-2"></i>Costo de la Carrera: ${carrera.nombre}</h5>
               <p>¡En el <strong>IESTP "Hermanos Cárcamo"</strong> la educación es <strong>100% pública y gratuita</strong>! No se pagan pensiones ni mensualidades.</p>
-              <p>Únicamente se abona la tasa de matrícula institucional semestral de <strong>S/ 120.00</strong> en el <strong>Banco de la Nación</strong> (Cuenta Corriente Oficial N° 00-631-012948), la cual cubre carné de medio pasaje y Seguro Integral de Salud (SIS).</p>
+              <p>Únicamente se abona la tasa de matrícula institucional semestral de <strong>S/ 250.00</strong> de forma presencial en <strong>ventanilla del Banco de la Nación</strong> (Cuenta Corriente Oficial N° <strong>00-638-002361</strong>). No se aceptan pagos por Págalo.pe ni agentes.</p>
               <div class="interactive-button-grid mt-3">
-                <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Ver Cuenta Banco de la Nación</button>
+                <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-credit-card text-warning"></i> Ver 2 Cuentas Banco de la Nación</button>
                 <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-mortarboard-fill text-primary"></i> Modalidades de Admisión</button>
               </div>
             </div>
           `;
-          this.appendBotMessage(html, `¡No se pagan mensualidades ni pensiones! La carrera de ${carrera.nombre} es pública y gratuita. Solo abonas la matrícula semestral de ciento veinte soles en el Banco de la Nación.`);
+          this.appendBotMessage(html, `¡No se pagan mensualidades ni pensiones! La carrera de ${carrera.nombre} es pública. Solo abonas la matrícula semestral de doscientos cincuenta soles en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno.`);
           return true;
         }
 
@@ -4205,7 +4210,7 @@ class HercarBotApp {
         <div class="suggested-prompts-section mb-3">
           <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Consultas rápidas recomendadas:</span>
           <div class="prompts-chips-wrapper">
-            <button class="prompt-chip" data-prompt="¿Cuál es el número de cuenta bancaria para pagar?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuenta BN 00-631-012948</button>
+            <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuentas BN (00-638-002361 / 025736)</button>
             <button class="prompt-chip" data-prompt="¿Cómo es la admisión 2026 y requisitos?"><i class="bi bi-pencil-square me-1 text-success"></i> Admisión 2026</button>
             <button class="prompt-chip" data-prompt="Háblame sobre la carrera de Computación e Informática"><i class="bi bi-laptop me-1 text-info"></i> Computación e Informática</button>
             <button class="prompt-chip" data-prompt="Iniciar test de orientación vocacional"><i class="bi bi-compass-fill me-1 text-danger"></i> Test Vocacional</button>
@@ -4487,9 +4492,10 @@ class HercarBotApp {
 ━━━━━━━━━━━━━━━━━━
 ${text}
 ━━━━━━━━━━━━━━━━━━
-📌 *Cuenta Banco de la Nación:* 00-631-012948
-💳 *Código CCI:* 018-631-000631012948-52
-📍 *Campus Central:* Av. Miguel Grau Mz. A Lt. 01, Paita Alta
+📌 *Cta. Principal BN:* 00-638-002361 (Matrícula, Suficiencia, Título)
+🇬🇧 *Cta. Inglés BN:* 00-638-025736 (2 copias en Tesorería)
+⚠️ *Canal de Pago:* Solo ventanilla del Banco de la Nación (No Págalo.pe)
+📍 *Campus Central:* Av. Miguel Grau . Urb. El Parque - Mz. A - Lote 01 - Paita
 🌐 *Portal Web Oficial:* https://ieshercar.edu.pe/`;
 
       const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`;
@@ -4912,7 +4918,7 @@ ${text}
     }
 
     // 14.4 Número de Cuenta Bancaria Oficial para Pagos (Banco de la Nación / CCI)
-    if (norm.includes('numero de cuenta') || norm.includes('num de cuenta') || norm.includes('nro de cuenta') || norm.includes('pasa la cuenta') || norm.includes('pasar la cuenta') || norm.includes('pasas la cuenta') || norm.includes('pasa el numero') || norm.includes('dame la cuenta') || norm.includes('a que cuenta') || norm.includes('cuenta para pagar') || norm.includes('cuenta bancaria') || (norm.includes('cuenta') && (norm.includes('banco') || norm.includes('nacion') || norm.includes('depositar') || norm.includes('transferir') || norm.includes('corriente') || norm.includes('pagar') || norm.includes('deposito'))) || norm.includes('cual es la cuenta') || norm.includes('datos bancarios') || norm.includes('datos de la cuenta') || norm.includes('cci del banco') || norm.includes('codigo interbancario')) {
+    if (norm.includes('numero de cuenta') || norm.includes('numeros de cuenta') || norm.includes('num de cuenta') || norm.includes('nro de cuenta') || norm.includes('pasa la cuenta') || norm.includes('pasar la cuenta') || norm.includes('pasas la cuenta') || norm.includes('pasa el numero') || norm.includes('dame la cuenta') || norm.includes('a que cuenta') || norm.includes('cuenta para pagar') || norm.includes('cuenta bancaria') || (norm.includes('cuenta') && (norm.includes('banco') || norm.includes('nacion') || norm.includes('depositar') || norm.includes('transferir') || norm.includes('corriente') || norm.includes('pagar') || norm.includes('deposito'))) || norm.includes('cual es la cuenta') || norm.includes('cuales son las cuentas') || norm.includes('datos bancarios') || norm.includes('datos de la cuenta') || norm.includes('00-638-002361') || norm.includes('002361') || norm.includes('cci del banco') || norm.includes('codigo interbancario')) {
       this.renderNumeroCuentaBancaria();
       this.logQuery('pagos');
       return;
@@ -4925,8 +4931,8 @@ ${text}
       return;
     }
 
-    // 14.6 Métodos de Pago Digitales (Págalo.pe, App BN, Yape, Plin y Transferencia CCI)
-    if (norm.includes('pagalo') || norm.includes('yape') || norm.includes('plin') || norm.includes('interbancari') || norm.includes('transferencia') || norm.includes('cci') || norm.includes('agente multired') || norm.includes('sin ir al banco') || norm.includes('pagar por internet') || norm.includes('pago digital') || norm.includes('pago virtual') || norm.includes('app bn') || norm.includes('aplicativo bn')) {
+    // 14.6 Canal de Pago Oficial (Aclaración: NO Págalo.pe, NO Yape, NO Agentes; solo ventanilla Banco de la Nación)
+    if (norm.includes('pagalo') || norm.includes('yape') || norm.includes('plin') || norm.includes('interbancari') || norm.includes('transferencia') || norm.includes('cci') || norm.includes('agente multired') || norm.includes('agentes') || norm.includes('sin ir al banco') || norm.includes('pagar por internet') || norm.includes('pago digital') || norm.includes('pago virtual') || norm.includes('app bn') || norm.includes('aplicativo bn')) {
       this.renderMetodosPagoDigitales();
       this.logQuery('pagos');
       return;
@@ -4946,8 +4952,19 @@ ${text}
       return;
     }
 
+    // 15.5 Examen de Suficiencia Profesional o Trámite de Título Profesional (Flayers Oficiales)
+    if ((norm.includes('examen de suficiencia') || (norm.includes('suficiencia') && !norm.includes('ingles'))) || norm.includes('caligrafiado') || norm.includes('ficha de actividades') || norm.includes('tramite de titulo') || norm.includes('requisitos de titulo') || norm.includes('requisitos para titulo')) {
+      const targetId = (norm.includes('suficiencia')) ? 'tramite-suficiencia-profesional' : 'tramite-titulacion';
+      const tr = GUIA_TRAMITES_TUPA.find(t => t.id === targetId);
+      if (tr) {
+        this.renderTramiteDetalle(tr);
+        this.logQuery('tramites');
+        return;
+      }
+    }
+
     // 16. Curso de Inglés, Requisito de Titulación y Pagos Específicos (00-638-025736)
-    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles tecnico') || norm.includes('suficiencia') || norm.includes('00-638-025736') || norm.includes('025736') || norm.includes('pago ingles') || norm.includes('voucher ingles') || norm.includes('tania herrera') || norm.includes('omar garcia') || norm.includes('deuda ingles')) {
+    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles tecnico') || norm.includes('00-638-025736') || norm.includes('025736') || norm.includes('pago ingles') || norm.includes('voucher ingles') || norm.includes('tania herrera') || norm.includes('omar garcia') || norm.includes('deuda ingles')) {
       this.renderCursoIngles();
       this.logQuery('ingles');
       return;
@@ -5126,7 +5143,9 @@ ${text}
         * Sistema Académico / Matrícula: https://sistema.ieshercar.edu.pe/acceso
         * Aula Virtual: https://aula.ieshercar.edu.pe/
         * Trámites y Mesa de Partes: https://ieshercar.edu.pe/registro-tramite/
-      - Matrícula y Pagos: Cuenta corriente oficial del Banco de la Nación N.° 00-631-012948. Tras pagar, el alumno sube el voucher nítido a pagos.ieshercar.edu.pe o lo presenta en Tesorería.
+      - Matrícula y Pagos (SOLO en ventanilla del Banco de la Nación, NO se paga en Págalo.pe ni agentes):
+        * Cuenta Corriente Principal BN N.° 00-638-002361 (Matrícula Semestral S/ 250.00, Examen de Suficiencia Profesional S/ 200.00, Formato/Caligrafiado Título S/ 60.00, Derecho Título S/ 100.00, Ficha Actividades Sist. Tradicional <=2008 S/ 12.00). Registrar voucher en https://pagos.ieshercar.edu.pe/ para boleta electrónica y presentar en Tesorería (en matrícula: voucher original + 3 copias de boleta en Tesorería y 1 copia sellada a Secretaría Académica).
+        * Cuenta Corriente Inglés BN N.° 00-638-025736 (Curso de Inglés: sacar 2 copias al voucher y entregarlos en Tesorería).
       - Requisito de Inglés: Para obtener el Título Profesional Técnico a Nombre de la Nación, es obligatorio acreditar el nivel Básico A2 de inglés (Ley N.° 30512 del MINEDU).
       
       INSTRUCCIONES DE RESPUESTA:
@@ -5184,9 +5203,9 @@ ${text}
       El estudiante te ha compartido una imagen o comprobante bancario.
       TU MISIÓN:
       1. Si es un comprobante de pago o voucher del Banco de la Nación:
-         - Identifica si es para el IESTP Hermanos Cárcamo (Cuenta: 00-631-012948, RUC: 20484258810).
+         - Identifica si es para el IESTP Hermanos Cárcamo (Cta. Principal Matrícula/Trámites: 00-638-002361 o Cta. Inglés: 00-638-025736).
          - Revisa monto, fecha y número de operación.
-         - Indícale al estudiante que debe registrarlo en https://pagos.ieshercar.edu.pe/ para que Tesorería lo valide.
+         - Recuérdale que no se realizan pagos en Págalo.pe ni agentes, y que debe registrarlo en https://pagos.ieshercar.edu.pe/ para generar la boleta electrónica y presentarlo con sus copias en Tesorería.
       2. Si es un certificado de estudios, DNI o documento:
          - Oriéntalo con amabilidad sobre el trámite institucional que le corresponde en https://ieshercar.edu.pe/registro-tramite/.
       3. Responde siempre con formato limpio en español, destacando datos y próximos pasos.
@@ -5248,14 +5267,14 @@ ${text}
         <div class="row g-2 mb-3">
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-primary d-block mb-1"><i class="bi bi-bank me-1"></i> 1. Banco y Cuenta Corriente</strong>
-              <span>Banco de la Nación del Perú.<br>Cta. Cte.: <strong>00-631-012948</strong><br>Titular: IESTP Hermanos Cárcamo.</span>
+              <strong class="text-primary d-block mb-1"><i class="bi bi-bank me-1"></i> 1. Banco y Cuentas Oficiales</strong>
+              <span>Banco de la Nación (Solo ventanilla):<br>• Principal: <strong>00-638-002361</strong><br>• Inglés: <strong>00-638-025736</strong></span>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-success d-block mb-1"><i class="bi bi-cash-stack me-1"></i> 2. Tasas Oficiales Válidas</strong>
-              <span>• Matrícula Regular: <strong>S/ 180.00</strong><br>• Examen Ordinario: <strong>S/ 150.00</strong><br>• Certificado Modular: <strong>S/ 50.00</strong></span>
+              <strong class="text-success d-block mb-1"><i class="bi bi-cash-stack me-1"></i> 2. Tasas Oficiales Vigentes</strong>
+              <span>• Matrícula Semestral: <strong>S/ 250.00</strong><br>• Suficiencia Prof.: <strong>S/ 200.00</strong><br>• Título Prof.: <strong>S/ 100.00 + S/ 60.00</strong></span>
             </div>
           </div>
           <div class="col-sm-6">
@@ -5306,16 +5325,17 @@ ${text}
             <span>¿QUÉ SE PAGA Y CUÁNTO ES?</span>
           </div>
           <p class="mb-1 text-dark"><strong>¡Educación Pública sin Mensualidades!</strong> En el IESTP Hermanos Cárcamo no se pagan pensiones de enseñanza ni mensualidades.</p>
-          <p class="mb-0 text-muted">Solo se abona la tasa administrativa por <strong>Derecho de Matrícula Semestral</strong> (aprox. <strong>S/. 120.00</strong> por semestre según TUPA, que incluye carné de medio pasaje y seguro estudiantil SIS).</p>
+          <p class="mb-0 text-muted">El derecho de <strong>Matrícula Semestral es de S/. 250.00</strong> (alumnos regulares).</p>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
           <div class="d-flex align-items-center gap-2 mb-2 text-warning fw-bold" style="color:#d97706 !important;">
             <span class="badge bg-warning text-dark rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">2</span>
-            <span>¿DÓNDE PAGO? (BANCO DE LA NACIÓN)</span>
+            <span>¿DÓNDE PAGO? (SOLO VENTANILLA DEL BANCO DE LA NACIÓN)</span>
           </div>
-          <p class="mb-1"><strong>Cuenta Corriente Oficial:</strong> <code class="fs-6 px-2 py-1 bg-white border rounded">00-631-012948</code></p>
-          <p class="mb-0 text-muted">A nombre de: <em>IESTP Hermanos Cárcamo</em>. Puedes pagar en cualquier agencia del Banco de la Nación, Agente MultiRed o en línea por la plataforma <strong>Págalo.pe</strong>.</p>
+          <p class="mb-1"><strong>Cuenta Corriente Principal (Matrícula y Trámites):</strong> <code class="fs-6 px-2 py-1 bg-white border rounded">00-638-002361</code></p>
+          <p class="mb-1"><strong>Cuenta Específica Curso de Inglés:</strong> <code class="fs-6 px-2 py-1 bg-white border rounded">00-638-025736</code> <small class="text-muted">(sacar 2 copias al voucher para Tesorería)</small></p>
+          <p class="mb-0 text-danger fw-semibold"><i class="bi bi-exclamation-octagon-fill me-1"></i> ¡Importante! No se realizan pagos en Págalo.pe ni en agentes. Acércate presencialmente a ventanilla del Banco de la Nación dando el DNI y nombres completos del estudiante (incluso si paga otra persona).</p>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
@@ -5323,18 +5343,17 @@ ${text}
             <span class="badge bg-danger rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">3</span>
             <span>¿QUÉ HAGO INMEDIATAMENTE DESPUÉS DE PAGAR?</span>
           </div>
-          <p class="mb-0 text-muted">Conserva el voucher original en físico (¡no lo botes ni lo ensucies!). Tómale una <strong>foto nítida y legible</strong> con tu celular donde se aprecie claramente el <strong>N° de Operación, Fecha, Hora e Importe</strong> depositado.</p>
+          <p class="mb-0 text-muted">Conserva el voucher original en físico y registra los datos en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> para generar tu <strong>boleta electrónica</strong>.</p>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
           <div class="d-flex align-items-center gap-2 mb-2 text-success fw-bold">
             <span class="badge bg-success rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">4</span>
-            <span>¿A DÓNDE VOY O DÓNDE LO REGISTRO?</span>
+            <span>¿A DÓNDE VOY? (TESORERÍA Y SECRETARÍA ACADÉMICA)</span>
           </div>
-          <p class="mb-2 text-muted">Tienes dos opciones:</p>
-          <ul class="mb-2 ps-3 text-muted">
-            <li><strong>Virtual (Recomendado):</strong> Entra a <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a>, selecciona "Matrícula", digita tu DNI, los datos del voucher y adjunta la foto.</li>
-            <li><strong>Presencial:</strong> Acércate a la <strong>Oficina de Tesorería / Secretaría</strong> del campus en <em>Av. Víctor Raúl Haya de la Torre s/n, Paita Alta</em> (Lunes a Viernes de 8:00 a.m. a 1:00 p.m.).</li>
+          <ul class="mb-0 ps-3 text-muted">
+            <li><strong>Tesorería (Av. Miguel Grau . Urb. El Parque - Mz. A - Lote 01 - Paita, Lun-Vie 8:00 a.m. - 3:00 p.m.):</strong> Presenta el voucher original y <strong>3 copias de la boleta electrónica</strong> para que las sellen.</li>
+            <li><strong>Secretaría Académica:</strong> Entrega <strong>1 copia sellada y firmada</strong> para validar formalmente tu matrícula.</li>
           </ul>
         </div>
 
@@ -5343,17 +5362,17 @@ ${text}
             <span class="badge bg-info text-dark rounded-circle" style="width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;">5</span>
             <span>¿CÓMO SÉ QUE YA ESTOY MATRICULADO?</span>
           </div>
-          <p class="mb-0 text-muted">En 24 a 48 horas hábiles, Secretaría Académica valida el comprobante, emite tu <strong>Ficha de Matrícula Oficial</strong> y habilita tus credenciales para el <a href="https://sistema.ieshercar.edu.pe/acceso" target="_blank">Sistema Académico</a> y el <a href="https://aula.ieshercar.edu.pe/" target="_blank">Aula Virtual</a>.</p>
+          <p class="mb-0 text-muted">Con la copia sellada y registrada en Secretaría Académica, se emite tu <strong>Ficha de Matrícula Oficial</strong> y se habilitan tus accesos al <a href="https://sistema.ieshercar.edu.pe/acceso" target="_blank">Sistema Académico</a> y <a href="https://aula.ieshercar.edu.pe/" target="_blank">Aula Virtual</a>.</p>
         </div>
 
         <div class="interactive-button-grid">
           <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn" style="text-decoration:none;"><i class="bi bi-box-arrow-up-right text-warning"></i> Ir a pagos.ieshercar.edu.pe</a>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles"><i class="bi bi-translate text-primary"></i> Curso de Inglés (Titulación)</button>
+          <button class="interactive-btn" data-chat-action="ver_curso_ingles"><i class="bi bi-translate text-primary"></i> Curso de Inglés (00-638-025736)</button>
           <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-danger"></i> Dónde queda el Instituto</button>
         </div>
       </div>
     `;
-    this.appendBotMessage(html, "¡Hola! Con gusto te explico los pasos de matrícula. Recuerda que al ser educación pública no pagas mensualidades, solo la tasa semestral en el Banco de la Nación y registras tu voucher en el portal oficial.", [
+    this.appendBotMessage(html, "¡Hola! Con gusto te explico el proceso oficial de matrícula: realizas el pago de doscientos cincuenta soles en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno, recuerda que no se paga en Págalo punto pe ni en agentes. Luego generas tu boleta electrónica en pagos punto i e s hercar punto edu punto pe, llevas tres copias a Tesorería y entregas una copia sellada en Secretaría Académica.", [
       { label: "🧾 ¿Qué hago con el voucher?", prompt: "¿Qué hago después de pagar en el Banco de la Nación?" },
       { label: "🌐 Curso de Inglés", prompt: "¿Cómo es el curso de inglés para titularme?" },
       { label: "📍 Ubicación y Horarios", prompt: "¿Dónde queda el instituto y cuál es el horario?" }
@@ -6089,7 +6108,10 @@ ${text}
             <i class="bi bi-translate text-primary"></i> Guía del Curso de Inglés
           </button>
           <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion">
-            <i class="bi bi-file-earmark-check text-success"></i> Trámite TUPA Titulación
+            <i class="bi bi-file-earmark-check text-success"></i> Requisitos Título Profesional
+          </button>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-suficiencia-profesional">
+            <i class="bi bi-journal-check text-info"></i> Requisitos Examen Suficiencia
           </button>
           <button class="interactive-btn" data-chat-action="ver_bolsa_trabajo">
             <i class="bi bi-building text-warning"></i> Empresas Aliadas en Paita
@@ -6524,17 +6546,17 @@ ${text}
             <h3 class="fw-bold mb-0 text-white">S/. ${total}.00</h3>
           </div>
           <div class="text-end">
-            <span class="badge bg-warning text-dark fw-bold px-3 py-2"><i class="bi bi-bank me-1"></i> Cta. Cte. 00-631-012948</span>
+            <span class="badge bg-warning text-dark fw-bold px-3 py-2"><i class="bi bi-bank me-1"></i> Cta. Cte. 00-638-002361</span>
           </div>
         </div>
 
         <div class="p-3 bg-light rounded-3 border small mb-3">
-          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-credit-card me-1 text-primary"></i> Datos para tu Pago:</h6>
+          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-credit-card me-1 text-primary"></i> Datos Oficiales para tu Pago (Solo Ventanilla BN):</h6>
           <ul class="mb-0 ps-3 text-muted">
-            <li><strong>Banco de la Nación:</strong> Cuenta Corriente N° <code>00-631-012948</code>.</li>
-            <li><strong>Código de Cuenta Interbancario (CCI):</strong> <code>018-631-000631012948-52</code> (Desde cualquier banco o Págalo.pe).</li>
-            <li><strong>Titular Oficial:</strong> IESTP Hermanos Cárcamo.</li>
-            <li><strong>Registro de Comprobante:</strong> Una vez realizado el pago, sube la foto a <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a> con tu DNI.</li>
+            <li><strong>Cta. Cte. Principal (Matrícula, Suficiencia, Título y TUPA):</strong> <code>00-638-002361</code>.</li>
+            <li><strong>Cta. Cte. Curso de Inglés:</strong> <code>00-638-025736</code> (sacar 2 copias al voucher y entregar en Tesorería).</li>
+            <li><strong>Canal Único Oficial:</strong> Únicamente presencial en <strong>ventanillas del Banco de la Nación</strong> (no se paga en Págalo.pe ni agentes).</li>
+            <li><strong>Registro de Comprobante:</strong> Registra tu voucher en <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a> para generar tu boleta electrónica y preséntala en Tesorería.</li>
           </ul>
         </div>
 
@@ -6542,8 +6564,8 @@ ${text}
           <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
             <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Subir a pagos.ieshercar.edu.pe
           </a>
-          <button class="interactive-btn" data-chat-action="ver_metodos_pago_digitales">
-            <i class="bi bi-phone-fill text-success"></i> Ver Pagos con Págalo.pe / App
+          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn">
+            <i class="bi bi-bank2 text-success"></i> Copiar las 2 Cuentas del BN
           </button>
           <button class="interactive-btn" data-chat-action="ver_tramites_tupa">
             <i class="bi bi-file-earmark-text text-warning"></i> Requisitos de Trámites
@@ -6552,9 +6574,9 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, `El total calculado para los trámites seleccionados es de S/. ${total}.00 a depositar en la Cuenta Corriente 00-631-012948 del Banco de la Nación.`, [
+    this.appendBotMessage(html, `El total calculado para los trámites seleccionados es de S/. ${total}.00 a depositar en ventanilla del Banco de la Nación en la Cuenta Corriente 00-638-002361.`, [
       { label: "💳 ¿Cómo registrar voucher?", prompt: "¿Cómo registro mi voucher en el portal de pagos?" },
-      { label: "📱 Pagos con Págalo.pe", prompt: "¿Cómo pagar con Págalo.pe o transferencia bancaria?" }
+      { label: "🏦 Ver 2 cuentas BN", prompt: "¿Cuáles son los números de cuenta del Banco de la Nación?" }
     ]);
   }
 
@@ -6676,131 +6698,115 @@ ${text}
   }
 
   /**
-   * Guía de Métodos de Pago Digitales (Págalo.pe, App BN, CCI y Agentes)
+   * Guía Oficial Sobre Canales de Pago (Solo Ventanilla del Banco de la Nación)
    */
   renderMetodosPagoDigitales() {
     const html = `
-      <div class="faq-card-custom" style="border-top: 4px solid #10b981;">
+      <div class="faq-card-custom" style="border-top: 4px solid #dc2626;">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-success px-3 py-1"><i class="bi bi-wallet2 me-1"></i>Canales Digitales</span>
-          <span class="badge bg-light text-dark border">Sin Hacer Colas</span>
+          <span class="badge bg-danger px-3 py-1"><i class="bi bi-exclamation-octagon-fill me-1"></i>Aviso Oficial de Tesorería</span>
+          <span class="badge bg-light text-dark border">IESTP Hermanos Cárcamo</span>
         </div>
-        <h4 class="fw-bold mb-1 text-dark">Cómo Pagar por Canales Digitales y Agentes</h4>
-        <p class="small text-muted mb-3">Evita colas en la agencia bancaria utilizando las opciones digitales oficiales:</p>
+        <h4 class="fw-bold mb-1 text-dark">¿Se puede pagar por Págalo.pe o Agentes?</h4>
+        <div class="alert alert-danger py-2 px-3 small mb-3">
+          <strong><i class="bi bi-x-circle-fill me-1"></i> ¡NO!</strong> En el IESTP Hermanos Cárcamo <strong>no se realizan pagos en Págalo.pe, Yape, Plin ni Agentes MultiRed</strong>. Todos los pagos se realizan <strong>únicamente de forma presencial en ventanilla del Banco de la Nación</strong>, brindando el DNI y nombres completos del estudiante.
+        </div>
 
-        <div class="row g-2 mb-3">
-          <div class="col-sm-6">
-            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-globe2 text-primary fs-5"></i>
-                <h6 class="fw-bold text-dark mb-0">1. Págalo.pe (Web y App)</h6>
+        <div class="d-flex flex-column gap-2 mb-3">
+          <div class="p-3 bg-light rounded-3 border">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary rounded-pill">Cuenta 1</span>
+                <h6 class="fw-bold text-dark mb-0">Cuenta Principal Institucional</h6>
               </div>
-              <p class="small text-muted mb-2">Paga con cualquier tarjeta de débito o crédito Visa o Mastercard sin costo adicional.</p>
-              <a href="https://pagalo.pe/" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3" style="font-size: 0.76rem;">
-                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Págalo.pe
-              </a>
+              <button class="btn btn-xs btn-warning text-dark fw-bold rounded-pill px-3 py-1"
+                      onclick="hercarBotApp.copyData('00-638-002361', 'Cuenta Principal BN')">
+                <i class="bi bi-clipboard me-1"></i> Copiar 00-638-002361
+              </button>
             </div>
+            <code class="d-block p-2 bg-white border rounded text-primary fw-bold fs-6 mb-1">00-638-002361</code>
+            <p class="small text-muted mb-0">Para <strong>Matrícula Semestral (S/. 250.00)</strong>, <strong>Examen de Suficiencia Profesional (S/. 200.00)</strong>, <strong>Título Profesional (S/. 60.00 + S/. 100.00 + S/. 12.00)</strong> y trámites TUPA. Luego genera tu boleta electrónica en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a>.</p>
           </div>
 
-          <div class="col-sm-6">
-            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-bank text-success fs-5"></i>
-                <h6 class="fw-bold text-dark mb-0">2. Transferencia Interbancaria (CCI)</h6>
+          <div class="p-3 bg-light rounded-3 border">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-success rounded-pill">Cuenta 2</span>
+                <h6 class="fw-bold text-dark mb-0">Cuenta Curso de Inglés</h6>
               </div>
-              <p class="small text-muted mb-1">Transfiere desde tu banca móvil BCP, BBVA, Interbank o Yape (opción a otros bancos):</p>
-              <code class="d-block p-1 bg-light rounded text-primary fw-bold" style="font-size: 0.78rem;">018-631-000631012948-52</code>
+              <button class="btn btn-xs btn-primary text-white fw-bold rounded-pill px-3 py-1"
+                      onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
+                <i class="bi bi-clipboard me-1"></i> Copiar 00-638-025736
+              </button>
             </div>
-          </div>
-
-          <div class="col-sm-6">
-            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-shop text-warning fs-5"></i>
-                <h6 class="fw-bold text-dark mb-0">3. Agentes MultiRed en Paita</h6>
-              </div>
-              <p class="small text-muted mb-0">Deposita en bodegas o farmacias con agente en Paita Alta o Baja a la Cuenta Corriente: <strong>00-631-012948</strong>.</p>
-            </div>
-          </div>
-
-          <div class="col-sm-6">
-            <div class="p-3 bg-white rounded-3 border h-100 shadow-sm">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-camera-fill text-info fs-5"></i>
-                <h6 class="fw-bold text-dark mb-0">4. Registro Obligatorio</h6>
-              </div>
-              <p class="small text-muted mb-0">Guarda la captura o foto del voucher e ingrésala en <a href="https://pagos.ieshercar.edu.pe/" target="_blank">pagos.ieshercar.edu.pe</a> para que Caja valide.</p>
-            </div>
+            <code class="d-block p-2 bg-white border rounded text-success fw-bold fs-6 mb-1">00-638-025736</code>
+            <p class="small text-muted mb-0">El pago se realiza en el Banco de la Nación en la cuenta <strong>00-638-025736</strong>. Debes sacar <strong>2 copias a tu voucher</strong> y entregarlos en Tesorería en la oficina del instituto.</p>
           </div>
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_cotizador_tupa">
-            <i class="bi bi-calculator text-warning"></i> Abrir Cotizador de Tasas TUPA
-          </button>
           <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
-            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Subir a pagos.ieshercar.edu.pe
+            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Generar Boleta en pagos.ieshercar.edu.pe
           </a>
-          <button class="interactive-btn" data-chat-action="ver_guia_pagos">
-            <i class="bi bi-credit-card text-success"></i> Ver Video Tutorial de Pagos
+          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn">
+            <i class="bi bi-bank2 text-warning"></i> Ver Tarjeta de 2 Cuentas BN
           </button>
         </div>
       </div>
     `;
 
-    this.appendBotMessage(html, "Puedes realizar tus abonos cómodamente sin colas a través de Págalo.pe, transferencias interbancarias por CCI o agentes MultiRed.", [
-      { label: "🏦 Cotizador de tasas", prompt: "¿Cuánto cuesta el trámite o matrícula?" },
-      { label: "💳 Registrar comprobante", prompt: "¿Cómo registrar el voucher en el portal?" }
+    this.appendBotMessage(html, "¡Atención! En el Instituto Hermanos Cárcamo no se realizan pagos en Págalo punto pe ni en agentes. Todos los pagos se efectúan presencialmente en ventanilla del Banco de la Nación en una de las dos cuentas oficiales: cero cero, seis tres ocho, cero cero, dos tres seis uno para matrícula y trámites, o cero cero, seis tres ocho, cero veinticinco, siete tres seis para el curso de inglés.", [
+      { label: "🏦 Copiar cuentas BN", prompt: "¿Cuáles son los números de cuenta del Banco de la Nación?" },
+      { label: "💳 Pasos de matrícula", prompt: "¿Cómo es el proceso de matrícula paso a paso en el instituto?" }
     ]);
   }
 
   /**
-   * Tarjeta Oficial de Cuentas Bancarias del IESTP Hermanos Cárcamo
-   * Muestra la Cuenta Corriente del Banco de la Nación y CCI para copiar con 1 clic
+   * Tarjeta Oficial de las 2 Cuentas Bancarias del IESTP Hermanos Cárcamo
    */
   renderNumeroCuentaBancaria() {
     const html = `
       <div class="faq-card-custom" style="border-top: 4px solid #f59e0b;">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
           <span class="badge bg-warning text-dark px-3 py-1 fw-bold"><i class="bi bi-bank me-1"></i>Banco de la Nación</span>
-          <span class="badge bg-success text-white"><i class="bi bi-shield-check me-1"></i>Cuenta Oficial de Recaudación</span>
+          <span class="badge bg-danger text-white"><i class="bi bi-exclamation-circle me-1"></i>Solo Ventanilla (NO Págalo.pe)</span>
         </div>
-        <h4 class="fw-bold mb-1 text-dark">Número de Cuenta Oficial para Pagos</h4>
+        <h4 class="fw-bold mb-1 text-dark">2 Números de Cuenta Oficiales — Banco de la Nación</h4>
         <p class="small text-muted mb-3">
-          Aquí tienes los datos bancarios oficiales del <strong>IESTP "Hermanos Cárcamo" de Paita</strong> para abonar matrícula, carné de medio pasaje, certificados modulares o trámites TUPA:
+          El <strong>IESTP "Hermanos Cárcamo" de Paita</strong> cuenta con <strong>2 números de cuenta oficiales</strong> en el Banco de la Nación según el trámite:
         </p>
 
-        <!-- Tarjeta Premium de Cuentas y Códigos -->
+        <!-- Tarjeta Premium de las 2 Cuentas -->
         <div class="p-3 rounded-3 mb-3 border shadow-sm" style="background: linear-gradient(135deg, #091a3e 0%, #163e8c 100%); color: #ffffff;">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
             <div class="d-flex align-items-center gap-2">
               <img src="https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png" alt="Logo" style="width: 28px; height: 28px; background: #fff; border-radius: 6px; padding: 2px;">
               <span class="small text-white-50 fw-semibold">Banco de la Nación del Perú</span>
             </div>
-            <span class="badge bg-warning text-dark fw-bold">Cuenta Corriente</span>
+            <span class="badge bg-warning text-dark fw-bold">2 Cuentas Corrientes</span>
           </div>
 
-          <!-- Cuenta Corriente BN -->
-          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);">
+          <!-- Cuenta Principal BN -->
+          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);">
             <div>
-              <span class="small d-block text-white-50" style="font-size: 0.74rem;">Número de Cuenta Corriente (BN):</span>
-              <span class="fs-4 fw-bold font-monospace text-warning d-block" style="letter-spacing: 1px;">00-631-012948</span>
+              <span class="small d-block text-warning fw-bold" style="font-size: 0.76rem;">1. Cuenta Principal (Matrícula S/ 250, Suficiencia S/ 200, Título S/ 100 + S/ 60):</span>
+              <span class="fs-4 fw-bold font-monospace text-white d-block" style="letter-spacing: 1px;">00-638-002361</span>
             </div>
-            <button class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3 py-1 shadow-sm" 
-                    onclick="hercarBotApp.copyData('00-631-012948', 'Cuenta Corriente BN')">
-              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta
+            <button class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3 py-1 shadow-sm"
+                    onclick="hercarBotApp.copyData('00-638-002361', 'Cuenta Principal BN')">
+              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta 1
             </button>
           </div>
 
-          <!-- CCI Interbancario -->
-          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);">
+          <!-- Cuenta Curso de Inglés BN -->
+          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);">
             <div>
-              <span class="small d-block text-white-50" style="font-size: 0.74rem;">Código de Cuenta Interbancario (CCI - Otros Bancos / Yape / Págalo.pe):</span>
-              <span class="fs-5 fw-bold font-monospace text-white d-block" style="letter-spacing: 0.5px;">018-631-000631012948-52</span>
+              <span class="small d-block text-info fw-bold" style="font-size: 0.76rem;">2. Cuenta Curso de Inglés (Sacar 2 copias al voucher y entregar en Tesorería):</span>
+              <span class="fs-4 fw-bold font-monospace text-warning d-block" style="letter-spacing: 1px;">00-638-025736</span>
             </div>
-            <button class="btn btn-sm btn-outline-light fw-bold rounded-pill px-3 py-1" 
-                    onclick="hercarBotApp.copyData('018-631-000631012948-52', 'Código CCI')">
-              <i class="bi bi-clipboard me-1"></i> Copiar CCI
+            <button class="btn btn-sm btn-outline-light fw-bold rounded-pill px-3 py-1"
+                    onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
+              <i class="bi bi-clipboard me-1"></i> Copiar Cuenta 2
             </button>
           </div>
 
@@ -6809,30 +6815,22 @@ ${text}
           </div>
         </div>
 
-        <!-- Canales de Pago Disponibles -->
+        <!-- Canal Único y Reglas -->
         <div class="p-3 bg-light rounded-3 border small mb-3">
-          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-wallet2 text-primary me-1"></i> ¿Cómo y dónde puedes pagar con este número de cuenta?</h6>
+          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-wallet2 text-primary me-1"></i> ¿Cómo se realizan los pagos oficialmente?</h6>
           <div class="row g-2">
             <div class="col-sm-6">
               <div class="p-2 bg-white rounded border h-100">
-                <strong class="text-primary d-block small"><i class="bi bi-shop me-1"></i>1. Agencias BN y Agentes MultiRed</strong>
-                <span class="text-muted" style="font-size: 0.76rem;">Dicta en cualquier ventanilla o agente la Cta. Cte. <strong>00-631-012948</strong> y tu DNI. Puedes pagar en cualquier parte de Paita o del Perú.</span>
+                <strong class="text-danger d-block small"><i class="bi bi-slash-circle me-1"></i>1. Solo en Ventanilla BN</strong>
+                <span class="text-muted" style="font-size: 0.76rem;"><strong>NO se paga en Págalo.pe ni en agentes.</strong> Acércate a ventanilla del Banco de la Nación indicando el DNI y nombres completos del estudiante.</span>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="p-2 bg-white rounded border h-100">
-                <strong class="text-success d-block small"><i class="bi bi-phone me-1"></i>2. Canales Digitales y Transferencias</strong>
-                <span class="text-muted" style="font-size: 0.76rem;">Paga en <strong>Págalo.pe</strong>, App BN o haz transferencia interbancaria desde BCP, BBVA o Interbank con el CCI <strong>018-631-000631012948-52</strong>.</span>
+                <strong class="text-success d-block small"><i class="bi bi-file-earmark-check me-1"></i>2. Boleta y Copias en Tesorería</strong>
+                <span class="text-muted" style="font-size: 0.76rem;"><strong>Matrícula (00-638-002361):</strong> registra en pagos.ieshercar.edu.pe, lleva original + 3 copias a Tesorería y 1 a Secretaría. <strong>Inglés (00-638-025736):</strong> saca 2 copias y entrega en Tesorería.</span>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Alerta de Registro de Voucher -->
-        <div class="p-3 rounded-3 border mb-3 small d-flex align-items-center gap-2" style="background: #fffbeb; border-color: #fde68a !important; color: #92400e;">
-          <i class="bi bi-exclamation-triangle-fill fs-4 flex-shrink-0 text-warning"></i>
-          <div>
-            <strong>¡Paso obligatorio tras pagar!</strong> Conserva tu voucher o captura de transferencia y regístralo con tu número de DNI en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold text-decoration-underline" style="color: #92400e;">pagos.ieshercar.edu.pe</a> para que Secretaría valide tu pago.
           </div>
         </div>
 
@@ -6843,8 +6841,8 @@ ${text}
           <button class="interactive-btn" data-chat-action="ver_cotizador_tupa">
             <i class="bi bi-calculator text-warning"></i> Cotizador de Trámites TUPA
           </button>
-          <button class="interactive-btn" data-chat-action="ver_metodos_pago_digitales">
-            <i class="bi bi-phone-fill text-success"></i> Ver Pagos por Págalo.pe / App
+          <button class="interactive-btn" data-chat-action="ver_curso_ingles">
+            <i class="bi bi-translate text-success"></i> Pago Curso de Inglés
           </button>
           <button class="interactive-btn" data-chat-action="ver_matricula_paso_a_paso">
             <i class="bi bi-ui-checks text-info"></i> Pasos de Matrícula
@@ -6853,8 +6851,8 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, "¡Claro que sí! Nuestra cuenta corriente oficial en el Banco de la Nación es cero cero, seis tres uno, cero uno dos nueve cuatro ocho. Si vas a transferir desde tu celular por Yape u otro banco, puedes usar el código interbancario que tienes en la tarjeta para copiarlo con un toque.", [
-      { label: "💳 Subir comprobante", prompt: "¿Cómo registro mi voucher en el portal de pagos?" },
+    this.appendBotMessage(html, "El Instituto Hermanos Cárcamo utiliza dos cuentas oficiales en el Banco de la Nación: la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno para matrícula, examen de suficiencia y titulación, y la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis para el curso de inglés. Recuerda que los pagos se realizan únicamente en ventanilla del Banco de la Nación, no en Págalo punto pe ni en agentes.", [
+      { label: "💳 Pasos de matrícula", prompt: "¿Cómo es el proceso de matrícula paso a paso en el instituto?" },
       { label: "🧮 ¿Cuánto pagar?", prompt: "Cotizador de trámites TUPA" }
     ]);
   }
@@ -7262,15 +7260,15 @@ ${text}
     this.context.lastTopic = 'pagos';
     this.context.lastTurnTime = Date.now();
 
-    const cuentaBN = '00-631-012948';
+    const cuentaBN = '00-638-002361';
+    const cuentaInglesBN = '00-638-025736';
     const pasos = [
-      'Paso 1: Realiza el depósito en el Banco de la Nación a la Cuenta Corriente N° 00-631-012948 (Titular: IESTP Hermanos Cárcamo).',
-      'Paso 2: Asegúrate de que el voucher contenga tu DNI, fecha, hora y número de operación de forma nítida.',
-      'Paso 3: Ingresa desde tu celular o PC a https://pagos.ieshercar.edu.pe/',
-      'Paso 4: Digita tu número de DNI para ingresar.',
-      'Paso 5: Selecciona tu carrera (Computación e Informática, ANI, CONTA o DPA) y el concepto pagado (Matrícula, Admisión, Certificado).',
-      'Paso 6: Digita el número de operación y sube la foto clara del comprobante.',
-      'Paso 7: Guarda y espera la validación de Caja (24 a 48 horas hábiles).'
+      'Paso 1 (Solo Ventanilla BN): Acércate presencialmente a ventanilla del Banco de la Nación (NO se paga en Págalo.pe ni agentes).',
+      'Paso 2: Elige la cuenta correcta: Cta. Cte. N° 00-638-002361 (Matrícula S/ 250.00, Suficiencia S/ 200.00, Título S/ 60 + S/ 100) o Cta. Cte. N° 00-638-025736 (Curso de Inglés).',
+      'Paso 3: Brinda siempre el DNI y nombres completos del estudiante al cajero del banco.',
+      'Paso 4 (Para Cta. 00-638-002361): Ingresa a https://pagos.ieshercar.edu.pe/ para registrar tu voucher y generar tu boleta electrónica.',
+      'Paso 5 (Tesorería - Matrícula): Lleva tu voucher original y 3 copias de la boleta electrónica a Tesorería para su sellado y entrega 1 copia sellada/firmada en Secretaría Académica.',
+      'Paso 6 (Tesorería - Curso de Inglés Cta. 00-638-025736): Saca 2 copias a tu voucher y entrégalas directamente en Tesorería, en la oficina del instituto.'
     ];
 
     const pasosHtml = pasos.map(p => `
@@ -7289,7 +7287,9 @@ ${text}
         <p class="small text-muted mb-3">Sigue estos pasos para que Tesorería valide tu comprobante sin inconvenientes:</p>
 
         <div class="alert alert-light border small mb-3">
-          <strong>Cuenta Corriente Banco de la Nación:</strong> <code class="fs-6">${cuentaBN}</code><br>
+          <strong>Cta. Principal (Matrícula, Suficiencia, Título):</strong> <code class="fs-6">${cuentaBN}</code><br>
+          <strong>Cta. Curso de Inglés:</strong> <code class="fs-6">${cuentaInglesBN}</code> <small class="text-muted">(2 copias voucher en Tesorería)</small><br>
+          <strong>Canal Obligatorio:</strong> Solo presencial en ventanilla del Banco de la Nación (No Págalo.pe, no agentes)<br>
           <strong>Titular:</strong> IESTP Hermanos Cárcamo - Paita
         </div>
 
@@ -7318,7 +7318,7 @@ ${text}
       { label: 'Certificados modulares TUPA', prompt: '¿Cómo tramito mi Certificado Modular y cuánto demora?' },
       { label: 'Requisitos de Admisión', prompt: '¿Cuáles son los requisitos para postular en la admisión 2026?' }
     ];
-    this.appendBotMessage(html, "¡Hola! Con mucho gusto te oriento: puedes abonar en cualquier agencia o agente del Banco de la Nación, o transferir por código interbancario. Luego subes la foto de tu comprobante a nuestro portal de pagos para que Caja lo valide. ¡En tu pantalla tienes el paso a paso!", pagosChips);
+    this.appendBotMessage(html, "¡Hola! Con mucho gusto te oriento: los pagos no se realizan en Págalo punto pe ni en agentes, sino únicamente en ventanilla del Banco de la Nación. La cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno es para matrícula y trámites, y la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis es para el curso de inglés.", pagosChips);
   }
 
   renderTramiteDetalle(tramite) {
@@ -8333,13 +8333,13 @@ ${text}
         this.logQuery('pagos');
         break;
       case 'copiar_cuenta_bn':
-        this.copyData('00-631-012948', 'Cuenta Corriente BN');
+        this.copyData('00-638-002361', 'Cuenta Principal BN');
         break;
       case 'copiar_cuenta_ingles_bn':
         this.copyData('00-638-025736', 'Cuenta Curso de Inglés BN');
         break;
       case 'copiar_cci_bn':
-        this.copyData('018-631-000631012948-52', 'Código Interbancario (CCI)');
+        this.copyData('00-638-002361', 'Cuenta Principal BN');
         break;
       case 'ver_plana_docente':
         this.renderPlanaDocente(val);

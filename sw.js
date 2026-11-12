@@ -1,5 +1,5 @@
 // Service Worker oficial de HercarBot IA (IESTP Hermanos Cárcamo - Paita)
-const CACHE_NAME = 'hercarbot-pwa-v2026-v14';
+const CACHE_NAME = 'hercarbot-pwa-v2026-v15';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,7 +14,13 @@ const ASSETS_TO_CACHE = [
   './js/knowledge-base.js',
   './assets/img/logo-hercar.png',
   './assets/img/escudo-hercar.webp',
-  './assets/img/campus-hercar.jpg'
+  './assets/img/campus-hercar.jpg',
+  './assets/img/fachada-2026.webp',
+  './assets/img/patio-2026.webp',
+  './assets/img/comunidad-2026.webp',
+  './assets/img/titulacion-2026.webp',
+  './assets/img/embarcacion-2026.webp',
+  './assets/img/movilidad-2026.webp'
 ];
 
 self.addEventListener('install', (e) => {

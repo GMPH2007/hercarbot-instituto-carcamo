@@ -4178,22 +4178,40 @@ class HercarBotApp {
     if (!this.messagesContainer) return;
     this.messagesContainer.innerHTML = '';
 
+    const galleryPhotos = this.getCampusGalleryPhotos();
+    const initialPhoto = galleryPhotos[0];
+
     const welcomeHtml = `
       <div class="bot-welcome-hero animate-fade-in">
-        <!-- Portada Superior del Campus Central IESTP Hermanos Cárcamo -->
+        <div class="welcome-hero-intro">
+          <div class="welcome-official-kicker">
+            <i class="bi bi-patch-check-fill text-primary"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo
+          </div>
+          <h1 class="welcome-title">
+            <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¡Hola! ¿Cómo te puedo orientar hoy?
+          </h1>
+          <p class="welcome-subtitle">
+            Asistencia instantánea sobre carreras públicas sin mensualidades, admisión 2026, pagos en Banco de la Nación y guía oficial del TUPA 2026.
+          </p>
+        </div>
+
+        <!-- Galería Oficial 2026 del IESTP Hermanos Cárcamo (Debajo del subtítulo) -->
         <div class="welcome-campus-card">
           <div class="campus-banner-img-wrap">
-            <img src="assets/img/campus-hercar.jpg" alt="Campus Central Instituto Superior Hermanos Cárcamo - Paita" class="campus-banner-img" />
+            <img id="campusBannerHeroImg" src="${initialPhoto.src}" alt="${initialPhoto.alt}" class="campus-banner-img" />
             <div class="campus-hero-top-pill">
-              <i class="bi bi-patch-check-fill text-info"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo
+              <i class="bi bi-camera-fill text-info"></i> <span id="campusBannerLabel">${initialPhoto.title}</span>
+            </div>
+            <div class="campus-hero-source-pill">
+              <i class="bi bi-globe2"></i> ieshercar.edu.pe
             </div>
             <div class="campus-banner-overlay">
               <div class="campus-banner-info">
                 <div class="campus-banner-title">
                   <i class="bi bi-geo-alt-fill text-danger me-1"></i> Campus Central Paita Alta
                 </div>
-                <div class="campus-banner-addr">
-                  Av. Miguel Grau Mz. A Lt. 01 – Urb. El Parque · Paita, Piura
+                <div class="campus-banner-addr" id="campusBannerCaption">
+                  ${initialPhoto.caption} · Av. Miguel Grau Mz. A Lt. 01 – Paita
                 </div>
               </div>
               <div class="campus-banner-tags">
@@ -4206,15 +4224,14 @@ class HercarBotApp {
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="welcome-hero-intro">
-          <h1 class="welcome-title">
-            <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¡Hola! ¿Cómo te puedo orientar hoy?
-          </h1>
-          <p class="welcome-subtitle">
-            Asistencia instantánea sobre carreras públicas sin mensualidades, admisión 2026, pagos en Banco de la Nación y guía oficial del TUPA 2026.
-          </p>
+          <div class="campus-gallery-thumbs" role="tablist" aria-label="Galería fotográfica oficial del IESTP Hermanos Cárcamo">
+            ${galleryPhotos.map((p, idx) => `
+              <button type="button" class="campus-thumb-btn ${idx === 0 ? 'active' : ''}" data-chat-action="cambiar_foto_campus" data-chat-val="${idx}" title="${p.alt}">
+                <img src="${p.src}" alt="${p.short}" class="campus-thumb-img" loading="lazy" />
+                <span class="campus-thumb-label">${p.short}</span>
+              </button>
+            `).join('')}
+          </div>
         </div>
 
         <!-- 4 Tarjetas Maestras Principales (Armónicas, Espaciosas y Modernas) -->
@@ -4783,8 +4800,8 @@ ${text}
           return;
         }
       }
-      // Si no hay clave de API configurada o falló, ejecutar el revisor institucional local
-      this.renderOfflineImageAnalysis(attachedImage, rawQuery);
+      // Si no hay clave de API configurada o falló, ejecutar lectura OCR + revisor institucional local
+      await this.renderOfflineImageAnalysis(attachedImage, rawQuery);
       this.logQuery('imagen_local');
       return;
     }
@@ -5374,15 +5391,16 @@ ${text}
 
     const systemPrompt = `
       Eres HercarBot IA, el asistente inteligente oficial del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita (Piura, Perú).
-      El estudiante te ha compartido una imagen o comprobante bancario.
+      El estudiante te ha compartido una imagen (voucher, captura, afiche TUPA, requisitos, horario, DNI, certificado o foto de pregunta) y posiblemente escribió una consulta acompañándola.
       TU MISIÓN:
-      1. Si es un comprobante de pago o voucher del Banco de la Nación:
-         - Identifica si es para el IESTP Hermanos Cárcamo (Cta. Principal Matrícula/Trámites: 00-638-002361 o Cta. Inglés: 00-638-025736).
-         - Revisa monto, fecha y número de operación.
-         - Recuérdale que no se realizan pagos en Págalo.pe ni agentes, y que debe registrarlo en https://pagos.ieshercar.edu.pe/ para generar la boleta electrónica y presentarlo con sus copias en Tesorería.
-      2. Si es un certificado de estudios, DNI o documento:
-         - Oriéntalo con amabilidad sobre el trámite institucional que le corresponde en https://ieshercar.edu.pe/registro-tramite/.
-      3. Responde siempre con formato limpio en español, destacando datos y próximos pasos.
+      1. LEE con atención TODO el texto visible dentro de la imagen y RESPONDE DIRECTAMENTE la consulta del estudiante usando las normas oficiales 2026 del IESTP Hermanos Cárcamo.
+      2. Si la imagen es un comprobante de pago o voucher del Banco de la Nación:
+         - Verifica a qué cuenta corresponde: Cta. Cte. 00-638-002361 (Matrícula S/ 250, Admisión, Examen de Suficiencia, Certificados, Título y trámites TUPA) o Cta. Cte. 00-638-025736 (Curso de Inglés de Titulación, donde debe sacar 2 copias al voucher para Tesorería).
+         - Advierte si detectas una cuenta antigua desactivada (serie 00-631-...) o si menciona Págalo.pe (NO se aceptan pagos por Págalo.pe ni agentes, solo ventanilla del Banco de la Nación).
+         - Recuerda los pasos: registrar en https://pagos.ieshercar.edu.pe/ (generar boleta electrónica) y presentar 3 copias (o 2 copias en Inglés) en Tesorería.
+      3. Si la imagen trata sobre TUPA 2026, Examen de Suficiencia Profesional, Titulación, Certificados Modulares, Admisión o alguna de las 4 carreras (Computación e Informática - ex APSTI, Administración de Negocios Internacionales, Contabilidad, Desarrollo Pesquero y Acuícola):
+         - Explica claramente los requisitos visibles, costos exactos, cuenta BN correspondiente, para qué sirve el trámite y dónde presentarlo (Mesa de Partes o Coordinación Académica).
+      4. Responde siempre en español claro y bien estructurado, destacando datos extraídos y próximos pasos concretos.
     `;
 
     for (const model of models) {
@@ -5428,55 +5446,364 @@ ${text}
     return null;
   }
 
-  renderOfflineImageAnalysis(attachedImage, rawQuery) {
-    const html = `
-      <div class="faq-card-custom" style="border-top: 4px solid #2563eb;">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="badge bg-primary text-white px-3 py-1"><i class="bi bi-file-earmark-check-fill me-1"></i>Revisor Institucional de Documentos</span>
-          <span class="badge bg-light text-dark border">IESTP HERCAR</span>
-        </div>
-        <h4 class="fw-bold mb-2 text-dark">Validación de Comprobante / Imagen Adjunta</h4>
-        <p class="small text-muted mb-3">Archivo procesado: <strong>${this.escapeHtml(attachedImage.name || 'comprobante')}</strong>. Para que Tesorería y Secretaría validen tu trámite sin observaciones, verifica los siguientes puntos oficiales:</p>
+  loadTesseractLib() {
+    if (typeof window === 'undefined') return Promise.resolve(null);
+    if (window.Tesseract && typeof window.Tesseract.recognize === 'function') {
+      return Promise.resolve(window.Tesseract);
+    }
+    if (this._tesseractPromise) return this._tesseractPromise;
+    this._tesseractPromise = new Promise((resolve) => {
+      try {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+        script.async = true;
+        const timer = setTimeout(() => resolve(null), 10000);
+        script.onload = () => {
+          clearTimeout(timer);
+          resolve(window.Tesseract || null);
+        };
+        script.onerror = () => {
+          clearTimeout(timer);
+          resolve(null);
+        };
+        document.head.appendChild(script);
+      } catch (e) {
+        resolve(null);
+      }
+    });
+    return this._tesseractPromise;
+  }
 
+  async extractTextFromImage(imageDataUrl) {
+    if (!imageDataUrl) return '';
+    try {
+      const typingLabel = document.querySelector('#chat-typing-indicator small');
+      if (typingLabel) {
+        typingLabel.textContent = 'Leyendo texto e información de tu imagen (OCR)...';
+      }
+      const Tesseract = await this.loadTesseractLib();
+      if (!Tesseract || typeof Tesseract.recognize !== 'function') return '';
+
+      const ocrPromise = Tesseract.recognize(imageDataUrl, 'spa').then((res) => {
+        return res && res.data && typeof res.data.text === 'string'
+          ? res.data.text.replace(/\s+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim()
+          : '';
+      });
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(''), 14000));
+      return await Promise.race([ocrPromise, timeoutPromise]);
+    } catch (e) {
+      return '';
+    }
+  }
+
+  analyzeOfflineImageContext(ocrText = '', rawQuery = '', fileName = '') {
+    const cleanOcr = (ocrText || '').trim();
+    const defaultImgPrompt = 'Por favor analiza el comprobante o imagen adjunta e infórmame.';
+    const rawTrimmed = (rawQuery || '').trim();
+    const cleanQuery = rawTrimmed === defaultImgPrompt ? '' : rawTrimmed;
+    const normQuery = this.normalizeText(cleanQuery);
+    const normOcr = this.normalizeText(cleanOcr);
+    const normAll = this.normalizeText(`${cleanQuery} ${cleanOcr} ${fileName || ''}`);
+
+    const compactDigits = (cleanOcr + ' ' + cleanQuery).replace(/[\s.\-]/g, '');
+    const hasMainAccount = compactDigits.includes('00638002361');
+    const hasInglesAccount = compactDigits.includes('00638025736');
+    const legacyPrefix = '00631' + '012948';
+    const hasOldAccount = compactDigits.includes(legacyPrefix) || /\b00-631-\d{6}\b/.test(cleanOcr + ' ' + cleanQuery);
+    const mentionsPagalo = normAll.includes('pagalo');
+
+    const amounts = [];
+    const amountRegex = /(?:s\/\.?|soles?)\s*(\d{1,4}(?:[.,]\d{1,2})?)/gi;
+    let m;
+    while ((m = amountRegex.exec(cleanOcr + ' ' + cleanQuery)) !== null) {
+      const val = `S/ ${m[1]}`;
+      if (!amounts.includes(val)) amounts.push(val);
+      if (amounts.length >= 4) break;
+    }
+
+    // Buscar trámite TUPA coincidente en GUIA_TRAMITES_TUPA
+    let matchedTramite = null;
+    let bestTramiteScore = 0;
+    const stopWords = new Set(['para', 'como', 'sobre', 'tupa', 'item', 'items', 'tramite', 'tramites', 'oficial', 'curso', 'pago', 'pagos']);
+    if (typeof GUIA_TRAMITES_TUPA !== 'undefined' && Array.isArray(GUIA_TRAMITES_TUPA)) {
+      for (const t of GUIA_TRAMITES_TUPA) {
+        let score = 0;
+        const rawName = (t.nombre || '').replace(/\([^)]*\)/g, ' ');
+        const tCoreName = this.normalizeText(rawName).trim();
+        if (tCoreName && normAll.includes(tCoreName)) score += 16;
+        if (tCoreName && normQuery && normQuery.includes(tCoreName)) score += 8;
+
+        const nameTokens = tCoreName.split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
+        for (const tok of nameTokens) {
+          if (normAll.includes(tok)) score += 4;
+          if (normQuery && normQuery.includes(tok)) score += 3;
+        }
+        const idTokens = this.normalizeText((t.id || '').replace(/tramite-/g, '').replace(/-/g, ' ')).split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
+        for (const tok of idTokens) {
+          if (normAll.includes(tok)) score += 3;
+        }
+        if (score > bestTramiteScore) {
+          bestTramiteScore = score;
+          matchedTramite = t;
+        }
+      }
+      if (bestTramiteScore < 6) matchedTramite = null;
+    }
+
+    // Buscar en compendio completo de 66 ítems TUPA si no hubo match fuerte en GUIA_TRAMITES_TUPA
+    let matchedCompendioItem = null;
+    if (!matchedTramite && typeof TUPA_COMPENDIO_OFICIAL_2026 !== 'undefined' && Array.isArray(TUPA_COMPENDIO_OFICIAL_2026.items)) {
+      let bestCompScore = 0;
+      for (const item of TUPA_COMPENDIO_OFICIAL_2026.items) {
+        const words = this.normalizeText(item.concepto || '').split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
+        let hits = 0;
+        for (const w of words) {
+          if (normAll.includes(w)) hits++;
+        }
+        if (hits >= 2 && hits > bestCompScore) {
+          bestCompScore = hits;
+          matchedCompendioItem = item;
+        }
+      }
+    }
+
+    // Buscar FAQ por consulta del usuario o por texto OCR leído
+    let matchedFaq = null;
+    if (normQuery.length >= 3) {
+      matchedFaq = this.findBestFaqMatch(normQuery);
+    }
+    if (!matchedFaq && normOcr.length >= 8) {
+      matchedFaq = this.findBestFaqMatch(normOcr);
+    }
+
+    // Buscar Carrera
+    let matchedCarrera = null;
+    if (typeof CARRERAS_COMPLETAS !== 'undefined' && Array.isArray(CARRERAS_COMPLETAS)) {
+      matchedCarrera = CARRERAS_COMPLETAS.find((c) => {
+        const cNom = this.normalizeText(c.nombre);
+        const cCorto = this.normalizeText(c.nombreCorto || '');
+        const cId = this.normalizeText(c.id || '');
+        const extraCi = (c.id === 'apsti') && (normAll.includes('computacion e informatica') || normAll.includes('apsti') || normAll.includes('arquitectura de plataformas'));
+        return extraCi || normAll.includes(cNom) || (cCorto.length >= 3 && normAll.includes(cCorto)) || (cId.length >= 3 && new RegExp(`\\b${cId}\\b`).test(normAll));
+      }) || null;
+    }
+
+    const isIngles = hasInglesAccount || normAll.includes('ingles') || normAll.includes('idioma');
+    const isVoucher = hasMainAccount || hasInglesAccount || hasOldAccount ||
+      /\b(voucher|comprobante|banco de la nacion|operacion|secuencia|recibo|deposito|abono|pagos\.ieshercar)\b/.test(normAll);
+    const isAdmision = /\b(admision|postul|inscripcion|prospecto|examen de ingreso|ordinario|exonerado)\b/.test(normAll);
+
+    return {
+      cleanOcr,
+      cleanQuery,
+      hasMainAccount,
+      hasInglesAccount,
+      hasOldAccount,
+      mentionsPagalo,
+      amounts,
+      matchedTramite,
+      matchedCompendioItem,
+      matchedFaq,
+      matchedCarrera,
+      isIngles,
+      isVoucher,
+      isAdmision
+    };
+  }
+
+  buildInstitutionalImageReply(attachedImage, rawQuery = '', ocrText = '') {
+    const fileName = attachedImage?.name || 'imagen-adjunta';
+    const ctx = this.analyzeOfflineImageContext(ocrText, rawQuery, fileName);
+    const previewImg = attachedImage?.base64
+      ? `<img src="${attachedImage.base64}" alt="${this.escapeHtml(fileName)}" class="ocr-thumb-preview" />`
+      : '';
+
+    const userQuestionBlock = ctx.cleanQuery
+      ? `<div class="ocr-query-pill mb-2"><i class="bi bi-chat-left-text-fill text-primary me-1"></i> <strong>Tu consulta:</strong> ${this.escapeHtml(ctx.cleanQuery)}</div>`
+      : '';
+
+    const ocrExcerpt = ctx.cleanOcr.length > 340
+      ? ctx.cleanOcr.slice(0, 340) + '...'
+      : ctx.cleanOcr;
+
+    const ocrStatusHtml = ctx.cleanOcr
+      ? `<div class="ocr-text-box mb-3">
+           <div class="ocr-text-header"><i class="bi bi-eye-fill text-success me-1"></i> Texto detectado en tu imagen</div>
+           <div class="ocr-text-body">${this.escapeHtml(ocrExcerpt)}</div>
+         </div>`
+      : `<div class="ocr-text-box ocr-text-muted mb-3">
+           <div class="ocr-text-header"><i class="bi bi-image text-info me-1"></i> Imagen recibida sin texto impreso legible</div>
+           <div class="ocr-text-body">No se detectaron caracteres nítidos en la imagen (o la foto no contiene texto). ${ctx.cleanQuery ? 'Respondo según tu pregunta escrita.' : 'Si deseas, escribe tu pregunta junto a la imagen para darte una respuesta exacta.'}</div>
+         </div>`;
+
+    const alertsHtml = [];
+    if (ctx.hasOldAccount) {
+      alertsHtml.push(`<div class="alert alert-danger py-2 px-3 small mb-2"><i class="bi bi-exclamation-octagon-fill me-1"></i> <strong>¡Cuidado!</strong> Se detectó una cuenta bancaria antigua desactivada (serie <code>00-631-...</code>). Los depósitos vigentes son únicamente en <strong>00-638-002361</strong> (General) o <strong>00-638-025736</strong> (Inglés).</div>`);
+    }
+    if (ctx.mentionsPagalo) {
+      alertsHtml.push(`<div class="alert alert-warning py-2 px-3 small mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i> <strong>Aviso oficial:</strong> NO se realizan pagos por <strong>Págalo.pe</strong> ni agentes. Todo abono es únicamente por ventanilla del <strong>Banco de la Nación</strong>.</div>`);
+    }
+
+    let diagnosisHtml = '';
+    let spokenText = '';
+    let actionButtonsHtml = '';
+
+    if (ctx.matchedTramite) {
+      const t = ctx.matchedTramite;
+      const reqList = (t.requisitos || []).map(r => `<li>${this.escapeHtml(r)}</li>`).join('');
+      const cuentaBN = ctx.isIngles || this.normalizeText(t.nombre).includes('ingles')
+        ? '00-638-025736 (Curso de Inglés · 2 copias del voucher en Tesorería)'
+        : '00-638-002361 (Cuenta Principal Banco de la Nación · ventanilla)';
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+            <span class="badge bg-primary"><i class="bi bi-journal-check me-1"></i> Trámite TUPA Identificado</span>
+            <span class="badge bg-success-subtle text-success fw-bold">${this.escapeHtml(t.costo || 'Ver TUPA')}</span>
+          </div>
+          <h5 class="fw-bold text-primary mb-2">${this.escapeHtml(t.nombre)}</h5>
+          <p class="small mb-2"><strong><i class="bi bi-lightbulb-fill text-warning me-1"></i> ¿Para qué sirve?:</strong> ${this.escapeHtml(t.paraQueSirve || t.descripcion || '')}</p>
+          <p class="small mb-2"><strong><i class="bi bi-bank me-1 text-primary"></i> Cuenta Banco de la Nación:</strong> ${cuentaBN}</p>
+          <p class="small mb-1"><strong><i class="bi bi-list-check me-1 text-success"></i> Requisitos oficiales (${this.escapeHtml(t.plazo || 'Trámite regular')}):</strong></p>
+          <ul class="small ps-3 mb-0">${reqList}</ul>
+        </div>`;
+      spokenText = `He leído tu imagen sobre ${t.nombre}. ${t.paraQueSirve || ''} El costo oficial es ${t.costo || 'según TUPA'} en ventanilla del Banco de la Nación.`;
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="${this.escapeHtml(t.id)}"><i class="bi bi-card-checklist text-primary"></i> Ver Ficha Completa</button>
+        <button class="interactive-btn" data-chat-action="abrir_generador_fut" data-chat-val="${this.escapeHtml(t.id)}"><i class="bi bi-file-earmark-pdf-fill text-danger"></i> Generar FUT PDF</button>
+        <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuentas BN</button>`;
+    } else if (ctx.matchedCompendioItem) {
+      const it = ctx.matchedCompendioItem;
+      const cuentaBN = it.cuenta || (this.normalizeText(it.concepto).includes('ingles') ? '00-638-025736' : '00-638-002361');
+      const costoFmt = typeof it.costo === 'number' ? `S/ ${it.costo.toFixed(2)}` : String(it.costo || 'Ver TUPA');
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+            <span class="badge bg-info text-dark"><i class="bi bi-file-earmark-text-fill me-1"></i> Ítem TUPA 2026 #${this.escapeHtml(String(it.item || it.num || ''))}</span>
+            <span class="badge bg-success-subtle text-success fw-bold">${this.escapeHtml(costoFmt)}</span>
+          </div>
+          <h5 class="fw-bold text-primary mb-2">${this.escapeHtml(it.concepto)}</h5>
+          <p class="small mb-2"><strong>¿Para qué sirve?:</strong> ${this.escapeHtml(it.paraQueSirve || 'Tasa oficial regulada en el TUPA 2026 del IESTP Hermanos Cárcamo.')}</p>
+          <p class="small mb-0"><strong>Pago autorizado:</strong> Solo ventanilla del Banco de la Nación en la cuenta <strong>${this.escapeHtml(cuentaBN)}</strong> (no usar Págalo.pe ni agentes). Luego registrar boleta en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener">pagos.ieshercar.edu.pe</a>.</p>
+        </div>`;
+      spokenText = `Identifiqué en tu imagen el trámite TUPA ${it.concepto}, con tasa de ${costoFmt}. ${it.paraQueSirve || ''}`;
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_tupa_compendio"><i class="bi bi-table text-primary"></i> Ver 66 Ítems TUPA</button>
+        <button class="interactive-btn" data-chat-action="abrir_generador_fut" data-chat-val="solicitud_libre"><i class="bi bi-file-earmark-pdf-fill text-danger"></i> Generar FUT PDF</button>`;
+    } else if (ctx.isIngles && !ctx.matchedFaq) {
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <span class="badge bg-success mb-2"><i class="bi bi-translate me-1"></i> Pago Curso de Inglés (Titulación)</span>
+          <h5 class="fw-bold text-primary mb-2">Indicaciones Oficiales · Curso de Inglés</h5>
+          <ul class="small ps-3 mb-0">
+            <li>El pago se realiza únicamente en ventanilla del <strong>Banco de la Nación</strong> en la cuenta <strong>N.º 00-638-025736</strong>.</li>
+            <li><strong>No se aceptan pagos por Págalo.pe ni agentes.</strong></li>
+            <li>Debes sacar <strong>2 copias a tu voucher</strong> y entregarlas físicamente en <strong>Tesorería</strong> del instituto.</li>
+          </ul>
+        </div>`;
+      spokenText = "Para el curso de inglés, el pago es en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis, y debes entregar dos copias de tu voucher en Tesorería.";
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_curso_ingles"><i class="bi bi-translate text-primary"></i> Detalle Curso de Inglés</button>
+        <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Guía de Pagos</button>`;
+    } else if (ctx.matchedFaq) {
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <span class="badge bg-primary mb-2"><i class="bi bi-patch-question-fill me-1"></i> Respuesta Oficial IESTP Cárcamo</span>
+          <h5 class="fw-bold text-primary mb-2">${this.escapeHtml(ctx.matchedFaq.titulo)}</h5>
+          <div class="small faq-custom-body">${this.formatMarkdown(ctx.matchedFaq.respuesta)}</div>
+        </div>`;
+      spokenText = ctx.matchedFaq.locucion
+        ? this.preparePhoneticText(ctx.matchedFaq.locucion)
+        : this.extractSpokenAnswer(ctx.matchedFaq.respuesta, ctx.matchedFaq.titulo);
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-text text-primary"></i> Guía TUPA 2026</button>
+        <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuentas BN</button>`;
+    } else if (ctx.matchedCarrera) {
+      const c = ctx.matchedCarrera;
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <span class="badge bg-primary mb-2"><i class="bi bi-mortarboard-fill me-1"></i> Carrera Profesional Técnica (3 años)</span>
+          <h5 class="fw-bold text-primary mb-1">${this.escapeHtml(c.nombre)}</h5>
+          <p class="small mb-2">${this.escapeHtml(c.resumen || c.descripcion || '')}</p>
+          <p class="small mb-0"><strong>Educación pública:</strong> Sin mensualidades. Título a Nombre de la Nación con certificación modular progresiva.</p>
+        </div>`;
+      spokenText = `Tu consulta corresponde a la carrera técnica de ${c.nombre}, de tres años de duración y educación pública sin mensualidades.`;
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_carrera_detalle" data-chat-val="${this.escapeHtml(c.id)}"><i class="bi bi-mortarboard text-primary"></i> Ver Perfil Completo</button>
+        <button class="interactive-btn" data-chat-action="ver_malla_carrera" data-chat-val="${this.escapeHtml(c.id)}"><i class="bi bi-book-half text-success"></i> Ver Malla Curricular</button>`;
+    } else if (ctx.isAdmision) {
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <span class="badge bg-success mb-2"><i class="bi bi-mortarboard-fill me-1"></i> Admisión 2026</span>
+          <p class="small mb-0">En el IESTP Hermanos Cárcamo no pagas mensualidades durante los 3 años. El derecho de inscripción al examen de admisión se abona en ventanilla del Banco de la Nación en la cuenta <strong>00-638-002361</strong> (luego registrarlo en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" rel="noopener">pagos.ieshercar.edu.pe</a>).</p>
+        </div>`;
+      spokenText = "Sobre Admisión dos mil veintiséis: solo pagas la inscripción al examen en ventanilla del Banco de la Nación a la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno, sin mensualidades durante tus tres años de estudio.";
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-mortarboard text-success"></i> Ver Requisitos Admisión</button>
+        <button class="interactive-btn" data-chat-action="ver_todas_carreras"><i class="bi bi-laptop text-primary"></i> 4 Carreras Técnicas</button>`;
+    } else if (ctx.isVoucher || ctx.hasMainAccount) {
+      const detectedAmounts = ctx.amounts.length ? `<br>• Monto leído: <strong>${this.escapeHtml(ctx.amounts.join(', '))}</strong>` : '';
+      diagnosisHtml = `
         <div class="row g-2 mb-3">
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-primary d-block mb-1"><i class="bi bi-bank me-1"></i> 1. Banco y Cuentas Oficiales</strong>
-              <span>Banco de la Nación (Solo ventanilla):<br>• Principal: <strong>00-638-002361</strong><br>• Inglés: <strong>00-638-025736</strong></span>
+              <strong class="text-primary d-block mb-1"><i class="bi bi-bank me-1"></i> 1. Cuentas Oficiales BN</strong>
+              <span>Banco de la Nación (Solo ventanilla):<br>• Principal: <strong>00-638-002361</strong><br>• Inglés: <strong>00-638-025736</strong>${detectedAmounts}</span>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-success d-block mb-1"><i class="bi bi-cash-stack me-1"></i> 2. Tasas Oficiales Vigentes</strong>
-              <span>• Matrícula Semestral: <strong>S/ 250.00</strong><br>• Suficiencia Prof.: <strong>S/ 200.00</strong><br>• Título Prof.: <strong>S/ 100.00 + S/ 60.00</strong></span>
+              <strong class="text-danger d-block mb-1"><i class="bi bi-cloud-arrow-up-fill me-1"></i> 2. Registro Obligatorio</strong>
+              <span>Registra tu voucher en <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> y entrega <strong>3 copias</strong> en Tesorería (<strong>2 copias</strong> si es Inglés).</span>
             </div>
           </div>
-          <div class="col-sm-6">
-            <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-warning d-block mb-1"><i class="bi bi-calendar-check me-1"></i> 3. Número de Operación y Fecha</strong>
-              <span>El número de secuencia u operación bancaria (6 a 8 dígitos) y la fecha deben ser completamente nítidos.</span>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="p-3 bg-light rounded-3 border small h-100">
-              <strong class="text-danger d-block mb-1"><i class="bi bi-cloud-arrow-up-fill me-1"></i> 4. Registro Obligatorio</strong>
-              <span>Debes ingresar a <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="fw-bold">pagos.ieshercar.edu.pe</a> y subir la foto nítida con tu DNI.</span>
-            </div>
+        </div>`;
+      spokenText = "He revisado tu comprobante adjunto. Recuerda que los pagos válidos son solo en ventanilla del Banco de la Nación en las cuentas cero cero, seis tres ocho, cero cero, dos tres seis uno o cero veinticinco, siete tres seis para inglés, y debes registrarlo en el portal de pagos.";
+      actionButtonsHtml = `
+        <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none"><i class="bi bi-box-arrow-up-right text-primary"></i> Portal pagos.ieshercar.edu.pe</a>
+        <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Guía de Pagos BN</button>`;
+    } else {
+      diagnosisHtml = `
+        <div class="ocr-diagnosis-box p-3 rounded-3 border mb-3">
+          <h6 class="fw-bold text-primary mb-1"><i class="bi bi-robot me-1"></i> ¿Qué deseas consultar sobre esta imagen?</h6>
+          <p class="small mb-0">Para analizar fotografías complejas con visión artificial avanzada además del lector OCR local, puedes escribir tu pregunta específica junto a la imagen (por ejemplo: <em>"¿Cuánto cuesta este trámite?"</em>, <em>"¿En qué cuenta pago?"</em> o <em>"Requisitos para matrícula"</em>), o configurar una API Key de Gemini en <i class="bi bi-gear"></i>.</p>
+        </div>`;
+      spokenText = "Recibí tu imagen. Escribe tu pregunta específica junto a la foto sobre trámites, cuentas del Banco de la Nación, admisión o carreras del instituto para darte la respuesta exacta.";
+      actionButtonsHtml = `
+        <button class="interactive-btn" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-text text-primary"></i> Guía TUPA 2026</button>
+        <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Cuentas BN</button>
+        <button class="interactive-btn" data-chat-action="ver_todas_carreras"><i class="bi bi-mortarboard text-success"></i> 4 Carreras</button>
+        <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-person-check text-info"></i> Admisión 2026</button>`;
+    }
+
+    const html = `
+      <div class="faq-card-custom" style="border-top: 4px solid #2563eb;">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
+          <span class="badge bg-primary text-white px-3 py-1"><i class="bi bi-file-earmark-check-fill me-1"></i>Lector Inteligente de Imágenes y Consultas</span>
+          <span class="badge bg-light text-dark border">IESTP HERCAR</span>
+        </div>
+        <div class="ocr-preview-wrap mb-3">
+          ${previewImg}
+          <div class="ocr-preview-meta">
+            <h5 class="fw-bold mb-1 text-dark">Análisis de Imagen Adjunta</h5>
+            <div class="small text-muted mb-1">Archivo: <strong>${this.escapeHtml(fileName)}</strong></div>
+            ${userQuestionBlock}
           </div>
         </div>
-
-        <div class="alert alert-info py-2 px-3 small mb-3">
-          <i class="bi bi-clock-history me-1"></i> <strong>Aprobación:</strong> Tesorería valida los vouchers en un plazo máximo de 24 a 48 horas hábiles. Una vez aprobado, podrás ratificar tu matrícula o retirar tu certificado.
-        </div>
-
+        ${ocrStatusHtml}
+        ${alertsHtml.join('')}
+        ${diagnosisHtml}
         <div class="interactive-button-grid">
-          <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none"><i class="bi bi-box-arrow-up-right text-primary"></i> Subir a pagos.ieshercar.edu.pe</a>
-          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Ver Video Tutorial</button>
-          <button class="interactive-btn" data-chat-action="ver_matricula_paso_a_paso"><i class="bi bi-ui-checks text-success"></i> Pasos de Matrícula</button>
+          ${actionButtonsHtml}
         </div>
       </div>
     `;
-    this.appendBotMessage(html, "¡He revisado tu imagen adjunta! Aquí tienes las indicaciones y requisitos clave para que Tesorería valide tu comprobante sin ningún inconveniente.");
+    return { html, spokenText };
+  }
+
+  async renderOfflineImageAnalysis(attachedImage, rawQuery) {
+    const ocrText = await this.extractTextFromImage(attachedImage && attachedImage.base64 ? attachedImage.base64 : '');
+    const result = this.buildInstitutionalImageReply(attachedImage, rawQuery, ocrText);
+    this.appendBotMessage(result.html, result.spokenText);
   }
 
   /* ==========================================================================
@@ -8863,7 +9190,81 @@ ${text}
         this.renderComiteDefensaEstudiante();
         this.logQuery('bienestar');
         break;
+      case 'cambiar_foto_campus':
+        this.switchCampusBannerPhoto(val, sourceEl);
+        break;
     }
+  }
+
+  getCampusGalleryPhotos() {
+    return [
+      {
+        src: 'assets/img/fachada-2026.webp',
+        short: 'Fachada',
+        title: 'Fachada Institucional 2026',
+        caption: 'Ingreso principal azul y blanco del IESTP Hermanos Cárcamo',
+        alt: 'Fachada principal del IESTP Hermanos Cárcamo con ingreso azul y blanco en Paita'
+      },
+      {
+        src: 'assets/img/patio-2026.webp',
+        short: 'Patio',
+        title: 'Espacios para Aprender',
+        caption: 'Patio central y pabellones académicos en Paita Alta',
+        alt: 'Vista del patio y pabellones del instituto IESTP Hermanos Cárcamo'
+      },
+      {
+        src: 'assets/img/comunidad-2026.webp',
+        short: 'Comunidad',
+        title: 'Nuestra Comunidad Docente',
+        caption: 'Docentes y autoridades en actividad oficial institucional',
+        alt: 'Docentes y autoridades durante una actividad institucional'
+      },
+      {
+        src: 'assets/img/titulacion-2026.webp',
+        short: 'Titulación',
+        title: 'Ceremonia de Titulación',
+        caption: 'Egresados titulados a Nombre de la Nación con certificación oficial',
+        alt: 'Graduados con sus diplomas y docentes en ceremonia de titulación'
+      },
+      {
+        src: 'assets/img/embarcacion-2026.webp',
+        short: 'Embarcación',
+        title: 'Vinculación con el Mar',
+        caption: 'Embarcación rotulada Hermanos Cárcamo para prácticas pesqueras',
+        alt: 'Embarcación rotulada Hermanos Cárcamo situada en astillero de Paita'
+      },
+      {
+        src: 'assets/img/movilidad-2026.webp',
+        short: 'Movilidad',
+        title: 'Nuestra Región Piura',
+        caption: 'Movilidad institucional al servicio de los estudiantes de Paita',
+        alt: 'Autobús amarillo y azul identificado con el Gobierno Regional de Piura'
+      }
+    ];
+  }
+
+  switchCampusBannerPhoto(val, sourceEl = null) {
+    const photos = this.getCampusGalleryPhotos();
+    const idx = Math.max(0, Math.min(photos.length - 1, parseInt(val, 10) || 0));
+    const item = photos[idx];
+    if (!item) return;
+
+    const imgEl = document.getElementById('campusBannerHeroImg');
+    const labelEl = document.getElementById('campusBannerLabel');
+    const captionEl = document.getElementById('campusBannerCaption');
+    if (imgEl) {
+      imgEl.style.opacity = '0.35';
+      imgEl.src = item.src;
+      imgEl.alt = item.alt;
+      setTimeout(() => { imgEl.style.opacity = '1'; }, 90);
+    }
+    if (labelEl) labelEl.textContent = item.title;
+    if (captionEl) captionEl.textContent = `${item.caption} · Av. Miguel Grau Mz. A Lt. 01 – Paita`;
+
+    document.querySelectorAll('.campus-thumb-btn').forEach((btn, i) => {
+      const isActive = sourceEl ? btn === sourceEl : i === idx;
+      btn.classList.toggle('active', isActive);
+    });
   }
 
   renderFallback(query) {

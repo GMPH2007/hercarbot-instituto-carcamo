@@ -4183,9 +4183,11 @@ class HercarBotApp {
           <i class="bi bi-patch-check-fill text-primary"></i> Asistente Oficial 2026 · IESTP Hermanos Cárcamo (Paita)
         </div>
         
-        <h1 class="welcome-title">¡Hola! <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¿Cómo te puedo orientar hoy?</h1>
+        <h1 class="welcome-title">
+          <span class="wave-hand-emoji" aria-hidden="true">👋</span> ¡Hola! ¿Cómo te puedo orientar hoy?
+        </h1>
         <p class="welcome-subtitle">
-          Orientación vocacional, admisión 2026 sin costo de mensualidades, guías oficiales del Banco de la Nación, TUPA 2026 explicado paso a paso, plana docente y trámites para Mesa de Partes.
+          Asistencia instantánea sobre carreras públicas sin mensualidades, admisión 2026, pagos en Banco de la Nación y guía oficial del TUPA 2026.
         </p>
 
         <!-- 4 Tarjetas Maestras Principales (Armónicas, Espaciosas y Modernas) -->
@@ -4197,7 +4199,7 @@ class HercarBotApp {
             </div>
             <div class="feature-pill-content">
               <strong>4 Carreras Técnicas</strong>
-              <small>Computación e Informática, Negocios, Contabilidad y Pesquería. 100% gratuitas con título a la Nación.</small>
+              <small>Computación e Informática, ANI, Contabilidad y Pesquería sin mensualidades.</small>
             </div>
           </div>
 
@@ -4206,18 +4208,18 @@ class HercarBotApp {
               <i class="bi bi-credit-card-2-front-fill"></i>
             </div>
             <div class="feature-pill-content">
-              <strong>Matrícula & Pagos BN</strong>
-              <small>Cuentas oficiales BN, guía paso a paso, tasas TUPA y validación de vouchers.</small>
+              <strong>Pagos BN & Tasas 2026</strong>
+              <small>Cuentas 00-638-002361 y 025736 (solo ventanilla) y guía de matrícula.</small>
             </div>
           </div>
 
-          <div class="feature-pill" data-chat-action="abrir_generador_fut" style="border-top: 3px solid #dc2626;">
+          <div class="feature-pill" data-chat-action="ver_tramites_tupa" style="border-top: 3px solid #dc2626;">
             <div class="feature-pill-icon-box" style="background: rgba(220,38,38,0.12); color: #dc2626;">
-              <i class="bi bi-file-earmark-pdf-fill"></i>
+              <i class="bi bi-file-earmark-ruled-fill"></i>
             </div>
             <div class="feature-pill-content">
-              <strong>Generador Oficial de FUT</strong>
-              <small>Genera y descarga tu Formulario Único de Trámite en PDF para Mesa de Partes.</small>
+              <strong>Guía TUPA 2026 (66 Ítems)</strong>
+              <small>Conoce para qué sirve cada trámite oficial, requisitos, costos y plazos.</small>
             </div>
           </div>
 
@@ -4227,7 +4229,7 @@ class HercarBotApp {
             </div>
             <div class="feature-pill-content">
               <strong>Plana Docente & Módulos</strong>
-              <small>20 docentes titulados, perfiles por carrera y certificación modular progresiva.</small>
+              <small>20 docentes titulados, mallas curriculares y certificación modular.</small>
             </div>
           </div>
 

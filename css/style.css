@@ -1004,31 +1004,32 @@ body.dark-theme .btn-fut-chip:hover {
   font-weight: 500;
 }
 
-/* Sección de Preguntas Frecuentes / Chips */
+/* Sección de Preguntas Frecuentes / Chips (Minimalista y Armónica) */
 .suggested-prompts-section {
-  text-align: left;
-  background: var(--bg-white);
-  border: 1px solid var(--line);
-  border-radius: var(--r3);
-  padding: 16px 18px;
-  box-shadow: var(--s-1);
-  margin-bottom: 20px;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 2px 0 4px;
+  box-shadow: none;
+  margin-bottom: 18px;
 }
 
 .suggested-label {
-  font-size: 0.74rem;
-  font-weight: 900;
-  color: var(--brand);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #64748b;
   display: block;
-  margin-bottom: 11px;
+  margin-bottom: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.8px;
 }
 
 .prompts-chips-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  justify-content: center;
+  gap: 8px;
 }
 
 .prompt-chip {
@@ -3696,7 +3697,7 @@ body.dark-theme #modalVoiceSettings .modal-footer {
 .campus-banner-img-wrap {
   position: relative;
   width: 100%;
-  height: 120px;
+  height: 102px;
   overflow: hidden;
 }
 

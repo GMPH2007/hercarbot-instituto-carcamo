@@ -4466,10 +4466,18 @@ function initHeaderUserProfile() {
     headAvatar.src = avatarSrc;
   }
 
+  const openCurrentProfile = (ev) => {
+    if (ev) ev.preventDefault();
+    openUserProfileModal(savedUser.id || 1);
+  };
+
   if (btnHeaderProfile) {
-    btnHeaderProfile.onclick = () => {
-      openUserProfileModal(savedUser.id || 1);
-    };
+    btnHeaderProfile.onclick = openCurrentProfile;
+  }
+
+  const btnSidebarProfile = document.getElementById('btn-sidebar-profile');
+  if (btnSidebarProfile) {
+    btnSidebarProfile.onclick = openCurrentProfile;
   }
 }
 

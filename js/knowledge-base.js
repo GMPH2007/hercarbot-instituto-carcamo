@@ -833,19 +833,74 @@ Por disposición de la Ley de Institutos N° 30512 del MINEDU, el dominio de un 
   {
     id: 'faq-autoridades',
     titulo: 'Autoridades y Plana Directiva Institucional',
-    keywords: ['director', 'directora', 'autoridades', 'plana docente', 'profesores', 'docentes', 'jefatura', 'secretaria general', 'quien dirige', 'coordinador', 'adolfo zeta'],
+    keywords: ['director', 'directora', 'autoridades', 'directivos', 'jefatura', 'secretaria general', 'quien dirige', 'coordinador', 'adolfo zeta', 'resolucion de creacion'],
     categorias: ['institucional'],
-    locucion: "¡Hola! Nuestra institución está dirigida por el economista Adolfo Zeta Pazo como Director General, junto a la Unidad Académica, Secretaría General y las coordinaciones de cada carrera. En tu pantalla puedes conocer a nuestro equipo directivo.",
+    locucion: "¡Hola! Con mucho gusto te cuento que nuestra institución está dirigida por la Dirección General junto a la Unidad Académica y Secretaría General. Fue creada por Resolución Ministerial doscientos treinta y dos y revalidada con Resolución quinientos veintiocho. En tu pantalla puedes revisar todos los datos con calma.",
     respuesta: `🏛️ **Plana Directiva y Autoridades del IESTP "Hermanos Cárcamo":**
 * **Director General:** **Econ. Adolfo Zeta Pazo** — Lidera la gestión institucional, licenciamiento y vinculación estratégica con el sector productivo de Paita.
 * **Jefe de Unidad Académica:** **Lic. Juan García Reto** — Responsable de la planificación curricular, mallas, supervisión pedagógica y titulación.
 * **Jefe de Unidad Administrativa:** **CPC Edson Maza** — Gestión administrativa, recursos y presupuesto institucional.
+* **Resoluciones Oficiales:** Creado por **R.M. N° 232-87-ED** y revalidado por **R.M. N° 0528-2006-ED**.
 * **Coordinaciones de Carrera:**
   - Coordinación de **APSTI** (Arquitectura de Plataformas y Servicios TI).
   - Coordinación de **ANI** (Administración de Negocios Internacionales).
   - Coordinación de **Contabilidad** (Finanzas y Tributación).
   - Coordinación de **Desarrollo Pesquero y Acuícola** (Acuicultura y Tecnología Pesquera).
-* **Secretaría Académica & Mesa de Partes:** Trámites de certificados, matrículas y constancias en Av. Miguel Grau – Urb. El Parque Mz. A Lt. 01, Paita Alta.`
+* **Secretaría Académica & Mesa de Partes:** Trámites de certificados, matrículas y constancias en Av. Miguel Grau Mz. A Lt. 001 – Urb. El Parque, Paita Alta.`
+  },
+  {
+    id: 'faq-plana-docente',
+    titulo: 'Plana Docente Oficial del IESTP Hermanos Cárcamo (20 Docentes)',
+    keywords: ['plana docente', 'profesores', 'docentes', 'quienes son los profesores', 'docentes apsti', 'docentes ani', 'docentes contabilidad', 'docentes dpa', 'jose hernandez', 'javier jaramillo', 'luis cherre', 'erick denegri', 'juan ruidias', 'eduardo masias', 'yemina vite', 'paola manrique', 'karolina farfan', 'juan garcia', 'nelly julca', 'jose llontop', 'nilda panta', 'edson maza', 'daniel olaya', 'rocio chapa', 'dalila barrios', 'fabiola pinto', 'bertha rufasto', 'sergio panta'],
+    categorias: ['institucional', 'carreras'],
+    locucion: "¡Hola! Qué gusto saludarte. Con todo cariño te cuento que nuestro instituto cuenta con veinte docentes altamente capacitados y titulados en sus cuatro carreras técnicas. En tu pantalla te comparto la plana docente oficial completa por cada programa de estudios.",
+    respuesta: `👨‍🏫 **Plana Docente Oficial del IESTP "Hermanos Cárcamo" de Paita:**
+*(Fuente Oficial: ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/)*
+
+💻 **Arquitectura de Plataformas y Servicios de TI (APSTI):**
+1. **Prof. José Hernández Panta** — Desarrollo de software, arquitectura de sistemas y bases de datos.
+2. **Prof. Javier Jaramillo Atoche** — Redes de datos, conectividad y soporte de telecomunicaciones.
+3. **Prof. Luis Cherre Lizama** — Sistemas operativos monousuario/multiusuario y servidores.
+4. **Prof. Erick Denegri Arizapana** — Programación avanzada, aplicaciones cloud y desarrollo empresarial.
+5. **Prof. Juan Ruidias Casaverde** — Plataformas web, bases de datos y seguridad informática.
+
+🌐 **Administración de Negocios Internacionales (ANI):**
+1. **Prof. Eduardo Masías de la Rosa** — Logística portuaria, aduanas y comercio exterior.
+2. **Prof. Yemina Vite Piedra** — Marketing internacional, gestión comercial y planes de negocios.
+3. **Prof. Paola Manrique Purizaca** — Finanzas internacionales, proyectos de exportación y aranceles.
+4. **Prof. Karolina Grace Farfán Cavero** — Investigación de mercados y legislación aduanera.
+5. **Prof. Juan García Reto** — Operatividad aduanera, transporte multimodal y distribución física internacional.
+
+📊 **Contabilidad:**
+1. **Prof. Nelly Julca García** — Formulación de estados financieros y auditoría contable.
+2. **Prof. José Llontop Pasache** — Tributación, gestión fiscal ante SUNAT y software contable.
+3. **Prof. Nilda Panta Flores** — Costos, presupuestos y operaciones comerciales.
+4. **Prof. Edson Maza Gonzales** — Finanzas empresariales, análisis de balances y control de gestión.
+5. **Prof. Daniel Olaya Castillo** — Contabilidad gubernamental y auditoría tributaria.
+
+🐟 **Desarrollo Pesquero y Acuícola (DPA):**
+1. **Prof. Rocío Chapa Tume** — Procesamiento de productos hidrobiológicos, congelados y conservas.
+2. **Prof. Dalila Barrios Cruz** — Sistemas de cultivo acuícola y gestión ambiental costera.
+3. **Prof. Fabiola Pinto Granda** — Control de calidad sanitaria, norma HACCP e inocuidad alimentaria (SANIPES).
+4. **Prof. Bertha Rufasto Kanashiro** — Tecnología pesquera y evaluación de recursos marinos.
+5. **Prof. Sergio Panta Jacinto** — Artes y métodos de pesca, navegación y operaciones marítimas.`
+  },
+  {
+    id: 'faq-comite-defensa-code',
+    titulo: 'Comité de Defensa del Estudiante (CODE) y Protección Integral',
+    keywords: ['code', 'defensa del estudiante', 'denuncia', 'queja', 'acoso', 'derechos del estudiante', 'rd 046-2021', 'comite de defensa', 'bienestar estudiantil'],
+    categorias: ['institucional', 'bienestar'],
+    locucion: "¡Hola! Te cuento que en el Instituto Hermanos Cárcamo contamos con el Comité de Defensa del Estudiante, respaldado por resolución directoral cero cuarenta y seis. Garantiza un ambiente seguro, libre de discriminación y con total acompañamiento para ti. En tu pantalla tienes todos los detalles.",
+    respuesta: `🛡️ **Comité de Defensa del Estudiante (CODE) — IESTP Hermanos Cárcamo:**
+*(Aprobado mediante Resolución Directoral N° 046-2021)*
+
+* ⚖️ **Misión del CODE:** Velar por la integridad, respeto y derechos de todos los estudiantes del instituto, garantizando un ambiente educativo seguro, inclusivo y libre de hostigamiento o discriminación.
+* 📋 **Servicios del Comité:**
+  - Atención y acompañamiento en situaciones de queja, reclamo o denuncia.
+  - Asesoramiento y orientación psicológica y psicopedagógica confidencial.
+  - Canales formales para la presentación del Formulario de Queja o Denuncia ante la Dirección General.
+  - Seguimiento y resolución transparente de incidentes con garantías procesales.
+* 🏢 **Atención Presencial:** Unidad de Bienestar y Empleabilidad, Campus Av. Miguel Grau Mz. A Lt. 001 - Urb. El Parque, Paita Alta.`
   },
   {
     id: 'faq-historia-mision',
@@ -2145,6 +2200,65 @@ const CAMPUS_AMBIENTES_HERCAR = [
   { ambiente: 'Auditorio Central Institucional "Hermanos Cárcamo"', descripcion: 'Sala magna para conferencias, ceremonias de graduación y seminarios de innovación', icon: 'bi-people' },
   { ambiente: 'Losa Polideportiva y Cafetín', descripcion: 'Espacios recreativos para fulbito, vóley, campeonatos intercarreras y descanso estudiantil', icon: 'bi-trophy' }
 ];
+
+/**
+ * INFORMACIÓN INSTITUCIONAL OFICIAL EXTRAÍDA DEL PORTAL WEB (https://ieshercar.edu.pe/)
+ */
+const DATOS_OFICIALES_PORTAL = {
+  portalUrl: 'https://ieshercar.edu.pe/',
+  resolucionCreacion: 'Resolución Ministerial N° 232-87-ED',
+  resolucionRevalidacion: 'Resolución Ministerial N° 0528-2006-ED',
+  lema: 'Formando Profesionales y Construyendo Oportunidades',
+  objetivo: 'Promover el desarrollo integral del estudiante mediante una formación académica, cultural y deportiva de alta calidad, contribuyendo al progreso de la comunidad y al prestigio de nuestro Instituto Tecnológico.',
+  direccion: 'Av. Grau Mz. A Lt. 001 - Urb. El Parque, Paita, Piura, Perú',
+  telefono: '(073) 251013',
+  celularOrientacion: '969100257',
+  correo: 'ieshercar@ieshercar.edu.pe',
+  horarioAtencion: 'Lunes a viernes de 8:00 a. m. a 3:00 p. m.',
+  cuentaMatriculaBN: '00-638-002361',
+  cuentaInstitucionalBN: '00-631-012948',
+  codigoCCI: '018-631-000631012948-52',
+  portalPagos: 'https://pagos.ieshercar.edu.pe/',
+  portalAcademico: 'https://sistema.ieshercar.edu.pe/acceso',
+  aulaVirtual: 'https://aula.ieshercar.edu.pe/',
+  reglamentoInterno: 'Reglamento Interno 2025, Versión 02 (Aprobado el 11 de junio de 2025)',
+  comiteDefensaEstudiante: 'CODE regido por RD N° 046-2021 para protección estudiantil, prevención y atención de quejas o denuncias'
+};
+
+/**
+ * PLANA DOCENTE OFICIAL PUBLICADA EN EL PORTAL INSTITUCIONAL (20 Docentes / 4 Carreras)
+ * Fuente: https://ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/
+ */
+const PLANA_DOCENTE_OFICIAL = [
+  // Arquitectura de Plataformas y Servicios de TI (APSTI)
+  { id: 'doc-apsti-1', nombre: 'José Hernández Panta', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Especialista en desarrollo de software, arquitectura de sistemas y bases de datos.' },
+  { id: 'doc-apsti-2', nombre: 'Javier Jaramillo Atoche', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Docente en redes de computadoras, conectividad y soporte tecnológico.' },
+  { id: 'doc-apsti-3', nombre: 'Luis Cherre Lizama', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Especialista en sistemas operativos, servidores e infraestructura tecnológica.' },
+  { id: 'doc-apsti-4', nombre: 'Erick Denegri Arizapana', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Docente en programación avanzada, aplicaciones empresariales y tecnologías cloud.' },
+  { id: 'doc-apsti-5', nombre: 'Juan Ruidias Casaverde', carreraId: 'apsti', carrera: 'Arquitectura de Plataformas y Servicios de TI', cvPublicado: true, perfil: 'Especialista en plataformas web, bases de datos y seguridad informática.' },
+
+  // Administración de Negocios Internacionales (ANI)
+  { id: 'doc-ani-1', nombre: 'Eduardo Masías de la Rosa', carreraId: 'ani', carrera: 'Administración de Negocios Internacionales', cvPublicado: true, perfil: 'Especialista en comercio exterior, logística portuaria y gestión aduanera.' },
+  { id: 'doc-ani-2', nombre: 'Yemina Vite Piedra', carreraId: 'ani', carrera: 'Administración de Negocios Internacionales', cvPublicado: true, perfil: 'Docente en marketing internacional, administración y gestión empresarial.' },
+  { id: 'doc-ani-3', nombre: 'Paola Manrique Purizaca', carreraId: 'ani', carrera: 'Administración de Negocios Internacionales', cvPublicado: true, perfil: 'Especialista en finanzas internacionales, formulación de proyectos y exportaciones.' },
+  { id: 'doc-ani-4', nombre: 'Karolina Grace Farfán Cavero', carreraId: 'ani', carrera: 'Administración de Negocios Internacionales', cvPublicado: true, perfil: 'Docente en investigación de mercados, tratados comerciales y legislación aduanera.' },
+  { id: 'doc-ani-5', nombre: 'Juan García Reto', carreraId: 'ani', carrera: 'Administración de Negocios Internacionales', cvPublicado: true, perfil: 'Especialista en operatividad portuaria, aduanas y distribución física internacional.' },
+
+  // Contabilidad
+  { id: 'doc-conta-1', nombre: 'Nelly Julca García', carreraId: 'conta', carrera: 'Contabilidad', cvPublicado: true, perfil: 'Especialista en formulación de estados financieros, auditoría y normas internacionales contables.' },
+  { id: 'doc-conta-2', nombre: 'José Llontop Pasache', carreraId: 'conta', carrera: 'Contabilidad', cvPublicado: true, perfil: 'Docente en tributación, gestión fiscal, SUNAT y software contable empresarial.' },
+  { id: 'doc-conta-3', nombre: 'Nilda Panta Flores', carreraId: 'conta', carrera: 'Contabilidad', cvPublicado: true, perfil: 'Especialista en costos, presupuestos y operaciones contables comerciales.' },
+  { id: 'doc-conta-4', nombre: 'Edson Maza Gonzales', carreraId: 'conta', carrera: 'Contabilidad', cvPublicado: true, perfil: 'Docente en finanzas empresariales, análisis de balances y control de gestión.' },
+  { id: 'doc-conta-5', nombre: 'Daniel Olaya Castillo', carreraId: 'conta', carrera: 'Contabilidad', cvPublicado: true, perfil: 'Especialista en contabilidad gubernamental, finanzas públicas y auditoría tributaria.' },
+
+  // Desarrollo Pesquero y Acuícola (DPA)
+  { id: 'doc-dpa-1', nombre: 'Rocío Chapa Tume', carreraId: 'dpa', carrera: 'Desarrollo Pesquero y Acuícola', cvPublicado: true, perfil: 'Especialista en procesamiento de productos hidrobiológicos, congelados y conservas.' },
+  { id: 'doc-dpa-2', nombre: 'Dalila Barrios Cruz', carreraId: 'dpa', carrera: 'Desarrollo Pesquero y Acuícola', cvPublicado: true, perfil: 'Docente en sistemas de cultivo acuícola, biología marina y gestión ambiental.' },
+  { id: 'doc-dpa-3', nombre: 'Fabiola Pinto Granda', carreraId: 'dpa', carrera: 'Desarrollo Pesquero y Acuícola', cvPublicado: true, perfil: 'Especialista en control de calidad, aseguramiento sanitario (HACCP / SANIPES) e inocuidad.' },
+  { id: 'doc-dpa-4', nombre: 'Bertha Rufasto Kanashiro', carreraId: 'dpa', carrera: 'Desarrollo Pesquero y Acuícola', cvPublicado: true, perfil: 'Docente en tecnología pesquera, evaluación de recursos marinos y sostenibilidad costera.' },
+  { id: 'doc-dpa-5', nombre: 'Sergio Panta Jacinto', carreraId: 'dpa', carrera: 'Desarrollo Pesquero y Acuícola', cvPublicado: true, perfil: 'Especialista en artes de pesca, navegación, operaciones de flota y manejo de recursos marinos.' }
+];
+
 
 
 

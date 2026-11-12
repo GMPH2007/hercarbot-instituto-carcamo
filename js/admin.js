@@ -2880,29 +2880,35 @@ function scoreAdminVoice(v) {
                  name.includes('diego') || name.includes('sergio') || name.includes('javier');
   if (isMale) return -50000;
 
-  const isRoboticDesktop = v.localService === true || 
-                           name.includes('desktop') || 
-                           name.includes('espeak') || 
-                           name.includes('sapi') ||
-                           (name.includes('helena') && !name.includes('natural') && !name.includes('online')) ||
-                           (name.includes('laura') && !name.includes('natural') && !name.includes('online')) ||
-                           (name.includes('sabina') && !name.includes('natural') && !name.includes('online'));
+  const isRoboticHelenaOrLaura = (name.includes('helena') && !name.includes('natural') && !name.includes('online')) ||
+                                (name.includes('laura') && !name.includes('natural') && !name.includes('online')) ||
+                                name.includes('espeak') || name.includes('sapi4');
 
-  if (name.includes('dalia') && (name.includes('natural') || name.includes('online'))) return 30000;
-  if (name.includes('sabina') && (name.includes('natural') || name.includes('online'))) return 28000;
-  if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 27500;
-  if ((name.includes('jimena') || name.includes('ximena')) && (name.includes('natural') || name.includes('online'))) return 27000;
+  const isSabinaDesktop = name.includes('sabina') && (v.localService || name.includes('desktop'));
+
+  if (name.includes('dalia') && (name.includes('natural') || name.includes('online'))) return 40000;
+  if (name.includes('sabina') && (name.includes('natural') || name.includes('online'))) return 37000;
+  if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 35000;
   if (name.includes('google') && !name.includes('male')) {
-    return (lang === 'es-us' || lang === 'es-419' || lang === 'es-pe') ? 26800 : 26000;
+    return (lang === 'es-us' || lang === 'es-419' || lang === 'es-pe') ? 34000 : 33000;
   }
-  if (name.includes('paulina') && (name.includes('natural') || name.includes('online'))) return 26000;
-  if (name.includes('paloma') && (name.includes('natural') || name.includes('online'))) return 25500;
-  if (name.includes('elena') && (name.includes('natural') || name.includes('online'))) return 25000;
-  if ((name.includes('network') || name.includes('neural')) && (lang.startsWith('es') || name.includes('female'))) return 25000;
-  if (name.includes('premium') || name.includes('enhanced')) return 24000;
-  if ((name.includes('natural') || name.includes('online') || name.includes('neural')) && !isMale) return 22000;
+  if ((name.includes('jimena') || name.includes('ximena')) && (name.includes('natural') || name.includes('online'))) return 33000;
+  if (name.includes('paulina') && (name.includes('natural') || name.includes('online'))) return 32000;
+  if (name.includes('paloma') && (name.includes('natural') || name.includes('online'))) return 31500;
+  if (name.includes('elena') && (name.includes('natural') || name.includes('online'))) return 31000;
+  if ((name.includes('network') || name.includes('neural')) && (lang.startsWith('es') || name.includes('female'))) return 30000;
+  if (name.includes('premium') || name.includes('enhanced')) return 29000;
+  if ((name.includes('natural') || name.includes('online') || name.includes('neural')) && !isMale) return 28000;
 
-  let score = 1000;
+  if (isSabinaDesktop) {
+    return 15000;
+  }
+
+  if (isRoboticHelenaOrLaura) {
+    return -25000;
+  }
+
+  let score = 2000;
   const isFemale = name.includes('female') || name.includes('mujer') || 
                    name.includes('dalia') || name.includes('sabina') || name.includes('paloma') || 
                    name.includes('salma') || name.includes('paulina') || name.includes('elena') || 
@@ -2910,11 +2916,6 @@ function scoreAdminVoice(v) {
                    name.includes('andrea') || name.includes('sofia') || name.includes('victoria') || 
                    name.includes('carmen') || name.includes('rosa') || name.includes('mia');
   if (isFemale) score += 3000;
-
-  if (isRoboticDesktop) {
-    score -= 25000;
-    if (name.includes('helena')) score -= 5000;
-  }
 
   if (lang === 'es-pe') score += 500;
   else if (lang === 'es-419' || lang.includes('419')) score += 400;
@@ -3136,22 +3137,23 @@ function normalizePhoneticAdmin(text) {
 
 function splitIntoBreathChunksAdmin(text) {
   if (!text) return [];
+  // Dividir SOLO por oraciones completas (. ! ?) para fluidez humana y melodía relajada
   const rawSentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
   const chunks = [];
 
   rawSentences.forEach(sentence => {
     const s = sentence.trim();
     if (!s) return;
-    if (s.length <= 100) {
+    if (s.length <= 240) {
       chunks.push(s);
       return;
     }
-    const subparts = s.split(/(?<=[;:])\s+|(?<=,)\s+(?=[a-záéíóúA-ZÁÉÍÓÚ])/g);
+    const subparts = s.split(/(?<=[;:])\s+|(?<=,\s)/);
     let temp = '';
     subparts.forEach(part => {
       const p = part.trim();
       if (!p) return;
-      if ((temp + ' ' + p).trim().length <= 95) {
+      if ((temp + ' ' + p).trim().length <= 180) {
         temp = (temp + ' ' + p).trim();
       } else {
         if (temp) chunks.push(temp);
@@ -3187,7 +3189,7 @@ function speakAdminPhrase(rawText) {
     const chunks = splitIntoBreathChunksAdmin(clean);
     if (chunks.length === 0) return;
 
-    // Asegurar la mejor voz disponible
+    // Asegurar la mejor voz disponible (dulce y humana)
     if (!adminSelectedVoice || (!isNaturalOnlineVoiceAdmin(adminSelectedVoice) && adminSpeechVoices.length > 0)) {
       const natural = adminSpeechVoices.find(v => isNaturalOnlineVoiceAdmin(v));
       if (natural) adminSelectedVoice = natural;
@@ -3195,8 +3197,11 @@ function speakAdminPhrase(rawText) {
 
     const rateRange = document.getElementById('admin-voice-rate');
     const pitchRange = document.getElementById('admin-voice-pitch');
-    const chosenRate = rateRange ? parseFloat(rateRange.value) : 0.98;
-    const chosenPitch = pitchRange ? parseFloat(pitchRange.value) : 1.00;
+    const isOnline = isNaturalOnlineVoiceAdmin(adminSelectedVoice);
+    const defaultRate = isOnline ? 0.93 : 0.92;
+    const defaultPitch = isOnline ? 1.01 : 1.04;
+    const chosenRate = rateRange ? parseFloat(rateRange.value) : defaultRate;
+    const chosenPitch = pitchRange ? parseFloat(pitchRange.value) : defaultPitch;
 
     function speakQueue(queue) {
       if (!queue || queue.length === 0) return;
@@ -3210,11 +3215,11 @@ function speakAdminPhrase(rawText) {
       }
       utt.rate = chosenRate;
       utt.pitch = chosenPitch;
-      utt.volume = 1.0;
+      utt.volume = 0.96;
 
       utt.onend = () => {
         if (queue.length > 0) {
-          adminSpeechTimer = setTimeout(() => speakQueue(queue), 85);
+          adminSpeechTimer = setTimeout(() => speakQueue(queue), 35);
         }
       };
       utt.onerror = () => {

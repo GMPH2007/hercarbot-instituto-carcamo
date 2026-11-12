@@ -2516,6 +2516,31 @@ class HercarBotApp {
      SÍNTESIS DE VOZ NATURAL, FLUIDA Y CONVERSACIONAL (TEXT TO SPEECH)
      ========================================================================== */
 
+  playCalmChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!this.audioCtx) this.audioCtx = new AudioCtx();
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sine';
+      // Armónico relajante suave: 523.25 Hz (Do) deslizándose a 659.25 Hz (Mi)
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.12);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.025, now + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.38);
+    } catch (e) {}
+  }
+
   scoreVoice(v) {
     if (!v) return -99999;
     const name = (v.name || '').toLowerCase();
@@ -2538,52 +2563,61 @@ class HercarBotApp {
                    name.includes('diego') || name.includes('sergio') || name.includes('javier');
     if (isMale) return -50000;
 
-    // 2. Detección de voces robóticas de escritorio antiguas (SAPI5 de Windows / espeak / desktop)
-    // En Windows, las voces robóticas son: Microsoft Helena, Microsoft Sabina (sin online/natural), Microsoft Laura
-    const isRoboticDesktop = v.localService === true || 
-                             name.includes('desktop') || 
-                             name.includes('espeak') || 
-                             name.includes('sapi') ||
-                             (name.includes('helena') && !name.includes('natural') && !name.includes('online')) ||
-                             (name.includes('laura') && !name.includes('natural') && !name.includes('online')) ||
-                             (name.includes('sabina') && !name.includes('natural') && !name.includes('online'));
+    // 2. Detección de voces robóticas rígidas de escritorio (Helena Desktop / Laura Desktop / espeak)
+    const isRoboticHelenaOrLaura = (name.includes('helena') && !name.includes('natural') && !name.includes('online')) ||
+                                  (name.includes('laura') && !name.includes('natural') && !name.includes('online')) ||
+                                  name.includes('espeak') || name.includes('sapi4');
 
-    // 3. Voces Neuronales / Naturales Femeninas en la Nube (Calidad humana ultra-alta y dulce)
-    // Microsoft Dalia Online (Natural) — Reconocida por su timbre dulce, joven, latino, 100% humano
-    if (name.includes('dalia') && (name.includes('natural') || name.includes('online'))) return 30000;
-    // Microsoft Sabina Online (Natural) — Cordial, femenina, suave
-    if (name.includes('sabina') && (name.includes('natural') || name.includes('online'))) return 28000;
-    // Microsoft Camila Online (Natural) — Acento peruano / latinoamericano
-    if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 27500;
-    // Microsoft Jimena Online (Natural) — Entonación melódica y cordial
-    if ((name.includes('jimena') || name.includes('ximena')) && (name.includes('natural') || name.includes('online'))) return 27000;
-    // Microsoft Paulina Online (Natural)
-    if (name.includes('paulina') && (name.includes('natural') || name.includes('online'))) return 26000;
-    // Microsoft Paloma Online (Natural)
-    if (name.includes('paloma') && (name.includes('natural') || name.includes('online'))) return 25500;
-    // Microsoft Elena Online (Natural)
-    if (name.includes('elena') && (name.includes('natural') || name.includes('online'))) return 25000;
+    // Sabina Desktop es la voz local más dulce y calmada en Windows si no hay conexión a internet
+    const isSabinaDesktop = name.includes('sabina') && (v.localService || name.includes('desktop'));
+
+    // 3. Voces Neuronales / Naturales Femeninas en la Nube (Calidad humana ultra-alta, dulce y relajante)
+    // Microsoft Dalia Online (Natural) — Timbre dulce, joven, latino, 100% humano y melodioso
+    if (name.includes('dalia') && (name.includes('natural') || name.includes('online'))) return 40000;
+    // Microsoft Sabina Online (Natural) — Cordial, femenina, muy suave y calmada
+    if (name.includes('sabina') && (name.includes('natural') || name.includes('online'))) return 37000;
+    // Microsoft Camila Online (Natural) — Acento peruano / latinoamericano cálido
+    if (name.includes('camila') && (name.includes('natural') || name.includes('online'))) return 35000;
     // Google español (Chrome / Android Cloud TTS) — Muy fluida, natural y cálida
     if (name.includes('google') && !name.includes('male')) {
-      return (lang === 'es-us' || lang === 'es-419' || lang === 'es-pe') ? 26800 : 26000;
+      return (lang === 'es-us' || lang === 'es-419' || lang === 'es-pe') ? 34000 : 33000;
     }
+    // Microsoft Jimena / Ximena Online (Natural) — Entonación melódica y cordial
+    if ((name.includes('jimena') || name.includes('ximena')) && (name.includes('natural') || name.includes('online'))) return 33000;
+    // Microsoft Paulina Online (Natural)
+    if (name.includes('paulina') && (name.includes('natural') || name.includes('online'))) return 32000;
+    // Microsoft Paloma Online (Natural)
+    if (name.includes('paloma') && (name.includes('natural') || name.includes('online'))) return 31500;
+    // Microsoft Elena Online (Natural)
+    if (name.includes('elena') && (name.includes('natural') || name.includes('online'))) return 31000;
     // Android Neural Network TTS ("es-*-network" / "es-*-neural")
     if ((name.includes('network') || name.includes('neural')) && (lang.startsWith('es') || name.includes('female'))) {
-      return 25000;
+      return 30000;
     }
     // Apple Siri / Samantha / Paulina / Mónica Premium en macOS / iOS
     if (name.includes('premium') || name.includes('enhanced')) {
       if (name.includes('paulina') || name.includes('monica') || name.includes('mónica') || name.includes('luciana') || name.includes('soledad')) {
-        return 24000;
+        return 29000;
       }
     }
     // Cualquier otra voz femenina que tenga 'natural' u 'online'
     if ((name.includes('natural') || name.includes('online') || name.includes('neural')) && !isMale) {
-      return 22000;
+      return 28000;
     }
 
-    // 4. Voces femeninas estándar / de sistema
-    let score = 1000;
+    // 4. Voces de escritorio locales de Windows:
+    // Sabina Desktop es suave y dulce con afinación de tono; se prioriza ampliamente sobre Helena
+    if (isSabinaDesktop) {
+      return 15000;
+    }
+
+    // Penalización drástica para voces robóticas metálicas antiguas (Helena, Laura, espeak)
+    if (isRoboticHelenaOrLaura) {
+      return -25000;
+    }
+
+    // Voces femeninas estándar
+    let score = 2000;
     const isFemale = name.includes('female') || name.includes('mujer') || 
                      name.includes('dalia') || name.includes('sabina') || name.includes('paloma') || 
                      name.includes('salma') || name.includes('paulina') || name.includes('elena') || 
@@ -2591,12 +2625,6 @@ class HercarBotApp {
                      name.includes('andrea') || name.includes('sofia') || name.includes('victoria') || 
                      name.includes('carmen') || name.includes('rosa') || name.includes('mia');
     if (isFemale) score += 3000;
-
-    // Penalización drástica para voces de escritorio antiguas / robóticas
-    if (isRoboticDesktop) {
-      score -= 25000; // Asegura que una voz robótica NUNCA gane si existe una natural online
-      if (name.includes('helena')) score -= 5000;
-    }
 
     // Bonus de afinidad dialectal
     if (lang === 'es-pe') score += 500;
@@ -2634,10 +2662,11 @@ class HercarBotApp {
       localStorage.removeItem('hercar_voice_uri');
     }
 
-    // Calibración acústica ultra-natural para voz femenina dulce, cálida y humana ("chica asesora")
-    // PITCH 1.0 EXACTO para preservar la resonancia vocal humana original y evitar distorsión de vocoder
-    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.98;
-    this.voicePitch = 1.0;
+    // Calibración acústica ultra-humana: Chica Dulce, Suave y Relajada
+    // Rate 0.93 para cadencia pausada y tranquilizadora (elimina la prisa o sensación de lectura mecánica)
+    // Pitch 1.02 para melodía dulce y juvenil
+    this.voiceRate = parseFloat(localStorage.getItem('hercar_voice_rate')) || 0.93;
+    this.voicePitch = parseFloat(localStorage.getItem('hercar_voice_pitch')) || 1.02;
     this.voiceStyle = localStorage.getItem('hercar_voice_style') || 'dulce';
     this.voiceURI = localStorage.getItem('hercar_voice_uri') || null;
 
@@ -2652,16 +2681,17 @@ class HercarBotApp {
         const nameLower = v.name.toLowerCase();
         const isDalia = nameLower.includes('dalia');
         const isGoogle = nameLower.includes('google') && !nameLower.includes('male');
-        const isSabina = nameLower.includes('sabina') && !nameLower.includes('desktop');
-        const isCamila = nameLower.includes('camila') && !nameLower.includes('desktop');
+        const isSabina = nameLower.includes('sabina');
+        const isCamila = nameLower.includes('camila');
         const isNatural = this.isNaturalOnlineVoice(v);
 
         let badge = '';
-        if (isDalia) badge = ' 🌸 Voz Dulce y Joven (Máxima Recomendación)';
+        if (isDalia) badge = ' 🌸 Chica Dulce y Joven (Máxima Calidad)';
         else if (isCamila) badge = ' 🌸 Voz Peruana Natural (Recomendada)';
+        else if (isSabina && isNatural) badge = ' 🌸 Voz Dulce y Relajada (Recomendada)';
         else if (isGoogle) badge = ' 🌸 Voz Natural Google (Recomendada)';
-        else if (isSabina) badge = ' 🌸 Voz Femenina Cálida (Recomendada)';
         else if (isNatural) badge = ' ✨ Voz Natural Online';
+        else if (isSabina) badge = ' 🌸 Voz Suave y Cálida';
         else if (!nameLower.includes('desktop') && !v.localService) badge = ' 🌸 Voz Estándar';
         else badge = ' 💻 (Voz Local de Escritorio)';
 
@@ -2745,14 +2775,14 @@ class HercarBotApp {
     const btnReset = document.getElementById('btn-reset-voice-defaults');
 
     if (speedRange && speedLabel) {
-      speedRange.value = this.voiceRate || 0.98;
-      speedLabel.textContent = `${Number(this.voiceRate || 0.98).toFixed(2)}x (Dulce y Natural 🌸)`;
+      speedRange.value = this.voiceRate || 0.93;
+      speedLabel.textContent = `${Number(this.voiceRate || 0.93).toFixed(2)}x (🌸 Chica Dulce y Relajada)`;
 
       speedRange.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
         this.voiceRate = val;
         localStorage.setItem('hercar_voice_rate', val);
-        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.94 ? 'Pausada' : val > 1.02 ? 'Ágil' : 'Natural y Dulce 🌸'})`;
+        speedLabel.textContent = `${val.toFixed(2)}x (${val < 0.92 ? 'Muy Pausada' : val > 1.02 ? 'Ágil' : '🌸 Dulce y Relajada'})`;
       });
     }
 
@@ -2765,7 +2795,7 @@ class HercarBotApp {
           this.voiceURI = found.voiceURI;
           localStorage.setItem('hercar_voice_uri', found.voiceURI);
           this.showToast(`Voz seleccionada: ${found.name}`, 'info', 'bi-mic-fill');
-          this.speak('¡Hola! Así suena mi voz para orientarte con cariño en el Instituto Superior Hermanos Cárcamo de Paita.');
+          this.speak('¡Hola! Así suena mi voz, dulce, suave y tranquila para acompañarte en el Instituto Hermanos Cárcamo.');
         }
       });
     }
@@ -2773,7 +2803,7 @@ class HercarBotApp {
     const btnQuickPreview = document.getElementById('btn-quick-preview-voice');
     if (btnQuickPreview) {
       btnQuickPreview.addEventListener('click', () => {
-        this.speak('¡Hola! Soy tu asesora virtual del Instituto Superior Hermanos Cárcamo de Paita. ¿Te gusta cómo suena mi voz?');
+        this.speak('¡Hola! Soy tu asesora virtual del Instituto Hermanos Cárcamo. Qué lindo saludarte, estoy aquí para ayudarte con toda tranquilidad.');
       });
     }
 
@@ -2792,33 +2822,33 @@ class HercarBotApp {
 
       btnWarm.addEventListener('click', () => {
         this.voiceStyle = 'dulce';
-        this.voicePitch = 1.0;
-        this.voiceRate = 0.98;
+        this.voicePitch = 1.02;
+        this.voiceRate = 0.93;
         localStorage.setItem('hercar_voice_style', 'dulce');
-        localStorage.setItem('hercar_voice_pitch', '1.0');
-        localStorage.setItem('hercar_voice_rate', '0.98');
+        localStorage.setItem('hercar_voice_pitch', '1.02');
+        localStorage.setItem('hercar_voice_rate', '0.93');
         if (speedRange && speedLabel) {
-          speedRange.value = 0.98;
-          speedLabel.textContent = '0.98x (Dulce, Suave y Natural 🌸)';
+          speedRange.value = 0.93;
+          speedLabel.textContent = '0.93x (🌸 Chica Dulce y Relajada)';
         }
         btnWarm.classList.add('active', 'btn-primary');
         btnWarm.classList.remove('btn-outline-primary');
         btnPro.classList.remove('active', 'btn-primary');
         btnPro.classList.add('btn-outline-secondary');
-        this.showToast('Voz configurada: Asesora Femenina Dulce y Natural 🌸', 'success', 'bi-mic-fill');
-        this.speak('¡Hola! He ajustado mi voz a un tono dulce, suave y natural para orientarte en el Instituto Superior Hermanos Cárcamo.');
+        this.showToast('Voz configurada: Chica Dulce, Suave y Relajada 🌸', 'success', 'bi-mic-fill');
+        this.speak('¡Hola! He ajustado mi voz para hablarte con suavidad, calma y cariño. Respira tranquilo, aquí estoy para orientarte.');
       });
 
       btnPro.addEventListener('click', () => {
         this.voiceStyle = 'pro';
-        this.voicePitch = 1.0;
-        this.voiceRate = 1.0;
+        this.voicePitch = 1.00;
+        this.voiceRate = 0.98;
         localStorage.setItem('hercar_voice_style', 'pro');
-        localStorage.setItem('hercar_voice_pitch', '1.0');
-        localStorage.setItem('hercar_voice_rate', '1.0');
+        localStorage.setItem('hercar_voice_pitch', '1.00');
+        localStorage.setItem('hercar_voice_rate', '0.98');
         if (speedRange && speedLabel) {
-          speedRange.value = 1.0;
-          speedLabel.textContent = '1.00x (Formal y Serena 👔)';
+          speedRange.value = 0.98;
+          speedLabel.textContent = '0.98x (Serena y Formal 👔)';
         }
         btnPro.classList.add('active', 'btn-primary');
         btnPro.classList.remove('btn-outline-secondary');
@@ -2832,8 +2862,8 @@ class HercarBotApp {
     if (btnTest) {
       btnTest.addEventListener('click', () => {
         const saludoPrueba = this.voiceStyle === 'pro'
-          ? 'Estimado estudiante o postulante. Soy el asistente virtual oficial del Instituto Superior Hermanos Cárcamo de Paita. Te oriento con información actualizada sobre carreras técnicas, matrícula y trámites.'
-          : '¡Hola! Te doy una cálida bienvenida al Instituto Superior Hermanos Cárcamo de Paita. Soy tu asesora virtual y con mucho gusto te oriento sobre nuestras carreras técnicas, pagos y trámites. ¿En qué te puedo ayudar hoy?';
+          ? 'Estimado postulante. Te saluda el asistente oficial del Instituto Hermanos Cárcamo. Puedes consultar carreras, matrícula y trámites con total confianza.'
+          : '¡Hola! Te doy una cálida bienvenida al Instituto Hermanos Cárcamo de Paita. Soy tu asesora y con mucho cariño te acompaño en lo que necesites para tu carrera profesional. Cuéntame, ¿en qué te puedo apoyar hoy?';
         this.speak(saludoPrueba);
       });
     }
@@ -2844,17 +2874,17 @@ class HercarBotApp {
         localStorage.removeItem('hercar_voice_rate');
         localStorage.removeItem('hercar_voice_pitch');
         localStorage.removeItem('hercar_voice_style');
-        this.voiceRate = 0.98;
-        this.voicePitch = 1.0;
+        this.voiceRate = 0.93;
+        this.voicePitch = 1.02;
         this.voiceStyle = 'dulce';
         this.voiceURI = null;
         if (speedRange && speedLabel) {
-          speedRange.value = 0.98;
-          speedLabel.textContent = '0.98x (Dulce y Natural 🌸)';
+          speedRange.value = 0.93;
+          speedLabel.textContent = '0.93x (🌸 Chica Dulce y Relajada)';
         }
         this.initVoiceSynthesis();
-        this.showToast('Voz restablecida a Asesora Femenina Dulce y Natural 🌸', 'info', 'bi-arrow-counterclockwise');
-        this.speak('¡Listo! He restablecido mi voz a la opción más dulce y natural del Instituto Superior Hermanos Cárcamo.');
+        this.showToast('Ajustes de voz restablecidos a Voz de Chica Dulce y Relajada 🌸', 'success', 'bi-arrow-counterclockwise');
+        this.speak('¡Listo! He restablecido mi voz a su tono dulce, suave y natural de fábrica.');
       });
     }
   }
@@ -3916,6 +3946,8 @@ class HercarBotApp {
 
   splitIntoBreathChunks(text) {
     if (!text) return [];
+    // Dividir SOLO por oraciones completas (. ! ?) para que el sintetizador
+    // mantenga la entonación y melodía natural de la voz de chica sin cortar en seco en cada coma
     const rawSentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
     const chunks = [];
 
@@ -3923,19 +3955,20 @@ class HercarBotApp {
       const s = sentence.trim();
       if (!s) return;
 
-      // Si la frase es de longitud adecuada (<= 100 caracteres), enviar directamente
-      if (s.length <= 100) {
+      // Si la oración es de longitud normal (hasta 240 caracteres), mantenerla íntegra
+      // para que el motor neural module las comas y pausas con fluidez orgánica y relajada
+      if (s.length <= 240) {
         chunks.push(s);
         return;
       }
 
-      // Si la frase es larga, subdividir en puntos de respiración natural (comas, dos puntos, punto y coma)
-      const subparts = s.split(/(?<=[;:])\s+|(?<=,)\s+(?=[a-záéíóúA-ZÁÉÍÓÚ])/g);
+      // Solo si la frase es extremadamente larga (> 240 caracteres), dividir en pausas naturales mayores
+      const subparts = s.split(/(?<=[;:])\s+|(?<=,\s)/);
       let temp = '';
       subparts.forEach(part => {
         const p = part.trim();
         if (!p) return;
-        if ((temp + ' ' + p).trim().length <= 95) {
+        if ((temp + ' ' + p).trim().length <= 180) {
           temp = (temp + ' ' + p).trim();
         } else {
           if (temp) chunks.push(temp);
@@ -3955,9 +3988,11 @@ class HercarBotApp {
     const clean = this.preparePhoneticText(text);
     if (!clean || clean.trim().length === 0) return;
 
-    // Dividir en fragmentos respiratorios humanos para micro-pausas naturales de respiración
     const sentences = this.splitIntoBreathChunks(clean);
     if (sentences.length === 0) return;
+
+    // Suave acorde zen relajante que prepara la atmósfera de calma
+    this.playCalmChime();
 
     this.isSpeaking = true;
     if (this.voiceIndicator) this.voiceIndicator.classList.add('active');
@@ -4006,20 +4041,24 @@ class HercarBotApp {
       utterance.lang = 'es-MX';
     }
 
-    // Calibración acústica ultra-humana:
-    // PITCH = 1.0 EXACTO. No alterar pitch para evitar el modulador metálico del navegador.
-    // La voz natural neural conserva su timbre femenino dulce y armónicos de grabación en estudio.
-    utterance.pitch = 1.0;
-    utterance.rate = this.voiceRate || 0.98;
-    utterance.volume = 1.0;
+    // Calibración acústica: Chica Dulce, Suave y Relajada
+    // Para voces online naturales: rate 0.93 y pitch 1.01 (melodiosa, cálida y relajante)
+    // Para voces locales (Sabina Desktop): rate 0.92 y pitch 1.04 (eleva sutilmente el tono haciéndola dulce y juvenil)
+    const isOnline = this.isNaturalOnlineVoice(this.selectedVoice);
+    const targetRate = this.voiceRate || (isOnline ? 0.93 : 0.92);
+    const targetPitch = this.voicePitch || (isOnline ? 1.01 : 1.04);
+
+    utterance.pitch = targetPitch;
+    utterance.rate = targetRate;
+    utterance.volume = 0.96;
 
     utterance.onend = () => {
       if (!this.isSpeaking) return;
       if (queue.length > 0) {
-        // Pausa de respiración natural de 85ms entre frases
+        // Pausa suave y orgánica de 35ms entre oraciones completas
         this.speechQueueTimer = setTimeout(() => {
           this.speakSentenceQueue(queue);
-        }, 85);
+        }, 35);
       } else {
         this.stopSpeaking();
       }
@@ -4738,10 +4777,43 @@ ${text}
       return;
     }
 
-    // 5. Autoridades, Director y Plana Docente
-    if (norm.includes('director') || norm.includes('directora') || norm.includes('autoridad') || norm.includes('autoridades') || norm.includes('plana docente') || norm.includes('profesores') || norm.includes('docentes') || norm.includes('jefatura') || norm.includes('quien dirige') || norm.includes('secretaria general') || norm.includes('coordinador')) {
+    // 5. Plana Docente Oficial y Profesores (portal ieshercar.edu.pe)
+    if (norm.includes('plana docente') || norm.includes('profesor') || norm.includes('docente') || norm.includes('maestro') || norm.includes('catedratico') ||
+        norm.includes('jaramillo') || norm.includes('denegri') || norm.includes('ruidias') || norm.includes('cherre') ||
+        norm.includes('masias') || norm.includes('yemina') || norm.includes('manrique') || norm.includes('karolina') ||
+        norm.includes('julca') || norm.includes('llontop') || norm.includes('olaya') || norm.includes('chapa') || norm.includes('barrios') || norm.includes('rufasto')) {
+      let filtro = 'todas';
+      if (norm.includes('apsti') || norm.includes('sistema') || norm.includes('computacion') || norm.includes('software')) filtro = 'apsti';
+      else if (norm.includes('ani') || norm.includes('negocio') || norm.includes('comercio')) filtro = 'ani';
+      else if (norm.includes('conta') || norm.includes('tribut') || norm.includes('finanza')) filtro = 'conta';
+      else if (norm.includes('dpa') || norm.includes('pesquer') || norm.includes('acuicul') || norm.includes('pesca')) filtro = 'dpa';
+      this.renderPlanaDocente(filtro);
+      this.logQuery('institucional');
+      return;
+    }
+
+    // 5.1 Autoridades Institucionales y Dirección
+    if (norm.includes('director') || norm.includes('directora') || norm.includes('autoridad') || norm.includes('autoridades') || norm.includes('jefatura') || norm.includes('quien dirige') || norm.includes('secretaria general') || norm.includes('coordinador')) {
       this.renderAutoridades();
       this.logQuery('institucional');
+      return;
+    }
+
+    // 5.2 Módulos Formativos y Certificación Modular Oficial
+    if (norm.includes('modulo') || norm.includes('modulos') || norm.includes('certificacion modular') || norm.includes('certificado modular') || norm.includes('modular')) {
+      let carreraId = 'apsti';
+      if (norm.includes('ani') || norm.includes('negocio')) carreraId = 'ani';
+      else if (norm.includes('conta') || norm.includes('contabilidad')) carreraId = 'conta';
+      else if (norm.includes('dpa') || norm.includes('pesquer') || norm.includes('pesca')) carreraId = 'dpa';
+      this.renderModulosFormativos(carreraId);
+      this.logQuery('carreras');
+      return;
+    }
+
+    // 5.3 Comité de Defensa del Estudiante (CODE) y Protección Estudiantil (RD N° 046-2021)
+    if (norm.includes('code') || norm.includes('defensa del estudiante') || norm.includes('comite de defensa') || norm.includes('derechos del estudiante') || norm.includes('denuncia') || norm.includes('hostigamiento') || norm.includes('acoso') || norm.includes('arbitrariedad')) {
+      this.renderComiteDefensaEstudiante();
+      this.logQuery('bienestar');
       return;
     }
 
@@ -5385,15 +5457,200 @@ ${text}
         </div>
 
         <div class="interactive-button-grid">
+          <button class="interactive-btn" data-chat-action="ver_plana_docente"><i class="bi bi-people-fill text-success"></i> Plana Docente (20 Profesores)</button>
           <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt"></i> Horarios de Atención</button>
           <button class="interactive-btn" data-chat-action="ver_todas_carreras"><i class="bi bi-mortarboard text-primary"></i> 4 Carreras Técnicas</button>
         </div>
       </div>
     `;
-    this.appendBotMessage(html, "¡Hola! Te cuento que nuestra institución está liderada por la Dirección General junto a la Unidad Académica y Secretaría General. ¡En tu pantalla puedes conocer a todo nuestro equipo directivo!", [
+    this.appendBotMessage(html, "¡Hola! Qué gusto saludarte. Con todo cariño te cuento que nuestra institución está dirigida por la Dirección General junto a la Unidad Académica y Secretaría General. Fue creada por Resolución Ministerial doscientos treinta y dos y revalidada con Resolución quinientos veintiocho. En tu pantalla puedes conocer a todo nuestro equipo directivo con calma.", [
+      { label: "👨‍🏫 Plana Docente Completa", prompt: "¿Quiénes son los profesores del instituto?" },
       { label: "📍 Horarios y Ubicación", prompt: "¿Dónde queda el instituto y cuál es el horario de atención?" },
-      { label: "💻 Carrera APSTI", prompt: "¿Qué cursos se llevan en APSTI?" },
-      { label: "📜 Trámites y Certificados", prompt: "¿Cómo tramito mi Certificado Modular?" }
+      { label: "💻 Carrera APSTI", prompt: "¿Qué cursos se llevan en APSTI?" }
+    ]);
+  }
+
+  renderPlanaDocente(filtroCarrera = null) {
+    const docentes = (typeof PLANA_DOCENTE_OFICIAL !== 'undefined' ? PLANA_DOCENTE_OFICIAL : []);
+    const carreras = [
+      { id: 'todas', label: 'Todas las Carreras' },
+      { id: 'apsti', label: '💻 APSTI (Sistemas)' },
+      { id: 'ani', label: '🌐 Negocios (ANI)' },
+      { id: 'conta', label: '📊 Contabilidad' },
+      { id: 'dpa', label: '🐟 Pesquería (DPA)' }
+    ];
+
+    const currentFilter = (filtroCarrera && filtroCarrera !== 'todas') ? filtroCarrera.toLowerCase() : 'todas';
+    const listaFiltrada = currentFilter === 'todas'
+      ? docentes
+      : docentes.filter(d => d.carreraId.toLowerCase() === currentFilter);
+
+    const filterBtns = carreras.map(c => {
+      const activeClass = (c.id === currentFilter) ? 'btn-primary active' : 'btn-outline-primary';
+      return `<button class="btn btn-sm ${activeClass} rounded-pill px-3 py-1" data-chat-action="ver_plana_docente" data-chat-val="${c.id}" style="font-size:0.75rem;">${c.label}</button>`;
+    }).join(' ');
+
+    const cardsHtml = listaFiltrada.map(d => `
+      <div class="col-12 col-md-6">
+        <div class="p-3 bg-white rounded-3 border shadow-sm h-100 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-0" style="font-size:0.68rem;">${d.carrera}</span>
+              ${d.cvPublicado ? '<span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-0" style="font-size:0.66rem;"><i class="bi bi-file-earmark-pdf me-1"></i>CV Publicado</span>' : ''}
+            </div>
+            <h6 class="fw-bold text-dark mb-1" style="font-size:0.92rem;"><i class="bi bi-person-fill text-primary me-1"></i>${d.nombre}</h6>
+            <p class="text-muted small mb-2" style="font-size:0.78rem; line-height:1.4;">${d.perfil}</p>
+          </div>
+          <div class="pt-2 border-top d-flex justify-content-between align-items-center">
+            <small class="text-muted" style="font-size:0.7rem;"><i class="bi bi-mortarboard me-1"></i>Docente Titular IESTP</small>
+            <a href="https://ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/" target="_blank" class="small text-primary text-decoration-none fw-semibold" style="font-size:0.72rem;">Ver en portal ↗</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const html = `
+      <div class="faq-card-custom" style="border-top: 4px solid #0e2d6c;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-primary px-3 py-1"><i class="bi bi-people-fill me-1"></i>Plana Docente Oficial</span>
+          <span class="badge bg-light text-dark border">20 Docentes · 4 Carreras</span>
+        </div>
+        <h4 class="fw-bold mb-1 text-dark">Plana Docente Oficial — IESTP Hermanos Cárcamo</h4>
+        <p class="small text-muted mb-3">Docentes altamente capacitados y titulados publicados en el portal oficial <strong>ieshercar.edu.pe</strong>:</p>
+
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          ${filterBtns}
+        </div>
+
+        <div class="row g-2 mb-3">
+          ${cardsHtml}
+        </div>
+
+        <div class="p-3 bg-light rounded-3 border small mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check text-success fs-5"></i>
+            <div>
+              <strong>Calidad Educativa Garantizada:</strong> Nuestros docentes cuentan con grado profesional, experiencia demostrada en el sector productivo de Paita y formación pedagógica continua según los lineamientos del MINEDU.
+            </div>
+          </div>
+        </div>
+
+        <div class="interactive-button-grid">
+          <a href="https://ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/" target="_blank" class="interactive-btn text-decoration-none"><i class="bi bi-box-arrow-up-right text-primary"></i> Ver en ieshercar.edu.pe</a>
+          <button class="interactive-btn" data-chat-action="ver_todas_carreras"><i class="bi bi-mortarboard text-success"></i> 4 Carreras Técnicas</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-danger"></i> Contacto y Horarios</button>
+        </div>
+      </div>
+    `;
+
+    const locucionTexto = "¡Hola! Con mucho cariño te cuento que el Instituto Hermanos Cárcamo cuenta con una plana docente oficial de veinte docentes titulados y especializados. En tu pantalla puedes ver a todos los profesores y filtrar por carrera con toda tranquilidad.";
+
+    this.appendBotMessage(html, locucionTexto, [
+      { label: "💻 Docentes APSTI", prompt: "¿Quiénes son los profesores de APSTI?" },
+      { label: "🌐 Docentes Negocios", prompt: "¿Quiénes son los profesores de Negocios Internacionales?" },
+      { label: "📊 Docentes Contabilidad", prompt: "¿Quiénes son los profesores de Contabilidad?" },
+      { label: "🐟 Docentes Pesquería", prompt: "¿Quiénes son los profesores de Desarrollo Pesquero?" }
+    ]);
+  }
+
+  renderModulosFormativos(carreraId = null) {
+    const dataCarreras = (typeof CARRERAS_COMPLETAS !== 'undefined' ? CARRERAS_COMPLETAS : []);
+    const carrera = dataCarreras.find(c => c.id === carreraId) || dataCarreras[0];
+
+    const modulosHtml = carrera.modulos.map((m, idx) => `
+      <div class="p-3 bg-white rounded-3 border mb-2 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="badge bg-primary-subtle text-primary fw-bold" style="font-size:0.75rem;">Módulo ${idx + 1}</span>
+          <span class="badge bg-success-subtle text-success small"><i class="bi bi-award-fill me-1"></i>Certificación Progresiva</span>
+        </div>
+        <h6 class="fw-bold text-dark mb-1">${m.modulo}</h6>
+        <p class="small text-muted mb-2"><i class="bi bi-check-circle-fill text-success me-1"></i>${m.certificacion}</p>
+        <div class="small text-muted">
+          ${m.semestres.map(s => `<div><strong>${s.ciclo}:</strong> ${s.cursos.slice(0, 4).join(', ')}...</div>`).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    const html = `
+      <div class="faq-card-custom" style="border-top: 4px solid #0284c7;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-info text-dark px-3 py-1"><i class="bi bi-layers-fill me-1"></i>Formación Modular</span>
+          <span class="badge bg-light text-dark border">${carrera.codigo}</span>
+        </div>
+        <h4 class="fw-bold mb-1 text-dark">Módulos Formativos y Certificación Progresiva</h4>
+        <p class="small text-muted mb-3">En el IESTP Hermanos Cárcamo obtienes un <strong>Certificado Modular Oficial</strong> al culminar cada año de estudios para que puedas trabajar antes de graduarte:</p>
+
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          ${dataCarreras.map(c => `
+            <button class="btn btn-sm ${c.id === carrera.id ? 'btn-primary active' : 'btn-outline-primary'} rounded-pill px-3 py-1" data-chat-action="ver_modulos_carrera" data-chat-val="${c.id}" style="font-size:0.75rem;">
+              ${c.codigo}
+            </button>
+          `).join(' ')}
+        </div>
+
+        ${modulosHtml}
+
+        <div class="interactive-button-grid mt-3">
+          <button class="interactive-btn" data-chat-action="ver_malla_carrera" data-chat-val="${carrera.id}"><i class="bi bi-diagram-3 text-primary"></i> Malla Curricular Completa</button>
+          <button class="interactive-btn" data-chat-action="ver_admision_completa"><i class="bi bi-mortarboard-fill text-success"></i> Cómo Postular</button>
+        </div>
+      </div>
+    `;
+
+    const locucionTexto = `¡Hola! Con mucho gusto te cuento que en el Instituto Hermanos Cárcamo la carrera de ${carrera.nombre} se divide en tres módulos formativos con certificación progresiva anual. En tu pantalla te comparto los módulos y certificados que obtendrás.`;
+
+    this.appendBotMessage(html, locucionTexto, [
+      { label: `💻 Módulos APSTI`, prompt: "Ver módulos de APSTI" },
+      { label: `🌐 Módulos Negocios`, prompt: "Ver módulos de Negocios Internacionales" },
+      { label: `📊 Módulos Contabilidad`, prompt: "Ver módulos de Contabilidad" },
+      { label: `🐟 Módulos Pesquería`, prompt: "Ver módulos de Desarrollo Pesquero" }
+    ]);
+  }
+
+  renderComiteDefensaEstudiante() {
+    const html = `
+      <div class="faq-card-custom" style="border-top: 4px solid #10b981;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge bg-success px-3 py-1"><i class="bi bi-shield-heart me-1"></i>Protección & Bienestar</span>
+          <span class="badge bg-light text-dark border">RD N° 046-2021</span>
+        </div>
+        <h4 class="fw-bold mb-1 text-dark">Comité de Defensa del Estudiante (CODE)</h4>
+        <p class="small text-muted mb-3">Órgano institucional oficial para garantizar un entorno seguro, inclusivo, respetuoso y libre de hostigamiento:</p>
+
+        <div class="row g-2 mb-3">
+          <div class="col-sm-6">
+            <div class="p-3 bg-light rounded-3 border small h-100">
+              <h6 class="fw-bold text-success mb-1"><i class="bi bi-check-circle-fill me-1"></i> Garantías al Estudiante</h6>
+              <p class="mb-0 text-muted">Acompañamiento integral, confidencialidad absoluta, respeto irrestricto y no discriminación por ninguna índole.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-3 bg-light rounded-3 border small h-100">
+              <h6 class="fw-bold text-primary mb-1"><i class="bi bi-file-earmark-text me-1"></i> Canal de Quejas y Denuncias</h6>
+              <p class="mb-0 text-muted">Recepción formal del Formulario de Queja o Denuncia y resolución con apego a las normas del MINEDU.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-white rounded-3 border small mb-3">
+          <h6 class="fw-bold text-dark mb-1"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Atención y Contacto del CODE:</h6>
+          <p class="mb-1 text-muted">Oficina de Bienestar y Empleabilidad · Campus Av. Grau Mz. A Lt. 001 - Urb. El Parque, Paita.</p>
+          <p class="mb-0 text-muted"><strong>Correo institucional:</strong> <a href="mailto:ieshercar@ieshercar.edu.pe">ieshercar@ieshercar.edu.pe</a> · Teléfono: (073) 251013</p>
+        </div>
+
+        <div class="interactive-button-grid">
+          <a href="https://ieshercar.edu.pe/Informacion_Academica/Bienestar_Empleabilidad/" target="_blank" class="interactive-btn text-decoration-none"><i class="bi bi-box-arrow-up-right text-success"></i> Ver en portal oficial</a>
+          <button class="interactive-btn" data-chat-action="ver_bienestar"><i class="bi bi-heart-pulse text-danger"></i> Tópico & Seguro SIS</button>
+          <button class="interactive-btn" data-chat-action="abrir_generador_fut"><i class="bi bi-file-earmark-plus text-primary"></i> Trámite FUT</button>
+        </div>
+      </div>
+    `;
+
+    const locucionTexto = "¡Hola! Con mucho gusto te informo que en el Instituto Hermanos Cárcamo contamos con el Comité de Defensa del Estudiante, respaldado por resolución directoral cero cuarenta y seis. Está para cuidarte, apoyarte y brindarte un espacio seguro en tus estudios. En tu pantalla tienes todos los detalles.";
+
+    this.appendBotMessage(html, locucionTexto, [
+      { label: "🏥 Seguro SIS Gratuito", prompt: "¿Cómo me afilio al seguro SIS en el instituto?" },
+      { label: "📜 Trámites y FUT", prompt: "¿Cómo presento una solicitud con el FUT?" }
     ]);
   }
 
@@ -8132,6 +8389,18 @@ ${text}
         break;
       case 'copiar_cci_bn':
         this.copyData('018-631-000631012948-52', 'Código Interbancario (CCI)');
+        break;
+      case 'ver_plana_docente':
+        this.renderPlanaDocente(val);
+        this.logQuery('institucional');
+        break;
+      case 'ver_modulos_carrera':
+        this.renderModulosFormativos(val);
+        this.logQuery('carreras');
+        break;
+      case 'ver_code_estudiantil':
+        this.renderComiteDefensaEstudiante();
+        this.logQuery('bienestar');
         break;
     }
   }

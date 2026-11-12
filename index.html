@@ -204,7 +204,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- Estilos HercarBot IA Premium con Cache Buster -->
-  <link rel="stylesheet" href="css/style.css?v=20261112f">
+  <link rel="stylesheet" href="css/style.css?v=20261112g">
 
   <!-- Desbloqueador Inmediato de Clics y Purga de Caché Estancada -->
   <style>
@@ -243,7 +243,7 @@
         if ('caches' in window) {
           caches.keys().then(function(keys) {
             for (var k of keys) {
-              if (k !== 'hercarbot-pwa-v2026-v16') { caches.delete(k); }
+              if (k !== 'hercarbot-pwa-v2026-v17') { caches.delete(k); }
             }
           });
         }
@@ -797,9 +797,9 @@
   <div class="hercar-fut-modal" id="modalGeneradorFUT" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="hercar-fut-box">
       <!-- Encabezado del Modal con botones y accesos rápidos -->
-      <div class="d-flex align-items-start justify-content-between pb-3 mb-3 border-bottom">
-        <div class="d-flex align-items-center gap-2">
-          <div style="width: 44px; height: 44px; background: rgba(14, 165, 233, 0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 1.4rem;">
+      <div class="d-flex align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom flex-wrap">
+        <div class="d-flex align-items-center gap-2" style="min-width: 220px; flex: 1 1 auto;">
+          <div class="flex-shrink-0" style="width: 44px; height: 44px; background: rgba(14, 165, 233, 0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 1.4rem;">
             <i class="bi bi-file-earmark-text-fill"></i>
           </div>
           <div>
@@ -807,11 +807,11 @@
             <small class="text-muted fut-header-subtitle">Formato Único de Trámite oficial para Mesa de Partes Virtual y Presencial</small>
           </div>
         </div>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" id="btn-fut-demo-data" title="Rellenar formulario con datos de ejemplo para probar la impresión">
+        <div class="d-flex align-items-center gap-2 flex-shrink-0 ms-auto">
+          <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 text-nowrap flex-shrink-0" id="btn-fut-demo-data" title="Rellenar formulario con datos de ejemplo para probar la impresión">
             <i class="bi bi-magic me-1"></i> Rellenar Ejemplo
           </button>
-          <button type="button" class="btn-close" id="btn-close-fut-modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-close flex-shrink-0" id="btn-close-fut-modal" aria-label="Cerrar"></button>
         </div>
       </div>
 
@@ -875,7 +875,7 @@
             <div class="fut-info-item">
               <span class="fut-info-label"><i class="bi bi-bank me-1"></i>Banco de la Nación:</span>
               <span class="fut-info-val d-flex align-items-center gap-1">
-                <span>00-638-002361</span>
+                <span id="futInfoBnCuenta">00-638-002361</span>
                 <button type="button" class="btn btn-xs btn-link p-0 text-primary" id="btnCopyBnFut" title="Copiar número de cuenta"><i class="bi bi-clipboard"></i></button>
               </span>
             </div>
@@ -976,23 +976,23 @@
 
         <div class="fut-grid-2">
           <div>
-            <label class="form-label small fw-bold text-muted mb-1" for="futNombre">Apellidos y Nombres Completos:</label>
-            <input class="fut-field" id="futNombre" placeholder="Ej: APELLIDOS Y NOMBRES COMPLETOS" required />
+            <label class="form-label small fw-bold text-muted mb-1" for="futNombre">Apellidos y Nombres Completos: <span class="text-danger">*</span></label>
+            <input class="fut-field" id="futNombre" placeholder="Ej: APELLIDOS Y NOMBRES COMPLETOS" autocomplete="name" required />
           </div>
           <div>
-            <label class="form-label small fw-bold text-muted mb-1" for="futDni">Número de DNI (8 dígitos):</label>
-            <input class="fut-field" id="futDni" maxlength="8" placeholder="Ej: 12345678 (8 dígitos)" required />
+            <label class="form-label small fw-bold text-muted mb-1" for="futDni">Número de DNI (8 dígitos): <span class="text-danger">*</span></label>
+            <input class="fut-field" id="futDni" maxlength="8" inputmode="numeric" pattern="\d{8}" placeholder="Ej: 12345678 (8 dígitos)" autocomplete="off" required />
           </div>
         </div>
 
         <div class="fut-grid-2">
           <div>
             <label class="form-label small fw-bold text-muted mb-1" for="futTelefono">Celular / WhatsApp de Contacto:</label>
-            <input class="fut-field" id="futTelefono" placeholder="Ej: 987 654 321 (9 dígitos)" />
+            <input class="fut-field" id="futTelefono" maxlength="15" inputmode="tel" placeholder="Ej: 987 654 321 (9 dígitos)" autocomplete="tel" />
           </div>
           <div>
             <label class="form-label small fw-bold text-muted mb-1" for="futCorreo">Correo Electrónico:</label>
-            <input class="fut-field" id="futCorreo" type="email" placeholder="Ej: estudiante@gmail.com" />
+            <input class="fut-field" id="futCorreo" type="email" placeholder="Ej: estudiante@gmail.com" autocomplete="email" />
           </div>
         </div>
 
@@ -1160,7 +1160,7 @@
   <div id="hercar-toast-container" class="hercar-toast-container" aria-live="polite"></div>
 
   <!-- Base de Conocimiento y Lógica del Asistente con Cache Buster -->
-  <script src="js/knowledge-base.js?v=20261112f"></script>
-  <script src="js/chatbot.js?v=20261112f"></script>
+  <script src="js/knowledge-base.js?v=20261112g"></script>
+  <script src="js/chatbot.js?v=20261112g"></script>
 </body>
 </html>

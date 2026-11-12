@@ -986,6 +986,17 @@ class HercarBotApp {
       btnDemo.addEventListener('click', () => this.fillFutDemoData());
     }
 
+    ['futNombre', 'futDni'].forEach(fieldId => {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        if (fieldId === 'futDni') {
+          el.value = el.value.replace(/\D+/g, '').slice(0, 8);
+        }
+        el.classList.remove('fut-field-invalid');
+      });
+    });
+
     const btnCopyBn = document.getElementById('btnCopyBnFut');
     if (btnCopyBn) {
       btnCopyBn.addEventListener('click', () => {
@@ -1370,11 +1381,24 @@ class HercarBotApp {
     const cfg = this.getFutConfig(key);
 
     // 1. Actualizar Tarjeta Informativa TUPA
+    const isGratuito = /gratuit/i.test(cfg.costo || '');
     const elAut = document.getElementById('futInfoAutoridad');
     const elCost = document.getElementById('futInfoCosto');
     const elPlazo = document.getElementById('futInfoPlazo');
+    const elBn = document.getElementById('futInfoBnCuenta');
+    const btnCopyBn = document.getElementById('btnCopyBnFut');
     if (elAut) elAut.innerText = cfg.autoridad;
-    if (elCost) elCost.innerText = cfg.costo;
+    if (elCost) {
+      elCost.innerText = cfg.costo;
+      elCost.classList.toggle('text-success', isGratuito);
+      elCost.classList.toggle('text-primary', !isGratuito);
+    }
+    if (elBn) {
+      elBn.innerText = isGratuito ? 'Exonerado (Sin pago)' : '00-638-002361';
+    }
+    if (btnCopyBn) {
+      btnCopyBn.style.display = isGratuito ? 'none' : 'inline-flex';
+    }
     if (elPlazo) elPlazo.innerText = cfg.plazo;
 
     // 2. Mostrar/Ocultar campos condicionales
@@ -1435,18 +1459,24 @@ class HercarBotApp {
   }
 
   fillFutDemoData() {
-    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-    setVal('futNombre', 'ESTUDIANTE EJEMPLO (NOMBRES Y APELLIDOS)');
-    setVal('futDni', '12345678');
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = val;
+        el.classList?.remove('fut-field-invalid');
+      }
+    };
+    setVal('futNombre', 'GARCIA MENDOZA LUCIA FERNANDA');
+    setVal('futDni', '74829105');
     setVal('futTelefono', '987 654 321');
     setVal('futCorreo', 'estudiante@ieshercar.edu.pe');
     setVal('futCarrera', 'Computación e Informática');
     setVal('futCiclo', 'Semestre V (Quinto Ciclo)');
-    setVal('futDireccion', 'Paita, Piura');
-    setVal('futEmpresaNombre', 'Colegio Tal / Empresa Receptora');
-    setVal('futEmpresaCargo', 'Dirección del Plantel / Jefatura de Recursos Humanos');
+    setVal('futDireccion', 'Jr. Zepita 450, Paita Alta, Piura');
+    setVal('futEmpresaNombre', 'I.E. Nuestra Señora de las Mercedes');
+    setVal('futEmpresaCargo', 'Dirección del Plantel');
     setVal('futEmpresaArea', 'Aula de Innovación Pedagógica (AIP) y Soporte Tecnológico');
-    
+
     const textarea = document.getElementById('futDetalle');
     if (textarea && (!textarea.value || textarea.value.trim() === '')) {
       this.applyFutTemplate('colegio');
@@ -1454,33 +1484,93 @@ class HercarBotApp {
     this.showToast('Datos de prueba cargados con éxito para demostración.', 'info', 'bi-magic');
   }
 
+  validateFutForm() {
+    const elNombre = document.getElementById('futNombre');
+    const elDni = document.getElementById('futDni');
+    const rawNombre = (elNombre?.value || '').trim();
+    const rawDni = (elDni?.value || '').replace(/\s+/g, '');
+
+    if (elDni && elDni.value !== rawDni) {
+      elDni.value = rawDni;
+    }
+
+    const errors = [];
+    if (elNombre && rawNombre.length < 3) {
+      elNombre.classList?.add('fut-field-invalid');
+      errors.push({ el: elNombre, msg: 'Ingresa tus Apellidos y Nombres completos' });
+    } else {
+      elNombre?.classList?.remove('fut-field-invalid');
+    }
+
+    if (elDni && !/^\d{8}$/.test(rawDni)) {
+      elDni.classList?.add('fut-field-invalid');
+      errors.push({ el: elDni, msg: 'Ingresa tu número de DNI válido de 8 dígitos' });
+    } else {
+      elDni?.classList?.remove('fut-field-invalid');
+    }
+
+    if (errors.length > 0) {
+      const first = errors[0];
+      try {
+        first.el.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+        first.el.focus?.();
+      } catch (e) {}
+      this.showToast(`${first.msg} (o usa "Rellenar Ejemplo" para probar).`, 'warning', 'bi-exclamation-triangle-fill');
+      return false;
+    }
+    return true;
+  }
+
   collectFutFormData() {
     const getVal = (id, def = '') => (document.getElementById(id)?.value || def).trim();
     const select = document.getElementById('futTramite');
     const key = select ? select.value : 'carta_practicas';
     const cfg = this.getFutConfig(key);
+    const isGratuito = /gratuit/i.test(cfg.costo || '');
 
     const isChecked = (id) => !!document.getElementById(id)?.checked;
     const reqList = [];
     if (isChecked('futAdjDni')) reqList.push('Copia legible de DNI vigente del solicitante');
-    if (isChecked('futAdjVoucher')) reqList.push(`Comprobante de depósito presencial en ventanilla del Banco de la Nación (${cfg.costo}) - Cta. Cte. N° 00-638-002361`);
+    if (isChecked('futAdjVoucher')) {
+      reqList.push(
+        isGratuito
+          ? 'Derecho de trámite exonerado (Gratuito según TUPA institucional)'
+          : `Comprobante de depósito presencial en ventanilla del Banco de la Nación (${cfg.costo}) - Cta. Cte. N° 00-638-002361`
+      );
+    }
     if (isChecked('futAdjFotos')) reqList.push('Fotografías tamaño carné / pasaporte en fondo blanco');
     if (isChecked('futAdjNotas')) reqList.push('Récord académico / Certificado de notas oficial');
     if (isChecked('futAdjPracticas')) reqList.push('Aceptación / Constancia de prácticas preprofesionales EFSRT');
     if (isChecked('futAdjMedicos')) reqList.push('Certificado médico / Constancia laboral justificatoria');
 
+    const extraDraftData = {
+      empresa: getVal('futEmpresaNombre'),
+      cargo: getVal('futEmpresaCargo'),
+      area: getVal('futEmpresaArea'),
+      modulo: getVal('futModuloNum'),
+      convalInst: getVal('futConvalInst'),
+      justifMotivo: getVal('futJustifMotivo'),
+      justifFechas: getVal('futJustifFechas'),
+      otro: getVal('futOtroTexto')
+    };
+
     const enteredDetalle = getVal('futDetalle');
-    const defaultLegalText = `Que, de conformidad con lo establecido en el Reglamento Institucional y el TUPA del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita, recurro a su digno despacho a fin de solicitar la debida atención a mi petitorio de ${cfg.sumilla}, dando cumplimiento a los requisitos documentarios establecidos con arreglo a ley.`;
+    const generatedDraft = typeof cfg.draft === 'function' ? cfg.draft(extraDraftData) : '';
+    const defaultLegalText = generatedDraft || `Que, de conformidad con lo establecido en el Reglamento Institucional y el TUPA del Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" de Paita, recurro a su digno despacho a fin de solicitar la debida atención a mi petitorio de ${cfg.sumilla}, dando cumplimiento a los requisitos documentarios establecidos con arreglo a ley.`;
+
+    const expNum = `EXP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
 
     return {
       id: 'fut_' + Date.now(),
+      expNum,
       key,
       sumilla: cfg.sumilla,
       autoridad: cfg.autoridad,
       costo: cfg.costo,
+      isGratuito,
       plazo: cfg.plazo,
       nombre: getVal('futNombre', 'ESTUDIANTE SOLICITANTE'),
-      dni: getVal('futDni', '--------'),
+      dni: getVal('futDni', '--------').replace(/\s+/g, ''),
       telefono: getVal('futTelefono', '--------'),
       correo: getVal('futCorreo', 'estudiante@ieshercar.edu.pe'),
       carrera: getVal('futCarrera', 'Computación e Informática'),
@@ -1489,20 +1579,48 @@ class HercarBotApp {
       detalle: enteredDetalle || defaultLegalText,
       requisitos: reqList,
       fechaDoc: new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' }),
-      fechaISO: new Date().toLocaleString()
+      fechaISO: new Date().toLocaleString('es-PE')
     };
   }
 
   buildFutHtmlDocument(data) {
-    const expNum = `EXP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const reqsHtml = data.requisitos.map((r, i) => `<div>[ X ] &nbsp; <strong>${i + 1}.</strong> ${r}</div>`).join('');
-    const reqsCargoHtml = data.requisitos.map((r, i) => `<div>✓ &nbsp; <strong>${i + 1}.</strong> ${r}</div>`).join('');
+    const expNum = data.expNum || `EXP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const esc = (v) => {
+      if (typeof this.escapeHtml === 'function') return this.escapeHtml(String(v ?? ''));
+      return String(v ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    };
+    const isGratuito = typeof data.isGratuito === 'boolean' ? data.isGratuito : /gratuit/i.test(data.costo || '');
+    const logoPrimary = (typeof window !== 'undefined' && window.location && /^https?:/.test(window.location.href))
+      ? new URL('assets/img/logo-hercar.png', window.location.href).href
+      : 'https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/logo-hercar.png';
+    const logoFallback = 'https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/logo-hercar.png';
+    const logoOnError = `if(!this.dataset.fb){this.dataset.fb='1';this.src='${logoFallback}';}else{this.style.display='none';}`;
+
+    const reqsHtml = (data.requisitos || []).map((r, i) => `<div>[ X ] &nbsp; <strong>${i + 1}.</strong> ${esc(r)}</div>`).join('');
+    const reqsCargoHtml = (data.requisitos || []).map((r, i) => `<div>✓ &nbsp; <strong>${i + 1}.</strong> ${esc(r)}</div>`).join('');
+
+    const safeNombre = esc(data.nombre);
+    const safeDni = esc(data.dni);
+    const safeTel = esc(data.telefono || '--------');
+    const safeCorreo = esc(data.correo || '--------');
+    const safeCarrera = esc(data.carrera);
+    const safeCiclo = esc(data.ciclo);
+    const safeDir = esc(data.direccion || 'Paita, Piura');
+    const safeSumilla = esc(data.sumilla);
+    const safeAutoridad = esc(data.autoridad);
+    const safeDetalle = esc(data.detalle);
+    const safeFecha = esc(data.fechaDoc);
+    const safeCosto = esc(data.costo);
+    const safePlazo = esc(data.plazo);
+    const safeTasaCargo = isGratuito
+      ? `${safeCosto} (Exonerado de depósito bancario)`
+      : `${safeCosto} &bull; Banco de la Nación (Cta. Cte. N° 00-638-002361)`;
 
     return `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>FUT Oficial - ${data.nombre} - ${data.sumilla}</title>
+  <title>FUT Oficial - ${safeNombre} - ${safeSumilla}</title>
   <style>
     @page {
       size: A4 portrait;
@@ -1516,9 +1634,9 @@ class HercarBotApp {
     body {
       font-family: Arial, Helvetica, sans-serif;
       color: #0f172a;
-      background: #ffffff;
+      background: #e2e8f0;
       margin: 0;
-      padding: 0;
+      padding: 0 14px 36px;
       font-size: 10pt;
       line-height: 1.38;
     }
@@ -1527,24 +1645,24 @@ class HercarBotApp {
     .no-print {
       background: #0f2d6c;
       color: #ffffff;
-      padding: 10px 18px;
-      margin: -12mm -15mm 15px -15mm;
+      padding: 11px 20px;
+      margin: 0 -14px 20px -14px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
       font-size: 13px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.22);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
     .no-print-btn {
       border: none;
-      padding: 7px 15px;
-      border-radius: 6px;
+      padding: 8px 15px;
+      border-radius: 7px;
       cursor: pointer;
       font-weight: 700;
       font-size: 12px;
@@ -1554,7 +1672,7 @@ class HercarBotApp {
       gap: 6px;
     }
     .btn-page-mode {
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.16);
       color: #ffffff;
       border: 1px solid rgba(255, 255, 255, 0.35);
     }
@@ -1571,14 +1689,21 @@ class HercarBotApp {
       background: #fbbf24;
     }
 
-    /* Estructura de Páginas A4 */
+    /* Estructura de Páginas A4 (Vista previa centrada en pantalla) */
     .page-sheet {
       position: relative;
+      background: #ffffff;
+      max-width: 210mm;
+      min-height: 272mm;
+      margin: 0 auto 22px;
+      padding: 12mm 15mm;
+      border-radius: 6px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
     }
     .page-break {
       page-break-before: always !important;
       break-before: page !important;
-      margin-top: 15mm;
+      margin-top: 0;
     }
 
     /* Encabezado Institucional */
@@ -1672,10 +1797,11 @@ class HercarBotApp {
     }
     .fundamentacion-text {
       text-align: justify;
-      text-indent: 18px;
+      white-space: pre-line;
+      word-break: break-word;
       font-size: 9.2pt;
       margin: 0;
-      line-height: 1.4;
+      line-height: 1.45;
     }
     .req-list {
       font-size: 8.8pt;
@@ -1783,6 +1909,7 @@ class HercarBotApp {
       font-size: 8.1pt !important;
       line-height: 1.18 !important;
     }
+    body.mode-compact-one-page .page-sheet { min-height: auto !important; margin-bottom: 10px !important; padding: 9mm 12mm !important; }
     body.mode-compact-one-page .fut-header-table { margin-bottom: 3px !important; }
     body.mode-compact-one-page .section-box { margin-bottom: 3px !important; }
     body.mode-compact-one-page .section-body { padding: 3px 6px !important; }
@@ -1791,11 +1918,24 @@ class HercarBotApp {
     body.mode-compact-one-page .page-break { page-break-before: auto !important; break-before: auto !important; margin-top: 6px !important; }
 
     @media print {
-      body { padding: 0; margin: 0; }
+      body { background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
       .no-print { display: none !important; }
+      .page-sheet {
+        max-width: none !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
       .page-break {
+        margin-top: 0 !important;
         page-break-before: always !important;
         break-before: page !important;
+      }
+      body.mode-compact-one-page .page-sheet {
+        padding: 0 !important;
+        margin: 0 !important;
       }
       body.mode-compact-one-page .page-break {
         page-break-before: auto !important;
@@ -1834,7 +1974,7 @@ class HercarBotApp {
     <table class="fut-header-table">
       <tr>
         <td style="width: 65px; text-align: left;">
-          <img src="assets/img/logo-hercar.png" alt="Escudo IESTP" style="width: 54px; height: 54px; object-fit: contain;" onerror="this.style.display='none'">
+          <img src="${logoPrimary}" alt="Escudo IESTP" style="width: 54px; height: 54px; object-fit: contain;" onerror="${logoOnError}">
         </td>
         <td style="text-align: center;">
           <div style="font-size: 7.6pt; font-weight: bold; color: #475569; letter-spacing: 0.5px;">GOBIERNO REGIONAL DE PIURA &bull; DRE PIURA</div>
@@ -1856,7 +1996,7 @@ class HercarBotApp {
     <div class="section-box">
       <div class="section-header">I. Resumen del Pedido (Sumilla)</div>
       <div class="section-body" style="background: #fafafa;">
-        <strong style="font-size: 10.2pt; color: #0f2d6c;">${data.sumilla}</strong>
+        <strong style="font-size: 10.2pt; color: #0f2d6c;">${safeSumilla}</strong>
       </div>
     </div>
 
@@ -1864,7 +2004,7 @@ class HercarBotApp {
     <div class="section-box">
       <div class="section-header">II. Autoridad a la que se dirige</div>
       <div class="section-body">
-        <strong>SEÑOR(A): ${data.autoridad}</strong><br>
+        <strong>SEÑOR(A): ${safeAutoridad}</strong><br>
         <span style="font-size: 8.2pt; color: #475569;">INSTITUTO DE EDUCACIÓN SUPERIOR TECNOLÓGICO PÚBLICO "HERMANOS CÁRCAMO" DE PAITA</span>
       </div>
     </div>
@@ -1876,27 +2016,27 @@ class HercarBotApp {
         <table class="data-table">
           <tr>
             <td class="data-label">Apellidos y Nombres:</td>
-            <td class="data-val" colspan="3"><strong>${data.nombre}</strong></td>
+            <td class="data-val" colspan="3"><strong>${safeNombre}</strong></td>
           </tr>
           <tr>
             <td class="data-label">Nº de DNI / Documento:</td>
-            <td class="data-val" style="width: 28%;"><strong>${data.dni}</strong></td>
+            <td class="data-val" style="width: 28%;"><strong>${safeDni}</strong></td>
             <td class="data-label" style="width: 22%;">Celular / WhatsApp:</td>
-            <td class="data-val"><strong>${data.telefono || '--------'}</strong></td>
+            <td class="data-val"><strong>${safeTel}</strong></td>
           </tr>
           <tr>
             <td class="data-label">Correo Electrónico:</td>
-            <td class="data-val" colspan="3">${data.correo || '--------'}</td>
+            <td class="data-val" colspan="3">${safeCorreo}</td>
           </tr>
           <tr>
             <td class="data-label">Programa de Estudios:</td>
-            <td class="data-val" style="width: 48%;"><strong>${data.carrera}</strong></td>
+            <td class="data-val" style="width: 48%;"><strong>${safeCarrera}</strong></td>
             <td class="data-label">Semestre / Ciclo:</td>
-            <td class="data-val"><strong>${data.ciclo}</strong></td>
+            <td class="data-val"><strong>${safeCiclo}</strong></td>
           </tr>
           <tr>
             <td class="data-label">Domicilio en Paita:</td>
-            <td class="data-val" colspan="3">${data.direccion || 'Paita, Piura'}</td>
+            <td class="data-val" colspan="3">${safeDir}</td>
           </tr>
         </table>
       </div>
@@ -1906,7 +2046,7 @@ class HercarBotApp {
     <div class="section-box">
       <div class="section-header">IV. Fundamentación del Petitorio (Hechos y Base Legal)</div>
       <div class="section-body">
-        <p class="fundamentacion-text">${data.detalle}</p>
+        <p class="fundamentacion-text">${safeDetalle}</p>
       </div>
     </div>
 
@@ -1925,12 +2065,12 @@ class HercarBotApp {
       <tr>
         <td style="width: 45%; text-align: left; font-size: 9pt;">
           <strong>Lugar y Fecha:</strong><br>
-          Paita, ${data.fechaDoc}
+          Paita, ${safeFecha}
         </td>
         <td style="width: 55%; text-align: center;">
           <div class="signature-line">
-            ${data.nombre}<br>
-            <span style="font-weight: normal; font-size: 8pt; color: #475569;">DNI Nº ${data.dni} &bull; Firma del Solicitante</span>
+            ${safeNombre}<br>
+            <span style="font-weight: normal; font-size: 8pt; color: #475569;">DNI Nº ${safeDni} &bull; Firma del Solicitante</span>
           </div>
         </td>
       </tr>
@@ -1949,7 +2089,7 @@ class HercarBotApp {
     <table class="fut-header-table">
       <tr>
         <td style="width: 65px; text-align: left;">
-          <img src="assets/img/logo-hercar.png" alt="Escudo IESTP" style="width: 54px; height: 54px; object-fit: contain;" onerror="this.style.display='none'">
+          <img src="${logoPrimary}" alt="Escudo IESTP" style="width: 54px; height: 54px; object-fit: contain;" onerror="${logoOnError}">
         </td>
         <td style="text-align: center;">
           <div style="font-size: 7.6pt; font-weight: bold; color: #475569; letter-spacing: 0.5px;">GOBIERNO REGIONAL DE PIURA &bull; DRE PIURA</div>
@@ -1977,27 +2117,27 @@ class HercarBotApp {
           <td style="width: 25%; font-weight: bold; color: #065f46;">Nº DE EXPEDIENTE:</td>
           <td style="width: 35%; font-weight: bold; color: #0f2d6c; font-size: 10.5pt;">${expNum}</td>
           <td style="width: 20%; font-weight: bold; color: #065f46;">FECHA Y HORA:</td>
-          <td style="width: 20%; font-weight: bold;">${data.fechaDoc}</td>
+          <td style="width: 20%; font-weight: bold;">${safeFecha}</td>
         </tr>
         <tr>
           <td style="font-weight: bold; color: #065f46;">ADMINISTRADO:</td>
-          <td><strong>${data.nombre}</strong></td>
+          <td><strong>${safeNombre}</strong></td>
           <td style="font-weight: bold; color: #065f46;">DNI / CELULAR:</td>
-          <td>${data.dni} / ${data.telefono || '--------'}</td>
+          <td>${safeDni} / ${safeTel}</td>
         </tr>
         <tr>
           <td style="font-weight: bold; color: #065f46;">PROGRAMA:</td>
-          <td>${data.carrera}</td>
+          <td>${safeCarrera}</td>
           <td style="font-weight: bold; color: #065f46;">SEMESTRE:</td>
-          <td>${data.ciclo}</td>
+          <td>${safeCiclo}</td>
         </tr>
         <tr>
           <td style="font-weight: bold; color: #065f46;">PETITORIO:</td>
-          <td colspan="3"><strong>${data.sumilla}</strong></td>
+          <td colspan="3"><strong>${safeSumilla}</strong></td>
         </tr>
         <tr>
           <td style="font-weight: bold; color: #065f46;">TASA TUPA:</td>
-          <td colspan="3" style="font-weight: bold; color: #047857;">${data.costo} &bull; Banco de la Nación (Cta. Cte. N° 00-638-002361)</td>
+          <td colspan="3" style="font-weight: bold; color: #047857;">${safeTasaCargo}</td>
         </tr>
       </table>
     </div>
@@ -2028,7 +2168,7 @@ class HercarBotApp {
       <strong style="color: #0f2d6c; display: block; margin-bottom: 3px;">📌 IMPORTANTE PARA EL ESTUDIANTE / ADMINISTRADO:</strong>
       <div>1. Conserva este documento como constancia formal de que tu solicitud fue presentada ante el Instituto Superior Tecnológico Público "Hermanos Cárcamo".</div>
       <div>2. Para el seguimiento de tu trámite, ingresa a la <strong>Mesa de Partes Virtual</strong> oficial: <span style="color: #0284c7; text-decoration: underline;">https://sistema.ieshercar.edu.pe/registro-tramite/</span> indicando tu número de DNI y el código de expediente <strong>${expNum}</strong>.</div>
-      <div>3. Plazo reglamentario de atención según el TUPA institucional: <strong>${data.plazo}</strong>.</div>
+      <div>3. Plazo reglamentario de atención según el TUPA institucional: <strong>${safePlazo}</strong>.</div>
     </div>
 
     <div class="page-footer-tag">
@@ -2055,14 +2195,48 @@ class HercarBotApp {
 </html>`;
   }
 
+  printFutViaIframeFallback(htmlDoc) {
+    try {
+      const existing = document.getElementById('hercarFutPrintFrame');
+      if (existing) existing.remove();
+      const iframe = document.createElement('iframe');
+      iframe.id = 'hercarFutPrintFrame';
+      iframe.style.position = 'fixed';
+      iframe.style.right = '0';
+      iframe.style.bottom = '0';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = '0';
+      iframe.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(iframe);
+      const cw = iframe.contentWindow;
+      if (cw && cw.document) {
+        cw.document.open();
+        cw.document.write(htmlDoc);
+        cw.document.close();
+        setTimeout(() => {
+          try {
+            cw.focus();
+            cw.print();
+          } catch (e) {}
+        }, 450);
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
   printFutDocument() {
+    if (!this.validateFutForm()) return;
     const data = this.collectFutFormData();
+    const htmlDoc = this.buildFutHtmlDocument(data);
 
     // Guardar registro de solicitud para el Panel Administrativo (admin.html)
     try {
       const records = JSON.parse(localStorage.getItem('hercarbot_fut_requests') || '[]');
       records.unshift({
         id: data.id,
+        expNum: data.expNum,
         nombre: data.nombre,
         dni: data.dni,
         carrera: data.carrera,
@@ -2074,24 +2248,49 @@ class HercarBotApp {
       localStorage.setItem('hercarbot_fut_requests', JSON.stringify(records.slice(0, 50)));
     } catch (e) {}
 
-    const win = window.open('', '_blank');
-    if (win) {
-      win.document.write(this.buildFutHtmlDocument(data));
+    let printed = false;
+    let win = null;
+    try {
+      win = window.open('', '_blank');
+    } catch (e) {
+      win = null;
+    }
+
+    if (win && win.document) {
+      win.document.open();
+      win.document.write(htmlDoc);
       win.document.close();
-      win.focus();
-      setTimeout(() => { win.print(); }, 400);
+      win.focus?.();
+      let triggered = false;
+      const runPrint = () => {
+        if (triggered) return;
+        triggered = true;
+        try { win.print?.(); } catch (e) {}
+      };
+      if (typeof win.addEventListener === 'function') {
+        win.addEventListener('load', () => setTimeout(runPrint, 200), { once: true });
+      }
+      setTimeout(runPrint, 650);
+      printed = true;
+    } else {
+      printed = this.printFutViaIframeFallback(htmlDoc);
     }
 
     this.closeFutModal();
-    this.showToast('¡FUT Oficial generado con éxito! Imprímelo o guárdalo como PDF.', 'success', 'bi-file-earmark-check-fill');
+    if (printed) {
+      this.showToast(`¡FUT Oficial (${data.expNum}) generado! Imprímelo o guárdalo como PDF.`, 'success', 'bi-file-earmark-check-fill');
+    } else {
+      this.downloadFutHtml(true);
+      this.showToast('Tu navegador bloqueó la ventana de impresión; se descargó el FUT en HTML.', 'info', 'bi-download');
+    }
 
     const chatMsgHtml = `
       <div class="p-3 bg-white rounded-3 border shadow-sm">
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>FUT Generado</span>
+        <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+          <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>FUT Generado (${this.escapeHtml(data.expNum)})</span>
           <strong>${this.escapeHtml(data.sumilla)}</strong>
         </div>
-        <p class="small text-muted mb-2">Tu Formato Único de Trámite para <strong>${this.escapeHtml(data.nombre)}</strong> (${this.escapeHtml(data.carrera)}) ha sido emitido con éxito con todos los estándares oficiales.</p>
+        <p class="small text-muted mb-2">Tu Formato Único de Trámite para <strong>${this.escapeHtml(data.nombre)}</strong> (${this.escapeHtml(data.carrera)}) ha sido emitido con Hoja 1 (Solicitud) y Hoja 2 (Cargo de Recepción).</p>
         <div class="interactive-button-grid">
           <a href="https://sistema.ieshercar.edu.pe/registro-tramite/" target="_blank" class="interactive-btn text-decoration-none">
             <i class="bi bi-send-check text-primary"></i> Subir a Mesa de Partes Virtual
@@ -2102,10 +2301,11 @@ class HercarBotApp {
         </div>
       </div>
     `;
-    this.appendBotMessage(chatMsgHtml, `He generado tu Formato Único de Trámite oficial para ${data.sumilla}. Recuerda subirlo firmado junto a tus requisitos a través de la Mesa de Partes Virtual.`);
+    this.appendBotMessage(chatMsgHtml, `He generado tu Formato Único de Trámite oficial número ${data.expNum} para ${data.sumilla}. Recuerda subirlo firmado junto a tus requisitos a través de la Mesa de Partes Virtual.`);
   }
 
-  downloadFutHtml() {
+  downloadFutHtml(skipValidation = false) {
+    if (!skipValidation && !this.validateFutForm()) return;
     const data = this.collectFutFormData();
     const htmlContent = this.buildFutHtmlDocument(data);
     const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -2117,7 +2317,7 @@ class HercarBotApp {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    this.showToast('Archivo digital del FUT descargado correctamente.', 'info', 'bi-download');
+    this.showToast(`Archivo digital del FUT (${data.expNum}) descargado correctamente.`, 'info', 'bi-download');
   }
 
   /* ==========================================================================

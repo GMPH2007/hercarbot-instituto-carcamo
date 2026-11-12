@@ -5275,15 +5275,25 @@ body.dark-theme .hercar-tour-btn.skip {
 
 .fut-field {
   width: 100%;
+  min-height: 42px;
   padding: 9px 13px;
   margin-bottom: 8px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   font-size: 0.88rem;
+  line-height: 1.45;
   background: #ffffff;
   color: #0f172a;
   font-family: inherit;
+  box-sizing: border-box;
   transition: all 0.2s ease;
+}
+
+select.fut-field {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .fut-field:focus {
@@ -5303,8 +5313,15 @@ body.dark-theme .hercar-tour-btn.skip {
 
 .fut-info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+@media (max-width: 600px) {
+  .fut-info-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 
 .fut-info-item {
@@ -6002,6 +6019,11 @@ body.dark-theme .v-bar {
   color: #0f172a !important;
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18) !important;
 }
+.fut-field.fut-field-invalid {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.16) !important;
+}
 .fut-field option {
   background: #ffffff !important;
   color: #0f172a !important;
@@ -6034,10 +6056,12 @@ body.dark-theme .hercar-fut-box {
   border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85) !important;
 }
-body.dark-theme .hercar-fut-box h4 {
+body.dark-theme .hercar-fut-box h4,
+body.dark-theme .hercar-fut-box .fut-header-title {
   color: #ffffff !important;
 }
-body.dark-theme .hercar-fut-box p.text-muted {
+body.dark-theme .hercar-fut-box p.text-muted,
+body.dark-theme .hercar-fut-box .fut-header-subtitle {
   color: #cbd5e1 !important;
 }
 body.dark-theme .fut-section {
@@ -6067,6 +6091,11 @@ body.dark-theme .fut-field:focus {
   border-color: #38bdf8 !important;
   color: #ffffff !important;
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3) !important;
+}
+body.dark-theme .fut-field.fut-field-invalid {
+  border-color: #f87171 !important;
+  background: rgba(127, 29, 29, 0.28) !important;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25) !important;
 }
 body.dark-theme .fut-field option {
   background: #070e22 !important;

@@ -455,6 +455,16 @@ class HercarBotApp {
     this.paletteInput = document.getElementById('paletteInput');
     this.paletteResults = document.getElementById('paletteResults');
     this.paletteCloseBtn = document.getElementById('paletteCloseBtn');
+    this.voiceCompanionBar = document.getElementById('voice-companion-bar');
+    this.voiceCompanionStatus = document.getElementById('voice-companion-status');
+    this.btnCompanionRepeat = document.getElementById('btn-companion-repeat');
+    this.btnCompanionStop = document.getElementById('btn-companion-stop');
+    this.btnCompanionMute = document.getElementById('btn-companion-mute');
+    this.companionMuteIcon = document.getElementById('companion-mute-icon');
+    this.companionMuteLabel = document.getElementById('companion-mute-label');
+    this.lastSpokenText = '';
+    this.campusCarouselTimer = null;
+    this.campusCarouselIdx = 0;
   }
 
   initEvents() {
@@ -570,19 +580,39 @@ class HercarBotApp {
       this.btnHeaderNewChat.addEventListener('click', () => this.startNewChat());
     }
 
-    // Control de Voz Silenciar
+    // Control de Voz Silenciar / Reactivar (sincronizado con barra permanente)
+    const toggleMuteState = () => {
+      this.isMuted = !this.isMuted;
+      if (this.isMuted) {
+        this.stopSpeaking();
+      } else {
+        this.syncVoiceCompanionUI('ready');
+      }
+      this.syncMuteButtonsUI();
+    };
+
     if (this.btnMute) {
-      this.btnMute.addEventListener('click', () => {
-        this.isMuted = !this.isMuted;
+      this.btnMute.addEventListener('click', toggleMuteState);
+    }
+    if (this.btnCompanionMute) {
+      this.btnCompanionMute.addEventListener('click', toggleMuteState);
+    }
+    if (this.btnCompanionStop) {
+      this.btnCompanionStop.addEventListener('click', () => this.stopSpeaking());
+    }
+    if (this.btnCompanionRepeat) {
+      this.btnCompanionRepeat.addEventListener('click', () => {
         if (this.isMuted) {
-          this.stopSpeaking();
+          this.isMuted = false;
+          this.syncMuteButtonsUI();
         }
-        this.btnMute.innerHTML = this.isMuted 
-          ? '<i class="bi bi-volume-mute-fill text-danger"></i>' 
-          : '<i class="bi bi-volume-up-fill text-success"></i>';
-        this.btnMute.title = this.isMuted ? 'Activar Voz del Bot' : 'Silenciar Voz del Bot';
+        const msgBubbles = this.messagesContainer ? this.messagesContainer.querySelectorAll('.msg-bubble-bot[data-spoken-text]') : [];
+        const latestSpoken = msgBubbles.length > 0 ? msgBubbles[msgBubbles.length - 1].getAttribute('data-spoken-text') : '';
+        const toRead = latestSpoken || this.lastSpokenText || '¡Hola! Soy HercarBot, tu asesora virtual del Instituto Superior Hermanos Cárcamo de Paita. Estoy lista para responder tus consultas sobre carreras técnicas públicas sin mensualidades, admisión dos mil veintiséis, Banco de la Nación y Tupa.';
+        this.speak(toRead);
       });
     }
+    this.syncMuteButtonsUI();
 
     // Toggle de Tema Oscuro / Claro
     if (this.btnThemeToggle) {
@@ -3996,6 +4026,12 @@ class HercarBotApp {
       .replace(/^\s*3[\.\)]\s+/gm, 'Tercero: ')
       .replace(/^\s*4[\.\)]\s+/gm, 'Cuarto: ')
       .replace(/^\s*5[\.\)]\s+/gm, 'Quinto: ')
+      .replace(/\bOpción\s+([A-D])\b/gi, 'Opción $1')
+      .replace(/(?:^|\s)([A-D])\)\s+/g, ', alternativa $1: ')
+      .replace(/\bS\/\.\s*(\d+(?:[.,]\d{1,2})?)/gi, '$1 soles')
+      .replace(/\bS\/\s*(\d+(?:[.,]\d{1,2})?)/gi, '$1 soles')
+      .replace(/\bEC\s*70%\b/gi, 'evaluación continua setenta por ciento')
+      .replace(/\bEF\s*30%\b/gi, 'evaluación final treinta por ciento')
       .replace(/^\s*[-•·▪]\s+/gm, ', ')
       .replace(/\s*\/\s*/g, ' o ')
       .replace(/\s*&\s*/g, ' y ')
@@ -4048,6 +4084,46 @@ class HercarBotApp {
     return chunks.filter(c => c.length > 0);
   }
 
+  syncMuteButtonsUI() {
+    if (this.btnMute) {
+      this.btnMute.innerHTML = this.isMuted
+        ? '<i class="bi bi-volume-mute-fill text-danger"></i>'
+        : '<i class="bi bi-volume-up-fill text-success"></i>';
+      this.btnMute.title = this.isMuted ? 'Activar Voz del Bot' : 'Silenciar Voz del Bot';
+    }
+    if (this.companionMuteIcon && this.companionMuteLabel) {
+      this.companionMuteIcon.className = this.isMuted ? 'bi bi-mic-mute-fill text-danger' : 'bi bi-mic-fill text-success';
+      this.companionMuteLabel.textContent = this.isMuted ? 'Silencio' : 'Voz On';
+    }
+    this.syncVoiceCompanionUI(this.isMuted ? 'muted' : (this.isSpeaking ? 'speaking' : 'ready'));
+  }
+
+  syncVoiceCompanionUI(mode = 'ready', snippet = '') {
+    if (!this.voiceCompanionBar) return;
+    this.voiceCompanionBar.classList.remove('is-speaking', 'is-muted');
+    if (mode === 'muted' || this.isMuted) {
+      this.voiceCompanionBar.classList.add('is-muted');
+      if (this.voiceCompanionStatus) {
+        this.voiceCompanionStatus.innerHTML = '<strong>Voz en pausa</strong> · Pulsa <em>Escuchar</em> o <em>Voz On</em> cuando gustes';
+      }
+      if (this.btnCompanionStop) this.btnCompanionStop.style.display = 'none';
+      return;
+    }
+    if (mode === 'speaking') {
+      this.voiceCompanionBar.classList.add('is-speaking');
+      if (this.voiceCompanionStatus) {
+        const preview = snippet ? snippet.slice(0, 58) + (snippet.length > 58 ? '…' : '') : 'Leyendo respuesta en voz dulce y clara...';
+        this.voiceCompanionStatus.innerHTML = `<strong>Hablando ahora:</strong> ${this.escapeHtml(preview)}`;
+      }
+      if (this.btnCompanionStop) this.btnCompanionStop.style.display = 'inline-flex';
+      return;
+    }
+    if (this.voiceCompanionStatus) {
+      this.voiceCompanionStatus.innerHTML = '<strong>Voz Dulce Activa</strong> · Lista para hablar y leer cada pregunta';
+    }
+    if (this.btnCompanionStop) this.btnCompanionStop.style.display = 'none';
+  }
+
   speak(text) {
     if (this.isMuted || !('speechSynthesis' in window) || !text) return;
     this.stopSpeaking();
@@ -4055,8 +4131,16 @@ class HercarBotApp {
     const clean = this.preparePhoneticText(text);
     if (!clean || clean.trim().length === 0) return;
 
+    this.lastSpokenText = clean;
     const sentences = this.splitIntoBreathChunks(clean);
     if (sentences.length === 0) return;
+
+    // Asegurar selección actualizada de voz femenina natural si recién cargaron en Chromium
+    const refreshedFemale = this.getBestFemaleVoice();
+    if (refreshedFemale && (!this.selectedVoice || (!this.isNaturalOnlineVoice(this.selectedVoice) && this.isNaturalOnlineVoice(refreshedFemale)))) {
+      this.selectedVoice = refreshedFemale;
+      this.voiceURI = refreshedFemale.voiceURI;
+    }
 
     // Suave acorde zen relajante que prepara la atmósfera de calma
     this.playCalmChime();
@@ -4064,6 +4148,7 @@ class HercarBotApp {
     this.isSpeaking = true;
     if (this.voiceIndicator) this.voiceIndicator.classList.add('active');
     if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'inline-flex';
+    this.syncVoiceCompanionUI('speaking', clean);
     document.querySelectorAll('.bot-avatar-badge').forEach(el => el.classList.add('speaking'));
     document.querySelectorAll('.msg-bubble-bot, .btn-speak-msg').forEach(el => el.classList.remove('speaking'));
     const lastBotBubble = this.messagesContainer ? this.messagesContainer.querySelector('.chat-message-row.bot-row:last-child .msg-bubble-bot') : null;
@@ -4080,7 +4165,12 @@ class HercarBotApp {
       }
     }, 10000);
 
-    this.speakSentenceQueue(sentences);
+    // Pausa breve de 55ms tras cancel() para evitar que Chromium descarte el primer enunciado
+    this.speechQueueTimer = setTimeout(() => {
+      if (this.isSpeaking) {
+        this.speakSentenceQueue(sentences);
+      }
+    }, 55);
   }
 
   speakSentenceQueue(queue) {
@@ -4108,24 +4198,22 @@ class HercarBotApp {
       utterance.lang = 'es-MX';
     }
 
-    // Calibración acústica: Chica Dulce, Suave y Relajada
-    // Para voces online naturales: rate 0.93 y pitch 1.01 (melodiosa, cálida y relajante)
-    // Para voces locales (Sabina Desktop): rate 0.92 y pitch 1.04 (eleva sutilmente el tono haciéndola dulce y juvenil)
+    // Calibración acústica: Chica Dulce, Suave, Entendible y Relajada
     const isOnline = this.isNaturalOnlineVoice(this.selectedVoice);
-    const targetRate = this.voiceRate || (isOnline ? 0.93 : 0.92);
-    const targetPitch = this.voicePitch || (isOnline ? 1.01 : 1.04);
+    const targetRate = this.voiceRate || (isOnline ? 0.94 : 0.93);
+    const targetPitch = this.voicePitch || (isOnline ? 1.03 : 1.08);
 
     utterance.pitch = targetPitch;
     utterance.rate = targetRate;
-    utterance.volume = 0.96;
+    utterance.volume = 0.98;
 
     utterance.onend = () => {
       if (!this.isSpeaking) return;
       if (queue.length > 0) {
-        // Pausa suave y orgánica de 35ms entre oraciones completas
+        // Pausa suave y orgánica de 45ms entre oraciones completas
         this.speechQueueTimer = setTimeout(() => {
           this.speakSentenceQueue(queue);
-        }, 35);
+        }, 45);
       } else {
         this.stopSpeaking();
       }
@@ -4154,6 +4242,7 @@ class HercarBotApp {
     this.currentUtterance = null;
     if (this.voiceIndicator) this.voiceIndicator.classList.remove('active');
     if (this.btnStopSpeech) this.btnStopSpeech.style.display = 'none';
+    this.syncVoiceCompanionUI(this.isMuted ? 'muted' : 'ready');
     document.querySelectorAll('.bot-avatar-badge, .msg-bubble-bot, .btn-speak-msg').forEach(el => el.classList.remove('speaking'));
   }
 
@@ -4196,15 +4285,21 @@ class HercarBotApp {
         </div>
 
         <!-- Galería Oficial 2026 del IESTP Hermanos Cárcamo (Debajo del subtítulo) -->
-        <div class="welcome-campus-card">
+        <div class="welcome-campus-card" id="welcomeCampusCard">
           <div class="campus-banner-img-wrap">
-            <img id="campusBannerHeroImg" src="${initialPhoto.src}" alt="${initialPhoto.alt}" class="campus-banner-img" />
+            <img id="campusBannerHeroImg" src="${initialPhoto.src}" alt="${initialPhoto.alt}" class="campus-banner-img" style="object-position: ${initialPhoto.pos || 'center 42%'};" />
             <div class="campus-hero-top-pill">
               <i class="bi bi-camera-fill text-info"></i> <span id="campusBannerLabel">${initialPhoto.title}</span>
             </div>
             <div class="campus-hero-source-pill">
-              <i class="bi bi-globe2"></i> ieshercar.edu.pe
+              <i class="bi bi-globe2"></i> <span id="campusBannerCounter">1 / ${galleryPhotos.length}</span> · ieshercar.edu.pe
             </div>
+            <button type="button" class="campus-nav-btn campus-nav-prev" data-chat-action="prev_foto_campus" aria-label="Foto anterior">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button type="button" class="campus-nav-btn campus-nav-next" data-chat-action="next_foto_campus" aria-label="Siguiente foto">
+              <i class="bi bi-chevron-right"></i>
+            </button>
             <div class="campus-banner-overlay">
               <div class="campus-banner-info">
                 <div class="campus-banner-title">
@@ -4222,6 +4317,9 @@ class HercarBotApp {
                   <i class="bi bi-map-fill text-primary me-1"></i> Croquis & Mapa
                 </button>
               </div>
+            </div>
+            <div class="campus-carousel-progress" aria-hidden="true">
+              <div class="campus-carousel-progress-bar" id="campusCarouselBar"></div>
             </div>
           </div>
           <div class="campus-gallery-thumbs" role="tablist" aria-label="Galería fotográfica oficial del IESTP Hermanos Cárcamo">
@@ -4297,6 +4395,7 @@ class HercarBotApp {
     `;
 
     this.messagesContainer.innerHTML = welcomeHtml;
+    this.startCampusCarousel();
   }
   handleUserSubmit(overrideText = null, isVoice = false) {
     if (this.isSubmitting) return;
@@ -4345,6 +4444,7 @@ class HercarBotApp {
   }
 
   appendUserMessage(text, imageBase64 = null, isVoice = false) {
+    this.stopCampusCarousel();
     const hero = this.messagesContainer.querySelector('.bot-welcome-hero');
     if (hero) hero.remove();
 
@@ -8384,9 +8484,14 @@ ${text}
         <h5 class="fw-bold text-dark mb-3" style="font-size:1.01rem; line-height:1.45;">${currentQ.q}</h5>
         <div class="test-choices-list">${optionsHtml}</div>
         <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top flex-wrap gap-2">
-          <span class="small text-muted" style="font-size:0.75rem;">
-            <i class="bi bi-hand-index-thumb me-1"></i>Haz clic en una alternativa o escribe A, B, C o D.
-          </span>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1 fw-semibold" data-chat-action="leer_pregunta_test_actual">
+              <i class="bi bi-volume-up-fill me-1"></i>Escuchar pregunta y opciones
+            </button>
+            <span class="small text-muted" style="font-size:0.75rem;">
+              <i class="bi bi-hand-index-thumb me-1"></i>Elige una tarjeta o escribe A, B, C o D.
+            </span>
+          </div>
           <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none p-0" data-chat-action="cancelar_test_vocacional" style="font-size:0.74rem;">
             <i class="bi bi-x-circle me-1"></i>Salir del test
           </button>
@@ -8394,10 +8499,22 @@ ${text}
       </div>
     `;
 
-    const spokenFirst = isFirst
-      ? '¡Comencemos tu Test Vocacional Inteligente! Te haré siete preguntas sobre tus gustos, habilidades y decisiones para recomendar la carrera técnica que mejor encaja contigo.'
-      : false;
-    this.appendBotMessage(html, spokenFirst);
+    const ordinalLeads = [
+      'Primera pregunta:',
+      'Perfecto, vamos con la pregunta dos:',
+      'Muy bien, pregunta tres:',
+      'Seguimos avanzando. Pregunta cuatro:',
+      'Excelente, vamos por la pregunta cinco:',
+      'Ya casi terminamos. Pregunta seis:',
+      'Última pregunta del test:'
+    ];
+    const spokenQuestion = currentQ.isTieBreaker
+      ? `¡Tenemos un empate muy cercano entre tus intereses! Vamos con la pregunta final de desempate. ${currentQ.q}`
+      : isFirst
+        ? `¡Comencemos tu Test Vocacional Inteligente! Te haré siete preguntas sobre tus gustos y habilidades para recomendarte tu carrera ideal. ${ordinalLeads[0]} ${currentQ.q}`
+        : `${ordinalLeads[qIndex] || `Pregunta ${qIndex + 1}:`} ${currentQ.q}`;
+
+    this.appendBotMessage(html, spokenQuestion);
   }
 
   handleTestResponse(inputVal, sourceEl = null, rawText = '') {
@@ -8468,7 +8585,7 @@ ${text}
         <div class="p-3 bg-white rounded-3 border small">
           <i class="bi bi-compass-fill text-primary me-1"></i> Para avanzar en la pregunta actual, haz clic en una de las tarjetas de arriba o escribe la letra de tu alternativa (<strong>${letters}</strong>). Si deseas detener la evaluación, escribe <strong>salir</strong>.
         </div>
-      `, false);
+      `, `Para avanzar en el test, elige una de las opciones en pantalla o escribe ${letters}.`);
       return;
     }
 
@@ -8836,7 +8953,7 @@ ${text}
       </div>
     `;
 
-    this.appendBotMessage(html, false);
+    this.appendBotMessage(html, `Pregunta ${qIndex + 1} de ${this.activeSimulator.total}. ${q.pregunta}`);
   }
 
   handleSimulatorResponse(chosenIdx) {
@@ -9060,6 +9177,9 @@ ${text}
       case 'cancelar_test_vocacional':
         this.handleTestResponse('salir', null, 'salir');
         break;
+      case 'leer_pregunta_test_actual':
+        this.readCurrentVocationalQuestionFull();
+        break;
       case 'iniciar_simulador_admision':
         this.startAdmissionSimulator();
         this.logQuery('admision');
@@ -9191,9 +9311,28 @@ ${text}
         this.logQuery('bienestar');
         break;
       case 'cambiar_foto_campus':
-        this.switchCampusBannerPhoto(val, sourceEl);
+        this.switchCampusBannerPhoto(val, sourceEl, true);
+        break;
+      case 'prev_foto_campus':
+        this.stepCampusBannerPhoto(-1);
+        break;
+      case 'next_foto_campus':
+        this.stepCampusBannerPhoto(1);
         break;
     }
+  }
+
+  readCurrentVocationalQuestionFull() {
+    if (!this.activeTest || !this.activeTest.questions) return;
+    const qIndex = this.activeTest.step;
+    const q = this.activeTest.questions[qIndex];
+    if (!q) return;
+    if (this.isMuted) {
+      this.isMuted = false;
+      this.syncMuteButtonsUI();
+    }
+    const optsSpoken = (q.opts || []).map((o, i) => `Alternativa ${String.fromCharCode(65 + i)}: ${o.t}`).join('. ');
+    this.speak(`Pregunta ${qIndex + 1}. ${q.q}. ${optsSpoken}`);
   }
 
   getCampusGalleryPhotos() {
@@ -9201,6 +9340,7 @@ ${text}
       {
         src: 'assets/img/fachada-2026.webp',
         short: 'Fachada',
+        pos: 'center 48%',
         title: 'Fachada Institucional 2026',
         caption: 'Ingreso principal azul y blanco del IESTP Hermanos Cárcamo',
         alt: 'Fachada principal del IESTP Hermanos Cárcamo con ingreso azul y blanco en Paita'
@@ -9208,6 +9348,7 @@ ${text}
       {
         src: 'assets/img/patio-2026.webp',
         short: 'Patio',
+        pos: 'center 52%',
         title: 'Espacios para Aprender',
         caption: 'Patio central y pabellones académicos en Paita Alta',
         alt: 'Vista del patio y pabellones del instituto IESTP Hermanos Cárcamo'
@@ -9215,6 +9356,7 @@ ${text}
       {
         src: 'assets/img/comunidad-2026.webp',
         short: 'Comunidad',
+        pos: 'center 24%',
         title: 'Nuestra Comunidad Docente',
         caption: 'Docentes y autoridades en actividad oficial institucional',
         alt: 'Docentes y autoridades durante una actividad institucional'
@@ -9222,6 +9364,7 @@ ${text}
       {
         src: 'assets/img/titulacion-2026.webp',
         short: 'Titulación',
+        pos: 'center 22%',
         title: 'Ceremonia de Titulación',
         caption: 'Egresados titulados a Nombre de la Nación con certificación oficial',
         alt: 'Graduados con sus diplomas y docentes en ceremonia de titulación'
@@ -9229,6 +9372,7 @@ ${text}
       {
         src: 'assets/img/embarcacion-2026.webp',
         short: 'Embarcación',
+        pos: 'center 52%',
         title: 'Vinculación con el Mar',
         caption: 'Embarcación rotulada Hermanos Cárcamo para prácticas pesqueras',
         alt: 'Embarcación rotulada Hermanos Cárcamo situada en astillero de Paita'
@@ -9236,6 +9380,7 @@ ${text}
       {
         src: 'assets/img/movilidad-2026.webp',
         short: 'Movilidad',
+        pos: 'center 56%',
         title: 'Nuestra Región Piura',
         caption: 'Movilidad institucional al servicio de los estudiantes de Paita',
         alt: 'Autobús amarillo y azul identificado con el Gobierno Regional de Piura'
@@ -9243,28 +9388,84 @@ ${text}
     ];
   }
 
-  switchCampusBannerPhoto(val, sourceEl = null) {
+  stepCampusBannerPhoto(delta = 1) {
+    const total = this.getCampusGalleryPhotos().length;
+    const nextIdx = (this.campusCarouselIdx + delta + total) % total;
+    this.switchCampusBannerPhoto(nextIdx, null, true);
+  }
+
+  switchCampusBannerPhoto(val, sourceEl = null, resetTimer = false) {
     const photos = this.getCampusGalleryPhotos();
     const idx = Math.max(0, Math.min(photos.length - 1, parseInt(val, 10) || 0));
+    this.campusCarouselIdx = idx;
     const item = photos[idx];
     if (!item) return;
 
     const imgEl = document.getElementById('campusBannerHeroImg');
     const labelEl = document.getElementById('campusBannerLabel');
     const captionEl = document.getElementById('campusBannerCaption');
+    const counterEl = document.getElementById('campusBannerCounter');
+    const barEl = document.getElementById('campusCarouselBar');
+
     if (imgEl) {
-      imgEl.style.opacity = '0.35';
-      imgEl.src = item.src;
-      imgEl.alt = item.alt;
-      setTimeout(() => { imgEl.style.opacity = '1'; }, 90);
+      imgEl.classList.add('is-switching');
+      setTimeout(() => {
+        imgEl.src = item.src;
+        imgEl.alt = item.alt;
+        imgEl.style.objectPosition = item.pos || 'center 42%';
+        imgEl.classList.remove('is-switching');
+      }, 170);
     }
     if (labelEl) labelEl.textContent = item.title;
     if (captionEl) captionEl.textContent = `${item.caption} · Av. Miguel Grau Mz. A Lt. 01 – Paita`;
+    if (counterEl) counterEl.textContent = `${idx + 1} / ${photos.length}`;
+
+    if (barEl) {
+      barEl.classList.remove('is-running');
+      void barEl.offsetWidth;
+      barEl.classList.add('is-running');
+    }
 
     document.querySelectorAll('.campus-thumb-btn').forEach((btn, i) => {
       const isActive = sourceEl ? btn === sourceEl : i === idx;
       btn.classList.toggle('active', isActive);
     });
+
+    if (resetTimer) {
+      this.startCampusCarousel();
+    }
+  }
+
+  startCampusCarousel() {
+    this.stopCampusCarousel();
+    const card = document.getElementById('welcomeCampusCard');
+    const barEl = document.getElementById('campusCarouselBar');
+    if (barEl) {
+      barEl.classList.remove('is-running');
+      void barEl.offsetWidth;
+      barEl.classList.add('is-running');
+    }
+    if (card && !card.dataset.hoverBound) {
+      card.dataset.hoverBound = '1';
+      card.addEventListener('mouseenter', () => { this._carouselPaused = true; });
+      card.addEventListener('mouseleave', () => { this._carouselPaused = false; });
+    }
+    this._carouselPaused = false;
+    this.campusCarouselTimer = setInterval(() => {
+      if (this._carouselPaused) return;
+      if (!document.getElementById('campusBannerHeroImg')) {
+        this.stopCampusCarousel();
+        return;
+      }
+      this.stepCampusBannerPhoto(1);
+    }, 4500);
+  }
+
+  stopCampusCarousel() {
+    if (this.campusCarouselTimer) {
+      clearInterval(this.campusCarouselTimer);
+      this.campusCarouselTimer = null;
+    }
   }
 
   renderFallback(query) {

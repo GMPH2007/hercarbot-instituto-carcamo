@@ -4003,6 +4003,37 @@ function initDatabaseSQLAdmin() {
         alertBox.style.display = 'block';
       }
     });
+
+    const newUserDniInput = document.getElementById('new-user-dni');
+    if (newUserDniInput) {
+      newUserDniInput.addEventListener('input', () => {
+        const cleanDni = newUserDniInput.value.replace(/[^0-9]/g, '');
+        newUserDniInput.value = cleanDni;
+        if (cleanDni.length === 8 && window.HercarSQL && typeof HercarSQL.consultarDni === 'function') {
+          const res = HercarSQL.consultarDni(cleanDni);
+          if (res.enPadron && res.docente) {
+            const doc = res.docente;
+            const fn = document.getElementById('new-user-fullname');
+            const em = document.getElementById('new-user-email');
+            const un = document.getElementById('new-user-username');
+            const ph = document.getElementById('new-user-phone');
+            const cr = document.getElementById('new-user-career');
+            if (fn && !fn.value) fn.value = doc.nombre;
+            if (em && !em.value) em.value = doc.email;
+            if (un && !un.value) un.value = doc.email.split('@')[0];
+            if (ph && !ph.value) ph.value = doc.phone;
+            if (cr) {
+              for (let opt of cr.options) {
+                if (opt.value.toLowerCase().includes(doc.carrera.toLowerCase()) || doc.carrera.toLowerCase().includes(opt.value.toLowerCase())) {
+                  cr.value = opt.value;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
   }
 
   // Eventos de Búsqueda y Filtros en Tiempo Real

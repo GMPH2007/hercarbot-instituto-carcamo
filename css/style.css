@@ -3874,19 +3874,16 @@ body.dark-theme #modalVoiceSettings .modal-footer {
   to { width: 100%; }
 }
 
-/* Barra Permanente de Voz Dulce Interactiva */
+/* Barra Permanente de Voz Dulce Interactiva (Oculta a solicitud) */
 .voice-companion-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 6px 12px;
-  margin-bottom: 7px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(239, 246, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
-  border: 1px solid #bfdbfe;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
-  transition: all 0.25s ease;
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
 }
 
 .voice-companion-bar.is-speaking {
@@ -4300,7 +4297,7 @@ body.dark-theme .voice-pill-btn {
     font-size: 0.8rem;
   }
   .voice-companion-bar {
-    padding: 5px 8px;
+    display: none !important;
   }
   .voice-companion-status {
     font-size: 0.69rem;

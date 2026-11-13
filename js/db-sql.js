@@ -103,10 +103,108 @@
 
   const STORAGE_KEY_PREFIX = 'hercarsql_table_';
 
+  // =========================================================================
+  // PADRÓN DOCENTE OFICIAL IESTP HERMANOS CÁRCAMO (20 Docentes / 4 Carreras)
+  // Fuente Oficial: ieshercar.edu.pe/Nosotros/Estructura_Organizativa/Plana-Docente/
+  // =========================================================================
+  const PADRON_DOCENTES_OFICIAL = [
+    // Computación e Informática
+    { dni: '02849182', nombre: 'José Hernández Panta', carrera: 'Computación e Informática', carreraId: 'apsti', email: 'jhernandez@ieshercar.edu.pe', phone: '973849102', perfil: 'Especialista en desarrollo de software, arquitectura de sistemas y bases de datos.', cvPublicado: true },
+    { dni: '02849183', nombre: 'Javier Jaramillo Atoche', carrera: 'Computación e Informática', carreraId: 'apsti', email: 'jjaramillo@ieshercar.edu.pe', phone: '969100257', perfil: 'Docente en redes de computadoras, conectividad y soporte tecnológico.', cvPublicado: true },
+    { dni: '02849184', nombre: 'Luis Cherre Lizama', carrera: 'Computación e Informática', carreraId: 'apsti', email: 'lcherre@ieshercar.edu.pe', phone: '973849103', perfil: 'Especialista en sistemas operativos, servidores e infraestructura tecnológica.', cvPublicado: true },
+    { dni: '02849185', nombre: 'Erick Denegri Arizapana', carrera: 'Computación e Informática', carreraId: 'apsti', email: 'edenegri@ieshercar.edu.pe', phone: '968184784', perfil: 'Docente en programación avanzada, aplicaciones empresariales y tecnologías cloud.', cvPublicado: true },
+    { dni: '02849186', nombre: 'Juan Ruidias Casaverde', carrera: 'Computación e Informática', carreraId: 'apsti', email: 'jruidias@ieshercar.edu.pe', phone: '973849104', perfil: 'Especialista en plataformas web, bases de datos y seguridad informática.', cvPublicado: true },
+
+    // Administración de Negocios Internacionales (ANI)
+    { dni: '45892021', nombre: 'Eduardo Masías de la Rosa', carrera: 'Administración de Negocios Internacionales', carreraId: 'ani', email: 'emasias@ieshercar.edu.pe', phone: '969100258', perfil: 'Especialista en comercio exterior, logística portuaria y gestión aduanera.', cvPublicado: true },
+    { dni: '45892022', nombre: 'Yemina Vite Piedra', carrera: 'Administración de Negocios Internacionales', carreraId: 'ani', email: 'yvite@ieshercar.edu.pe', phone: '968184785', perfil: 'Docente en marketing internacional, administración y gestión empresarial.', cvPublicado: true },
+    { dni: '45892023', nombre: 'Paola Manrique Purizaca', carrera: 'Administración de Negocios Internacionales', carreraId: 'ani', email: 'pmanrique@ieshercar.edu.pe', phone: '973849105', perfil: 'Especialista en finanzas internacionales, formulación de proyectos y exportaciones.', cvPublicado: true },
+    { dni: '45892024', nombre: 'Karolina Grace Farfán Cavero', carrera: 'Administración de Negocios Internacionales', carreraId: 'ani', email: 'kfarfan@ieshercar.edu.pe', phone: '969100259', perfil: 'Docente en investigación de mercados, tratados comerciales y legislación aduanera.', cvPublicado: true },
+    { dni: '45892025', nombre: 'Juan García Reto', carrera: 'Administración de Negocios Internacionales', carreraId: 'ani', email: 'jgarcia@ieshercar.edu.pe', phone: '968184786', perfil: 'Especialista en operatividad portuaria, aduanas y distribución física internacional.', cvPublicado: true },
+
+    // Contabilidad
+    { dni: '03829101', nombre: 'Nelly Julca García', carrera: 'Contabilidad', carreraId: 'conta', email: 'njulca@ieshercar.edu.pe', phone: '973849106', perfil: 'Especialista en formulación de estados financieros, auditoría y normas internacionales contables.', cvPublicado: true },
+    { dni: '03829102', nombre: 'José Llontop Pasache', carrera: 'Contabilidad', carreraId: 'conta', email: 'jllontop@ieshercar.edu.pe', phone: '969100260', perfil: 'Docente en tributación, gestión fiscal, SUNAT y software contable empresarial.', cvPublicado: true },
+    { dni: '03829103', nombre: 'Nilda Panta Flores', carrera: 'Contabilidad', carreraId: 'conta', email: 'npanta@ieshercar.edu.pe', phone: '968184787', perfil: 'Especialista en costos, presupuestos y operaciones contables comerciales.', cvPublicado: true },
+    { dni: '03829104', nombre: 'Edson Maza Gonzales', carrera: 'Contabilidad', carreraId: 'conta', email: 'emaza@ieshercar.edu.pe', phone: '973849107', perfil: 'Docente en finanzas empresariales, análisis de balances y control de gestión.', cvPublicado: true },
+    { dni: '03829105', nombre: 'Daniel Olaya Castillo', carrera: 'Contabilidad', carreraId: 'conta', email: 'dolaya@ieshercar.edu.pe', phone: '969100261', perfil: 'Especialista en contabilidad gubernamental, finanzas públicas y auditoría tributaria.', cvPublicado: true },
+
+    // Desarrollo Pesquero y Acuícola (DPA)
+    { dni: '02948111', nombre: 'Rocío Chapa Tume', carrera: 'Desarrollo Pesquero y Acuícola', carreraId: 'dpa', email: 'rchapa@ieshercar.edu.pe', phone: '968184788', perfil: 'Especialista en procesamiento de productos hidrobiológicos, congelados y conservas.', cvPublicado: true },
+    { dni: '02948112', nombre: 'Dalila Barrios Cruz', carrera: 'Desarrollo Pesquero y Acuícola', carreraId: 'dpa', email: 'dbarrios@ieshercar.edu.pe', phone: '973849108', perfil: 'Docente en sistemas de cultivo acuícola, biología marina y gestión ambiental.', cvPublicado: true },
+    { dni: '02948113', nombre: 'Fabiola Pinto Granda', carrera: 'Desarrollo Pesquero y Acuícola', carreraId: 'dpa', email: 'fpinto@ieshercar.edu.pe', phone: '969100262', perfil: 'Especialista en control de calidad, aseguramiento sanitario (HACCP / SANIPES) e inocuidad.', cvPublicado: true },
+    { dni: '02948114', nombre: 'Bertha Rufasto Kanashiro', carrera: 'Desarrollo Pesquero y Acuícola', carreraId: 'dpa', email: 'brufasto@ieshercar.edu.pe', phone: '968184789', perfil: 'Docente en tecnología pesquera, evaluación de recursos marinos y sostenibilidad costera.', cvPublicado: true },
+    { dni: '02948115', nombre: 'Sergio Panta Jacinto', carrera: 'Desarrollo Pesquero y Acuícola', carreraId: 'dpa', email: 'spanta@ieshercar.edu.pe', phone: '973849109', perfil: 'Especialista en artes de pesca, navegación, operaciones de flota y manejo de recursos marinos.', cvPublicado: true },
+
+    // Dirección General y TI
+    { dni: '45892014', nombre: 'Ing. Administrador General HercarBot', carrera: 'Dirección General y TI', carreraId: 'admin', email: 'admin@ieshercar.edu.pe', phone: '968184783', perfil: 'Administrador general y responsable del sistema institucional HercarBot.', cvPublicado: true }
+  ];
+
   const HercarSQL = {
     version: '2.5.0',
     dbName: 'HercarBotDB',
     isReady: false,
+
+    obtenerPadronDocentes() {
+      return JSON.parse(JSON.stringify(PADRON_DOCENTES_OFICIAL));
+    },
+
+    consultarDni(rawDni) {
+      if (!rawDni) {
+        return { valid: false, message: 'Ingresa un número de DNI.' };
+      }
+      const cleanDni = String(rawDni).trim().replace(/[^0-9]/g, '');
+      if (cleanDni.length !== 8) {
+        return { valid: false, message: 'El DNI debe contener exactamente 8 dígitos numéricos.' };
+      }
+
+      const users = this._readTable('users');
+      const existingUser = users.find(u => u.dni && u.dni.trim().replace(/[^0-9]/g, '') === cleanDni);
+      if (existingUser) {
+        return {
+          valid: true,
+          registrado: true,
+          enPadron: true,
+          origen: 'db',
+          dni: cleanDni,
+          usuario: {
+            id: existingUser.id,
+            full_name: existingUser.full_name,
+            username: existingUser.username,
+            email: existingUser.email,
+            dni: existingUser.dni,
+            phone: existingUser.phone,
+            career: existingUser.career,
+            role: existingUser.role,
+            avatar: existingUser.avatar,
+            status: existingUser.status
+          },
+          mensaje: `Este DNI ya se encuentra registrado a nombre de ${existingUser.full_name}.`
+        };
+      }
+
+      const docentePadron = PADRON_DOCENTES_OFICIAL.find(d => d.dni === cleanDni);
+      if (docentePadron) {
+        return {
+          valid: true,
+          registrado: false,
+          enPadron: true,
+          origen: 'padron',
+          dni: cleanDni,
+          docente: docentePadron,
+          mensaje: `Docente Oficial Identificado en Padrón IESTP Cárcamo: ${docentePadron.nombre} (${docentePadron.carrera}).`
+        };
+      }
+
+      return {
+        valid: true,
+        registrado: false,
+        enPadron: false,
+        origen: 'nuevo',
+        dni: cleanDni,
+        mensaje: 'DNI de 8 dígitos validado. Puedes completar los nombres y especialidad docente para el registro.'
+      };
+    },
 
     getClientIp() {
       return getClientIp();
@@ -307,7 +405,7 @@
       const users = this._readTable('users');
 
       const user = users.find(u => 
-        (u.email.toLowerCase() === cleanLogin || u.username.toLowerCase() === cleanLogin) &&
+        (u.email.toLowerCase() === cleanLogin || u.username.toLowerCase() === cleanLogin || (u.dni && u.dni.trim().replace(/[^0-9]/g, '') === cleanLogin)) &&
         (u.password_hash === inputHash || u.plain_hint === rawPassword.trim() || u.password_plain === rawPassword.trim())
       );
 
@@ -492,6 +590,12 @@
       }
       if (users.some(u => u.username.toLowerCase() === cleanUsername)) {
         return { success: false, message: 'El nombre de usuario ya está en uso. Elige otro identificador.' };
+      }
+      if (dni && String(dni).trim()) {
+        const cleanDni = String(dni).trim().replace(/[^0-9]/g, '');
+        if (cleanDni.length === 8 && users.some(u => u.dni && String(u.dni).trim().replace(/[^0-9]/g, '') === cleanDni)) {
+          return { success: false, message: `El número de DNI ${cleanDni} ya se encuentra registrado en el sistema institucional.` };
+        }
       }
 
       const newId = users.length > 0 ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;

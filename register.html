@@ -40,9 +40,11 @@
        TEMA CLARO (Sincronizado con index.html)
        ------------------------------------------------------------------------ */
     body.light-theme {
-      background: radial-gradient(circle at 85% 15%, rgba(37, 99, 235, 0.08), transparent 40%),
-                  radial-gradient(circle at 15% 85%, rgba(14, 165, 233, 0.08), transparent 40%),
-                  linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f8fafc 100%);
+      background:
+        radial-gradient(circle at 85% 15%, rgba(37, 99, 235, 0.16), transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(14, 165, 233, 0.14), transparent 45%),
+        linear-gradient(135deg, rgba(240, 244, 248, 0.88) 0%, rgba(226, 232, 240, 0.82) 50%, rgba(219, 234, 254, 0.88) 100%),
+        url('assets/img/fachada-2026.webp') center center / cover no-repeat fixed;
       color: #0f172a;
     }
     body.light-theme .register-card {
@@ -112,9 +114,11 @@
        TEMA OSCURO (Sincronizado con index.html)
        ------------------------------------------------------------------------ */
     body.dark-theme {
-      background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.28), transparent 45%),
-                  radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.16), transparent 45%),
-                  linear-gradient(135deg, #060b16 0%, #0c1830 50%, #060d1d 100%);
+      background:
+        radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.32), transparent 45%),
+        radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.18), transparent 45%),
+        linear-gradient(135deg, rgba(6, 11, 22, 0.90) 0%, rgba(12, 24, 48, 0.85) 50%, rgba(15, 23, 42, 0.92) 100%),
+        url('assets/img/fachada-2026.webp') center center / cover no-repeat fixed;
       color: #f8fafc;
     }
     body.dark-theme .register-card {
@@ -190,6 +194,10 @@
       justify-content: center;
       padding: 24px 16px;
       transition: background 0.3s ease, color 0.3s ease;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     .auth-shell {
@@ -199,8 +207,8 @@
       overflow: hidden;
       display: grid;
       grid-template-columns: 0.92fr 1.18fr;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       animation: fadeIn 0.35s ease-out;
       position: relative;
     }
@@ -208,14 +216,14 @@
     body.light-theme .auth-shell {
       background: rgba(255, 255, 255, 0.98);
       border: 1.5px solid #cbd5e1;
-      box-shadow: 0 24px 54px -14px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(226, 232, 240, 0.9);
+      box-shadow: 0 25px 60px -10px rgba(10, 25, 60, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.45);
       color: #0f172a;
     }
 
     body.dark-theme .auth-shell {
       background: rgba(15, 23, 42, 0.94);
       border: 1.5px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.82), 0 0 0 1px rgba(255, 255, 255, 0.08);
       color: #f8fafc;
     }
 
@@ -784,20 +792,39 @@
           <input type="hidden" id="regAvatarData" value="">
         </div>
       </div>
-      <div class="row g-2 mb-2">
-        <div class="col-sm-7">
-          <label for="regName" class="form-label">
-            <i class="bi bi-person-fill text-primary me-1"></i> Nombres y Apellidos Completos:
+      <!-- Panel de Identificación y Consulta Inteligente de DNI (Padrón Institucional 2026) -->
+      <div class="p-3 mb-3 rounded-4" style="background: rgba(19, 53, 123, 0.05); border: 1.5px solid rgba(19, 53, 123, 0.18);">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label for="regDni" class="form-label mb-0 fw-bold" style="font-size: 0.86rem;">
+            <i class="bi bi-person-vcard text-primary me-1"></i> DNI del Docente (8 dígitos):
           </label>
-          <input type="text" id="regName" class="form-control" placeholder="Ej: Nombres y Apellidos Completos" required autofocus>
+          <span class="badge bg-primary text-white rounded-pill px-2 py-1" style="font-size: 0.68rem; font-weight: 600;">
+            <i class="bi bi-shield-check me-1"></i>Padrón Oficial Cárcamo
+          </span>
         </div>
-        <div class="col-sm-5">
-          <label for="regDni" class="form-label">
-            <i class="bi bi-card-heading text-primary me-1"></i> DNI (8 dígitos):
-          </label>
-          <input type="text" id="regDni" class="form-control" placeholder="8 dígitos" maxlength="8" pattern="[0-9]{8}" required>
-          <div id="dniStatusBadge" class="mt-1" style="font-size:0.72rem; display:none;"></div>
+        <div class="input-group">
+          <span class="input-group-text bg-white"><i class="bi bi-card-heading text-primary"></i></span>
+          <input type="text" id="regDni" class="form-control" placeholder="Ingresa los 8 dígitos de tu DNI" maxlength="8" pattern="[0-9]{8}" required autofocus>
+          <button type="button" class="btn btn-primary fw-semibold px-3" id="btnConsultarDni" title="Consultar DNI en Padrón">
+            <i class="bi bi-search me-1"></i> Consultar DNI
+          </button>
         </div>
+        <div id="dniStatusBadge" class="mt-2" style="font-size:0.75rem; display:none;"></div>
+
+        <!-- Selector Rápido del Padrón Docente Oficial -->
+        <div class="mt-2 pt-2 border-top d-flex align-items-center justify-content-between flex-wrap gap-2" style="font-size:0.74rem;">
+          <span class="text-muted"><i class="bi bi-person-check-fill text-primary me-1"></i><strong>¿Docente Titular?</strong> Autocompletar con mi DNI:</span>
+          <select id="selectPadronDocente" class="form-select form-select-sm" style="width: auto; max-width: 290px; font-size: 0.74rem;">
+            <option value="">⚡ Selecciona tu nombre del Padrón Docente...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="regName" class="form-label">
+          <i class="bi bi-person-fill text-primary me-1"></i> Nombres y Apellidos Completos:
+        </label>
+        <input type="text" id="regName" class="form-control" placeholder="Ej: Nombres y Apellidos Completos" required>
       </div>
 
       <div class="row g-2 mb-2">
@@ -919,7 +946,7 @@
   <!-- Bootstrap 5 Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Motor de Base de Datos Relacional SQL Institucional -->
-  <script src="js/db-sql.js?v=20261112j"></script>
+  <script src="js/db-sql.js?v=20261112k"></script>
 
   <script>
     // ------------------------------------------------------------------------
@@ -963,6 +990,7 @@
 
     async function refreshCountersAndState() {
       await HercarSQL.init();
+      populatePadronSelect();
       const stats = HercarSQL.getStats();
 
       const statsMap = {
@@ -1273,21 +1301,207 @@ const regForm = document.getElementById('registerForm');
     });
 
     // ------------------------------------------------------------------------
-    // Validación Interactiva en Vivo (DNI, Celular, Fortaleza de Contraseña y Bloq Mayús)
+    // Módulo Inteligente de Lectura y Autocompletado de Datos por DNI (Padrón Docente)
     // ------------------------------------------------------------------------
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function populatePadronSelect() {
+      const select = document.getElementById('selectPadronDocente');
+      if (!select || !window.HercarSQL || typeof HercarSQL.obtenerPadronDocentes !== 'function') return;
+      const padron = HercarSQL.obtenerPadronDocentes();
+      select.innerHTML = '<option value="">⚡ Selecciona tu nombre del Padrón Docente...</option>';
+
+      const carreras = [
+        'Computación e Informática',
+        'Administración de Negocios Internacionales',
+        'Contabilidad',
+        'Desarrollo Pesquero y Acuícola',
+        'Dirección General y TI'
+      ];
+
+      carreras.forEach(carrera => {
+        const docs = padron.filter(d => d.carrera === carrera);
+        if (docs.length > 0) {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = carrera;
+          docs.forEach(doc => {
+            const opt = document.createElement('option');
+            opt.value = doc.dni;
+            opt.textContent = `${doc.nombre} (${doc.dni})`;
+            optgroup.appendChild(opt);
+          });
+          select.appendChild(optgroup);
+        }
+      });
+    }
+
+    function speakDniVerification(text) {
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'es-PE';
+          utterance.rate = 1.05;
+          utterance.pitch = 1.05;
+          window.speechSynthesis.speak(utterance);
+        }
+      } catch (e) {}
+    }
+
+    async function ejecutarConsultaDni(rawDni) {
+      const dni = String(rawDni || '').trim().replace(/[^0-9]/g, '');
+      const badge = document.getElementById('dniStatusBadge');
+      if (!badge) return;
+
+      if (dni.length !== 8) {
+        badge.style.display = 'block';
+        badge.innerHTML = `<div class="text-warning py-1 small fw-semibold"><i class="bi bi-info-circle me-1"></i> El DNI debe tener exactamente 8 dígitos (faltan ${8 - dni.length}).</div>`;
+        return;
+      }
+
+      badge.style.display = 'block';
+      badge.innerHTML = `<div class="text-primary py-1 small"><span class="spinner-border spinner-border-sm me-1"></span> Consultando padrón institucional de docentes...</div>`;
+
+      try {
+        await HercarSQL.init();
+        const res = HercarSQL.consultarDni(dni);
+
+        if (res.registrado) {
+          badge.innerHTML = `
+            <div class="alert alert-warning py-2 px-3 mb-0 rounded-3 shadow-sm border border-warning d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+                <div>
+                  <strong>Este DNI ya está registrado en el sistema:</strong>
+                  <div class="small text-muted">${escapeHtml(res.usuario.full_name)} • ${escapeHtml(res.usuario.career || 'IESTP Cárcamo')}</div>
+                </div>
+              </div>
+              <a href="login.html" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">Iniciar Sesión</a>
+            </div>
+          `;
+          speakDniVerification(`El DNI ${dni} ya se encuentra registrado a nombre de ${res.usuario.full_name}.`);
+          return;
+        }
+
+        if (res.enPadron && res.docente) {
+          const doc = res.docente;
+          document.getElementById('regName').value = doc.nombre;
+          
+          const carEl = document.getElementById('regCareer');
+          if (carEl) {
+            for (let opt of carEl.options) {
+              if (opt.value.toLowerCase().includes(doc.carrera.toLowerCase()) || doc.carrera.toLowerCase().includes(opt.value.toLowerCase())) {
+                carEl.value = opt.value;
+                break;
+              }
+            }
+          }
+
+          document.getElementById('regEmail').value = doc.email;
+          document.getElementById('regUsername').value = doc.email.split('@')[0];
+          
+          if (document.getElementById('regPhone')) {
+            document.getElementById('regPhone').value = doc.phone;
+            const phoneBadge = document.getElementById('phoneStatusBadge');
+            if (phoneBadge) {
+              phoneBadge.style.display = 'block';
+              phoneBadge.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-whatsapp me-1"></i> Celular institucional verificado</span>';
+            }
+          }
+
+          if (document.getElementById('regRole')) {
+            document.getElementById('regRole').value = doc.carreraId === 'admin' ? 'Administrador Institucional' : 'Docente Evaluador';
+          }
+
+          const autoAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(doc.nombre)}&background=0284c7&color=fff&bold=true`;
+          const avatarPrev = document.getElementById('avatarPreview');
+          if (avatarPrev) avatarPrev.src = autoAvatar;
+          const regAvatarInput = document.getElementById('regAvatarData');
+          if (regAvatarInput) regAvatarInput.value = autoAvatar;
+
+          badge.innerHTML = `
+            <div class="alert alert-success py-2 px-3 mb-0 rounded-3 shadow-sm border border-success d-flex align-items-center gap-2">
+              <i class="bi bi-patch-check-fill text-success fs-4"></i>
+              <div>
+                <strong class="d-block text-success">✅ Docente Oficial Identificado en Padrón IESTP Cárcamo</strong>
+                <div class="small text-dark"><strong>${escapeHtml(doc.nombre)}</strong> • ${escapeHtml(doc.carrera)}</div>
+                <div class="small text-muted" style="font-size:0.72rem;">Perfil: ${escapeHtml(doc.perfil)}</div>
+              </div>
+            </div>
+          `;
+
+          speakDniVerification(`Docente identificado: ${doc.nombre}, programa de estudios ${doc.carrera}. Datos vinculados.`);
+
+          const pwdInput = document.getElementById('regPassword');
+          if (pwdInput) pwdInput.focus();
+          return;
+        }
+
+        // DNI 8 dígitos nuevo no registrado
+        badge.innerHTML = `
+          <div class="alert alert-info py-2 px-3 mb-0 rounded-3 shadow-sm border border-info d-flex align-items-center gap-2">
+            <i class="bi bi-info-circle-fill text-info fs-5"></i>
+            <div>
+              <strong>DNI validado (${dni})</strong>
+              <div class="small text-muted">DNI de 8 dígitos listo. Completa tus nombres completos y especialidad docente para continuar.</div>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        console.error('Error al consultar DNI:', err);
+        badge.innerHTML = `<div class="text-muted small">DNI de 8 dígitos verificado.</div>`;
+      }
+    }
+
     const dniInput = document.getElementById('regDni');
     const dniBadge = document.getElementById('dniStatusBadge');
-    if (dniInput && dniBadge) {
+    const btnConsultarDni = document.getElementById('btnConsultarDni');
+    const selectPadronDocente = document.getElementById('selectPadronDocente');
+
+    if (dniInput) {
       dniInput.addEventListener('input', () => {
         dniInput.value = dniInput.value.replace(/[^0-9]/g, '');
         if (dniInput.value.length === 8) {
-          dniBadge.style.display = 'block';
-          dniBadge.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> DNI institucional válido (8 dígitos)</span>';
+          ejecutarConsultaDni(dniInput.value);
         } else if (dniInput.value.length > 0) {
-          dniBadge.style.display = 'block';
-          dniBadge.innerHTML = `<span class="text-muted"><i class="bi bi-info-circle me-1"></i> Faltan ${8 - dniInput.value.length} dígito(s)</span>`;
+          if (dniBadge) {
+            dniBadge.style.display = 'block';
+            dniBadge.innerHTML = `<span class="text-muted small"><i class="bi bi-info-circle me-1"></i> Faltan ${8 - dniInput.value.length} dígito(s) para completar tu DNI</span>`;
+          }
         } else {
-          dniBadge.style.display = 'none';
+          if (dniBadge) dniBadge.style.display = 'none';
+        }
+      });
+
+      dniInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          ejecutarConsultaDni(dniInput.value);
+        }
+      });
+    }
+
+    if (btnConsultarDni) {
+      btnConsultarDni.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (dniInput) ejecutarConsultaDni(dniInput.value);
+      });
+    }
+
+    if (selectPadronDocente) {
+      selectPadronDocente.addEventListener('change', () => {
+        const selectedDni = selectPadronDocente.value;
+        if (selectedDni && dniInput) {
+          dniInput.value = selectedDni;
+          ejecutarConsultaDni(selectedDni);
         }
       });
     }

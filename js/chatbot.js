@@ -4581,7 +4581,8 @@ class HercarBotApp {
         <div class="suggested-prompts-section">
           <span class="suggested-label"><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Consultas rápidas recomendadas</span>
           <div class="prompts-chips-wrapper">
-            <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuentas BN (00-638-002361 / 025736)</button>
+            <button class="prompt-chip" data-prompt="¿Cuáles son los números de cuenta del Banco de la Nación?"><i class="bi bi-bank2 me-1 text-primary"></i> Cuentas BN (002361 vs 025736)</button>
+            <button class="prompt-chip" data-prompt="¿Cómo y a qué cuenta bancaria pago el curso de inglés?"><i class="bi bi-translate me-1 text-success"></i> Pago de Inglés (00-638-025736)</button>
             <button class="prompt-chip" data-chat-action="ver_tramites_tupa"><i class="bi bi-file-earmark-ruled-fill me-1 text-primary"></i> TUPA 2026: ¿Para qué sirve cada trámite?</button>
             <button class="prompt-chip" data-prompt="¿Cómo es la admisión 2026 y requisitos?"><i class="bi bi-pencil-square me-1 text-success"></i> Admisión 2026</button>
             <button class="prompt-chip" data-prompt="Háblame sobre la carrera de Computación e Informática"><i class="bi bi-laptop me-1 text-info"></i> Computación e Informática</button>
@@ -5346,6 +5347,69 @@ ${text}
       return;
     }
 
+    // 10.4 Rectificación por Error de Cuenta Bancaria (si el estudiante se equivocó de cuenta al depositar)
+    if (
+      norm.includes('error de cuenta') ||
+      norm.includes('equivoque de cuenta') ||
+      norm.includes('confundi de cuenta') ||
+      norm.includes('cuenta equivocada') ||
+      norm.includes('pague en otra cuenta') ||
+      norm.includes('pague en la otra cuenta') ||
+      norm.includes('rectificacion de cuenta') ||
+      norm.includes('rectificar pago') ||
+      norm.includes('pague mal') ||
+      norm.includes('me confundi al pagar') ||
+      (norm.includes('confund') && norm.includes('cuenta') && (norm.includes('pague') || norm.includes('deposi') || norm.includes('error') || norm.includes('equivo')))
+    ) {
+      const trRect = GUIA_TRAMITES_TUPA.find(t => t.id === 'tramite-rectificacion-error-cuenta');
+      if (trRect) {
+        this.renderTramiteDetalle(trRect);
+        this.logQuery('pagos');
+        return;
+      }
+    }
+
+    // 10.5 Prioridad Absoluta: Curso de Inglés y Pagos Específicos (Cta. Cte. BN 00-638-025736)
+    // Se evalúa ANTES de Carreras, Admisión y Pagos Generales para que jamás se confunda con la cuenta de Matrícula (00-638-002361)
+    const asksBothBankAccounts = (norm.includes('002361') && norm.includes('025736')) ||
+      norm.includes('dos cuentas') ||
+      norm.includes('2 cuentas') ||
+      norm.includes('diferencia entre cuentas') ||
+      norm.includes('diferencia entre las cuentas') ||
+      norm.includes('no confundir cuentas') ||
+      norm.includes('no se confunda') ||
+      (norm.includes('ingles') && norm.includes('matricula') && (norm.includes('cuenta') || norm.includes('diferencia') || norm.includes('cual')));
+
+    if (asksBothBankAccounts) {
+      this.renderNumeroCuentaBancaria();
+      this.logQuery('pagos');
+      return;
+    }
+
+    if (
+      norm.includes('ingles') ||
+      norm.includes('idioma') ||
+      norm.includes('idiomas') ||
+      norm.includes('english') ||
+      norm.includes('curso de ingles') ||
+      norm.includes('ingles tecnico') ||
+      norm.includes('ingles basico') ||
+      norm.includes('00-638-025736') ||
+      norm.includes('025736') ||
+      norm.includes('pago ingles') ||
+      norm.includes('pago de ingles') ||
+      norm.includes('pagar ingles') ||
+      norm.includes('voucher ingles') ||
+      norm.includes('voucher de ingles') ||
+      norm.includes('tania herrera') ||
+      norm.includes('omar garcia') ||
+      norm.includes('deuda ingles')
+    ) {
+      this.renderCursoIngles();
+      this.logQuery('ingles');
+      return;
+    }
+
     // 11. Consulta de Carrera específica o Malla Curricular
     for (const carrera of CARRERAS_COMPLETAS) {
       const cId = carrera.id.toLowerCase();
@@ -5392,8 +5456,8 @@ ${text}
       return;
     }
 
-    // 14.4 Número de Cuenta Bancaria Oficial para Pagos (Banco de la Nación / CCI)
-    if (norm.includes('numero de cuenta') || norm.includes('numeros de cuenta') || norm.includes('num de cuenta') || norm.includes('nro de cuenta') || norm.includes('pasa la cuenta') || norm.includes('pasar la cuenta') || norm.includes('pasas la cuenta') || norm.includes('pasa el numero') || norm.includes('dame la cuenta') || norm.includes('a que cuenta') || norm.includes('cuenta para pagar') || norm.includes('cuenta bancaria') || (norm.includes('cuenta') && (norm.includes('banco') || norm.includes('nacion') || norm.includes('depositar') || norm.includes('transferir') || norm.includes('corriente') || norm.includes('pagar') || norm.includes('deposito'))) || norm.includes('cual es la cuenta') || norm.includes('cuales son las cuentas') || norm.includes('datos bancarios') || norm.includes('datos de la cuenta') || norm.includes('00-638-002361') || norm.includes('002361') || norm.includes('cci del banco') || norm.includes('codigo interbancario')) {
+    // 14.4 Número de Cuenta Bancaria Oficial para Pagos (Banco de la Nación / Matriz Anti-Confusión)
+    if (norm.includes('numero de cuenta') || norm.includes('numeros de cuenta') || norm.includes('num de cuenta') || norm.includes('nro de cuenta') || norm.includes('pasa la cuenta') || norm.includes('pasar la cuenta') || norm.includes('pasas la cuenta') || norm.includes('pasa el numero') || norm.includes('dame la cuenta') || norm.includes('a que cuenta') || norm.includes('cuenta para pagar') || norm.includes('cuenta bancaria') || norm.includes('cuentas bancarias') || (norm.includes('cuenta') && (norm.includes('banco') || norm.includes('nacion') || norm.includes('depositar') || norm.includes('transferir') || norm.includes('corriente') || norm.includes('pagar') || norm.includes('deposito'))) || norm.includes('cual es la cuenta') || norm.includes('cuales son las cuentas') || norm.includes('datos bancarios') || norm.includes('datos de la cuenta') || norm.includes('00-638-002361') || norm.includes('002361') || norm.includes('cci del banco') || norm.includes('codigo interbancario')) {
       this.renderNumeroCuentaBancaria();
       this.logQuery('pagos');
       return;
@@ -5436,13 +5500,6 @@ ${text}
         this.logQuery('tramites');
         return;
       }
-    }
-
-    // 16. Curso de Inglés, Requisito de Titulación y Pagos Específicos (00-638-025736)
-    if (norm.includes('ingles') || norm.includes('idioma') || norm.includes('idiomas') || norm.includes('curso de ingles') || norm.includes('ingles tecnico') || norm.includes('00-638-025736') || norm.includes('025736') || norm.includes('pago ingles') || norm.includes('voucher ingles') || norm.includes('tania herrera') || norm.includes('omar garcia') || norm.includes('deuda ingles')) {
-      this.renderCursoIngles();
-      this.logQuery('ingles');
-      return;
     }
 
     // 17. Trámites TUPA 2026 (y explicación "¿Para qué sirve cada uno?")
@@ -7567,94 +7624,109 @@ ${text}
    */
   renderNumeroCuentaBancaria() {
     const html = `
-      <div class="faq-card-custom" style="border-top: 4px solid #f59e0b;">
+      <div class="faq-card-custom bank-matrix-card" style="border-top: 4px solid #0f3380;">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-          <span class="badge bg-warning text-dark px-3 py-1 fw-bold"><i class="bi bi-bank me-1"></i>Banco de la Nación</span>
-          <span class="badge bg-danger text-white"><i class="bi bi-exclamation-circle me-1"></i>Solo Ventanilla (NO Págalo.pe)</span>
+          <span class="badge bg-primary text-white px-3 py-1 fw-bold"><i class="bi bi-bank2 me-1"></i>Banco de la Nación • Guía Anti-Confusión</span>
+          <span class="badge bg-danger text-white px-2 py-1"><i class="bi bi-slash-circle me-1"></i>Solo Ventanilla (NO Págalo.pe / NO Yape)</span>
         </div>
-        <h4 class="fw-bold mb-1 text-dark">2 Números de Cuenta Oficiales — Banco de la Nación</h4>
+        <h4 class="fw-bold mb-1 text-dark">2 Cuentas Bancarias Oficiales — ¡No las Confundas!</h4>
         <p class="small text-muted mb-3">
-          El <strong>IESTP "Hermanos Cárcamo" de Paita</strong> cuenta con <strong>2 números de cuenta oficiales</strong> en el Banco de la Nación según el trámite:
+          El <strong>IESTP "Hermanos Cárcamo" de Paita</strong> usa <strong>2 cuentas corrientes distintas</strong> según tu trámite. Verifica bien cuál corresponde antes de depositar en ventanilla:
         </p>
 
-        <!-- Tarjeta Premium de las 2 Cuentas -->
-        <div class="p-3 rounded-3 mb-3 border shadow-sm" style="background: linear-gradient(135deg, #091a3e 0%, #163e8c 100%); color: #ffffff;">
-          <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-2">
-              <img src="https://ieshercar.edu.pe/public/assets/img/Logo-Hercar.png" alt="Logo" style="width: 28px; height: 28px; background: #fff; border-radius: 6px; padding: 2px;">
-              <span class="small text-white-50 fw-semibold">Banco de la Nación del Perú</span>
+        <!-- Matriz Comparativa Lado a Lado (Cero Confusiones) -->
+        <div class="row g-3 mb-3">
+          <!-- CUENTA 1: ACADÉMICA / TUPA -->
+          <div class="col-md-6">
+            <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-between shadow-sm" style="background: linear-gradient(145deg, #091a3e 0%, #163e8c 100%); color: #ffffff; border: 1.5px solid rgba(59,130,246,0.45);">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="badge bg-primary text-white rounded-pill px-2 py-1" style="font-size:0.72rem;"><i class="bi bi-mortarboard-fill me-1"></i>CUENTA 1 · TUPA ACADÉMICO</span>
+                  <span class="badge bg-white bg-opacity-10 text-white" style="font-size:0.68rem;">43 Trámites</span>
+                </div>
+                <div class="p-2 px-3 rounded-3 my-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);">
+                  <span class="fs-4 fw-bold font-monospace text-white" style="letter-spacing: 1px;">00-638-002361</span>
+                  <button class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3 py-1 shadow-sm"
+                          onclick="hercarBotApp.copyData('00-638-002361', 'Cuenta Principal BN (Matrícula/TUPA)')">
+                    <i class="bi bi-clipboard-check me-1"></i> Copiar
+                  </button>
+                </div>
+                <ul class="small ps-3 mb-2 text-white-50" style="font-size:0.79rem; line-height:1.5;">
+                  <li><strong class="text-white">Matrícula Semestral:</strong> S/ 250.00</li>
+                  <li><strong class="text-white">Examen de Suficiencia:</strong> S/ 200.00 (1ra) / S/ 100.00 (2da)</li>
+                  <li><strong class="text-white">Título Profesional:</strong> S/ 100.00 + S/ 60.00 caligrafiado</li>
+                  <li><strong class="text-white">Otros TUPA:</strong> Certificados, constancias, traslados, convalidaciones</li>
+                </ul>
+              </div>
+              <div class="p-2 rounded-3 small mt-1" style="background: rgba(15,23,42,0.45); border-left: 3px solid #60a5fa; font-size:0.75rem;">
+                <strong class="text-info d-block"><i class="bi bi-cloud-upload me-1"></i>¿Qué hago con el voucher?</strong>
+                Regístralo en <strong>pagos.ieshercar.edu.pe</strong>, saca <strong>3 copias</strong> de la boleta para Tesorería y entrega <strong>1 copia sellada</strong> en Secretaría.
+              </div>
             </div>
-            <span class="badge bg-warning text-dark fw-bold">2 Cuentas Corrientes</span>
           </div>
 
-          <!-- Cuenta Principal BN -->
-          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);">
-            <div>
-              <span class="small d-block text-warning fw-bold" style="font-size: 0.76rem;">1. Cuenta Principal (Matrícula S/ 250, Suficiencia S/ 200, Título S/ 100 + S/ 60):</span>
-              <span class="fs-4 fw-bold font-monospace text-white d-block" style="letter-spacing: 1px;">00-638-002361</span>
+          <!-- CUENTA 2: INGLÉS / ACTIVIDADES PRODUCTIVAS -->
+          <div class="col-md-6">
+            <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-between shadow-sm" style="background: linear-gradient(145deg, #064e3b 0%, #0f766e 100%); color: #ffffff; border: 1.5px solid rgba(52,211,153,0.45);">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="badge bg-warning text-dark rounded-pill px-2 py-1 fw-bold" style="font-size:0.72rem;"><i class="bi bi-translate me-1"></i>CUENTA 2 · INGLÉS & PRODUCTIVAS</span>
+                  <span class="badge bg-white bg-opacity-10 text-white" style="font-size:0.68rem;">23 Conceptos</span>
+                </div>
+                <div class="p-2 px-3 rounded-3 my-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);">
+                  <span class="fs-4 fw-bold font-monospace text-warning" style="letter-spacing: 1px;">00-638-025736</span>
+                  <button class="btn btn-sm btn-light text-dark fw-bold rounded-pill px-3 py-1 shadow-sm"
+                          onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
+                    <i class="bi bi-clipboard-check me-1"></i> Copiar
+                  </button>
+                </div>
+                <ul class="small ps-3 mb-2 text-white-50" style="font-size:0.79rem; line-height:1.5;">
+                  <li><strong class="text-white">Curso de Inglés Básico (Titulación):</strong> S/ 400.00</li>
+                  <li><strong class="text-white">Ciclo de Actualización:</strong> S/ 400.00</li>
+                  <li><strong class="text-white">Academia Pre Tecno:</strong> S/ 400.00</li>
+                  <li><strong class="text-white">Ceremonia:</strong> Toga S/ 50 · Medalla S/ 60 · Porta Título S/ 50</li>
+                </ul>
+              </div>
+              <div class="p-2 rounded-3 small mt-1" style="background: rgba(6,78,59,0.55); border-left: 3px solid #fbbf24; font-size:0.75rem;">
+                <strong class="text-warning d-block"><i class="bi bi-files me-1"></i>¿Qué hago con el voucher?</strong>
+                Saca <strong>2 copias legibles</strong> al voucher original y entrégalas <strong>directamente en Tesorería</strong> del instituto (Srta. Tania Herrera Cruz).
+              </div>
             </div>
-            <button class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3 py-1 shadow-sm"
-                    onclick="hercarBotApp.copyData('00-638-002361', 'Cuenta Principal BN')">
-              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta 1
-            </button>
-          </div>
-
-          <!-- Cuenta Curso de Inglés BN -->
-          <div class="p-2 px-3 rounded-2 mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);">
-            <div>
-              <span class="small d-block text-info fw-bold" style="font-size: 0.76rem;">2. Cuenta Curso de Inglés (Sacar 2 copias al voucher y entregar en Tesorería):</span>
-              <span class="fs-4 fw-bold font-monospace text-warning d-block" style="letter-spacing: 1px;">00-638-025736</span>
-            </div>
-            <button class="btn btn-sm btn-outline-light fw-bold rounded-pill px-3 py-1"
-                    onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
-              <i class="bi bi-clipboard me-1"></i> Copiar Cuenta 2
-            </button>
-          </div>
-
-          <div class="small text-white-50 mt-2" style="font-size: 0.76rem;">
-            <i class="bi bi-person-badge me-1 text-warning"></i><strong>Titular Oficial:</strong> Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo" - Paita
           </div>
         </div>
 
-        <!-- Canal Único y Reglas -->
-        <div class="p-3 bg-light rounded-3 border small mb-3">
-          <h6 class="fw-bold text-dark mb-2"><i class="bi bi-wallet2 text-primary me-1"></i> ¿Cómo se realizan los pagos oficialmente?</h6>
-          <div class="row g-2">
-            <div class="col-sm-6">
-              <div class="p-2 bg-white rounded border h-100">
-                <strong class="text-danger d-block small"><i class="bi bi-slash-circle me-1"></i>1. Solo en Ventanilla BN</strong>
-                <span class="text-muted" style="font-size: 0.76rem;"><strong>NO se paga en Págalo.pe ni en agentes.</strong> Acércate a ventanilla del Banco de la Nación indicando el DNI y nombres completos del estudiante.</span>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="p-2 bg-white rounded border h-100">
-                <strong class="text-success d-block small"><i class="bi bi-file-earmark-check me-1"></i>2. Boleta y Copias en Tesorería</strong>
-                <span class="text-muted" style="font-size: 0.76rem;"><strong>Matrícula (00-638-002361):</strong> registra en pagos.ieshercar.edu.pe, lleva original + 3 copias a Tesorería y 1 a Secretaría. <strong>Inglés (00-638-025736):</strong> saca 2 copias y entrega en Tesorería.</span>
-              </div>
+        <!-- Alerta de Prevención de Errores -->
+        <div class="p-3 rounded-3 border mb-3 small" style="background: #fffbeb; border-color: #fde68a !important; color: #78350f;">
+          <div class="d-flex align-items-start gap-2">
+            <i class="bi bi-shield-exclamation text-warning fs-5 mt-1"></i>
+            <div>
+              <strong class="d-block mb-1">Regla de Oro para Evitar Confusiones:</strong>
+              <span><strong>NO deposites Inglés en la cuenta 00-638-002361</strong>, ni deposites Matrícula en la cuenta <strong>00-638-025736</strong>. Todos los depósitos son <strong>solo presenciales en ventanilla del Banco de la Nación</strong> dando el DNI y nombres completos del estudiante (<strong>NO Págalo.pe, NO Yape, NO agentes</strong>). Titular: <em>IESTP "Hermanos Cárcamo" - Paita</em>.</span>
             </div>
           </div>
         </div>
 
         <div class="interactive-button-grid">
+          <button class="interactive-btn" data-chat-action="ver_curso_ingles">
+            <i class="bi bi-translate text-success"></i> Detalle Pago de Inglés (025736)
+          </button>
           <a href="https://pagos.ieshercar.edu.pe/" target="_blank" class="interactive-btn text-decoration-none">
-            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Registrar Voucher en el Portal
+            <i class="bi bi-cloud-arrow-up-fill text-primary"></i> Registrar Voucher Matrícula
           </a>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-rectificacion-error-cuenta">
+            <i class="bi bi-arrow-left-right text-danger"></i> ¿Me equivoqué de cuenta?
+          </button>
           <button class="interactive-btn" data-chat-action="ver_cotizador_tupa">
             <i class="bi bi-calculator text-warning"></i> Cotizador de Trámites TUPA
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_curso_ingles">
-            <i class="bi bi-translate text-success"></i> Pago Curso de Inglés
-          </button>
-          <button class="interactive-btn" data-chat-action="ver_matricula_paso_a_paso">
-            <i class="bi bi-ui-checks text-info"></i> Pasos de Matrícula
           </button>
         </div>
       </div>
     `;
 
-    this.appendBotMessage(html, "El Instituto Hermanos Cárcamo utiliza dos cuentas oficiales en el Banco de la Nación: la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno para matrícula, examen de suficiencia y titulación, y la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis para el curso de inglés. Recuerda que los pagos se realizan únicamente en ventanilla del Banco de la Nación, no en Págalo punto pe ni en agentes.", [
-      { label: "💳 Pasos de matrícula", prompt: "¿Cómo es el proceso de matrícula paso a paso en el instituto?" },
-      { label: "🧮 ¿Cuánto pagar?", prompt: "Cotizador de trámites TUPA" }
+    this.appendBotMessage(html, "Para evitar confusiones, el Instituto Hermanos Cárcamo utiliza dos cuentas oficiales distintas en ventanilla del Banco de la Nación: la cuenta cero cero, seis tres ocho, cero cero, dos tres seis uno es únicamente para matrícula de doscientos cincuenta soles, suficiencia y trámites Tupa; mientras que la cuenta cero cero, seis tres ocho, cero veinticinco, siete tres seis es exclusivamente para el curso de inglés de cuatrocientos soles, ciclo de actualización y ceremonia. Recuerda pagar solo en ventanilla, nunca por Págalo punto pe ni agentes.", [
+      { label: "🌐 Pago de Inglés (025736)", prompt: "¿Cómo y a qué cuenta bancaria pago el curso de inglés?" },
+      { label: "⚠️ Me equivoqué de cuenta", prompt: "¿Qué hago si me equivoqué de cuenta bancaria al pagar?" },
+      { label: "💳 Pasos de matrícula", prompt: "¿Cómo es el proceso de matrícula paso a paso en el instituto?" }
     ]);
   }
 
@@ -7731,26 +7803,36 @@ ${text}
         <h4 class="fw-bold mb-1 text-dark">${ing.nombre}</h4>
         <p class="small text-muted mb-3">${ing.finalidad}</p>
 
-        <!-- Bloque Destacado de Pago Oficial del Curso de Inglés -->
-        <div class="p-3 rounded-3 mb-3" style="background: linear-gradient(135deg, #0a1f4d 0%, #0f3380 100%); color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">
+        <!-- Bloque Destacado de Pago Oficial del Curso de Inglés (Anti-Confusión) -->
+        <div class="p-3 rounded-4 mb-3 shadow-sm" style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 100%); color: #ffffff; border: 1.5px solid rgba(52,211,153,0.4);">
           <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-            <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="bi bi-bank me-1"></i> Banco de la Nación</span>
-            <small class="text-white-50">Cuenta Específica del Curso de Inglés</small>
+            <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="bi bi-bank2 me-1"></i> Banco de la Nación · Solo Ventanilla</span>
+            <span class="badge bg-white bg-opacity-10 text-white fw-semibold px-2 py-1">Tasa Oficial TUPA: S/ 400.00</span>
           </div>
-          <p class="small text-white-50 mb-1">Número de Cuenta para Pago de Inglés:</p>
-          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-2 rounded mb-2" style="background: rgba(255,255,255,0.1);">
-            <code class="fs-5 fw-bold text-warning font-monospace" style="letter-spacing: 1px;">00-638-025736</code>
-            <button type="button" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3" 
+          <p class="small text-white-50 mb-1">Cuenta Bancaria <strong>EXCLUSIVA</strong> para Pago del Curso de Inglés:</p>
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 p-2 px-3 rounded-3 mb-2" style="background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22);">
+            <code class="fs-4 fw-bold text-warning font-monospace" style="letter-spacing: 1px;">00-638-025736</code>
+            <button type="button" class="btn btn-sm btn-warning text-dark fw-bold rounded-pill px-3 shadow-sm" 
                     onclick="hercarBotApp.copyData('00-638-025736', 'Cuenta Curso de Inglés BN')">
-              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta
+              <i class="bi bi-clipboard-check me-1"></i> Copiar Cuenta Inglés
             </button>
           </div>
-          <div class="p-2 rounded small" style="background: rgba(239, 68, 68, 0.2); border-left: 3px solid #f87171;">
-            <strong class="text-warning d-block mb-1"><i class="bi bi-exclamation-triangle-fill me-1"></i> Indicaciones Obligatorias de Tesorería:</strong>
-            <ul class="mb-0 ps-3 text-white" style="font-size: 0.82rem; line-height: 1.45;">
-              <li>El pago se realiza en el Banco de la Nación en la cuenta Nº <strong>00-638-025736</strong>.</li>
-              <li>Debes <strong>sacar 2 copias legibles a tu voucher</strong> original.</li>
-              <li>Entregar el voucher original y las <strong>2 copias en Tesorería</strong>, en la oficina del instituto.</li>
+
+          <!-- Escudo Anti-Confusión de Cuentas -->
+          <div class="p-2 px-3 rounded-3 small mb-2" style="background: rgba(239, 68, 68, 0.24); border-left: 3px solid #fca5a5;">
+            <strong class="text-warning d-block mb-1"><i class="bi bi-shield-exclamation me-1"></i> ¡NO CONFUNDAS LAS CUENTAS BANCARIAS!</strong>
+            <ul class="mb-0 ps-3 text-white" style="font-size: 0.80rem; line-height: 1.48;">
+              <li>✅ <strong>Usa <code>00-638-025736</code></strong> únicamente para <strong>Inglés (S/ 400.00)</strong>, Ciclo de Actualización, Pre Tecno y Ceremonia.</li>
+              <li>❌ <strong>NO deposites Inglés en <code>00-638-002361</code></strong> (esa otra cuenta es SOLO para Matrícula S/ 250, Suficiencia y trámites TUPA).</li>
+              <li>❌ <strong>NO Págalo.pe, NO Yape, NO agentes:</strong> El depósito es presencial en ventanilla del Banco de la Nación indicando DNI y nombres completos.</li>
+            </ul>
+          </div>
+
+          <div class="p-2 px-3 rounded-3 small" style="background: rgba(15, 23, 42, 0.35); border-left: 3px solid #34d399;">
+            <strong class="text-info d-block mb-1"><i class="bi bi-check2-circle me-1"></i> Pasos Obligatorios en Tesorería:</strong>
+            <ul class="mb-0 ps-3 text-white" style="font-size: 0.80rem; line-height: 1.45;">
+              <li>Saca <strong>2 copias legibles a tu voucher original</strong> del Banco de la Nación.</li>
+              <li>Entrega el voucher original y las <strong>2 copias directamente en la oficina de Tesorería</strong> del instituto (Srta. Tania Herrera Cruz).</li>
             </ul>
           </div>
         </div>
@@ -7783,19 +7865,20 @@ ${text}
         </div>
 
         <div class="interactive-button-grid">
-          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion"><i class="bi bi-mortarboard text-primary"></i> Requisitos de Titulación</button>
-          <button class="interactive-btn" data-chat-action="ver_guia_pagos"><i class="bi bi-credit-card text-warning"></i> Guía General de Pagos BN</button>
-          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-danger"></i> Horario de Tesorería</button>
+          <button class="interactive-btn" data-chat-action="ver_numero_cuenta_bn"><i class="bi bi-bank2 text-primary"></i> Comparar 2 Cuentas BN</button>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-rectificacion-error-cuenta"><i class="bi bi-arrow-left-right text-danger"></i> ¿Me equivoqué de cuenta?</button>
+          <button class="interactive-btn" data-chat-action="ver_tramite_especifico" data-chat-val="tramite-titulacion"><i class="bi bi-mortarboard text-success"></i> Requisitos de Titulación</button>
+          <button class="interactive-btn" data-chat-action="ver_contacto_ubicacion"><i class="bi bi-geo-alt text-warning"></i> Horario de Tesorería</button>
         </div>
       </div>
     `;
 
     const inglesChips = [
-      { label: 'Requisitos de Titulación', prompt: '¿Cuáles son los requisitos para titularse profesionalmente?' },
-      { label: 'Horarios de Tesorería', prompt: '¿Dónde queda y cuál es el horario de atención de Tesorería?' },
-      { label: 'Cuenta General Matrícula', prompt: '¿Cuál es el número de cuenta bancaria para matrícula regular?' }
+      { label: '🏦 Comparar 2 Cuentas BN', prompt: '¿Cuál es la diferencia entre las dos cuentas bancarias del Banco de la Nación?' },
+      { label: '⚠️ Error de cuenta', prompt: '¿Qué hago si me equivoqué de cuenta bancaria al pagar?' },
+      { label: '🎓 Requisitos de Titulación', prompt: '¿Cuáles son los requisitos para titularse profesionalmente?' }
     ];
-    this.appendBotMessage(html, "¡Hola! Te cuento que para el curso de inglés de titulación, el pago se realiza en el Banco de la Nación a la cuenta específica cero cero, seis tres ocho, cero dos cinco siete tres seis. Recuerda sacar dos copias a tu voucher y entregarlos físicamente en Tesorería del instituto para que no haya retrasos en la entrega de tu certificado. ¡En tu pantalla tienes el número de cuenta y las indicaciones oficiales!", inglesChips);
+    this.appendBotMessage(html, "¡Hola! Muy importante para no confundir cuentas: el pago del curso de inglés de cuatrocientos soles se realiza únicamente en ventanilla del Banco de la Nación a la cuenta exclusiva cero cero, seis tres ocho, cero dos cinco siete tres seis. Nunca uses la cuenta de matrícula para inglés. Saca dos copias legibles a tu voucher y entrégalas en la oficina de Tesorería del instituto.", inglesChips);
   }
 
   renderCarreraCompleta(carrera) {
@@ -8087,11 +8170,34 @@ ${text}
         </div>
         <p class="small text-muted mb-3">Sigue estos pasos para que Tesorería valide tu comprobante sin inconvenientes:</p>
 
-        <div class="alert alert-light border small mb-3">
-          <strong>Cta. Principal (Matrícula, Suficiencia, Título):</strong> <code class="fs-6">${cuentaBN}</code><br>
-          <strong>Cta. Curso de Inglés:</strong> <code class="fs-6">${cuentaInglesBN}</code> <small class="text-muted">(2 copias voucher en Tesorería)</small><br>
-          <strong>Canal Obligatorio:</strong> Solo presencial en ventanilla del Banco de la Nación (No Págalo.pe, no agentes)<br>
-          <strong>Titular:</strong> IESTP Hermanos Cárcamo - Paita
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <div class="p-3 rounded-3 border h-100" style="background: rgba(15, 51, 128, 0.05); border-color: rgba(15, 51, 128, 0.25) !important;">
+              <span class="badge bg-primary mb-1">1. Matrícula, Suficiencia y TUPA</span>
+              <div class="d-flex align-items-center justify-content-between gap-2 my-1">
+                <code class="fs-5 fw-bold text-primary">${cuentaBN}</code>
+                <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1" onclick="hercarBotApp.copyData('${cuentaBN}', 'Cuenta Principal BN')">
+                  <i class="bi bi-clipboard me-1"></i>Copiar
+                </button>
+              </div>
+              <small class="text-muted d-block" style="font-size:0.75rem;">Registrar voucher en <strong>pagos.ieshercar.edu.pe</strong> + original y 3 copias en Tesorería.</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 rounded-3 border h-100" style="background: rgba(5, 150, 105, 0.06); border-color: rgba(5, 150, 105, 0.28) !important;">
+              <span class="badge bg-success mb-1">2. Curso de Inglés y Ceremonia</span>
+              <div class="d-flex align-items-center justify-content-between gap-2 my-1">
+                <code class="fs-5 fw-bold text-success">${cuentaInglesBN}</code>
+                <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1" onclick="hercarBotApp.copyData('${cuentaInglesBN}', 'Cuenta Curso de Inglés BN')">
+                  <i class="bi bi-clipboard me-1"></i>Copiar
+                </button>
+              </div>
+              <small class="text-muted d-block" style="font-size:0.75rem;">Inglés Básico (S/ 400): sacar <strong>2 copias</strong> del voucher y entregar en Tesorería.</small>
+            </div>
+          </div>
+        </div>
+        <div class="alert alert-warning py-2 px-3 small mb-3 border-warning">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i> <strong>Solo Ventanilla del Banco de la Nación</strong> (NO Págalo.pe, NO Yape, NO agentes). Titular: <strong>IESTP Hermanos Cárcamo - Paita</strong>. ¡No confundas las cuentas!
         </div>
 
         <div class="pagos-steps-wrapper mb-3">

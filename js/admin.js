@@ -251,6 +251,9 @@ function initAdminMobileSidebar() {
     if (activeSectionId === 'mi-perfil' && typeof window.renderMiPerfilSection === 'function') {
       window.renderMiPerfilSection();
     }
+    if (activeSectionId === 'seguridad' && typeof window.refreshSecurityCenter === 'function') {
+      window.refreshSecurityCenter();
+    }
 
     if (doScroll) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4782,4 +4785,306 @@ function initProfilePageEvents() {
 initHeaderUserProfile();
 initProfilePageEvents();
 renderMiPerfilSection();
+
+// =========================================================================
+// CENTRO DE SEGURIDAD ZERO-TRUST, AUTO-CIERRE POR INACTIVIDAD Y RESPALDO
+// =========================================================================
+(function initSecurityAndAdvancedConfigCenter() {
+  let inactivityTimerId = null;
+
+  function getActorEmail() {
+    const sess = typeof getHercarAdminSession === 'function' ? getHercarAdminSession() : null;
+    return (sess && (sess.email || sess.username)) || 'admin@ieshercar.edu.pe';
+  }
+
+  function renderSecurityCenter() {
+    if (typeof HercarSQL === 'undefined' || typeof HercarSQL.getSecurityScore !== 'function') return;
+
+    const posture = HercarSQL.getSecurityScore();
+    const policy = posture.policy;
+    const locks = typeof HercarSQL.getBruteForceLocks === 'function' ? HercarSQL.getBruteForceLocks() : [];
+    const logs = typeof HercarSQL.getAuditLogs === 'function' ? HercarSQL.getAuditLogs() : [];
+
+    // 1. KPIs y Badge Principal
+    const badgeEl = document.getElementById('sec-posture-badge');
+    const scoreValEl = document.getElementById('sec-kpi-score-val');
+    const levelValEl = document.getElementById('sec-kpi-level-val');
+    const scoreBarEl = document.getElementById('sec-kpi-score-bar');
+    const locksCountEl = document.getElementById('sec-kpi-locks-count');
+    const bfSummaryEl = document.getElementById('sec-kpi-bf-summary');
+    const eventsCountEl = document.getElementById('sec-kpi-events-count');
+    const timeoutLabelEl = document.getElementById('sec-kpi-timeout-label');
+
+    const isHigh = posture.score >= 85;
+    const tone = isHigh ? 'success' : (posture.score >= 65 ? 'warning' : 'danger');
+
+    if (badgeEl) {
+      badgeEl.className = `badge bg-${tone}-subtle text-${tone} border border-${tone}-subtle rounded-pill px-3 py-1`;
+      badgeEl.innerHTML = `<i class="bi bi-shield-check me-1"></i>Blindaje ${posture.level} (${posture.score}%)`;
+    }
+    if (scoreValEl) {
+      scoreValEl.textContent = `${posture.score}%`;
+      scoreValEl.className = `h2 fw-bold text-${tone} mb-0`;
+    }
+    if (levelValEl) {
+      levelValEl.textContent = posture.level;
+      levelValEl.className = `fw-semibold text-${tone}`;
+    }
+    if (scoreBarEl) {
+      scoreBarEl.style.width = `${posture.score}%`;
+      scoreBarEl.className = `progress-bar bg-${tone}`;
+    }
+    const activeLocks = locks.filter(l => l.locked);
+    if (locksCountEl) locksCountEl.textContent = activeLocks.length;
+    if (bfSummaryEl) bfSummaryEl.textContent = `Límite: ${policy.maxLoginAttempts} intentos / ${policy.lockDurationMinutes} min`;
+    if (eventsCountEl) eventsCountEl.textContent = logs.length;
+    if (timeoutLabelEl) timeoutLabelEl.textContent = policy.sessionTimeoutMinutes > 0 ? `${policy.sessionTimeoutMinutes} min` : 'Manual';
+
+    // 2. Sincronizar controles del formulario de políticas
+    const maxAttEl = document.getElementById('sec-max-attempts');
+    const lockMinEl = document.getElementById('sec-lock-minutes');
+    const timeoutEl = document.getElementById('sec-session-timeout');
+    const strongPwdEl = document.getElementById('sec-enforce-strong-pwd');
+    const reqInviteEl = document.getElementById('sec-require-invite');
+    const strictAuditEl = document.getElementById('sec-strict-audit');
+    const lastUpdEl = document.getElementById('sec-last-updated-label');
+
+    if (maxAttEl) maxAttEl.value = String(policy.maxLoginAttempts);
+    if (lockMinEl) lockMinEl.value = String(policy.lockDurationMinutes);
+    if (timeoutEl) timeoutEl.value = String(policy.sessionTimeoutMinutes);
+    if (strongPwdEl) strongPwdEl.checked = Boolean(policy.enforceStrongPassword);
+    if (reqInviteEl) reqInviteEl.checked = Boolean(policy.requireInviteForRegister);
+    if (strictAuditEl) strictAuditEl.checked = Boolean(policy.strictAuditMode);
+    if (lastUpdEl) {
+      const when = policy.updatedAt ? new Date(policy.updatedAt).toLocaleString('es-PE') : 'Configuración inicial';
+      lastUpdEl.innerHTML = `<i class="bi bi-clock-history me-1"></i>Actualizado: ${escapeHtml(when)}`;
+    }
+
+    // 3. Checklist de Blindaje
+    const checklistEl = document.getElementById('sec-checklist-container');
+    if (checklistEl) {
+      checklistEl.innerHTML = posture.checks.map(c => `
+        <li class="d-flex align-items-center justify-content-between gap-2 p-2 rounded-3 sec-check-row">
+          <span>
+            <i class="bi ${c.passed ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-warning'} me-2"></i>
+            ${escapeHtml(c.label)}
+          </span>
+          <span class="badge ${c.passed ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'} rounded-pill">${c.passed ? 'Activo' : 'Revisar'}</span>
+        </li>
+      `).join('');
+    }
+
+    // 4. Bloqueos Anti-Fuerza Bruta
+    const locksEl = document.getElementById('sec-locks-container');
+    if (locksEl) {
+      if (locks.length === 0) {
+        locksEl.innerHTML = `
+          <div class="d-flex align-items-center gap-2 p-2 rounded-3 bg-success-subtle text-success">
+            <i class="bi bi-shield-fill-check fs-5"></i>
+            <div>
+              <strong class="d-block">Sin cuentas bloqueadas ni intentos sospechosos</strong>
+              <span style="font-size:0.75rem;">El escudo anti-fuerza bruta se encuentra en vigilancia continua.</span>
+            </div>
+          </div>
+        `;
+      } else {
+        locksEl.innerHTML = locks.map(l => `
+          <div class="d-flex align-items-center justify-content-between gap-2 p-2 mb-2 rounded-3 border">
+            <div>
+              <strong class="d-block text-dark">${escapeHtml(l.identifier)}</strong>
+              <small class="${l.locked ? 'text-danger fw-semibold' : 'text-warning'}">
+                ${l.locked ? `🔒 Bloqueada (${l.remainingMin} min restantes · ${l.attempts} intentos)` : `⚠️ ${l.attempts} intento(s) fallido(s)`}
+              </small>
+            </div>
+            <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1 btn-unlock-single-bf" data-bf-id="${escapeHtml(l.identifier)}">
+              <i class="bi bi-unlock me-1"></i>Desbloquear
+            </button>
+          </div>
+        `).join('');
+
+        locksEl.querySelectorAll('.btn-unlock-single-bf').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-bf-id');
+            if (!id) return;
+            HercarSQL.clearFailedLoginAttempts(id);
+            HercarSQL.logAudit(getActorEmail(), 'SECURITY_UNLOCK_SINGLE', `Cuenta desbloqueada manualmente: ${id}`);
+            renderSecurityCenter();
+            if (typeof window.refreshSQLData === 'function') window.refreshSQLData();
+            showAdminToast(`Cuenta "${id}" desbloqueada correctamente.`, 'success', 'bi-unlock-fill');
+          });
+        });
+      }
+    }
+
+    // 5. Últimos Eventos de Seguridad
+    const recentEl = document.getElementById('sec-recent-events-container');
+    if (recentEl) {
+      const secLogs = logs.slice(0, 8);
+      if (secLogs.length === 0) {
+        recentEl.innerHTML = '<div class="small text-muted">Aún no se registran eventos de seguridad.</div>';
+      } else {
+        recentEl.innerHTML = secLogs.map(log => {
+          const act = String(log.action || '');
+          const badgeTone = (act.includes('FAILED') || act.includes('ATTACK') || act.includes('BLOCKED'))
+            ? 'danger'
+            : (act.includes('SECURITY') || act.includes('RESET') ? 'warning' : 'primary');
+          const dt = log.created_at ? new Date(log.created_at).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '';
+          return `
+            <div class="p-2 rounded-3 border sec-event-row">
+              <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+                <span class="badge bg-${badgeTone}-subtle text-${badgeTone} font-monospace" style="font-size:0.68rem;">${escapeHtml(act)}</span>
+                <small class="text-muted" style="font-size:0.70rem;">${escapeHtml(dt)} · ${escapeHtml(log.ip_origin || '')}</small>
+              </div>
+              <div class="small text-dark" style="font-size:0.76rem;">${escapeHtml(log.details || '')}</div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  }
+
+  function resetInactivityMonitor() {
+    if (inactivityTimerId) clearTimeout(inactivityTimerId);
+    if (typeof HercarSQL === 'undefined' || typeof HercarSQL.getSecurityPolicy !== 'function') return;
+    const policy = HercarSQL.getSecurityPolicy();
+    const mins = Number(policy.sessionTimeoutMinutes) || 0;
+    if (mins <= 0) return;
+    inactivityTimerId = setTimeout(() => {
+      try {
+        HercarSQL.logAudit(getActorEmail(), 'SESSION_TIMEOUT', `Sesión cerrada automáticamente tras ${mins} minutos de inactividad.`);
+        sessionStorage.removeItem('hercar_admin_session');
+        sessionStorage.removeItem('hercar_current_user');
+        localStorage.removeItem('hercar_admin_session');
+        localStorage.removeItem('hercar_current_user');
+      } catch (e) {}
+      window.location.replace('login.html?auth=invalid');
+    }, mins * 60 * 1000);
+  }
+
+  ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
+    window.addEventListener(evt, resetInactivityMonitor, { passive: true });
+  });
+
+  // Botón Guardar Políticas de Seguridad
+  const btnSaveSec = document.getElementById('btn-save-security-policy');
+  if (btnSaveSec) {
+    btnSaveSec.addEventListener('click', () => {
+      if (typeof HercarSQL === 'undefined' || typeof HercarSQL.saveSecurityPolicy !== 'function') return;
+      const updates = {
+        maxLoginAttempts: Number(document.getElementById('sec-max-attempts')?.value || 5),
+        lockDurationMinutes: Number(document.getElementById('sec-lock-minutes')?.value || 15),
+        sessionTimeoutMinutes: Number(document.getElementById('sec-session-timeout')?.value || 30),
+        enforceStrongPassword: Boolean(document.getElementById('sec-enforce-strong-pwd')?.checked),
+        requireInviteForRegister: Boolean(document.getElementById('sec-require-invite')?.checked),
+        strictAuditMode: Boolean(document.getElementById('sec-strict-audit')?.checked)
+      };
+      HercarSQL.saveSecurityPolicy(updates, getActorEmail());
+      renderSecurityCenter();
+      resetInactivityMonitor();
+      if (typeof window.refreshSQLData === 'function') window.refreshSQLData();
+      showAdminToast('Políticas de seguridad institucional actualizadas y activas.', 'success', 'bi-shield-check');
+    });
+  }
+
+  // Botón Actualizar Panel de Seguridad
+  const btnRefreshSec = document.getElementById('btn-refresh-security-panel');
+  if (btnRefreshSec) {
+    btnRefreshSec.addEventListener('click', () => {
+      renderSecurityCenter();
+      showAdminToast('Panel de seguridad actualizado en tiempo real.', 'info', 'bi-arrow-clockwise');
+    });
+  }
+
+  // Botón Desbloquear Todas las Cuentas
+  const btnUnlockAll = document.getElementById('btn-unlock-all-bf');
+  if (btnUnlockAll) {
+    btnUnlockAll.addEventListener('click', () => {
+      if (typeof HercarSQL === 'undefined' || typeof HercarSQL.clearAllBruteForceLocks !== 'function') return;
+      const count = HercarSQL.clearAllBruteForceLocks(getActorEmail());
+      renderSecurityCenter();
+      if (typeof window.refreshSQLData === 'function') window.refreshSQLData();
+      showAdminToast(count > 0 ? `Se desbloquearon ${count} cuenta(s) del escudo anti-fuerza bruta.` : 'No existían cuentas bloqueadas.', 'success', 'bi-unlock-fill');
+    });
+  }
+
+  // Botón Exportar Auditoría de Seguridad (.json)
+  const btnExportAudit = document.getElementById('btn-export-security-audit');
+  if (btnExportAudit) {
+    btnExportAudit.addEventListener('click', () => {
+      if (typeof HercarSQL === 'undefined') return;
+      const report = {
+        institucion: 'IESTP Hermanos Cárcamo - Paita',
+        generadoEn: new Date().toISOString(),
+        generadoPor: getActorEmail(),
+        posturaSeguridad: HercarSQL.getSecurityScore(),
+        bloqueosActivos: HercarSQL.getBruteForceLocks(),
+        bitacoraAuditoria: HercarSQL.getAuditLogs()
+      };
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hercarbot_auditoria_seguridad_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showAdminToast('Reporte de auditoría de seguridad exportado en JSON.', 'success', 'bi-shield-check');
+    });
+  }
+
+  // Botón Forzar Cierre de Sesión
+  const btnForceLogout = document.getElementById('btn-force-logout-all');
+  if (btnForceLogout) {
+    btnForceLogout.addEventListener('click', () => {
+      if (!confirm('¿Deseas cerrar tu sesión actual de forma inmediata y exigir nueva autenticación?')) return;
+      try {
+        if (typeof HercarSQL !== 'undefined') {
+          HercarSQL.logAudit(getActorEmail(), 'SESSION_FORCE_LOGOUT', 'Cierre forzado de sesión ejecutado desde Centro de Seguridad.');
+        }
+        sessionStorage.removeItem('hercar_admin_session');
+        sessionStorage.removeItem('hercar_current_user');
+        localStorage.removeItem('hercar_admin_session');
+        localStorage.removeItem('hercar_current_user');
+      } catch (e) {}
+      window.location.replace('login.html?logged_out=1');
+    });
+  }
+
+  // Botón Respaldo Total Institucional (.json)
+  const btnExportBackup = document.getElementById('btn-export-full-backup');
+  if (btnExportBackup) {
+    btnExportBackup.addEventListener('click', () => {
+      const backup = {
+        sistema: 'HercarBot IA - IESTP Hermanos Cárcamo',
+        version: '2026-v22',
+        exportadoEn: new Date().toISOString(),
+        exportadoPor: getActorEmail(),
+        cuentasOficialesBN: {
+          principalMatriculaTupa: '00-638-002361',
+          cursoInglesProductivas: '00-638-025736'
+        },
+        politicaSeguridad: typeof HercarSQL !== 'undefined' && HercarSQL.getSecurityPolicy ? HercarSQL.getSecurityPolicy() : {},
+        estadisticasSQL: typeof HercarSQL !== 'undefined' && HercarSQL.getStats ? HercarSQL.getStats() : {},
+        comunicadosPersonalizados: JSON.parse(localStorage.getItem('hercarbot_custom_announcements') || '[]'),
+        faqsPersonalizadas: JSON.parse(localStorage.getItem('hercarbot_custom_faqs') || '[]')
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hercarbot_respaldo_institucional_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showAdminToast('Respaldo institucional completo descargado correctamente.', 'success', 'bi-cloud-download');
+    });
+  }
+
+  window.refreshSecurityCenter = renderSecurityCenter;
+  renderSecurityCenter();
+  resetInactivityMonitor();
+})();
+
 

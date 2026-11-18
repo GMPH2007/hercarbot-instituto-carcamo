@@ -57,15 +57,39 @@
     }
   }
 
+  const SECURITY_POLICY_KEY = 'hercar_security_policy_v1';
+  const DEFAULT_SECURITY_POLICY = {
+    maxLoginAttempts: 5,
+    lockDurationMinutes: 15,
+    sessionTimeoutMinutes: 30,
+    enforceStrongPassword: true,
+    requireInviteForRegister: true,
+    strictAuditMode: true,
+    updatedAt: null,
+    updatedBy: 'SISTEMA'
+  };
+
+  function readSecurityPolicy() {
+    try {
+      const raw = localStorage.getItem(SECURITY_POLICY_KEY);
+      if (!raw) return Object.assign({}, DEFAULT_SECURITY_POLICY);
+      const parsed = JSON.parse(raw);
+      return Object.assign({}, DEFAULT_SECURITY_POLICY, parsed);
+    } catch (e) {
+      return Object.assign({}, DEFAULT_SECURITY_POLICY);
+    }
+  }
+
   function checkBruteForceLock(identifier) {
     try {
       const key = 'hercar_bf_' + String(identifier).trim().toLowerCase();
       const raw = localStorage.getItem(key);
       if (!raw) return { locked: false, attempts: 0 };
       const data = JSON.parse(raw);
+      const policy = readSecurityPolicy();
       if (data.lockUntil && Date.now() < data.lockUntil) {
         const remainingMin = Math.ceil((data.lockUntil - Date.now()) / (60 * 1000));
-        return { locked: true, remainingMin, attempts: data.attempts || 5 };
+        return { locked: true, remainingMin, attempts: data.attempts || policy.maxLoginAttempts };
       }
       if (data.lockUntil && Date.now() >= data.lockUntil) {
         // Bloqueo expiró, resetear
@@ -80,12 +104,15 @@
 
   function recordFailedLoginAttempt(identifier) {
     try {
+      const policy = readSecurityPolicy();
+      const maxAtt = Math.max(3, Math.min(10, Number(policy.maxLoginAttempts) || 5));
+      const lockMins = Math.max(5, Math.min(120, Number(policy.lockDurationMinutes) || 15));
       const key = 'hercar_bf_' + String(identifier).trim().toLowerCase();
       const raw = localStorage.getItem(key);
       const data = raw ? JSON.parse(raw) : { attempts: 0, lockUntil: 0 };
       data.attempts = (data.attempts || 0) + 1;
-      if (data.attempts >= 5) {
-        data.lockUntil = Date.now() + (15 * 60 * 1000); // 15 minutos de bloqueo estricto
+      if (data.attempts >= maxAtt) {
+        data.lockUntil = Date.now() + (lockMins * 60 * 1000);
       }
       localStorage.setItem(key, JSON.stringify(data));
       return data.attempts;
@@ -216,6 +243,84 @@
 
     clearFailedLoginAttempts(identifier) {
       clearFailedLoginAttempts(identifier);
+    },
+
+    getSecurityPolicy() {
+      return readSecurityPolicy();
+    },
+
+    saveSecurityPolicy(updates, actorEmail = 'admin@ieshercar.edu.pe') {
+      const current = readSecurityPolicy();
+      const next = Object.assign({}, current, {
+        maxLoginAttempts: Math.max(3, Math.min(10, Number(updates.maxLoginAttempts ?? current.maxLoginAttempts) || 5)),
+        lockDurationMinutes: Math.max(5, Math.min(120, Number(updates.lockDurationMinutes ?? current.lockDurationMinutes) || 15)),
+        sessionTimeoutMinutes: Math.max(0, Math.min(240, Number(updates.sessionTimeoutMinutes ?? current.sessionTimeoutMinutes) || 0)),
+        enforceStrongPassword: updates.enforceStrongPassword !== undefined ? Boolean(updates.enforceStrongPassword) : current.enforceStrongPassword,
+        requireInviteForRegister: updates.requireInviteForRegister !== undefined ? Boolean(updates.requireInviteForRegister) : current.requireInviteForRegister,
+        strictAuditMode: updates.strictAuditMode !== undefined ? Boolean(updates.strictAuditMode) : current.strictAuditMode,
+        updatedAt: new Date().toISOString(),
+        updatedBy: actorEmail || 'admin@ieshercar.edu.pe'
+      });
+      try {
+        localStorage.setItem(SECURITY_POLICY_KEY, JSON.stringify(next));
+      } catch (e) {}
+      this.logAudit(actorEmail, 'SECURITY_POLICY_UPDATED', `Políticas actualizadas: Máx ${next.maxLoginAttempts} intentos, bloqueo ${next.lockDurationMinutes} min, timeout sesión ${next.sessionTimeoutMinutes || 'Desactivado'} min.`);
+      return next;
+    },
+
+    getBruteForceLocks() {
+      const locks = [];
+      try {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('hercar_bf_')) keys.push(k);
+        }
+        keys.forEach(k => {
+          const identifier = k.replace('hercar_bf_', '');
+          const status = checkBruteForceLock(identifier);
+          if (status.locked || status.attempts > 0) {
+            locks.push({
+              identifier,
+              attempts: status.attempts,
+              locked: status.locked,
+              remainingMin: status.remainingMin || 0
+            });
+          }
+        });
+      } catch (e) {}
+      return locks;
+    },
+
+    clearAllBruteForceLocks(actorEmail = 'admin@ieshercar.edu.pe') {
+      let cleared = 0;
+      try {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('hercar_bf_')) keys.push(k);
+        }
+        keys.forEach(k => {
+          localStorage.removeItem(k);
+          cleared++;
+        });
+      } catch (e) {}
+      this.logAudit(actorEmail, 'SECURITY_LOCKS_CLEARED', `Se desbloquearon ${cleared} registro(s) del escudo anti-fuerza bruta.`);
+      return cleared;
+    },
+
+    getSecurityScore() {
+      const policy = readSecurityPolicy();
+      const checks = [
+        { id: 'sha256', label: 'Hashing Criptográfico SHA-256 (WebCrypto)', passed: true, weight: 25 },
+        { id: 'bruteforce', label: `Escudo Anti-Fuerza Bruta (${policy.maxLoginAttempts} intentos / ${policy.lockDurationMinutes} min)`, passed: policy.maxLoginAttempts <= 7, weight: 20 },
+        { id: 'timeout', label: policy.sessionTimeoutMinutes > 0 ? `Auto-cierre por inactividad (${policy.sessionTimeoutMinutes} min)` : 'Auto-cierre por inactividad desactivado', passed: policy.sessionTimeoutMinutes > 0, weight: 15 },
+        { id: 'strongpwd', label: 'Política de contraseñas seguras obligatoria', passed: Boolean(policy.enforceStrongPassword), weight: 15 },
+        { id: 'invite', label: 'Registro docente protegido por enlace/clave oficial', passed: Boolean(policy.requireInviteForRegister), weight: 15 },
+        { id: 'audit', label: 'Bitácora de auditoría SQL estricta', passed: Boolean(policy.strictAuditMode), weight: 10 }
+      ];
+      const score = checks.reduce((acc, c) => acc + (c.passed ? c.weight : 0), 0);
+      return { score, level: score >= 90 ? 'ÓPTIMO' : (score >= 70 ? 'ALTO' : 'MODERADO'), checks, policy };
     },
 
     // Esquema DDL Relacional SQL Oficial

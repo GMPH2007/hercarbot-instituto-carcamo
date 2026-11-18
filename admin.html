@@ -30,7 +30,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- Estilos del Admin con Cache Buster -->
-  <link rel="stylesheet" href="css/admin.css?v=20261112k">
+  <link rel="stylesheet" href="css/admin.css?v=20261118a">
 
   <!-- Blindaje Anti-Hacker y Anti-FOUC: El panel jamás se muestra sin antes autenticarse en el login -->
   <style id="admin-auth-guard-style">body { display: none !important; opacity: 0 !important; visibility: hidden !important; }</style>
@@ -146,7 +146,7 @@
         </a>
       </li>
 
-      <li class="sidebar-category">SISTEMA & BASE DE DATOS</li>
+      <li class="sidebar-category">SISTEMA, CONFIGURACIÓN & SEGURIDAD</li>
       <li>
         <a href="#database-sql">
           <i class="bi bi-database-fill-check text-success"></i>
@@ -154,9 +154,15 @@
         </a>
       </li>
       <li>
+        <a href="#seguridad">
+          <i class="bi bi-shield-lock-fill text-warning"></i>
+          <span>Centro de Seguridad</span>
+        </a>
+      </li>
+      <li>
         <a href="#configuracion">
-          <i class="bi bi-gear-fill"></i>
-          <span>Configuración & Demo</span>
+          <i class="bi bi-sliders2-vertical text-info"></i>
+          <span>Configuración Avanzada</span>
         </a>
       </li>
 
@@ -1002,67 +1008,311 @@
       </div>
     </section>
 
-    <!-- CONFIGURACIÓN DE IA GEMINI -->
-    <section id="configuracion" class="admin-card mb-4">
-      <div class="admin-card-header">
-        <h5><i class="bi bi-cpu-fill me-2 text-primary"></i> Configuración del Motor de Inteligencia Artificial</h5>
+    <!-- ==========================================
+         SECCIÓN: CENTRO DE SEGURIDAD & BLINDAJE ZERO-TRUST
+         ========================================== -->
+    <section id="seguridad" class="admin-card security-center-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-shield-lock-fill me-2 text-warning"></i> Centro de Seguridad & Blindaje Institucional</h5>
+            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1" id="sec-posture-badge" style="font-size:0.72rem;">
+              <i class="bi bi-shield-check me-1"></i>Blindaje Óptimo (100%)
+            </span>
+          </div>
+          <small class="text-muted">Control de políticas criptográficas SHA-256, escudo anti-fuerza bruta, auto-cierre de sesión y auditoría de accesos.</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" id="btn-export-security-audit">
+            <i class="bi bi-file-earmark-arrow-down me-1"></i> Exportar Auditoría (.json)
+          </button>
+          <button type="button" class="btn btn-outline-warning btn-sm rounded-pill px-3 shadow-sm" id="btn-unlock-all-bf">
+            <i class="bi bi-unlock-fill me-1"></i> Desbloquear Cuentas
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm" id="btn-force-logout-all">
+            <i class="bi bi-power me-1"></i> Forzar Cierre de Sesión
+          </button>
+        </div>
       </div>
+
       <div class="admin-card-body">
+        <!-- KPIs de Seguridad en Tiempo Real -->
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="sec-kpi-tile sec-kpi-score p-3 rounded-4 border h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-semibold text-muted">Índice de Blindaje</span>
+                <span class="sec-kpi-icon bg-success-subtle text-success"><i class="bi bi-shield-fill-check"></i></span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 fw-bold text-success mb-0" id="sec-kpi-score-val">100%</span>
+                <small class="fw-semibold text-success" id="sec-kpi-level-val">ÓPTIMO</small>
+              </div>
+              <div class="progress mt-2" style="height: 6px; border-radius: 99px;">
+                <div class="progress-bar bg-success" id="sec-kpi-score-bar" style="width: 100%; transition: width 0.4s ease;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="sec-kpi-tile p-3 rounded-4 border h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-semibold text-muted">Cifrado de Credenciales</span>
+                <span class="sec-kpi-icon bg-primary-subtle text-primary"><i class="bi bi-key-fill"></i></span>
+              </div>
+              <div class="h4 fw-bold text-primary mb-1">SHA-256</div>
+              <small class="text-muted">WebCrypto nativo · Cero puertas traseras</small>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="sec-kpi-tile p-3 rounded-4 border h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-semibold text-muted">Escudo Anti-Fuerza Bruta</span>
+                <span class="sec-kpi-icon bg-danger-subtle text-danger"><i class="bi bi-bricks"></i></span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 fw-bold text-danger mb-0" id="sec-kpi-locks-count">0</span>
+                <small class="text-muted">bloqueo(s) activos</small>
+              </div>
+              <small class="text-muted d-block mt-1" id="sec-kpi-bf-summary">Límite: 5 intentos / 15 min</small>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="sec-kpi-tile p-3 rounded-4 border h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-semibold text-muted">Eventos Auditados</span>
+                <span class="sec-kpi-icon bg-warning-subtle text-warning"><i class="bi bi-journal-check"></i></span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2">
+                <span class="h2 fw-bold text-dark mb-0" id="sec-kpi-events-count">0</span>
+                <small class="text-muted">registros SQL</small>
+              </div>
+              <small class="text-muted d-block mt-1">Último control: <span id="sec-kpi-timeout-label">30 min</span></small>
+            </div>
+          </div>
+        </div>
+
         <div class="row g-4">
-          <div class="col-lg-7">
-            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-              <h6 class="fw-bold mb-0">Google Gemini API Key (Opcional)</h6>
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1" style="font-size:0.75rem;">
-                <i class="bi bi-box-arrow-up-right me-1"></i>Obtener clave gratis en Google AI Studio
-              </a>
-            </div>
-            <p class="text-muted small mb-3">
-              El chatbot cuenta con un <strong>motor semántico NLP institucional integrado que funciona 100% sin internet</strong>. Si deseas habilitar respuestas generativas avanzadas con Google Gemini, ingresa tu clave API aquí:
-            </p>
-            <div class="input-group mb-2">
-              <input type="password" id="gemini-api-key" class="form-control" placeholder="AIzaSy..." autocomplete="off">
-              <button class="btn btn-outline-secondary" type="button" id="btn-toggle-key-visibility" title="Mostrar u ocultar clave">
-                <i class="bi bi-eye" id="icon-toggle-key"></i>
-              </button>
-              <button class="btn btn-primary px-3" id="btn-save-gemini-key">Guardar Clave</button>
-            </div>
-            <div class="row g-2 align-items-center mb-3">
-              <div class="col-sm-6">
-                <label for="gemini-model-select" class="form-label small text-muted mb-1">Modelo Gemini:</label>
-                <select id="gemini-model-select" class="form-select form-select-sm">
-                  <option value="auto">⚡ Detección Automática (Recomendado)</option>
-                  <option value="gemini-2.0-flash">gemini-2.0-flash (Más rápido y moderno)</option>
-                  <option value="gemini-1.5-flash">gemini-1.5-flash (Alta compatibilidad)</option>
-                  <option value="gemini-1.5-flash-8b">gemini-1.5-flash-8b (Bajo consumo)</option>
-                  <option value="gemini-2.5-flash">gemini-2.5-flash (Experimental)</option>
-                  <option value="gemini-pro">gemini-pro (Estándar)</option>
+          <!-- Columna Izquierda: Políticas Configurables -->
+          <div class="col-lg-6">
+            <div class="p-4 rounded-4 border sec-panel-box h-100">
+              <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <div>
+                  <h6 class="fw-bold mb-0"><i class="bi bi-sliders text-primary me-2"></i>Políticas de Seguridad Institucional</h6>
+                  <small class="text-muted">Los cambios se guardan en SQL/LocalStorage y se aplican inmediatamente.</small>
+                </div>
+                <span class="badge bg-primary-subtle text-primary rounded-pill">Zero-Trust</span>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                  <label for="sec-max-attempts" class="form-label small fw-semibold">Máx. Intentos Fallidos</label>
+                  <select id="sec-max-attempts" class="form-select form-select-sm">
+                    <option value="3">3 intentos (Máxima Seguridad)</option>
+                    <option value="5" selected>5 intentos (Estándar Institucional)</option>
+                    <option value="7">7 intentos (Moderado)</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <label for="sec-lock-minutes" class="form-label small fw-semibold">Duración de Bloqueo</label>
+                  <select id="sec-lock-minutes" class="form-select form-select-sm">
+                    <option value="10">10 minutos</option>
+                    <option value="15" selected>15 minutos (Recomendado)</option>
+                    <option value="30">30 minutos</option>
+                    <option value="60">60 minutos (Estricto)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="sec-session-timeout" class="form-label small fw-semibold">Auto-cierre de Sesión por Inactividad</label>
+                <select id="sec-session-timeout" class="form-select form-select-sm">
+                  <option value="15">15 minutos sin actividad</option>
+                  <option value="30" selected>30 minutos sin actividad (Recomendado)</option>
+                  <option value="60">60 minutos sin actividad</option>
+                  <option value="0">Desactivado (Solo cierre manual)</option>
                 </select>
               </div>
-              <div class="col-sm-6 d-flex align-items-end">
-                <button class="btn btn-outline-success btn-sm rounded-pill px-3 w-100" id="btn-test-gemini-key" style="height:31px;">
-                  <i class="bi bi-lightning-charge-fill me-1"></i> Probar Conexión con Gemini en Vivo
+
+              <div class="d-flex flex-column gap-2 mb-4">
+                <div class="form-check form-switch p-2 ps-5 rounded-3 border sec-switch-item">
+                  <input class="form-check-input" type="checkbox" role="switch" id="sec-enforce-strong-pwd" checked>
+                  <label class="form-check-label small fw-semibold d-block" for="sec-enforce-strong-pwd">Exigir contraseñas seguras en nuevos registros</label>
+                  <small class="text-muted d-block" style="font-size:0.73rem;">Valida longitud mínima y fortaleza criptográfica antes de crear cuentas.</small>
+                </div>
+
+                <div class="form-check form-switch p-2 ps-5 rounded-3 border sec-switch-item">
+                  <input class="form-check-input" type="checkbox" role="switch" id="sec-require-invite" checked>
+                  <label class="form-check-label small fw-semibold d-block" for="sec-require-invite">Registro docente restringido por enlace oficial</label>
+                  <small class="text-muted d-block" style="font-size:0.73rem;">Impide altas públicas sin token institucional autorizado por Dirección.</small>
+                </div>
+
+                <div class="form-check form-switch p-2 ps-5 rounded-3 border sec-switch-item">
+                  <input class="form-check-input" type="checkbox" role="switch" id="sec-strict-audit" checked>
+                  <label class="form-check-label small fw-semibold d-block" for="sec-strict-audit">Auditoría estricta de sesiones y cambios</label>
+                  <small class="text-muted d-block" style="font-size:0.73rem;">Registra IP, usuario, fecha y acción de cada evento en la tabla <code>audit_logs</code>.</small>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <small class="text-muted" id="sec-last-updated-label" style="font-size:0.74rem;"><i class="bi bi-clock-history me-1"></i>Política activa sincronizada</small>
+                <button type="button" class="btn btn-primary btn-sm rounded-pill px-4 fw-semibold shadow-sm" id="btn-save-security-policy" style="background:#0f3380; border-color:#0f3380;">
+                  <i class="bi bi-shield-check me-1"></i> Guardar Políticas de Seguridad
                 </button>
               </div>
             </div>
-            <div id="gemini-test-result" class="mt-2" style="display: none;"></div>
-            <small class="text-muted d-block mt-2"><i class="bi bi-shield-lock me-1"></i>La clave se almacena de forma segura en tu navegador (localStorage) y se conecta directamente a la API oficial de Google.</small>
           </div>
-          <div class="col-lg-5">
-            <div class="p-3 bg-light rounded-3 border mb-3">
-              <h6 class="fw-bold"><i class="bi bi-shield-check text-success me-1"></i> Estado de los Servicios Institucionales</h6>
-              <ul class="list-unstyled small mb-0 mt-2 d-flex flex-column gap-1">
-                <li><i class="bi bi-check2-circle text-success me-1"></i> Base Institucional Oficial: <strong>Activa</strong></li>
-                <li><i class="bi bi-check2-circle text-success me-1"></i> 4 Programas de Estudio: <strong>Cargados</strong></li>
-                <li><i class="bi bi-check2-circle text-success me-1"></i> Test Vocacional 24 Preguntas: <strong>Operativo</strong></li>
-                <li><i class="bi bi-check2-circle text-success me-1"></i> Tablón de Comunicados en Vivo: <strong>Conectado</strong></li>
-                <li><i class="bi bi-check2-circle text-success me-1"></i> Voz Conversacional y Humana: <strong>Habilitada</strong></li>
+
+          <!-- Columna Derecha: Escudo en Vivo + Checklist + Eventos -->
+          <div class="col-lg-6 d-flex flex-column gap-3">
+            <!-- Checklist de Cumplimiento -->
+            <div class="p-3 p-lg-4 rounded-4 border sec-panel-box">
+              <h6 class="fw-bold mb-2"><i class="bi bi-list-check text-success me-2"></i>Verificación de Blindaje Institucional</h6>
+              <ul class="list-unstyled small mb-0 d-flex flex-column gap-2" id="sec-checklist-container">
+                <!-- Renderizado dinámicamente desde admin.js -->
               </ul>
             </div>
 
-            <div class="p-3 bg-white rounded-3 border shadow-sm">
-              <h6 class="fw-bold text-danger mb-2"><i class="bi bi-arrow-counterclockwise me-1"></i> Restaurar Demostración para Evaluación</h6>
-              <p class="small text-muted mb-2">Restablece las métricas, tests simulados y preguntas de prueba para sustentar ante el docente evaluador:</p>
-              <button id="btn-reset-demo" class="btn btn-outline-danger btn-sm rounded-pill w-100">
+            <!-- Cuentas Bloqueadas por Fuerza Bruta -->
+            <div class="p-3 p-lg-4 rounded-4 border sec-panel-box">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold mb-0"><i class="bi bi-lock-fill text-danger me-2"></i>Bloqueos Anti-Fuerza Bruta Activos</h6>
+                <button type="button" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-0" id="btn-refresh-security-panel">
+                  <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                </button>
+              </div>
+              <div id="sec-locks-container" class="small text-muted">
+                <!-- Renderizado dinámicamente desde admin.js -->
+              </div>
+            </div>
+
+            <!-- Monitor Rápido de Alertas de Seguridad -->
+            <div class="p-3 p-lg-4 rounded-4 border sec-panel-box">
+              <h6 class="fw-bold mb-2"><i class="bi bi-radar text-primary me-2"></i>Últimos Eventos de Seguridad</h6>
+              <div id="sec-recent-events-container" class="d-flex flex-column gap-2" style="max-height: 210px; overflow-y: auto;">
+                <!-- Renderizado dinámicamente desde admin.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECCIÓN: CONFIGURACIÓN AVANZADA DEL SISTEMA & IA
+         ========================================== -->
+    <section id="configuracion" class="admin-card config-pro-card mb-4">
+      <div class="admin-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h5 class="mb-0 fw-bold"><i class="bi bi-sliders2-vertical me-2 text-primary"></i> Configuración Avanzada del Sistema & Motor IA</h5>
+          <small class="text-muted">Administración del motor generativo Gemini, verificación de cuentas oficiales del Banco de la Nación y respaldos.</small>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" id="btn-export-full-backup">
+            <i class="bi bi-cloud-download me-1"></i> Respaldo Total (.json)
+          </button>
+        </div>
+      </div>
+      <div class="admin-card-body">
+        <div class="row g-4">
+          <!-- Bloque 1: Motor de Inteligencia Artificial -->
+          <div class="col-lg-7">
+            <div class="p-4 rounded-4 border sec-panel-box h-100">
+              <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                <h6 class="fw-bold mb-0"><i class="bi bi-stars text-primary me-1"></i> Google Gemini API Key (Motor Generativo Opcional)</h6>
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="btn btn-xs btn-outline-primary rounded-pill px-2 py-1" style="font-size:0.75rem;">
+                  <i class="bi bi-box-arrow-up-right me-1"></i>Obtener clave en Google AI Studio
+                </a>
+              </div>
+              <p class="text-muted small mb-3">
+                El chatbot opera con un <strong>motor semántico NLP institucional integrado 100% autónomo</strong> (sin costo y sin caídas). Si deseas activar respuestas generativas avanzadas con Google Gemini, configura tu clave aquí:
+              </p>
+              <div class="input-group mb-3">
+                <span class="input-group-text bg-light"><i class="bi bi-key text-primary"></i></span>
+                <input type="password" id="gemini-api-key" class="form-control" placeholder="AIzaSy..." autocomplete="off">
+                <button class="btn btn-outline-secondary" type="button" id="btn-toggle-key-visibility" title="Mostrar u ocultar clave">
+                  <i class="bi bi-eye" id="icon-toggle-key"></i>
+                </button>
+                <button class="btn btn-primary px-3 fw-semibold" id="btn-save-gemini-key" style="background:#0f3380; border-color:#0f3380;">Guardar Clave</button>
+              </div>
+              <div class="row g-2 align-items-end mb-3">
+                <div class="col-sm-6">
+                  <label for="gemini-model-select" class="form-label small fw-semibold text-muted mb-1">Modelo Gemini Preferido:</label>
+                  <select id="gemini-model-select" class="form-select form-select-sm">
+                    <option value="auto">⚡ Detección Automática (Recomendado)</option>
+                    <option value="gemini-2.0-flash">gemini-2.0-flash (Más rápido y moderno)</option>
+                    <option value="gemini-1.5-flash">gemini-1.5-flash (Alta compatibilidad)</option>
+                    <option value="gemini-1.5-flash-8b">gemini-1.5-flash-8b (Bajo consumo)</option>
+                    <option value="gemini-2.5-flash">gemini-2.5-flash (Experimental)</option>
+                    <option value="gemini-pro">gemini-pro (Estándar)</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <button class="btn btn-outline-success btn-sm rounded-pill px-3 w-100 fw-semibold" id="btn-test-gemini-key" style="height:31px;">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> Probar Conexión en Vivo
+                  </button>
+                </div>
+              </div>
+              <div id="gemini-test-result" class="mt-2" style="display: none;"></div>
+
+              <!-- Verificación de Cuentas Bancarias Oficiales en Producción -->
+              <div class="mt-4 pt-3 border-top">
+                <h6 class="fw-bold small mb-2 text-dark"><i class="bi bi-bank2 text-warning me-1"></i> Verificación de Cuentas Oficiales Banco de la Nación (Anti-Confusión)</h6>
+                <div class="row g-2">
+                  <div class="col-sm-6">
+                    <div class="p-2 px-3 rounded-3 border" style="background: rgba(15, 51, 128, 0.05); border-color: rgba(15, 51, 128, 0.2) !important;">
+                      <small class="d-block fw-bold text-primary" style="font-size:0.71rem;">CUENTA 1 · MATRÍCULA & TUPA</small>
+                      <code class="fw-bold fs-6 text-dark">00-638-002361</code>
+                      <small class="d-block text-muted" style="font-size:0.70rem;">Matrícula S/ 250 · Suficiencia · Títulos</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="p-2 px-3 rounded-3 border" style="background: rgba(5, 150, 105, 0.06); border-color: rgba(5, 150, 105, 0.25) !important;">
+                      <small class="d-block fw-bold text-success" style="font-size:0.71rem;">CUENTA 2 · INGLÉS & PRODUCTIVAS</small>
+                      <code class="fw-bold fs-6 text-dark">00-638-025736</code>
+                      <small class="d-block text-muted" style="font-size:0.70rem;">Inglés S/ 400 · 2 copias en Tesorería</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <small class="text-muted d-block mt-3"><i class="bi bi-shield-lock me-1"></i>La clave API se cifra/aisla localmente en tu navegador y nunca se expone en el código fuente público.</small>
+            </div>
+          </div>
+
+          <!-- Bloque 2: Estado de Módulos y Mantenimiento -->
+          <div class="col-lg-5 d-flex flex-column gap-3">
+            <div class="p-4 rounded-4 border sec-panel-box">
+              <h6 class="fw-bold mb-3"><i class="bi bi-hdd-stack-fill text-success me-2"></i> Estado de Servicios Institucionales</h6>
+              <ul class="list-unstyled small mb-0 d-flex flex-column gap-2">
+                <li class="d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-check2-circle text-success me-2"></i>Base Oficial TUPA 2026 (66 ítems)</span>
+                  <span class="badge bg-success-subtle text-success rounded-pill">Activa</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-check2-circle text-success me-2"></i>Escudo Anti-Confusión Cuentas BN</span>
+                  <span class="badge bg-success-subtle text-success rounded-pill">Verificado</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-check2-circle text-success me-2"></i>4 Carreras Públicas y Plana Docente</span>
+                  <span class="badge bg-success-subtle text-success rounded-pill">Cargadas</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-check2-circle text-success me-2"></i>Test Vocacional Adaptativo</span>
+                  <span class="badge bg-success-subtle text-success rounded-pill">Operativo</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-check2-circle text-success me-2"></i>Motor de Voz y Padrón DNI</span>
+                  <span class="badge bg-success-subtle text-success rounded-pill">Conectado</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-4 border sec-panel-box">
+              <h6 class="fw-bold text-danger mb-2"><i class="bi bi-arrow-counterclockwise me-2"></i> Zona de Restablecimiento (Evaluación)</h6>
+              <p class="small text-muted mb-3">Restablece métricas, tests simulados y preguntas de prueba para una presentación limpia ante el jurado evaluador:</p>
+              <button id="btn-reset-demo" class="btn btn-outline-danger btn-sm rounded-pill w-100 fw-semibold">
                 <i class="bi bi-arrow-clockwise me-1"></i> Restaurar Estadísticas de Demostración
               </button>
             </div>
@@ -1622,9 +1872,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <!-- Scripts de la Base de Conocimiento y Lógica de Administración con Cache Buster -->
-  <script src="js/knowledge-base.js?v=20261112k"></script>
-  <script src="js/db-sql.js?v=20261112k"></script>
-  <script src="js/admin.js?v=20261112k"></script>
+  <script src="js/knowledge-base.js?v=20261118a"></script>
+  <script src="js/db-sql.js?v=20261118a"></script>
+  <script src="js/admin.js?v=20261118a"></script>
 
   
 

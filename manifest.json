@@ -1,7 +1,10 @@
 {
+  "id": "https://gmph2007.github.io/hercarbot-instituto-carcamo/",
   "name": "HercarBot IA — IESTP Hermanos Cárcamo",
   "short_name": "HercarBot",
   "description": "Asistente Virtual Institucional Oficial con Inteligencia Artificial del IESTP Hermanos Cárcamo de Paita (Piura)",
+  "lang": "es-PE",
+  "dir": "ltr",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

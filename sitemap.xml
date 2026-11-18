@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/</loc>
-    <lastmod>2026-11-09</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es-PE" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://gmph2007.github.io/hercarbot-instituto-carcamo/"/>
+    <image:image>
+      <image:loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/fachada-2026.webp</image:loc>
+      <image:title>Fachada Oficial Campus Central IESTP Hermanos Cárcamo Paita</image:title>
+      <image:caption>Campus institucional del IESTP Hermanos Cárcamo en Av. Miguel Grau Mz. A Lt. 01, Urb. El Parque, Paita Alta, Piura</image:caption>
+    </image:image>
     <image:image>
       <image:loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/logo-hercar.png</image:loc>
-      <image:title>Logo Oficial HercarBot IA — IESTP Hermanos Cárcamo Paita</image:title>
+      <image:title>Logo Oficial HercarBot IA — IESTP Hermanos Cárcamo</image:title>
+      <image:caption>Insignia oficial del asistente virtual institucional con IA</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/campus-hercar.jpg</image:loc>
-      <image:title>Campus Central IESTP Hermanos Cárcamo Paita</image:title>
+      <image:loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/assets/img/patio-2026.webp</image:loc>
+      <image:title>Patio e Infraestructura Central IESTP Hermanos Cárcamo</image:title>
+      <image:caption>Ambientes pedagógicos y patio central del instituto en Paita</image:caption>
     </image:image>
-  </url>
-  <url>
-    <loc>https://gmph2007.github.io/hercarbot-instituto-carcamo/login.html</loc>
-    <lastmod>2026-11-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>

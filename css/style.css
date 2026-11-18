@@ -6370,3 +6370,18 @@ body.dark-theme .tupa-compendio-item {
   background: #0f172a;
   border-color: #1e293b;
 }
+
+/* ==========================================================================
+   DIRECTORIO SEMÁNTICO SEO ACCESIBLE (INDEXACIÓN PARA GOOGLE, BING & NAVER)
+   ========================================================================== */
+.seo-crawlable-index {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: normal !important;
+  border: 0 !important;
+}

@@ -1,5 +1,5 @@
 // Service Worker oficial de HercarBot IA (IESTP Hermanos Cárcamo - Paita)
-const CACHE_NAME = 'hercarbot-pwa-v2026-v22';
+const CACHE_NAME = 'hercarbot-pwa-v2026-v23';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -7,6 +7,9 @@ const ASSETS_TO_CACHE = [
   './login.html',
   './register.html',
   './manifest.json',
+  './robots.txt',
+  './sitemap.xml',
+  './llms.txt',
   './css/style.css',
   './css/admin.css',
   './js/chatbot.js',

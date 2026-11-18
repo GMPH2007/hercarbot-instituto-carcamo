@@ -9,8 +9,10 @@
 
 ---
 
-> 🚀 **Ingresa directamente al Asistente Virtual en Vivo:**  
-> 👉 **[https://gmph2007.github.io/hercarbot-instituto-carcamo/](https://gmph2007.github.io/hercarbot-instituto-carcamo/)**
+> 🌐 **PORTAL WEB Y ASISTENTE VIRTUAL OFICIAL (EN PRODUCCIÓN):**  
+> 👉 **[https://gmph2007.github.io/hercarbot-instituto-carcamo/](https://gmph2007.github.io/hercarbot-instituto-carcamo/)**  
+>  
+> *Aviso para usuarios y motores de búsqueda:* Este repositorio de GitHub almacena el código fuente abierto del proyecto. Para interactuar con el asistente virtual en vivo, postular a la Admisión 2026, consultar las 4 carreras públicas sin mensualidades, generar el FUT oficial en PDF o revisar las tasas del Banco de la Nación, accede directamente al enlace web oficial indicado arriba.
 
 ---
 
@@ -22,7 +24,7 @@
 2. **Monitor de Red Neuronal & Sinapsis en Tiempo Real:** Un canvas interactivo animado que muestra la propagación de impulsos en 4 capas (Entrada Léxica, Oculta Semántica, Oculta Entidades y Salida de Intención) con sandbox de inferencia en vivo (precisión calculada de 99.4% y latencia de ~16 ms).
 3. **Síntesis de Voz Humana Femenina ("Voz de Chica Asesora"):** Motor fonético universal con Web Speech API calibrado acústicamente (prioridad para voces naturales Dalia, Salma, Jimena o Google Español). Elimina la monotonía y cualquier distorsión metálica, introduce micro-pausas respiratorias de 65 ms y sincroniza un halo pulsante de locución activa en el avatar.
 4. **Convertidor Fonético Universal de Números:** Convierte al vuelo todos los dígitos a palabras en español fluido:
-   - Cuentas corrientes del Banco de la Nación: `00-631-012948` &rarr; *"cero cero, seis tres uno, cero doce, nueve cuatro ocho"*.
+   - Cuentas corrientes del Banco de la Nación: `00-638-002361` &rarr; *"cero cero, seis tres ocho, cero cero, dos tres seis uno"*, y `00-638-025736` (Inglés y actividades productivas).
    - Tasas y aranceles TUPA: `S/ 120.00` &rarr; *"ciento veinte soles"*.
    - Escalas de notas: `0 a 20` &rarr; *"cero a veinte"*, `nota 13` &rarr; *"nota mínima trece"*.
    - Horarios: `8:00 a.m.` &rarr; *"ocho de la mañana"*, `1:15 p.m.` &rarr; *"una y quince de la tarde"*.

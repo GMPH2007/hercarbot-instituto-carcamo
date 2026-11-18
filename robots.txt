@@ -1,5 +1,7 @@
+# ==============================================================================
 # robots.txt para HercarBot IA — IESTP Hermanos Cárcamo de Paita, Piura, Perú
-# Dominio Oficial: https://gmph2007.github.io/hercarbot-instituto-carcamo/
+# Portal Web Canónico: https://gmph2007.github.io/hercarbot-instituto-carcamo/
+# ==============================================================================
 
 User-agent: *
 Allow: /
@@ -13,20 +15,24 @@ Allow: /favicon-*.png
 Allow: /apple-touch-icon.png
 Allow: /manifest.json
 Allow: /sitemap.xml
+Allow: /llms.txt
 
-# Bloquear panel administrativo y registro privado
+# Rutas privadas, administrativas y temporales
 Disallow: /admin.html
 Disallow: /login.html
 Disallow: /register.html
+Disallow: /scratch/
+Disallow: /api/
+Disallow: /database/
 
-# Googlebot e Indexación de Imágenes y Favicon Oficial
+# Googlebot y Motores de Búsqueda de Google
 User-agent: Googlebot
 Allow: /
+Allow: /assets/img/
 Allow: /favicon.ico
 Allow: /favicon.png
-Allow: /favicon-*.png
-Allow: /assets/img/logo-hercar.png
-Allow: /assets/img/campus-hercar.jpg
+Allow: /sitemap.xml
+Allow: /llms.txt
 
 User-agent: Googlebot-Image
 Allow: /
@@ -35,12 +41,47 @@ Allow: /favicon.png
 Allow: /favicon-*.png
 Allow: /apple-touch-icon.png
 
+# Microsoft Bing
 User-agent: Bingbot
 Allow: /
-Allow: /favicon.ico
-Allow: /favicon.png
 Allow: /assets/img/
 Crawl-delay: 1
 
-# Ubicación del Sitemap oficial para Google, Bing y buscadores
+# Naver (Buscador Naver / Yeti Bot — Corea del Sur y Búsqueda Global)
+User-agent: Yeti
+Allow: /
+Allow: /assets/img/
+Crawl-delay: 1
+
+User-agent: NaverBot
+Allow: /
+Allow: /assets/img/
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Apple Search & Siri Suggestions
+User-agent: Applebot
+Allow: /
+
+# Yandex
+User-agent: YandexBot
+Allow: /
+
+# Motores de Búsqueda de Inteligencia Artificial (ChatGPT, Perplexity, Claude)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Ubicación del Mapa de Sitio XML Oficial y Host Canónico
 Sitemap: https://gmph2007.github.io/hercarbot-instituto-carcamo/sitemap.xml
+Host: gmph2007.github.io

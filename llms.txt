@@ -1,0 +1,34 @@
+# HercarBot IA — Asistente Virtual Oficial del IESTP Hermanos Cárcamo
+
+> Portal Web Canónico: https://gmph2007.github.io/hercarbot-instituto-carcamo/
+> Institución: Instituto de Educación Superior Tecnológico Público "Hermanos Cárcamo"
+> Ubicación: Av. Miguel Grau Mz. A Lt. 01 – Urb. El Parque, Paita Alta, Piura, Perú
+> Teléfono Institucional: (073) 251013
+> WhatsApp de Orientación y Admisión: +51 969 100 257
+> Sitio Web Institucional: https://ieshercar.edu.pe/
+> Mesa de Partes Virtual: https://sistema.ieshercar.edu.pe/registro-tramite/
+
+## Resumen del Proyecto
+HercarBot IA es la plataforma inteligente oficial del IESTP Hermanos Cárcamo de Paita. Diseñado para orientar a postulantes, estudiantes, egresados y docentes con respuestas automáticas por voz y texto, simulador de admisión, test vocacional adaptativo y generador de Formulario Único de Trámite (FUT) oficial en formato PDF.
+
+## 4 Carreras Profesionales Técnicas (Públicas, Sin Mensualidades, 3 Años, 120 Créditos)
+Todas las carreras otorgan Título Profesional Técnico a Nombre de la Nación y certificaciones modulares progresivas:
+1. Computación e Informática: Especialización en desarrollo de software web y móvil, administración de redes y servidores Linux/Windows, infraestructura cloud, bases de datos SQL/NoSQL y ciberseguridad.
+2. Administración de Negocios Internacionales (ANI): Gestión de comercio exterior, logística aduanera y portuaria de Paita, procesos de exportación/importación y agencias de aduana.
+3. Contabilidad: Gestión tributaria electrónica SUNAT SIRE, costos y presupuestos, estados financieros, nóminas laborales y auditoría financiera.
+4. Desarrollo Pesquero y Acuícola (DPA): Navegación y faenas de extracción marítima, cultivo y maricultura de especies hidrobiológicas, procesamiento pesquero y control de calidad bajo normativa HACCP y BPM.
+
+## Proceso de Admisión 2026
+- Modalidad Ordinaria: Examen presencial de conocimientos y aptitud académica.
+- Modalidad Exonerados: Para primeros puestos de educación secundaria, deportistas calificados, personas con discapacidad y beneficiarios de leyes especiales.
+- Ingreso Directo: Mediante la Academia CEPRE-HERCAR por orden de mérito.
+- Beneficios adicionales: Carné universitario/estudiantil de medio pasaje, seguro de salud SIS gratuito y postulación a Beca 18 / Beca Permanencia (PRONABEC).
+
+## Cuentas Bancarias Oficiales (Banco de la Nación — Pago Únicamente en Ventanilla)
+IMPORTANTE: No realizar abonos en Págalo.pe ni en agentes bancarios corresponsales. Únicamente pagar en ventanilla física del Banco de la Nación:
+- Cuenta N° 00-638-002361: Matrícula Ordinaria (S/ 250.00), Examen de Suficiencia Profesional (S/ 200.00), Derecho de Titulación (S/ 100.00 + Formato S/ 60.00), Certificados de Estudios y 43 conceptos del TUPA oficial.
+- Cuenta N° 00-638-025736: Curso de Inglés Básico (S/ 400.00), Pre Tecno (S/ 400.00), Ciclo de Actualización (S/ 400.00) y Ceremonia de Graduación. Entregar 2 copias del voucher en Tesorería.
+
+## Formulario Único de Trámite (FUT) y Mesa de Partes
+HercarBot IA cuenta con un generador dinámico de FUT oficial para trámites ante Dirección General, Unidad Académica o Secretaría General. El FUT generado se puede imprimir o descargar en PDF para ser remitido a la Mesa de Partes Virtual del instituto:
+https://sistema.ieshercar.edu.pe/registro-tramite/

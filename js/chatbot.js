@@ -318,6 +318,7 @@ class HercarBotApp {
     this.initCommandPalette();
     this.initTour();
     this.initPwaServiceWorker();
+    this.initUrlRouting();
   }
 
   normalizeText(str) {
@@ -4984,6 +4985,67 @@ ${text}
         };
       }
     });
+  }
+
+  initUrlRouting() {
+    try {
+      if (typeof window === 'undefined' || !window.location || !window.location.search) return;
+      const urlParams = new URLSearchParams(window.location.search);
+      const action = urlParams.get('action');
+      const q = urlParams.get('q');
+      const c = urlParams.get('c') || urlParams.get('carrera');
+
+      if (q && q.trim()) {
+        setTimeout(() => {
+          this.handleUserSubmit(q.trim());
+        }, 380);
+        return;
+      }
+
+      if (action) {
+        setTimeout(() => {
+          switch (action.toLowerCase()) {
+            case 'admision':
+              this.triggerAction('ver_admision_completa');
+              break;
+            case 'fut':
+              this.triggerAction('abrir_generador_fut');
+              break;
+            case 'pagos':
+            case 'banco':
+              this.triggerAction('ver_guia_pagos');
+              break;
+            case 'carreras':
+              this.triggerAction('ver_todas_carreras');
+              break;
+            case 'vocacional':
+            case 'test':
+              this.triggerAction('iniciar_test_vocacional');
+              break;
+            case 'simulador':
+              this.triggerAction('iniciar_simulador_admision');
+              break;
+            case 'tupa':
+              this.triggerAction('ver_tramites_tupa');
+              break;
+            case 'cuentas':
+              this.triggerAction('ver_numero_cuenta_bn');
+              break;
+            default:
+              break;
+          }
+        }, 380);
+        return;
+      }
+
+      if (c) {
+        setTimeout(() => {
+          this.triggerAction('ver_carrera_detalle', c.toLowerCase());
+        }, 380);
+      }
+    } catch (e) {
+      console.warn('initUrlRouting non-blocking error:', e);
+    }
   }
 
   showPwaInstallPrompt() {

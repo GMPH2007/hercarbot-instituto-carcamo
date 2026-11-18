@@ -1300,7 +1300,34 @@ body.admin-single-view .admin-main > section.admin-section-active {
 
 @media (max-width: 767.98px) {
   .sql-panel-card {
-    padding: 18px;
+    padding: 16px 12px !important;
+  }
+
+  #database-sql .d-flex.flex-wrap.gap-2.align-items-center {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  #database-sql .d-flex.flex-wrap.gap-2.align-items-center .btn {
+    flex: 1 1 calc(50% - 6px) !important;
+    min-height: 38px !important;
+    font-size: 0.76rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  #database-sql .sql-search-box {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+
+  #database-sql .table-responsive {
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 12px !important;
   }
 }
 
